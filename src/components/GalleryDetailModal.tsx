@@ -79,18 +79,18 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
 
         {/* 2. Modal Body */}
         <div className="p-4 sm:p-5 overflow-y-auto space-y-4 text-xs text-stone-700 dark:text-stone-300">
-          {/* Gallery Header Row: Logo 48x48 + Name + Location */}
+          {/* Gallery Header Row: Logo 56x56 + Name + Location */}
           <div className="flex items-center gap-3 p-3 rounded-2xl bg-[#f4f7fb] dark:bg-[#141822] border border-[#E1E1E1] dark:border-stone-800">
-            <div className="w-12 h-12 rounded-xl overflow-hidden bg-white dark:bg-stone-900 shadow-sm border border-[#E1E1E1] dark:border-stone-700 shrink-0 flex items-center justify-center p-1">
+            <div className="w-14 h-14 rounded-2xl overflow-hidden bg-stone-100 dark:bg-stone-800 shadow-sm border border-[#E1E1E1] dark:border-stone-700 shrink-0 flex items-center justify-center">
               {galleryLogoUrl ? (
                 <img
                   src={galleryLogoUrl}
                   alt={getGalleryDisplayName(gallery)}
                   referrerPolicy="no-referrer"
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-cover"
                 />
               ) : (
-                <Palette className="w-5 h-5 text-stone-400" />
+                <Palette className="w-6 h-6 text-stone-400" />
               )}
             </div>
             <div className="truncate flex-1">

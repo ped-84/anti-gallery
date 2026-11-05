@@ -96,20 +96,20 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
           </div>
         ) : null}
 
-        {/* 2. Gallery Row: 48x48px Rounded Logo + Gallery Name + Single Clean Location Line */}
+        {/* 2. Gallery Row: 56x56px Rounded Logo + Gallery Name + Single Clean Location Line */}
         <div className="flex items-center gap-3 mb-3">
-          {/* Gallery Logo: 48x48 px */}
-          <div className="w-12 h-12 rounded-xl overflow-hidden bg-white dark:bg-stone-900 shadow-sm border border-[#E1E1E1] dark:border-stone-700 shrink-0 flex items-center justify-center p-1">
+          {/* Gallery Logo: 56x56 px (larger, object-cover, seamless edge-to-edge styling) */}
+          <div className="w-14 h-14 rounded-2xl overflow-hidden bg-stone-100 dark:bg-stone-800 shadow-sm border border-[#E1E1E1] dark:border-stone-700 shrink-0 flex items-center justify-center">
             {!logoError && galleryLogoUrl ? (
               <img
                 src={galleryLogoUrl}
                 alt={getGalleryDisplayName(gallery)}
                 referrerPolicy="no-referrer"
                 onError={() => setLogoError(true)}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-cover"
               />
             ) : (
-              <ImageIcon className="w-5 h-5 text-stone-400" />
+              <ImageIcon className="w-6 h-6 text-stone-400" />
             )}
           </div>
 

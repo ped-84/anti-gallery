@@ -11,7 +11,7 @@ interface HeaderProps {
   onToggleDarkMode: () => void;
 }
 
-export const APP_VERSION = 'بتا V 1.040';
+export const APP_VERSION = 'بتا V 1.045';
 
 export const Header: React.FC<HeaderProps> = ({
   selectedCount,
@@ -23,25 +23,25 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   return (
     <header className="sticky top-0 z-40 bg-[#f4f6fa]/95 dark:bg-[#131722]/95 backdrop-blur-md border-b border-[#E1E1E1] dark:border-stone-800 transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
         {/* Zone 1: Brand Wordmark (Compact on mobile, full on desktop) */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          <a href="/" className="flex items-center gap-2 sm:gap-3 text-inherit no-underline group">
+        <div className="flex items-center gap-2.5 sm:gap-3.5 shrink-0">
+          <a href="/" className="flex items-center gap-2.5 sm:gap-3.5 text-inherit no-underline group">
             <div className="w-10 h-10 sm:w-12 sm:h-12 clay-card clay-darkblue flex items-center justify-center text-white group-hover:scale-105 transition-transform shrink-0">
               <Compass className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
             </div>
-            <div>
-              <span className="text-lg sm:text-2xl font-black tracking-tight text-[#1c2944] dark:text-white block leading-tight">
-                گالری‌گردی
-              </span>
-              <div className="flex items-center gap-2 mt-1">
-                <span className="text-[10px] sm:text-[11px] font-medium text-[#3D5B99] dark:text-[#A3C2E4] hidden xs:block">
-                  مسیریاب هوشمند گالری‌های هنری
+            <div className="flex flex-col justify-center">
+              <div className="flex items-center gap-2 sm:gap-2.5">
+                <span className="text-lg sm:text-2xl font-black tracking-tight text-[#1c2944] dark:text-white block leading-tight">
+                  گالری‌گردی
                 </span>
-                <span className="px-2 py-0.5 text-[9px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-none">
+                <span className="px-2 sm:px-2.5 py-0.5 text-[9px] sm:text-[10px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug shrink-0">
                   {APP_VERSION}
                 </span>
               </div>
+              <p className="text-[10px] sm:text-[11px] font-medium text-[#3D5B99] dark:text-[#A3C2E4] mt-1 hidden xs:block">
+                مسیریاب هوشمند گالری‌های هنری
+              </p>
             </div>
           </a>
         </div>

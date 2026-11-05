@@ -516,36 +516,19 @@ export default function App() {
       />
 
       {/* Operational Ribbon */}
-      <div className="bg-[#e4ebf5] dark:bg-[#161a24] text-stone-700 dark:text-stone-300 text-xs px-3 sm:px-6 lg:px-8 py-2.5 border-b border-[#E1E1E1] dark:border-stone-800">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 flex-wrap font-medium">
-          <div className="flex items-center gap-2.5 flex-wrap">
+      <div className="bg-[#e4ebf5] dark:bg-[#161a24] text-stone-700 dark:text-stone-300 text-xs px-4 sm:px-6 lg:px-8 py-2.5 border-b border-[#E1E1E1] dark:border-stone-800">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 font-medium">
+          <div className="flex items-center gap-2.5 shrink-0">
             <span className="w-2.5 h-2.5 rounded-full bg-[#F76B1C] inline-block shadow-sm shrink-0"></span>
-            <span className="truncate">
+            <span className="text-xs">
               <strong>{toPersianDigits(totalWithPosters)} نمایشگاه جاری</strong> از میان {toPersianDigits(galleries.length)} نگارخانه
             </span>
-
-            {/* Scheduled Auto-Sync Status Badge */}
-            <div className="hidden md:flex items-center gap-2 mr-3 pr-3 border-r border-[#A3C2E4]/40 dark:border-stone-700 text-[11px] text-stone-500 dark:text-stone-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
-              <span>همگام‌سازی خودکار:</span>
-              <span className="text-[#3D5B99] dark:text-[#A3C2E4] font-bold">
-                چهارشنبه و پنجشنبه (هر ۲ ساعت) · جمعه (هر نیم‌ساعت)
-              </span>
-              <button
-                onClick={handleManualSync}
-                disabled={isTriggeringSync}
-                title="همگام‌سازی دستی اکنون"
-                className="p-1 hover:text-[#F76B1C] transition-colors rounded-md hover:bg-white/60 dark:hover:bg-stone-800"
-              >
-                <RotateCcw className={`w-3 h-3 ${isTriggeringSync ? 'animate-spin text-[#F76B1C]' : ''}`} />
-              </button>
-            </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center shrink-0">
             <button
               onClick={() => setIsCuratedModalOpen(true)}
-              className="clay-button clay-orange-subtle px-3 py-1 text-xs font-bold flex items-center gap-1 hover:scale-105 active:scale-95 transition-all text-[#F76B1C] shrink-0"
+              className="clay-button clay-orange-subtle px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 hover:scale-105 active:scale-95 transition-all text-[#F76B1C] shrink-0 shadow-xs"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>۴ گشت هنری آماده</span>
@@ -581,7 +564,7 @@ export default function App() {
       </div>
 
       {/* Main Content Layout */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6">
         {/* Editorial Claymorphic Banner */}
         <section className="clay-card p-4 sm:p-6 bg-white dark:bg-[#181d27] border border-[#E1E1E1] dark:border-stone-800">
           <span className="text-[11px] font-bold text-[#F76B1C] block mb-1">
