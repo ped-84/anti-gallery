@@ -306,11 +306,21 @@ body {
   font-weight: 700;
   font-family: 'Shabnam FD', 'Shabnam', sans-serif !important;
   box-shadow: 0 6px 14px rgba(61, 91, 153, 0.35);
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  /* NO transition on transform here so dragging never lags */
 }
 
-.custom-tour-pin:hover {
-  transform: scale(1.18);
+/* Hide Neshan / Mapbox attribution & watermarks */
+.mapboxgl-ctrl-attrib,
+.mapboxgl-ctrl-attrib-inner,
+.mapboxgl-compact,
+.mapboxgl-ctrl-bottom-right,
+.neshan-watermark,
+a.mapboxgl-ctrl-logo,
+.neshan-logo {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 ::-webkit-scrollbar {

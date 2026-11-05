@@ -73,7 +73,8 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           trackResize: true,
           mapKey: NESHAN_WEB_KEY,
           poi: true,
-          traffic: true
+          traffic: true,
+          attributionControl: false
         });
 
         map.on('load', () => {
@@ -268,7 +269,9 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       const isFocused = activeGalleryId === gallery.id;
 
       const el = document.createElement('div');
-      el.className = 'cursor-pointer transition-transform duration-200 hover:scale-110';
+      el.className = 'cursor-pointer select-none';
+      // Absolutely no CSS transition on transform to guarantee zero drag lag!
+      el.style.willChange = 'transform';
 
       if (orderNum !== undefined) {
         const isFirst = orderNum === 1;

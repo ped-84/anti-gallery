@@ -526,28 +526,21 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
             </a>
           </div>
 
-          {/* Utility Buttons: GPX Download & Copy (with comfortable padding) */}
-          <div className="flex items-center gap-2.5 pt-1">
-            <button
-              onClick={handleDownloadGpx}
-              className="clay-button clay-base flex-1 py-2.5 px-3 text-stone-700 dark:text-stone-300 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all border border-[#E1E1E1]"
-            >
-              <Download className="w-3.5 h-3.5 text-[#3D5B99]" />
-              <span>خروجی GPX</span>
-            </button>
+          {/* Utility Action: Copy Tour Itinerary */}
+          <div className="pt-1">
             <button
               onClick={handleCopySummary}
-              className="clay-button clay-base flex-1 py-2.5 px-3 text-stone-700 dark:text-stone-300 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all border border-[#E1E1E1]"
+              className="clay-button clay-base w-full py-3 px-4 text-stone-700 dark:text-stone-200 text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition-all border border-[#E1E1E1] shadow-sm hover:scale-[1.01] active:scale-95"
             >
               {copied ? (
                 <>
-                  <Check className="w-3.5 h-3.5 text-emerald-600" />
-                  <span className="text-emerald-700 dark:text-emerald-400">کپی شد!</span>
+                  <Check className="w-4 h-4 text-emerald-600" />
+                  <span className="text-emerald-700 dark:text-emerald-400 font-bold">متن برنامه و آدرس‌ها کپی شد!</span>
                 </>
               ) : (
                 <>
-                  <Share2 className="w-3.5 h-3.5 text-[#3D5B99]" />
-                  <span>کپی متن برنامه</span>
+                  <Share2 className="w-4 h-4 text-[#3D5B99]" />
+                  <span>کپی متن و مشخصات برنامه بازدید</span>
                 </>
               )}
             </button>
