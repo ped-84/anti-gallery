@@ -357,9 +357,8 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       const isFocused = activeGalleryId === gallery.id;
 
       const el = document.createElement('div');
-      el.className = 'cursor-pointer select-none transition-transform hover:scale-110 active:scale-95';
-      // Absolutely no CSS transition on transform to guarantee zero drag lag!
-      el.style.willChange = 'transform';
+      // Keep outer marker element free of any CSS transforms so Mapbox geolocation positioning never glitches!
+      el.className = 'cursor-pointer select-none';
       const galleryDisplayName = getGalleryDisplayName(gallery);
       el.title = `${galleryDisplayName} (کلیک برای جزئیات کامل و افزودن به مسیر)`;
 
@@ -381,13 +380,13 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           : 'bg-[#1e335a] text-white border-2 border-[#A3C2E4]';
 
         el.innerHTML = `
-          <div class="w-[34px] h-[34px] rounded-full flex items-center justify-center font-bold text-xs shadow-xl ${bgClass}">
+          <div class="w-[34px] h-[34px] rounded-full flex items-center justify-center font-bold text-xs shadow-xl ${bgClass} transition-transform duration-150 ease-out hover:scale-110 active:scale-95 origin-center">
             ${toPersianDigits(orderNum)}
           </div>
         `;
       } else if (isSelected) {
         el.innerHTML = `
-          <div class="w-[30px] h-[30px] rounded-full bg-[#3D5B99] text-white border-2 border-white flex items-center justify-center shadow-lg">
+          <div class="w-[30px] h-[30px] rounded-full bg-[#3D5B99] text-white border-2 border-white flex items-center justify-center shadow-lg transition-transform duration-150 ease-out hover:scale-110 active:scale-95 origin-center">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
             </svg>
@@ -402,7 +401,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
               : hasExhibition
               ? 'bg-[#3D5B99] text-white border-2 border-white'
               : 'bg-[#A3C2E4] text-[#1e335a] border border-white'
-          } flex items-center justify-center shadow-md opacity-90">
+          } flex items-center justify-center shadow-md opacity-90 transition-transform duration-150 ease-out hover:scale-125 active:scale-95 origin-center">
             <div class="w-2 h-2 rounded-full ${hasExhibition ? 'bg-[#F76B1C]' : 'bg-white'}"></div>
           </div>
         `;
@@ -411,8 +410,6 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       const marker = new nmp.Marker({ element: el })
         .setLngLat([gallery.lng, gallery.lat])
         .addTo(map);
-
-      markersRef.current.push(marker);
 
       markersRef.current.push(marker);
 
