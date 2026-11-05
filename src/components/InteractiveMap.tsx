@@ -357,9 +357,19 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       const isFocused = activeGalleryId === gallery.id;
 
       const el = document.createElement('div');
-      el.className = 'cursor-pointer select-none';
+      el.className = 'cursor-pointer select-none transition-transform hover:scale-110 active:scale-95';
       // Absolutely no CSS transition on transform to guarantee zero drag lag!
       el.style.willChange = 'transform';
+      const galleryDisplayName = getGalleryDisplayName(gallery);
+      el.title = `${galleryDisplayName} (کلیک برای جزئیات کامل و افزودن به مسیر)`;
+
+      // Clicking any marker opens the full darkened overlay modal directly
+      el.onclick = (e) => {
+        e.stopPropagation();
+        if (onSelectForDetails) {
+          onSelectForDetails(gallery);
+        }
+      };
 
       if (orderNum !== undefined) {
         const isFirst = orderNum === 1;
@@ -398,96 +408,11 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         `;
       }
 
-      // Popup Construction
-      const popupDiv = document.createElement('div');
-      popupDiv.className = 'p-3 text-stone-800 dark:text-stone-100 max-w-[270px] bg-white dark:bg-[#1a202c] rounded-2xl shadow-xl font-sans';
-
-      const activeEx = gallery.activeExhibition;
-      const exhibitionHtml = activeEx
-        ? `<div class="mt-2 pt-2 border-t border-[#E1E1E1] dark:border-stone-700/60">
-             <div class="text-[10px] font-bold text-[#F76B1C]">نمایشگاه جاری ${activeEx.artist ? `· آثار ${activeEx.artist}` : ''}</div>
-             <div class="text-xs font-bold text-[#10335e] dark:text-[#dbeafe] mt-0.5 line-clamp-1">${activeEx.title}</div>
-             ${activeEx.openingDate ? `<div class="text-[10px] text-stone-500 dark:text-stone-400 mt-0.5">افتتاحیه: ${toPersianDigits(activeEx.openingDate)}</div>` : ''}
-           </div>`
-        : '';
-
-      const trafficWarningHtml = gallery.isInTrafficZone
-        ? `<div class="mt-1 text-[10px] font-bold text-[#F76B1C] flex items-center gap-1">
-             <span>⚠️ واقع در محدوده طرح ترافیک تهران</span>
-           </div>`
-        : '';
-
-      let startPointButtonHtml = '';
-      if (orderNum !== undefined) {
-        if (orderNum === 1) {
-          startPointButtonHtml = `<div class="mt-2 text-[11px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-lg inline-flex items-center gap-1.5 border border-emerald-300 dark:border-emerald-700/60"><span>🟢</span> مبدأ گشت</div>`;
-        } else if (onSetStartGallery) {
-          startPointButtonHtml = `
-            <div class="mt-2 pt-1.5 border-t border-[#E1E1E1] dark:border-stone-800">
-              <button id="neshan-btn-setstart-${gallery.id}" class="text-[11px] text-[#1856C7] dark:text-[#93c5fd] hover:text-[#F76B1C] font-bold underline cursor-pointer flex items-center gap-1">
-                📍 شروع گشت از این گالری
-              </button>
-            </div>`;
-        }
-      }
-
-      const posterOrImg = gallery.posterImage || activeEx?.poster || gallery.image;
-      const galleryDisplayName = getGalleryDisplayName(gallery);
-      const imageHtml = posterOrImg
-        ? `<div class="w-full h-28 mb-2 overflow-hidden rounded-xl bg-white dark:bg-stone-800 border border-[#E1E1E1] dark:border-stone-700">
-             <img src="${posterOrImg}" alt="${galleryDisplayName}" class="w-full h-full object-cover" onerror="this.style.display='none'" />
-           </div>`
-        : '';
-
-      popupDiv.innerHTML = `
-        ${imageHtml}
-        <div class="text-xs font-bold text-[#1d2d4c] dark:text-white leading-snug">${galleryDisplayName}</div>
-        <div class="text-[11px] text-[#3D5B99] dark:text-[#A3C2E4] mt-0.5 font-medium truncate">${gallery.neighborhoodFa || 'تهران'} · ${gallery.addressFa || gallery.address}</div>
-        ${trafficWarningHtml}
-        ${startPointButtonHtml}
-        ${exhibitionHtml}
-        <div class="mt-3 flex items-center justify-between gap-2 pt-2 border-t border-[#E1E1E1] dark:border-stone-800">
-          <button id="neshan-btn-details-${gallery.id}" class="text-[11px] text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] underline font-bold cursor-pointer">
-            مشاهده جزئیات کامل
-          </button>
-          <button id="neshan-btn-toggle-${gallery.id}" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
-        isSelected ? 'bg-rose-50 text-rose-700 hover:bg-rose-100' : 'bg-[#3D5B99] text-white hover:bg-[#F76B1C]'
-      }">
-            ${isSelected ? 'حذف از گشت' : '+ افزودن به گشت'}
-          </button>
-        </div>
-      `;
-
-      const popup = new nmp.Popup({ offset: 25, maxWidth: '290px' }).setDOMContent(popupDiv);
-
-      popup.on('open', () => {
-        const btnToggle = document.getElementById(`neshan-btn-toggle-${gallery.id}`);
-        if (btnToggle) {
-          btnToggle.onclick = () => {
-            onToggleGallery(gallery);
-            popup.remove();
-          };
-        }
-        const btnDetails = document.getElementById(`neshan-btn-details-${gallery.id}`);
-        if (btnDetails && onSelectForDetails) {
-          btnDetails.onclick = () => {
-            onSelectForDetails(gallery);
-            popup.remove();
-          };
-        }
-        const btnSetStart = document.getElementById(`neshan-btn-setstart-${gallery.id}`);
-        if (btnSetStart && onSetStartGallery) {
-          btnSetStart.onclick = () => {
-            onSetStartGallery(gallery.id);
-            popup.remove();
-          };
-        }
-      });
-
       const marker = new nmp.Marker({ element: el })
         .setLngLat([gallery.lng, gallery.lat])
-        .setPopup(popup)
         .addTo(map);
+
+      markersRef.current.push(marker);
 
       markersRef.current.push(marker);
 

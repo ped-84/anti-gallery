@@ -21,15 +21,19 @@ import { GoogleMapsIcon, WazeIcon, NeshanIcon, BaladIcon } from './NavIcons';
 interface GalleryDetailModalProps {
   gallery: Gallery | null;
   isSelected: boolean;
+  isStartGallery?: boolean;
   onClose: () => void;
   onToggle: (gallery: Gallery) => void;
+  onSetStart?: (galleryId: number) => void;
 }
 
 export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
   gallery,
   isSelected,
+  isStartGallery,
   onClose,
-  onToggle
+  onToggle,
+  onSetStart
 }) => {
   if (!gallery) return null;
 
@@ -38,8 +42,14 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
   const galleryLogoUrl = gallery.logoImage || gallery.image;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-stone-950/70 backdrop-blur-sm animate-fade-in font-sans">
-      <div className="clay-card relative w-full max-w-xl bg-white dark:bg-[#1a202c] rounded-3xl overflow-hidden flex flex-col max-h-[94vh] border border-[#E1E1E1] dark:border-stone-800 shadow-2xl">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-stone-950/70 backdrop-blur-sm animate-fade-in font-sans"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="clay-card relative w-full max-w-xl bg-white dark:bg-[#1a202c] rounded-3xl overflow-hidden flex flex-col max-h-[94vh] border border-[#E1E1E1] dark:border-stone-800 shadow-2xl"
+      >
         {/* Close button (Always accessible at top left) */}
         <button
           onClick={onClose}
@@ -274,6 +284,27 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
               <span className="text-sm font-bold">بلد</span>
             </a>
           </div>
+
+          {/* Set as Start Stop if in tour */}
+          {isSelected && (
+            <div className="pt-1">
+              {isStartGallery ? (
+                <div className="text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-300 dark:border-emerald-700/60 flex items-center justify-center gap-1.5 shadow-xs">
+                  <span>🟢</span>
+                  <span>این گالری به عنوان نقطه شروع (مبدأ گشت) انتخاب شده است</span>
+                </div>
+              ) : onSetStart ? (
+                <button
+                  type="button"
+                  onClick={() => onSetStart(gallery.id)}
+                  className="w-full clay-button clay-base text-xs font-bold py-2 px-3 text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] flex items-center justify-center gap-1.5 transition-all shadow-xs"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-[#F76B1C]" />
+                  <span>شروع گشت از این گالری (تغییر مبدأ)</span>
+                </button>
+              ) : null}
+            </div>
+          )}
 
           {/* Add / Remove from Tour Button */}
           <button

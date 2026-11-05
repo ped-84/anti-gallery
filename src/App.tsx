@@ -640,60 +640,60 @@ export default function App() {
                 )}
               </div>
 
-              {/* View filter tabs: Posters Only vs All Galleries + Sort Option */}
-              <div className="flex items-center justify-between gap-2.5 flex-wrap text-xs font-medium">
-                {/* Segmented Control for 3 View Tabs: This Week's Openings, All Active Exhibitions, All Galleries */}
-                <div className="flex items-center gap-1 p-1 bg-[#E1E1E1]/60 dark:bg-stone-800/80 rounded-2xl w-full sm:w-auto overflow-x-auto">
+              {/* View filter tabs & Controls (Spacious, multi-row, zero horizontal scroll) */}
+              <div className="space-y-2.5 w-full">
+                {/* 1. Segmented Control for 3 View Tabs: This Week's Openings, All Active Exhibitions, All Galleries */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-1.5 bg-[#E1E1E1]/60 dark:bg-stone-800/80 rounded-2xl w-full">
                   <button
                     type="button"
                     onClick={() => setGalleryFilterTab('this-week')}
-                    className={`flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
+                    className={`w-full py-3 sm:py-3.5 px-4 min-h-[46px] rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-xs sm:text-sm ${
                       galleryFilterTab === 'this-week'
-                        ? 'clay-base text-[#F76B1C] shadow-sm'
-                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                        ? 'clay-base text-[#F76B1C] shadow-sm ring-1 ring-[#F76B1C]/25'
+                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-white/40 dark:hover:bg-stone-700/40'
                     }`}
                   >
-                    <Flame className={`w-3.5 h-3.5 ${galleryFilterTab === 'this-week' ? 'text-[#F76B1C]' : 'text-amber-500'}`} />
+                    <Flame className={`w-4 h-4 ${galleryFilterTab === 'this-week' ? 'text-[#F76B1C]' : 'text-amber-500'}`} />
                     <span>افتتاحیه‌های این هفته ({toPersianDigits(totalThisWeek)})</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setGalleryFilterTab('all-active')}
-                    className={`flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
+                    className={`w-full py-3 sm:py-3.5 px-4 min-h-[46px] rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-xs sm:text-sm ${
                       galleryFilterTab === 'all-active'
-                        ? 'clay-base text-[#3D5B99] dark:text-[#A3C2E4] shadow-sm'
-                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                        ? 'clay-base text-[#3D5B99] dark:text-[#A3C2E4] shadow-sm ring-1 ring-[#3D5B99]/25'
+                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-white/40 dark:hover:bg-stone-700/40'
                     }`}
                   >
-                    <Palette className="w-3.5 h-3.5" />
+                    <Palette className="w-4 h-4" />
                     <span>نمایشگاه‌های جاری ({toPersianDigits(totalWithPosters)})</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setGalleryFilterTab('all')}
-                    className={`flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
+                    className={`w-full py-3 sm:py-3.5 px-4 min-h-[46px] rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-xs sm:text-sm ${
                       galleryFilterTab === 'all'
-                        ? 'clay-base text-[#3D5B99] dark:text-[#A3C2E4] shadow-sm'
-                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                        ? 'clay-base text-[#3D5B99] dark:text-[#A3C2E4] shadow-sm ring-1 ring-[#3D5B99]/25'
+                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-white/40 dark:hover:bg-stone-700/40'
                     }`}
                   >
-                    <Grid className="w-3.5 h-3.5" />
+                    <Grid className="w-4 h-4" />
                     <span>همه نگارخانه‌ها ({toPersianDigits(galleries.length)})</span>
                   </button>
                 </div>
 
-                {/* Sort & Neighborhood Controls with cohesive ClayDropdown */}
-                <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto">
+                {/* 2. Sort & Neighborhood Dropdowns Underneath (Taller, spacious, full-width grid) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
                   {/* Sort selector */}
                   <ClayDropdown
                     value={sortBy}
                     onChange={(val) => setSortBy(val as 'latest' | 'name')}
                     options={[
-                      { value: 'latest', label: 'جدیدترین رویدادها (پیش‌فرض)' },
-                      { value: 'name', label: 'بر اساس نام نگارخانه' }
+                      { value: 'latest', label: 'ترتیب: جدیدترین رویدادها (پیش‌فرض)' },
+                      { value: 'name', label: 'ترتیب: بر اساس نام نگارخانه' }
                     ]}
-                    prefix={<ArrowUpDown className="w-3.5 h-3.5" />}
-                    className="flex-1 sm:flex-none"
+                    prefix={<ArrowUpDown className="w-4 h-4" />}
+                    className="w-full"
                   />
 
                   {/* Neighborhood Dropdown */}
@@ -701,11 +701,11 @@ export default function App() {
                     value={selectedNeighborhood}
                     onChange={(val) => setSelectedNeighborhood(val)}
                     options={[
-                      { value: 'All', label: 'تمام محله‌ها' },
+                      { value: 'All', label: 'محدوده: تمام محله‌های تهران' },
                       ...neighborhoods.map((neigh) => ({ value: neigh, label: neigh }))
                     ]}
-                    prefix={<MapPin className="w-3.5 h-3.5" />}
-                    className="flex-1 sm:flex-none"
+                    prefix={<MapPin className="w-4 h-4" />}
+                    className="w-full"
                   />
                 </div>
               </div>
@@ -808,8 +808,10 @@ export default function App() {
       <GalleryDetailModal
         gallery={activeModalGallery}
         isSelected={activeModalGallery ? selectedGalleryIds.includes(activeModalGallery.id) : false}
+        isStartGallery={activeModalGallery ? startGalleryId === activeModalGallery.id : false}
         onClose={() => setActiveModalGallery(null)}
         onToggle={handleToggleGallery}
+        onSetStart={handleSetStartGallery}
       />
 
       <CuratedToursModal

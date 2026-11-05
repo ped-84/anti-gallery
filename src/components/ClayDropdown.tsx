@@ -69,21 +69,21 @@ export const ClayDropdown: React.FC<ClayDropdownProps> = ({
         </label>
       )}
 
-      {/* Trigger Button: Claymorphic style matching Stickdazzle theme */}
+      {/* Trigger Button: Claymorphic style matching Stickdazzle theme (Taller, spacious, clearer) */}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="clay-button clay-base w-full min-w-[140px] sm:min-w-[170px] py-2 pr-3.5 pl-9 text-xs font-bold text-[#1d2d4c] dark:text-white flex items-center justify-between gap-2 border border-[#E1E1E1] dark:border-stone-700 hover:border-[#3D5B99]/40 transition-all select-none focus:outline-none"
+        className="clay-button clay-base w-full min-w-[150px] sm:min-w-[180px] min-h-[46px] sm:min-h-[48px] py-2.5 sm:py-3 pr-4 pl-10 text-xs sm:text-sm font-bold text-[#1d2d4c] dark:text-white flex items-center justify-between gap-2.5 border border-[#E1E1E1] dark:border-stone-700 hover:border-[#3D5B99]/40 transition-all select-none focus:outline-none rounded-2xl"
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
-        <div className="flex items-center gap-2 truncate">
+        <div className="flex items-center gap-2.5 truncate">
           {prefix && <span className="text-[#3D5B99] dark:text-[#A3C2E4] shrink-0">{prefix}</span>}
           <span className="truncate">
             {selectedOption ? selectedOption.label : placeholder}
           </span>
           {selectedOption?.badge && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-[#3D5B99]/15 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0">
+            <span className="text-[11px] px-2 py-0.5 rounded-md bg-[#3D5B99]/15 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0">
               {selectedOption.badge}
             </span>
           )}
@@ -91,7 +91,7 @@ export const ClayDropdown: React.FC<ClayDropdownProps> = ({
 
         {/* ChevronDown with generous padding away from border */}
         <ChevronDown
-          className={`w-4 h-4 text-[#3D5B99] dark:text-[#A3C2E4] absolute left-3 top-1/2 -translate-y-1/2 transition-transform duration-200 shrink-0 ${
+          className={`w-4 h-4 sm:w-5 sm:h-5 text-[#3D5B99] dark:text-[#A3C2E4] absolute left-3.5 top-1/2 -translate-y-1/2 transition-transform duration-200 shrink-0 ${
             isOpen ? 'rotate-180 text-[#F76B1C]' : ''
           }`}
         />
@@ -110,7 +110,7 @@ export const ClayDropdown: React.FC<ClayDropdownProps> = ({
                   onChange(opt.value);
                   setIsOpen(false);
                 }}
-                className={`w-full py-2 px-3 text-xs font-bold rounded-xl flex items-center justify-between gap-2 transition-all text-right ${
+                className={`w-full py-2.5 px-3.5 text-xs sm:text-sm font-bold rounded-xl flex items-center justify-between gap-2 transition-all text-right ${
                   isSelected
                     ? 'bg-[#3D5B99]/10 text-[#3D5B99] dark:bg-[#A3C2E4]/15 dark:text-[#A3C2E4]'
                     : 'text-stone-700 dark:text-stone-300 hover:bg-[#f0f4fa] dark:hover:bg-stone-800'
