@@ -460,8 +460,8 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       {/* Map Container */}
       <div ref={mapContainerRef} className="w-full h-full overflow-hidden" />
 
-      {/* Floating Action Controls */}
-      <div className="absolute top-4 left-4 z-[400] flex flex-col gap-2">
+      {/* Floating Action Controls (z-10 so modal at z-[1000] cleanly covers them) */}
+      <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
         {/* Toggle Live Traffic */}
         <button
           onClick={handleToggleTraffic}
@@ -504,7 +504,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       </div>
 
       {/* Map Legend Overlay */}
-      <div className="absolute bottom-4 right-4 z-[400] clay-card bg-white/95 dark:bg-[#161a22]/95 px-3 py-1.5 text-xs text-stone-600 dark:text-stone-300 hidden sm:flex items-center gap-3 border border-[#E1E1E1] dark:border-stone-800">
+      <div className="absolute bottom-4 right-4 z-10 clay-card bg-white/95 dark:bg-[#161a22]/95 px-3 py-1.5 text-xs text-stone-600 dark:text-stone-300 hidden sm:flex items-center gap-3 border border-[#E1E1E1] dark:border-stone-800">
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full bg-[#3D5B99] inline-block"></span>
           <span>در برنامه گشت</span>

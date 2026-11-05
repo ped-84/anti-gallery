@@ -640,45 +640,51 @@ export default function App() {
                 )}
               </div>
 
-              {/* View filter tabs & Controls (Spacious, multi-row, zero horizontal scroll) */}
+              {/* View filter tabs & Controls (Authentic Claymorphic Segmented Control) */}
               <div className="space-y-2.5 w-full">
-                {/* 1. Segmented Control for 3 View Tabs: This Week's Openings, All Active Exhibitions, All Galleries */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-1.5 bg-[#E1E1E1]/60 dark:bg-stone-800/80 rounded-2xl w-full">
+                {/* 1. Sleek Claymorphic Segmented Control: 3 tabs on one line, no scroll, authentic Clay style */}
+                <div className="clay-card p-1.5 flex items-center gap-1.5 bg-[#f0f3f8] dark:bg-stone-900 rounded-2xl w-full border border-[#E1E1E1] dark:border-stone-800 shadow-xs">
                   <button
                     type="button"
                     onClick={() => setGalleryFilterTab('this-week')}
-                    className={`w-full py-3 sm:py-3.5 px-4 min-h-[46px] rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-xs sm:text-sm ${
+                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 text-xs sm:text-sm text-center ${
                       galleryFilterTab === 'this-week'
-                        ? 'clay-base text-[#F76B1C] shadow-sm ring-1 ring-[#F76B1C]/25'
-                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-white/40 dark:hover:bg-stone-700/40'
+                        ? 'clay-button clay-base text-[#F76B1C] shadow-sm'
+                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
                     }`}
                   >
-                    <Flame className={`w-4 h-4 ${galleryFilterTab === 'this-week' ? 'text-[#F76B1C]' : 'text-amber-500'}`} />
-                    <span>افتتاحیه‌های این هفته ({toPersianDigits(totalThisWeek)})</span>
+                    <Flame className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${galleryFilterTab === 'this-week' ? 'text-[#F76B1C]' : 'text-amber-500'}`} />
+                    <span className="hidden sm:inline">افتتاحیه‌های این هفته</span>
+                    <span className="sm:hidden">این هفته</span>
+                    <span className="text-[11px] font-mono opacity-85">({toPersianDigits(totalThisWeek)})</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setGalleryFilterTab('all-active')}
-                    className={`w-full py-3 sm:py-3.5 px-4 min-h-[46px] rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-xs sm:text-sm ${
+                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 text-xs sm:text-sm text-center ${
                       galleryFilterTab === 'all-active'
-                        ? 'clay-base text-[#3D5B99] dark:text-[#A3C2E4] shadow-sm ring-1 ring-[#3D5B99]/25'
-                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-white/40 dark:hover:bg-stone-700/40'
+                        ? 'clay-button clay-base text-[#3D5B99] dark:text-[#A3C2E4] shadow-sm'
+                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
                     }`}
                   >
-                    <Palette className="w-4 h-4" />
-                    <span>نمایشگاه‌های جاری ({toPersianDigits(totalWithPosters)})</span>
+                    <Palette className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                    <span className="hidden sm:inline">نمایشگاه‌های جاری</span>
+                    <span className="sm:hidden">جاری</span>
+                    <span className="text-[11px] font-mono opacity-85">({toPersianDigits(totalWithPosters)})</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setGalleryFilterTab('all')}
-                    className={`w-full py-3 sm:py-3.5 px-4 min-h-[46px] rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-xs sm:text-sm ${
+                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 text-xs sm:text-sm text-center ${
                       galleryFilterTab === 'all'
-                        ? 'clay-base text-[#3D5B99] dark:text-[#A3C2E4] shadow-sm ring-1 ring-[#3D5B99]/25'
-                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-white/40 dark:hover:bg-stone-700/40'
+                        ? 'clay-button clay-base text-[#3D5B99] dark:text-[#A3C2E4] shadow-sm'
+                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
                     }`}
                   >
-                    <Grid className="w-4 h-4" />
-                    <span>همه نگارخانه‌ها ({toPersianDigits(galleries.length)})</span>
+                    <Grid className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                    <span className="hidden sm:inline">همه نگارخانه‌ها</span>
+                    <span className="sm:hidden">همه</span>
+                    <span className="text-[11px] font-mono opacity-85">({toPersianDigits(galleries.length)})</span>
                   </button>
                 </div>
 
