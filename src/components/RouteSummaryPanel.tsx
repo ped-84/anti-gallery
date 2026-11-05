@@ -368,7 +368,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                   <button
                     onClick={() => onRemoveGallery(g.id)}
                     className="text-stone-400 hover:text-rose-600 p-1"
-                    title="حذف از تور"
+                    title="حذف از گشت"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -535,12 +535,12 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
               {copied ? (
                 <>
                   <Check className="w-4 h-4 text-emerald-600" />
-                  <span className="text-emerald-700 dark:text-emerald-400 font-bold">متن برنامه و آدرس‌ها کپی شد!</span>
+                  <span className="text-emerald-700 dark:text-emerald-400 font-bold">متن برنامه بازدید کپی شد!</span>
                 </>
               ) : (
                 <>
                   <Share2 className="w-4 h-4 text-[#3D5B99]" />
-                  <span>کپی متن و مشخصات برنامه بازدید</span>
+                  <span>کپی متن برنامه بازدید</span>
                 </>
               )}
             </button>

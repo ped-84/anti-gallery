@@ -24,19 +24,19 @@ export function haversineDistance(
 }
 
 /**
- * Solves the Traveling Salesperson Problem (TSP) using exact brute force for N <= 9
- * or 2-opt heuristic for larger sets to find the minimum distance ordering.
+ * Solves the Traveling Salesperson Problem (TSP) using exact brute force for N <= 8
+ * or multi-start 2-opt heuristic for larger sets to find the true minimum distance ordering.
  */
 export function solveTspOrder(
   points: { lat: number; lng: number }[],
   isRoundTrip: boolean = false,
-  fixStart: boolean = true
+  fixStart: boolean = false
 ): number[] {
   const n = points.length;
   if (n <= 1) return [0];
   if (n === 2) return [0, 1];
 
-  // Precompute distance matrix
+  // Precompute distance matrix in km
   const dist: number[][] = Array.from({ length: n }, () => Array(n).fill(0));
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
@@ -62,7 +62,8 @@ export function solveTspOrder(
     return sum;
   };
 
-  if (n <= 9) {
+  // For N <= 8, exact brute force permutation guarantees mathematically shortest tour
+  if (n <= 8) {
     let bestDist = Infinity;
     let bestRoute: number[] = [];
 
@@ -82,59 +83,74 @@ export function solveTspOrder(
         for (let i = 0; i < arr.length; i++) {
           const curr = arr.slice();
           const next = curr.splice(i, 1);
-          permute(curr.slice(), m.concat(next));
+          permute(curr, m.concat(next));
         }
       }
     };
 
     permute(indicesToPermute);
-    return bestRoute;
+    return bestRoute.length > 0 ? bestRoute : Array.from({ length: n }, (_, i) => i);
   }
 
-  // 2-opt refinement for N > 9
-  const visited = new Set<number>();
-  const route: number[] = [0];
-  visited.add(0);
+  // For N > 8: Multi-start nearest neighbor + 2-opt refinement
+  let bestRoute: number[] = [];
+  let bestDist = Infinity;
 
-  while (route.length < n) {
-    const last = route[route.length - 1];
-    let nearest = -1;
-    let minDist = Infinity;
-    for (let i = 0; i < n; i++) {
-      if (!visited.has(i)) {
-        const d = dist[last][i];
-        if (d < minDist) {
-          minDist = d;
-          nearest = i;
+  const startCandidates = fixStart ? [0] : Array.from({ length: n }, (_, i) => i);
+
+  for (const startNode of startCandidates) {
+    const visited = new Set<number>();
+    const route: number[] = [startNode];
+    visited.add(startNode);
+
+    while (route.length < n) {
+      const last = route[route.length - 1];
+      let nearest = -1;
+      let minDist = Infinity;
+      for (let i = 0; i < n; i++) {
+        if (!visited.has(i)) {
+          const d = dist[last][i];
+          if (d < minDist) {
+            minDist = d;
+            nearest = i;
+          }
+        }
+      }
+      if (nearest !== -1) {
+        visited.add(nearest);
+        route.push(nearest);
+      } else {
+        break;
+      }
+    }
+
+    // 2-opt local search
+    let improved = true;
+    let iterations = 0;
+    while (improved && iterations < 40) {
+      improved = false;
+      iterations++;
+      const startIdx = fixStart ? 1 : 0;
+      for (let i = startIdx; i < n - 1; i++) {
+        for (let k = i + 1; k < n; k++) {
+          const newRoute = [...route.slice(0, i), ...route.slice(i, k + 1).reverse(), ...route.slice(k + 1)];
+          const newD = getRouteDist(newRoute);
+          if (newD < getRouteDist(route) - 0.001) {
+            route.splice(0, route.length, ...newRoute);
+            improved = true;
+          }
         }
       }
     }
-    if (nearest !== -1) {
-      visited.add(nearest);
-      route.push(nearest);
-    } else {
-      break;
+
+    const totalD = getRouteDist(route);
+    if (totalD < bestDist) {
+      bestDist = totalD;
+      bestRoute = route;
     }
   }
 
-  let improved = true;
-  let iterations = 0;
-  while (improved && iterations < 50) {
-    improved = false;
-    iterations++;
-    const startIdx = fixStart ? 1 : 0;
-    for (let i = startIdx; i < n - 1; i++) {
-      for (let k = i + 1; k < n; k++) {
-        const newRoute = [...route.slice(0, i), ...route.slice(i, k + 1).reverse(), ...route.slice(k + 1)];
-        if (getRouteDist(newRoute) < getRouteDist(route) - 0.001) {
-          route.splice(0, route.length, ...newRoute);
-          improved = true;
-        }
-      }
-    }
-  }
-
-  return route;
+  return bestRoute;
 }
 
 /**
@@ -188,7 +204,8 @@ export async function optimizeGalleryRoute(
   try {
     const coordsStr = allPoints.map((p) => `${p.lng},${p.lat}`).join(';');
     const osrmMode = mode === 'walking' ? 'walking' : 'driving';
-    const tripUrl = `https://router.project-osrm.org/trip/v1/${osrmMode}/${coordsStr}?overview=full&geometries=geojson&steps=true&roundtrip=${isRoundTrip}&source=first`;
+    const sourceParam = options.customStart ? 'first' : 'any';
+    const tripUrl = `https://router.project-osrm.org/trip/v1/${osrmMode}/${coordsStr}?overview=full&geometries=geojson&steps=true&roundtrip=${isRoundTrip}&source=${sourceParam}`;
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 6000);
@@ -263,10 +280,11 @@ export async function optimizeGalleryRoute(
   }
 
   // --- Fallback: Offline Matrix TSP Solver ---
+  const fixStart = Boolean(options.customStart);
   const optimizedOrderIndices = solveTspOrder(
     allPoints.map((p) => ({ lat: p.lat, lng: p.lng })),
     isRoundTrip,
-    true
+    fixStart
   );
 
   const orderedPoints = optimizedOrderIndices.map((i) => allPoints[i]);

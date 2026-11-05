@@ -65,17 +65,36 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         '.mapboxgl-ctrl-top-left',
         '.mapboxgl-ctrl-top-right',
         '.mapboxgl-ctrl-attrib',
+        '.mapboxgl-ctrl-attrib-inner',
+        '.mapboxgl-ctrl-attrib-button',
+        '.mapboxgl-compact',
         '.mapboxgl-ctrl-logo',
         'a.mapboxgl-ctrl-logo',
         '.neshan-watermark',
         '.neshan-logo',
         'a[href*="neshan.org"]',
-        'a[href*="mapbox.com"]'
+        'a[href*="mapbox.com"]',
+        'a[href*="openstreetmap.org"]',
+        '[class*="mapboxgl-ctrl"]'
       ];
       selectors.forEach((sel) => {
-        mapContainerRef.current?.querySelectorAll(sel).forEach((el) => {
+        mapContainerRef.current?.querySelectorAll(sel).forEach((el: any) => {
+          el.style.display = 'none';
           el.remove();
         });
+      });
+
+      // Also search by text content for any stubborn OSM or Neshan text nodes
+      const allDivs = mapContainerRef.current.querySelectorAll('div, a, span');
+      allDivs.forEach((el: any) => {
+        const text = el.textContent || '';
+        if (text.includes('OSM') || text.includes('©') || text.includes('Neshan') || text.includes('نشان')) {
+          // If this is an attribution overlay (not user legend or popup)
+          if (!el.closest('.clay-card') && !el.closest('.mapboxgl-popup') && !el.closest('.cursor-pointer')) {
+            el.style.display = 'none';
+            el.remove();
+          }
+        }
       });
     };
 
@@ -143,10 +162,27 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         map.on('render', () => {
           purgeNeshanWatermarks();
         });
+        map.on('sourcedata', () => {
+          purgeNeshanWatermarks();
+        });
+        map.on('styledata', () => {
+          purgeNeshanWatermarks();
+        });
       } catch (err) {
         console.error('[Neshan] Map init error:', err);
       }
     };
+
+    let mutationObserver: MutationObserver | null = null;
+    if (mapContainerRef.current && window.MutationObserver) {
+      mutationObserver = new MutationObserver(() => {
+        purgeNeshanWatermarks();
+      });
+      mutationObserver.observe(mapContainerRef.current, {
+        childList: true,
+        subtree: true
+      });
+    }
 
     let resizeObserver: ResizeObserver | null = null;
     if (mapContainerRef.current && window.ResizeObserver) {
@@ -171,12 +207,15 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
     }
 
     // Secondary watermark purge timer to catch delayed SDK injections
-    const purgeInterval = setInterval(purgeNeshanWatermarks, 300);
-    const purgeTimeout = setTimeout(() => clearInterval(purgeInterval), 5000);
+    const purgeInterval = setInterval(purgeNeshanWatermarks, 200);
+    const purgeTimeout = setTimeout(() => clearInterval(purgeInterval), 6000);
 
     return () => {
       clearInterval(purgeInterval);
       clearTimeout(purgeTimeout);
+      if (mutationObserver) {
+        mutationObserver.disconnect();
+      }
       if (resizeObserver) {
         resizeObserver.disconnect();
       }
@@ -397,7 +436,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           <button id="neshan-btn-toggle-${gallery.id}" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
         isSelected ? 'bg-rose-50 text-rose-700 hover:bg-rose-100' : 'bg-[#3D5B99] text-white hover:bg-[#F76B1C]'
       }">
-            ${isSelected ? 'حذف از تور' : '+ افزودن'}
+            ${isSelected ? 'حذف از گشت' : '+ افزودن به گشت'}
           </button>
         </div>
       `;
@@ -519,7 +558,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       <div className="absolute bottom-4 right-4 z-[400] clay-card bg-white/95 dark:bg-[#161a22]/95 px-3 py-1.5 text-xs text-stone-600 dark:text-stone-300 hidden sm:flex items-center gap-3 border border-[#E1E1E1] dark:border-stone-800">
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full bg-[#3D5B99] inline-block"></span>
-          <span>در برنامه تور</span>
+          <span>در برنامه گشت</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full bg-[#F76B1C] inline-block"></span>

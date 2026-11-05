@@ -65,6 +65,34 @@
       html, body, *, input, button, select, textarea {
         font-family: 'Shabnam FD', 'Shabnam', system-ui, sans-serif !important;
       }
+      /* Eradicate any Mapbox/Neshan attribution, logo, or OSM copyright watermark */
+      .mapboxgl-ctrl-attrib,
+      .mapboxgl-ctrl-attrib-inner,
+      .mapboxgl-ctrl-attrib-button,
+      .mapboxgl-compact,
+      .mapboxgl-ctrl-bottom-right,
+      .mapboxgl-ctrl-bottom-left,
+      .mapboxgl-ctrl-top-right,
+      .mapboxgl-ctrl-top-left,
+      .mapboxgl-ctrl-logo,
+      a.mapboxgl-ctrl-logo,
+      .neshan-watermark,
+      .neshan-logo,
+      [class*="mapboxgl-ctrl"],
+      [class*="mapboxgl-ctrl-attrib"] {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        font-size: 0 !important;
+        width: 0 !important;
+        height: 0 !important;
+        max-width: 0 !important;
+        max-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+      }
     </style>
   </head>
   <body class="bg-[#f0f2f6] dark:bg-[#13161c] text-stone-800 dark:text-stone-100 antialiased font-sans transition-colors duration-300">

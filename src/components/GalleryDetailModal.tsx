@@ -287,12 +287,12 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
             {isSelected ? (
               <>
                 <Check className="w-4 h-4 text-emerald-600" />
-                <span>در برنامه تور شما قرار دارد (حذف از تور)</span>
+                <span>در برنامه گشت شما قرار دارد (حذف از گشت)</span>
               </>
             ) : (
               <>
                 <Plus className="w-4 h-4" />
-                <span>+ افزودن این نگارخانه به برنامه بازدید</span>
+                <span>+ افزودن به گشت</span>
               </>
             )}
           </button>

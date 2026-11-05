@@ -103,7 +103,9 @@ export default function App() {
   };
 
   const selectedGalleries = useMemo(() => {
-    return galleries.filter((g) => selectedGalleryIds.includes(g.id));
+    return selectedGalleryIds
+      .map((id) => galleries.find((g) => g.id === id))
+      .filter((g): g is Gallery => !!g);
   }, [galleries, selectedGalleryIds]);
 
   const totalWithPosters = useMemo(() => {

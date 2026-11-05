@@ -214,7 +214,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
           ) : (
             <>
               <Plus className="w-3.5 h-3.5 text-[#3D5B99] dark:text-[#A3C2E4]" />
-              <span>+ افزودن به تور</span>
+              <span>+ افزودن به گشت</span>
             </>
           )}
         </button>
