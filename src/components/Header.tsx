@@ -11,7 +11,7 @@ interface HeaderProps {
   onToggleDarkMode: () => void;
 }
 
-export const APP_VERSION = 'بتا V 1.045';
+export const APP_VERSION = 'بتا V 1.049';
 
 export const Header: React.FC<HeaderProps> = ({
   selectedCount,
@@ -31,17 +31,17 @@ export const Header: React.FC<HeaderProps> = ({
               <Compass className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
             </div>
             <div className="flex flex-col justify-center">
-              <div className="flex items-center gap-2 sm:gap-2.5">
-                <span className="text-lg sm:text-2xl font-black tracking-tight text-[#1c2944] dark:text-white block leading-tight">
-                  گالری‌گردی
-                </span>
-                <span className="px-2 sm:px-2.5 py-0.5 text-[9px] sm:text-[10px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug shrink-0">
+              <span className="text-lg sm:text-2xl font-black tracking-tight text-[#1c2944] dark:text-white block leading-tight">
+                گالری‌گردی
+              </span>
+              <div className="flex items-center gap-2 mt-1">
+                <span className="px-2 py-0.5 text-[9px] sm:text-[10px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug shrink-0 font-mono">
                   {APP_VERSION}
                 </span>
+                <p className="text-[10px] sm:text-[11px] font-medium text-[#3D5B99] dark:text-[#A3C2E4] hidden xs:block">
+                  مسیریاب هوشمند گالری‌های هنری
+                </p>
               </div>
-              <p className="text-[10px] sm:text-[11px] font-medium text-[#3D5B99] dark:text-[#A3C2E4] mt-1 hidden xs:block">
-                مسیریاب هوشمند گالری‌های هنری
-              </p>
             </div>
           </a>
         </div>
