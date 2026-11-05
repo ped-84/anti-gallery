@@ -43,20 +43,39 @@ const STORAGE_KEYS = {
   DARK_MODE: 'gallerygardi_dark_mode'
 };
 
+const LEGACY_DEFAULT_IDS = [1023, 485, 25, 182];
+
+function isLegacyDefaultList(ids: any): boolean {
+  if (!Array.isArray(ids) || ids.length !== 4) return false;
+  return ids.every((id) => LEGACY_DEFAULT_IDS.includes(id));
+}
+
 export default function App() {
   const galleries = rawGalleriesData as Gallery[];
 
-  // Restore user selected galleries or fallback to initial starter sample
+  // Restore user selected galleries or default to an empty itinerary
   const [selectedGalleryIds, setSelectedGalleryIds] = useState<number[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.SELECTED_IDS);
       if (saved !== null) {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          // If the stored selection is the legacy placeholder sample, purge it
+          if (isLegacyDefaultList(parsed)) {
+            localStorage.removeItem(STORAGE_KEYS.SELECTED_IDS);
+            localStorage.removeItem(STORAGE_KEYS.ORDERED_IDS);
+            localStorage.removeItem(STORAGE_KEYS.START_ID);
+            localStorage.removeItem(STORAGE_KEYS.END_ID);
+            return [];
+          }
+          return parsed;
+        }
       }
     } catch (e) {
       console.warn('Storage read error:', e);
     }
-    return [1023, 485, 25, 182];
+    // Clean slate: user starts with empty tour until they pick galleries
+    return [];
   });
 
   const [routeResult, setRouteResult] = useState<RouteOptimizationResult | null>(null);
@@ -764,9 +783,11 @@ export default function App() {
                 routeResult={routeResult}
                 selectedGalleries={selectedGalleries}
                 isOptimizing={isOptimizing}
-                onRemoveGallery={(id) =>
-                  setSelectedGalleryIds((prev) => prev.filter((gid) => gid !== id))
-                }
+                onRemoveGallery={(id) => {
+                  if (startGalleryId === id) setStartGalleryId(null);
+                  if (endGalleryId === id) setEndGalleryId(null);
+                  setSelectedGalleryIds((prev) => prev.filter((gid) => gid !== id));
+                }}
                 onClearAll={handleClearAll}
                 onRecalculate={(m, rt, tc) => runRouteOptimization(m, rt, tc)}
                 onSelectGallery={(g) => {
