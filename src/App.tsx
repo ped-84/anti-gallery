@@ -262,7 +262,7 @@ export default function App() {
           <div className="flex items-center gap-2.5 flex-wrap">
             <span className="w-2.5 h-2.5 rounded-full bg-[#F76B1C] inline-block shadow-sm shrink-0"></span>
             <span className="truncate">
-              <strong>{toPersianDigits(totalWithPosters)} نمایشگاه جاری با پوستر رسمی</strong> از میان {toPersianDigits(galleries.length)} نگارخانه
+              <strong>{toPersianDigits(totalWithPosters)} نمایشگاه جاری</strong> از میان {toPersianDigits(galleries.length)} نگارخانه
             </span>
 
             {/* Scheduled Auto-Sync Status Badge */}
@@ -395,7 +395,7 @@ export default function App() {
                     }`}
                   >
                     <Palette className="w-3.5 h-3.5" />
-                    <span>نمایشگاه‌های جاری با پوستر ({toPersianDigits(totalWithPosters)})</span>
+                    <span>نمایشگاه‌های جاری ({toPersianDigits(totalWithPosters)})</span>
                   </button>
                   <button
                     type="button"

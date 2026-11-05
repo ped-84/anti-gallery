@@ -1,9 +1,11 @@
 import React from 'react';
 
+const BASE = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+
 // Google Maps Icon (Official Pin)
 export const GoogleMapsIcon: React.FC<{ className?: string }> = ({ className = 'w-8 h-8' }) => (
   <img
-    src="/assets/google-maps-logo.png"
+    src={`${BASE}assets/google-maps-logo.png`}
     alt="Google Maps"
     className={`${className} object-contain`}
   />
@@ -12,7 +14,7 @@ export const GoogleMapsIcon: React.FC<{ className?: string }> = ({ className = '
 // Waze Icon (Official Cyan car)
 export const WazeIcon: React.FC<{ className?: string }> = ({ className = 'w-8 h-8' }) => (
   <img
-    src="/assets/waze-logo.png"
+    src={`${BASE}assets/waze-logo.png`}
     alt="Waze"
     className={`${className} object-contain`}
   />
@@ -21,7 +23,7 @@ export const WazeIcon: React.FC<{ className?: string }> = ({ className = 'w-8 h-
 // Neshan Icon (Official Compass logo with green/teal center)
 export const NeshanIcon: React.FC<{ className?: string }> = ({ className = 'w-8 h-8' }) => (
   <img
-    src="/assets/neshan-logo.png"
+    src={`${BASE}assets/neshan-logo.png`}
     alt="نشان"
     className={`${className} object-contain`}
   />
@@ -30,10 +32,11 @@ export const NeshanIcon: React.FC<{ className?: string }> = ({ className = 'w-8 
 // Balad Icon (Official Purple logo with yellow pin)
 export const BaladIcon: React.FC<{ className?: string }> = ({ className = 'w-8 h-8' }) => (
   <img
-    src="/assets/balad-logo.png"
+    src={`${BASE}assets/balad-logo.png`}
     alt="بلد"
     className={`${className} object-contain rounded-md`}
   />
 );
+
 
 
