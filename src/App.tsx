@@ -26,13 +26,39 @@ import {
 
 const STICKDAZZLE_THEMES = ['darkblue', 'orange', 'softblue', 'gray'] as const;
 
+const STORAGE_KEYS = {
+  SELECTED_IDS: 'gallerygardi_selected_ids',
+  START_ID: 'gallerygardi_start_id',
+  END_ID: 'gallerygardi_end_id',
+  ORDERED_IDS: 'gallerygardi_ordered_ids',
+  DARK_MODE: 'gallerygardi_dark_mode'
+};
+
 export default function App() {
   const galleries = rawGalleriesData as Gallery[];
-  // Default sample (4 galleries with verified active posters & opening dates)
-  const [selectedGalleryIds, setSelectedGalleryIds] = useState<number[]>([1023, 485, 25, 182]);
+
+  // Restore user selected galleries or fallback to initial starter sample
+  const [selectedGalleryIds, setSelectedGalleryIds] = useState<number[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.SELECTED_IDS);
+      if (saved !== null) {
+        return JSON.parse(saved);
+      }
+    } catch (e) {
+      console.warn('Storage read error:', e);
+    }
+    return [1023, 485, 25, 182];
+  });
+
   const [routeResult, setRouteResult] = useState<RouteOptimizationResult | null>(null);
   const [isOptimizing, setIsOptimizing] = useState<boolean>(false);
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.DARK_MODE);
+      if (saved !== null) return JSON.parse(saved);
+    } catch {}
+    return false;
+  });
 
   // Responsive mobile view tab ('catalog' vs 'map')
   const [mobileActiveTab, setMobileActiveTab] = useState<'catalog' | 'map'>('catalog');
@@ -98,6 +124,9 @@ export default function App() {
       } else {
         document.documentElement.classList.remove('dark');
       }
+      try {
+        localStorage.setItem(STORAGE_KEYS.DARK_MODE, JSON.stringify(next));
+      } catch {}
       return next;
     });
   };
@@ -182,8 +211,21 @@ export default function App() {
     });
   }, [galleries, searchQuery, selectedNeighborhood, filterActivePostersOnly, sortBy]);
 
-  const [startGalleryId, setStartGalleryId] = useState<number | null>(null);
-  const [endGalleryId, setEndGalleryId] = useState<number | null>(null);
+  const [startGalleryId, setStartGalleryId] = useState<number | null>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.START_ID);
+      if (saved !== null) return JSON.parse(saved);
+    } catch {}
+    return null;
+  });
+
+  const [endGalleryId, setEndGalleryId] = useState<number | null>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.END_ID);
+      if (saved !== null) return JSON.parse(saved);
+    } catch {}
+    return null;
+  });
 
   const runRouteOptimization = async (
     mode: 'driving' | 'walking' = routeResult?.mode || 'driving',
@@ -210,8 +252,74 @@ export default function App() {
     }
   };
 
+  // Sync state changes to localStorage
   useEffect(() => {
-    runRouteOptimization('driving', false, 'peak');
+    try {
+      localStorage.setItem(STORAGE_KEYS.SELECTED_IDS, JSON.stringify(selectedGalleryIds));
+    } catch {}
+  }, [selectedGalleryIds]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.START_ID, JSON.stringify(startGalleryId));
+    } catch {}
+  }, [startGalleryId]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.END_ID, JSON.stringify(endGalleryId));
+    } catch {}
+  }, [endGalleryId]);
+
+  useEffect(() => {
+    if (routeResult?.orderedGalleries && routeResult.orderedGalleries.length > 0) {
+      try {
+        const order = routeResult.orderedGalleries.map((g) => g.id);
+        localStorage.setItem(STORAGE_KEYS.ORDERED_IDS, JSON.stringify(order));
+      } catch {}
+    } else if (selectedGalleryIds.length === 0) {
+      try {
+        localStorage.removeItem(STORAGE_KEYS.ORDERED_IDS);
+      } catch {}
+    }
+  }, [routeResult, selectedGalleryIds]);
+
+  // Restore saved itinerary order or calculate on mount
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    }
+
+    try {
+      const savedOrdered = localStorage.getItem(STORAGE_KEYS.ORDERED_IDS);
+      if (savedOrdered) {
+        const orderedIds: number[] = JSON.parse(savedOrdered);
+        const isValid =
+          orderedIds.length === selectedGalleryIds.length &&
+          orderedIds.every((id) => selectedGalleryIds.includes(id));
+
+        if (isValid && orderedIds.length >= 2) {
+          const matchingGalleries = orderedIds
+            .map((id) => galleries.find((g) => g.id === id))
+            .filter((g): g is Gallery => !!g);
+
+          if (matchingGalleries.length === orderedIds.length) {
+            calculateFixedRoute(matchingGalleries).then((res) => {
+              setRouteResult(res);
+            }).catch(() => {
+              runRouteOptimization('driving', false, 'peak', startGalleryId, endGalleryId);
+            });
+            return;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Restore order note:', e);
+    }
+
+    if (selectedGalleries.length >= 2) {
+      runRouteOptimization('driving', false, 'peak', startGalleryId, endGalleryId);
+    }
   }, []);
 
   const handleToggleGallery = (gallery: Gallery) => {
@@ -318,6 +426,19 @@ export default function App() {
       null,
       null
     );
+  };
+
+  const handleClearAll = () => {
+    setSelectedGalleryIds([]);
+    setStartGalleryId(null);
+    setEndGalleryId(null);
+    setRouteResult(null);
+    try {
+      localStorage.setItem(STORAGE_KEYS.SELECTED_IDS, JSON.stringify([]));
+      localStorage.removeItem(STORAGE_KEYS.ORDERED_IDS);
+      localStorage.removeItem(STORAGE_KEYS.START_ID);
+      localStorage.removeItem(STORAGE_KEYS.END_ID);
+    } catch {}
   };
 
   const handleSelectCuratedTour = (tour: PersianCuratedTour) => {
@@ -607,7 +728,7 @@ export default function App() {
                 onRemoveGallery={(id) =>
                   setSelectedGalleryIds((prev) => prev.filter((gid) => gid !== id))
                 }
-                onClearAll={() => setSelectedGalleryIds([])}
+                onClearAll={handleClearAll}
                 onRecalculate={(m, rt, tc) => runRouteOptimization(m, rt, tc)}
                 onSelectGallery={(g) => {
                   setHighlightedGalleryId(g.id);
