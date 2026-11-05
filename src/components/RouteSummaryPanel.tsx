@@ -501,36 +501,40 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                         </div>
                       )}
 
-                      {/* Explicit Start / End Point Controls */}
+                      {/* Distinct Start / End Point Controls & Badges */}
                       <div className="mt-2.5 pt-2 border-t border-stone-100 dark:border-stone-800/80 flex items-center justify-between gap-2 flex-wrap text-[11px]">
                         {isFirst ? (
-                          <span className="inline-flex items-center gap-1 font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 px-2.5 py-1 rounded-lg border border-blue-200/50 dark:border-blue-800/40">
-                            <span>🚩</span> مبدأ گشت (توقف ۱)
+                          <span className="inline-flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1 rounded-xl border border-emerald-300 dark:border-emerald-700/60 shadow-xs">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span>مبدأ گشت</span>
                           </span>
                         ) : (
                           <button
                             type="button"
                             onClick={() => onSetStartGallery?.(gallery.id)}
-                            className="inline-flex items-center gap-1 font-bold text-[#1856C7] dark:text-[#93c5fd] hover:text-[#F76B1C] bg-[#edf3ff] dark:bg-blue-950/30 px-2.5 py-1 rounded-lg hover:scale-105 active:scale-95 transition-all"
+                            className="inline-flex items-center gap-1.5 font-bold text-[#1856C7] dark:text-[#93c5fd] hover:text-white hover:bg-[#1856C7] bg-[#edf3ff] dark:bg-blue-950/40 px-3 py-1 rounded-xl border border-blue-200 dark:border-blue-800/50 hover:scale-105 active:scale-95 transition-all shadow-2xs"
                             title="این گالری به عنوان نقطه شروع تعیین شده و باقی مسیر از اینجا بهینه می‌شود"
                           >
-                            <span>🚩</span> شروع گشت از اینجا
+                            <span>📍</span>
+                            <span>شروع از این گالری</span>
                           </button>
                         )}
 
                         {!routeResult.isRoundTrip && (
                           isLast ? (
-                            <span className="inline-flex items-center gap-1 font-bold text-[#F76B1C] bg-orange-50 dark:bg-orange-950/40 px-2.5 py-1 rounded-lg border border-orange-200/50 dark:border-orange-800/40">
-                              <span>🏁</span> مقصد نهایی (توقف {toPersianDigits(idx + 1)})
+                            <span className="inline-flex items-center gap-1.5 font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 px-3 py-1 rounded-xl border border-amber-300 dark:border-amber-700/60 shadow-xs">
+                              <span>🏁</span>
+                              <span>مقصد نهایی</span>
                             </span>
                           ) : (
                             <button
                               type="button"
                               onClick={() => onSetEndGallery?.(gallery.id)}
-                              className="inline-flex items-center gap-1 font-medium text-stone-600 dark:text-stone-400 hover:text-[#F76B1C] bg-stone-100 dark:bg-stone-800 px-2.5 py-1 rounded-lg hover:scale-105 active:scale-95 transition-all"
+                              className="inline-flex items-center gap-1.5 font-medium text-stone-600 dark:text-stone-300 hover:text-white hover:bg-[#F76B1C] bg-stone-100 dark:bg-stone-800 px-3 py-1 rounded-xl border border-stone-200 dark:border-stone-700 hover:scale-105 active:scale-95 transition-all shadow-2xs"
                               title="تعیین این گالری به عنوان مقصد پایانی"
                             >
-                              <span>🏁</span> پایان در اینجا
+                              <span>🏁</span>
+                              <span>پایان در اینجا</span>
                             </button>
                           )
                         )}

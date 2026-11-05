@@ -420,12 +420,12 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       let startPointButtonHtml = '';
       if (orderNum !== undefined) {
         if (orderNum === 1) {
-          startPointButtonHtml = `<div class="mt-1.5 text-[10px] font-bold text-blue-600 dark:text-blue-400">🚩 مبدأ گشت (توقف ۱)</div>`;
+          startPointButtonHtml = `<div class="mt-2 text-[11px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-lg inline-flex items-center gap-1.5 border border-emerald-300 dark:border-emerald-700/60"><span>🟢</span> مبدأ گشت</div>`;
         } else if (onSetStartGallery) {
           startPointButtonHtml = `
-            <div class="mt-2 pt-1 border-t border-[#E1E1E1] dark:border-stone-800">
+            <div class="mt-2 pt-1.5 border-t border-[#E1E1E1] dark:border-stone-800">
               <button id="neshan-btn-setstart-${gallery.id}" class="text-[11px] text-[#1856C7] dark:text-[#93c5fd] hover:text-[#F76B1C] font-bold underline cursor-pointer flex items-center gap-1">
-                🚩 شروع گشت از این گالری (توقف ۱)
+                📍 شروع گشت از این گالری
               </button>
             </div>`;
         }

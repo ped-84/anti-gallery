@@ -31,17 +31,17 @@ export const Header: React.FC<HeaderProps> = ({
               <Compass className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
             </div>
             <div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-lg sm:text-xl font-bold tracking-tight text-[#1c2944] dark:text-white block leading-tight">
-                  گالری‌گرد
+              <span className="text-lg sm:text-2xl font-black tracking-tight text-[#1c2944] dark:text-white block leading-tight">
+                گالری‌گردی
+              </span>
+              <div className="flex items-center gap-2 mt-1">
+                <span className="text-[10px] sm:text-[11px] font-medium text-[#3D5B99] dark:text-[#A3C2E4] hidden xs:block">
+                  مسیریاب هوشمند گالری‌های هنری
                 </span>
-                <span className="px-1.5 py-0.5 text-[9px] font-bold rounded-md bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-none">
+                <span className="px-2 py-0.5 text-[9px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-none">
                   {APP_VERSION}
                 </span>
               </div>
-              <span className="text-[10px] sm:text-[11px] font-medium text-[#3D5B99] dark:text-[#A3C2E4] hidden xs:block mt-0.5">
-                مسیریاب هوشمند گالری‌های هنری
-              </span>
             </div>
           </a>
         </div>

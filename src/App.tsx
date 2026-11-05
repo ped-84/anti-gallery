@@ -632,7 +632,7 @@ export default function App() {
           <div className="flex items-center gap-2">
             <Compass className="w-4 h-4 text-[#F76B1C]" />
             <span className="font-bold text-[#1d2d4c] dark:text-white text-sm">
-              سامانه گالری‌گرد
+              سامانه گالری‌گردی
             </span>
             <span className="text-stone-400">·</span>
             <span>مسیریاب هوشمند نگارخانه‌ها و رویدادهای هنرهای تجسمی تهران</span>
