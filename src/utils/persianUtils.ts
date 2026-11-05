@@ -265,4 +265,69 @@ export function getGalleryDisplayName(gallery?: { nameFa?: string; name?: string
   return 'گالری هنر';
 }
 
+const PERSIAN_MONTHS: Record<string, number> = {
+  'فروردین': 1,
+  'اردیبهشت': 2,
+  'خرداد': 3,
+  'تیر': 4,
+  'مرداد': 5,
+  'شهریور': 6,
+  'مهر': 7,
+  'آبان': 8,
+  'آذر': 9,
+  'دی': 10,
+  'بهمن': 11,
+  'اسفند': 12
+};
+
+/**
+ * Parses Persian exhibition opening date into a numerical score (YYYYMMDD) for sorting and cycle detection.
+ * Example: 'جمعه 8 آبان 1405' -> 14050808
+ */
+export function parsePersianDateToScore(dateStr: string = ''): number {
+  if (!dateStr) return 0;
+  const enStr = dateStr
+    .replace(/[۰-۹]/g, (d) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
+    .trim();
+
+  // Find 4-digit year like 1405 or 1404
+  const yearMatch = enStr.match(/\b(14\d{2})\b/);
+  const year = yearMatch ? parseInt(yearMatch[1], 10) : 1405;
+
+  // Find month
+  let month = 0;
+  for (const [mName, mNum] of Object.entries(PERSIAN_MONTHS)) {
+    if (enStr.includes(mName)) {
+      month = mNum;
+      break;
+    }
+  }
+
+  // Find day
+  const numbers = enStr.match(/\b(\d{1,2})\b/g);
+  let day = 1;
+  if (numbers) {
+    for (const n of numbers) {
+      const val = parseInt(n, 10);
+      if (val >= 1 && val <= 31) {
+        day = val;
+        break;
+      }
+    }
+  }
+
+  return year * 10000 + month * 100 + day;
+}
+
+/**
+ * Determines whether an exhibition opened during the current week cycle (latest Friday/Thursday).
+ */
+export function isThisWeekOpening(openingDate?: string, maxScore?: number): boolean {
+  if (!openingDate) return false;
+  const score = parsePersianDateToScore(openingDate);
+  if (!score || score <= 0) return false;
+  if (!maxScore || maxScore <= 0) return true;
+  return score >= maxScore - 2 && score <= maxScore;
+}
+
 

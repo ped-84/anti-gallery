@@ -3,7 +3,14 @@ import { Gallery, RouteOptimizationResult } from './types/gallery';
 import rawGalleriesData from './data/galleries.json';
 import { PERSIAN_CURATED_TOURS, PersianCuratedTour } from './data/curatedTours';
 import { optimizeGalleryRoute, calculateFixedRoute } from './utils/routeOptimizer';
-import { toPersianDigits, TrafficCondition, getPersianNeighborhood, getGalleryDisplayName } from './utils/persianUtils';
+import {
+  toPersianDigits,
+  TrafficCondition,
+  getPersianNeighborhood,
+  getGalleryDisplayName,
+  parsePersianDateToScore,
+  isThisWeekOpening
+} from './utils/persianUtils';
 import { Header } from './components/Header';
 import { GalleryCard } from './components/GalleryCard';
 import { InteractiveMap } from './components/InteractiveMap';
@@ -21,7 +28,9 @@ import {
   ArrowUpDown,
   ChevronDown,
   Map as MapIcon,
-  Compass
+  Compass,
+  Flame,
+  Building2
 } from 'lucide-react';
 
 const STICKDAZZLE_THEMES = ['darkblue', 'orange', 'softblue', 'gray'] as const;
@@ -66,7 +75,7 @@ export default function App() {
   // Filters & Search
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedNeighborhood, setSelectedNeighborhood] = useState<string>('All');
-  const [filterActivePostersOnly, setFilterActivePostersOnly] = useState<boolean>(true);
+  const [galleryFilterTab, setGalleryFilterTab] = useState<'this-week' | 'all-active' | 'all'>('this-week');
   const [sortBy, setSortBy] = useState<'latest' | 'name'>('latest');
 
   // Modals
@@ -141,6 +150,17 @@ export default function App() {
     return galleries.filter((g) => Boolean(g.posterImage || g.activeExhibition?.poster)).length;
   }, [galleries]);
 
+  const maxOpeningScore = useMemo(() => {
+    const scores = galleries
+      .map((g) => parsePersianDateToScore(g.activeExhibition?.openingDate))
+      .filter((s) => s > 0);
+    return scores.length > 0 ? Math.max(...scores) : 0;
+  }, [galleries]);
+
+  const totalThisWeek = useMemo(() => {
+    return galleries.filter((g) => isThisWeekOpening(g.activeExhibition?.openingDate, maxOpeningScore)).length;
+  }, [galleries, maxOpeningScore]);
+
   const neighborhoods = useMemo(() => {
     const set = new Set<string>();
     galleries.forEach((g) => {
@@ -155,8 +175,14 @@ export default function App() {
     const filtered = galleries.filter((gallery) => {
       const hasPoster = Boolean(gallery.posterImage || gallery.activeExhibition?.poster);
 
-      if (filterActivePostersOnly && !hasPoster) {
-        return false;
+      if (galleryFilterTab === 'this-week') {
+        if (!isThisWeekOpening(gallery.activeExhibition?.openingDate, maxOpeningScore)) {
+          return false;
+        }
+      } else if (galleryFilterTab === 'all-active') {
+        if (!hasPoster) {
+          return false;
+        }
       }
 
       if (searchQuery.trim()) {
@@ -209,7 +235,7 @@ export default function App() {
 
       return b.id - a.id;
     });
-  }, [galleries, searchQuery, selectedNeighborhood, filterActivePostersOnly, sortBy]);
+  }, [galleries, searchQuery, selectedNeighborhood, galleryFilterTab, maxOpeningScore, sortBy]);
 
   const [startGalleryId, setStartGalleryId] = useState<number | null>(() => {
     try {
@@ -614,15 +640,27 @@ export default function App() {
 
               {/* View filter tabs: Posters Only vs All Galleries + Sort Option */}
               <div className="flex items-center justify-between gap-2.5 flex-wrap text-xs font-medium">
-                {/* Segmented Control for Posters vs All */}
-                <div className="flex items-center gap-1 p-1 bg-[#E1E1E1]/60 dark:bg-stone-800/80 rounded-2xl w-full sm:w-auto">
+                {/* Segmented Control for 3 View Tabs: This Week's Openings, All Active Exhibitions, All Galleries */}
+                <div className="flex items-center gap-1 p-1 bg-[#E1E1E1]/60 dark:bg-stone-800/80 rounded-2xl w-full sm:w-auto overflow-x-auto">
                   <button
                     type="button"
-                    onClick={() => setFilterActivePostersOnly(true)}
-                    className={`flex-1 sm:flex-none px-3 py-1.5 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 ${
-                      filterActivePostersOnly
+                    onClick={() => setGalleryFilterTab('this-week')}
+                    className={`flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
+                      galleryFilterTab === 'this-week'
                         ? 'clay-base text-[#F76B1C] shadow-sm'
-                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                    }`}
+                  >
+                    <Flame className={`w-3.5 h-3.5 ${galleryFilterTab === 'this-week' ? 'text-[#F76B1C]' : 'text-amber-500'}`} />
+                    <span>افتتاحیه‌های این هفته ({toPersianDigits(totalThisWeek)})</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setGalleryFilterTab('all-active')}
+                    className={`flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
+                      galleryFilterTab === 'all-active'
+                        ? 'clay-base text-[#3D5B99] dark:text-[#A3C2E4] shadow-sm'
+                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
                     }`}
                   >
                     <Palette className="w-3.5 h-3.5" />
@@ -630,11 +668,11 @@ export default function App() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setFilterActivePostersOnly(false)}
-                    className={`flex-1 sm:flex-none px-3 py-1.5 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 ${
-                      !filterActivePostersOnly
-                        ? 'clay-base text-[#3D5B99] shadow-sm'
-                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                    onClick={() => setGalleryFilterTab('all')}
+                    className={`flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
+                      galleryFilterTab === 'all'
+                        ? 'clay-base text-[#3D5B99] dark:text-[#A3C2E4] shadow-sm'
+                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
                     }`}
                   >
                     <Grid className="w-3.5 h-3.5" />
@@ -690,6 +728,7 @@ export default function App() {
                   isSelected={selectedGalleryIds.includes(gallery.id)}
                   orderNumber={galleryOrderMap.get(gallery.id)}
                   colorTheme={STICKDAZZLE_THEMES[idx % STICKDAZZLE_THEMES.length]}
+                  isOpeningThisWeek={isThisWeekOpening(gallery.activeExhibition?.openingDate, maxOpeningScore)}
                   onToggle={handleToggleGallery}
                   onSelectDetails={(g) => setActiveModalGallery(g)}
                 />

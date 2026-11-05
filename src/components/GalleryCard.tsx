@@ -10,7 +10,8 @@ import {
   MapPin,
   Clock,
   Image as ImageIcon,
-  Maximize2
+  Maximize2,
+  Sparkles
 } from 'lucide-react';
 
 interface GalleryCardProps {
@@ -18,6 +19,7 @@ interface GalleryCardProps {
   isSelected: boolean;
   orderNumber?: number;
   colorTheme?: 'darkblue' | 'orange' | 'softblue' | 'gray';
+  isOpeningThisWeek?: boolean;
   onToggle: (gallery: Gallery) => void;
   onSelectDetails: (gallery: Gallery) => void;
 }
@@ -34,6 +36,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
   isSelected,
   orderNumber,
   colorTheme = 'darkblue',
+  isOpeningThisWeek = false,
   onToggle,
   onSelectDetails
 }) => {
@@ -139,13 +142,21 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
           <div className="p-3 rounded-2xl bg-[#f0f4fa] dark:bg-[#1b2230] shadow-sm space-y-2 border border-[#A3C2E4]/40 dark:border-stone-700/60">
             {/* Opening & Visiting Days: Friday Opening + Weekdays */}
             <div className="space-y-1">
-              <div className="flex items-center gap-1.5 bg-white/95 dark:bg-stone-900/95 text-[#F76B1C] px-2.5 py-1 rounded-xl text-xs font-bold shadow-xs border border-[#F76B1C]/20">
-                <Calendar className="w-3.5 h-3.5 shrink-0" />
-                <span className="truncate">
-                  {activeExhibition.openingDate
-                    ? `افتتاحیه: ${toPersianDigits(activeExhibition.openingDate)}`
-                    : 'افتتاحیه: جمعه‌ها ۱۶:۰۰ الی ۲۰:۰۰'}
-                </span>
+              <div className="flex items-center justify-between gap-1.5 bg-white/95 dark:bg-stone-900/95 text-[#F76B1C] px-2.5 py-1 rounded-xl text-xs font-bold shadow-xs border border-[#F76B1C]/20">
+                <div className="flex items-center gap-1.5 truncate">
+                  <Calendar className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate">
+                    {activeExhibition.openingDate
+                      ? `افتتاحیه: ${toPersianDigits(activeExhibition.openingDate)}`
+                      : 'افتتاحیه: جمعه‌ها ۱۶:۰۰ الی ۲۰:۰۰'}
+                  </span>
+                </div>
+                {isOpeningThisWeek && (
+                  <span className="shrink-0 text-[10px] bg-[#F76B1C] text-white px-2 py-0.5 rounded-lg font-extrabold shadow-xs flex items-center gap-1 animate-pulse">
+                    <Sparkles className="w-2.5 h-2.5" />
+                    <span>این هفته</span>
+                  </span>
+                )}
               </div>
               <div className="text-[10px] text-stone-500 dark:text-stone-400 px-1 font-medium flex items-center justify-between">
                 <span>بازدید عادی: یکشنبه تا پنجشنبه {toPersianDigits(gallery.hoursFa || gallery.hours || '۱۶ الی ۲۰')}</span>

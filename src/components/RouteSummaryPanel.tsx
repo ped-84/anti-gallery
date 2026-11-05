@@ -407,7 +407,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                   title="معکوس کردن کامل مسیر (از آخر به اول)"
                 >
                   <ArrowUpDown className="w-3.5 h-3.5 text-[#F76B1C]" />
-                  <span>معکوس مسیر</span>
+                  <span>مسیر معکوس</span>
                 </button>
                 <button
                   type="button"
