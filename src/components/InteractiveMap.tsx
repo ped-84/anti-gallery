@@ -57,6 +57,28 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
   useEffect(() => {
     if (!mapContainerRef.current || mapInstanceRef.current) return;
 
+    const purgeNeshanWatermarks = () => {
+      if (!mapContainerRef.current) return;
+      const selectors = [
+        '.mapboxgl-ctrl-bottom-left',
+        '.mapboxgl-ctrl-bottom-right',
+        '.mapboxgl-ctrl-top-left',
+        '.mapboxgl-ctrl-top-right',
+        '.mapboxgl-ctrl-attrib',
+        '.mapboxgl-ctrl-logo',
+        'a.mapboxgl-ctrl-logo',
+        '.neshan-watermark',
+        '.neshan-logo',
+        'a[href*="neshan.org"]',
+        'a[href*="mapbox.com"]'
+      ];
+      selectors.forEach((sel) => {
+        mapContainerRef.current?.querySelectorAll(sel).forEach((el) => {
+          el.remove();
+        });
+      });
+    };
+
     const initNeshanMap = () => {
       const nmp = (window as any).nmp_mapboxgl;
       if (!nmp || !mapContainerRef.current) return;
@@ -80,6 +102,8 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         map.on('load', () => {
           mapInstanceRef.current = map;
           setIsMapReady(true);
+          map.resize();
+          purgeNeshanWatermarks();
 
           // Add Tehran Central Traffic Zone Layer
           try {
@@ -115,10 +139,24 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
             console.warn('[Neshan] Traffic zone layer init note:', e);
           }
         });
+
+        map.on('render', () => {
+          purgeNeshanWatermarks();
+        });
       } catch (err) {
         console.error('[Neshan] Map init error:', err);
       }
     };
+
+    let resizeObserver: ResizeObserver | null = null;
+    if (mapContainerRef.current && window.ResizeObserver) {
+      resizeObserver = new ResizeObserver(() => {
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.resize();
+        }
+      });
+      resizeObserver.observe(mapContainerRef.current);
+    }
 
     if ((window as any).nmp_mapboxgl) {
       initNeshanMap();
@@ -132,7 +170,16 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       return () => clearInterval(interval);
     }
 
+    // Secondary watermark purge timer to catch delayed SDK injections
+    const purgeInterval = setInterval(purgeNeshanWatermarks, 300);
+    const purgeTimeout = setTimeout(() => clearInterval(purgeInterval), 5000);
+
     return () => {
+      clearInterval(purgeInterval);
+      clearTimeout(purgeTimeout);
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
       if (mapInstanceRef.current) {
         try {
           mapInstanceRef.current.remove();
@@ -423,7 +470,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
   return (
     <div className="clay-card relative w-full h-full min-h-[360px] sm:min-h-[420px] overflow-hidden border border-[#E1E1E1] dark:border-stone-800 shadow-md">
       {/* Map Container */}
-      <div ref={mapContainerRef} className="w-full h-full" />
+      <div ref={mapContainerRef} className="w-full h-full overflow-hidden" />
 
       {/* Floating Action Controls */}
       <div className="absolute top-4 left-4 z-[400] flex flex-col gap-2">

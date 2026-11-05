@@ -322,43 +322,59 @@ export default function App() {
       </div>
 
       {/* Main Content Layout */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6">
+        {/* Editorial Claymorphic Banner */}
+        <section className="clay-card p-4 sm:p-6 bg-white dark:bg-[#181d27] border border-[#E1E1E1] dark:border-stone-800">
+          <span className="text-[11px] font-bold text-[#F76B1C] block mb-1">
+            برنامه‌ریزی تور گالری‌های هنری و نمایشگاه‌های جاری
+          </span>
+          <h1 className="text-xl sm:text-3xl font-bold text-[#1d2d4c] dark:text-white tracking-tight leading-snug">
+            بهترین مسیر گالری‌گردی در تهران
+          </h1>
+          <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 mt-2 leading-relaxed">
+            پوسترهای مربعی نمایشگاه‌ها، تاریخ افتتاحیه و نام هنرمندان را بررسی کرده و مقصدهای بازدید خود را انتخاب کنید تا کوتاه‌ترین مسیر با احتساب ترافیک تهران محاسبه شود.
+          </p>
+
+          {/* Quick Tour Presets */}
+          <div className="mt-4 pt-3.5 border-t border-[#E1E1E1] dark:border-stone-800 flex items-center gap-2 flex-wrap">
+            <span className="text-xs font-bold text-[#1d2d4c] dark:text-stone-300 ml-1">
+              تورهای آماده:
+            </span>
+            {PERSIAN_CURATED_TOURS.map((tour, idx) => {
+              const theme = STICKDAZZLE_THEMES[idx % STICKDAZZLE_THEMES.length];
+              return (
+                <button
+                  key={tour.id}
+                  onClick={() => handleSelectCuratedTour(tour)}
+                  className={`clay-button clay-${theme}-subtle text-xs px-3 py-1.5 font-bold transition-all hover:scale-105 active:scale-95 flex items-center gap-1 border border-[#E1E1E1] dark:border-stone-700`}
+                >
+                  <span>{tour.titleFa.split(' ')[0]} {tour.titleFa.split(' ')[1] || ''}</span>
+                  <span className="opacity-70 text-[10px]">({toPersianDigits(tour.galleryIds.length)})</span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* FULL-WIDTH IMMERSIVE MAP (Desktop, Tablet & Mobile) */}
+        <section className={`w-full ${mobileActiveTab === 'catalog' ? 'hidden lg:block' : 'block'}`}>
+          <div className="h-[420px] sm:h-[480px] lg:h-[530px] w-full rounded-2xl overflow-hidden border border-[#E1E1E1] dark:border-stone-800 shadow-md">
+            <InteractiveMap
+              galleries={galleries}
+              selectedGalleries={selectedGalleries}
+              routeResult={routeResult}
+              onToggleGallery={handleToggleGallery}
+              onSelectForDetails={(g) => setActiveModalGallery(g)}
+              activeGalleryId={highlightedGalleryId}
+              isDarkMode={isDarkMode}
+            />
+          </div>
+        </section>
+
+        {/* 2-COLUMN SECTION BELOW MAP: Catalog & Route Panel */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-start">
-          {/* RIGHT COLUMN: Gallery Catalog, Filters & Search (7 cols on lg in RTL) */}
+          {/* RIGHT COLUMN: Gallery Directory, Search & Cards (7 cols on lg in RTL) */}
           <section className={`lg:col-span-7 flex flex-col space-y-4 sm:space-y-5 ${mobileActiveTab === 'map' ? 'hidden lg:flex' : 'flex'}`}>
-            {/* Editorial Claymorphic Banner */}
-            <div className="clay-card p-4 sm:p-6 bg-white dark:bg-[#181d27] border border-[#E1E1E1] dark:border-stone-800">
-              <span className="text-[11px] font-bold text-[#F76B1C] block mb-1">
-                برنامه‌ریزی تور گالری‌های هنری و نمایشگاه‌های جاری
-              </span>
-              <h1 className="text-xl sm:text-3xl font-bold text-[#1d2d4c] dark:text-white tracking-tight leading-snug">
-                بهترین مسیر گالری‌گردی در تهران
-              </h1>
-              <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 mt-2 leading-relaxed">
-                پوسترهای مربعی نمایشگاه‌ها، تاریخ افتتاحیه و نام هنرمندان را بررسی کرده و مقصدهای بازدید خود را انتخاب کنید تا کوتاه‌ترین مسیر با احتساب ترافیک تهران محاسبه شود.
-              </p>
-
-              {/* Quick Tour Presets */}
-              <div className="mt-4 pt-3.5 border-t border-[#E1E1E1] dark:border-stone-800 flex items-center gap-2 flex-wrap">
-                <span className="text-xs font-bold text-[#1d2d4c] dark:text-stone-300 ml-1">
-                  تورهای آماده:
-                </span>
-                {PERSIAN_CURATED_TOURS.map((tour, idx) => {
-                  const theme = STICKDAZZLE_THEMES[idx % STICKDAZZLE_THEMES.length];
-                  return (
-                    <button
-                      key={tour.id}
-                      onClick={() => handleSelectCuratedTour(tour)}
-                      className={`clay-button clay-${theme}-subtle text-xs px-3 py-1.5 font-bold transition-all hover:scale-105 active:scale-95 flex items-center gap-1 border border-[#E1E1E1] dark:border-stone-700`}
-                    >
-                      <span>{tour.titleFa.split(' ')[0]} {tour.titleFa.split(' ')[1] || ''}</span>
-                      <span className="opacity-70 text-[10px]">({toPersianDigits(tour.galleryIds.length)})</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
             {/* Filter & Search Toolbar */}
             <div className="clay-card p-3.5 sm:p-4.5 bg-white dark:bg-[#181d27] border border-[#E1E1E1] dark:border-stone-800 space-y-3">
               {/* Search input with clay inset */}
@@ -486,23 +502,10 @@ export default function App() {
             )}
           </section>
 
-          {/* LEFT COLUMN: Map & Route Panel (5 cols on lg in RTL, sticky on desktop) */}
+          {/* LEFT COLUMN: Route Summary Panel (5 cols on lg in RTL, sticky on desktop) */}
           <section className={`lg:col-span-5 flex flex-col space-y-4 sm:space-y-5 lg:sticky lg:top-24 ${mobileActiveTab === 'catalog' ? 'hidden lg:flex' : 'flex'}`}>
-            {/* Interactive Leaflet Map (High resolution OpenStreetMap with crisp alley & street names) */}
-            <div className="h-[360px] sm:h-[420px] lg:h-[440px] w-full">
-              <InteractiveMap
-                galleries={galleries}
-                selectedGalleries={selectedGalleries}
-                routeResult={routeResult}
-                onToggleGallery={handleToggleGallery}
-                onSelectForDetails={(g) => setActiveModalGallery(g)}
-                activeGalleryId={highlightedGalleryId}
-                isDarkMode={isDarkMode}
-              />
-            </div>
-
             {/* Route Summary Panel */}
-            <div className="flex-1 flex flex-col min-h-[540px]">
+            <div className="flex-1 flex flex-col min-h-[500px]">
               <RouteSummaryPanel
                 routeResult={routeResult}
                 selectedGalleries={selectedGalleries}
@@ -522,7 +525,7 @@ export default function App() {
         </div>
       </main>
 
-      {/* Footer (ZERO galleryinfo links or mentions) */}
+      {/* Footer */}
       <footer className="bg-[#e4ebf5] dark:bg-[#10141c] text-stone-600 dark:text-stone-400 border-t border-[#E1E1E1] dark:border-stone-800 py-6 sm:py-8 px-4 sm:px-6 lg:px-8 mt-12 text-xs font-medium">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-right">
           <div className="flex items-center gap-2">
@@ -532,26 +535,6 @@ export default function App() {
             </span>
             <span className="text-stone-400">·</span>
             <span>مسیریاب هوشمند نگارخانه‌ها و رویدادهای هنرهای تجسمی تهران</span>
-          </div>
-
-          <div className="flex items-center gap-4 text-stone-500 dark:text-stone-400">
-            <a
-              href="https://www.openstreetmap.org/copyright"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-[#3D5B99] dark:hover:text-[#A3C2E4] underline"
-            >
-              OpenStreetMap
-            </a>
-            <span>·</span>
-            <a
-              href="https://project-osrm.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-[#3D5B99] dark:hover:text-[#A3C2E4] underline"
-            >
-              OSRM
-            </a>
           </div>
         </div>
       </footer>
