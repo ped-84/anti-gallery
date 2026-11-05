@@ -516,8 +516,8 @@ export default function App() {
       />
 
       {/* Operational Ribbon */}
-      <div className="bg-[#e4ebf5] dark:bg-[#161a24] text-stone-700 dark:text-stone-300 text-xs px-4 sm:px-6 lg:px-8 py-2.5 border-b border-[#E1E1E1] dark:border-stone-800">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 font-medium">
+      <div className="bg-[#e4ebf5] dark:bg-[#161a24] text-stone-700 dark:text-stone-300 text-xs py-2.5 border-b border-[#E1E1E1] dark:border-stone-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 font-medium">
           <div className="flex items-center gap-2.5 shrink-0">
             <span className="w-2.5 h-2.5 rounded-full bg-[#F76B1C] inline-block shadow-sm shrink-0"></span>
             <span className="text-xs">
