@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import L from 'leaflet';
 import { Gallery, RouteOptimizationResult } from '../types/gallery';
 import { toPersianDigits, getGalleryDisplayName } from '../utils/persianUtils';
-import { Navigation, Layers, Compass, Check } from 'lucide-react';
+import { Navigation, Compass, Layers, Car, ShieldAlert } from 'lucide-react';
 
 interface InteractiveMapProps {
   galleries: Gallery[];
@@ -14,28 +13,27 @@ interface InteractiveMapProps {
   isDarkMode?: boolean;
 }
 
-// Snapp & Tap30 navigation-style crisp raster tiles with detailed Persian street & alley names
-const TILE_LAYERS: Record<string, { name: string; url: string; className: string; attribution: string; maxZoom: number }> = {
-  snapp: {
-    name: 'طرح اسنپ و تپسی (مسیریابی ملایم و خوانا)',
-    url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-    className: 'snapp-map-tile',
-    attribution: '&copy; OpenStreetMap contributors',
-    maxZoom: 19
-  },
-  osm: {
-    name: 'نقشه استاندارد شهری (رنگ‌های اصلی)',
-    url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-    className: '',
-    attribution: '&copy; OpenStreetMap contributors',
-    maxZoom: 19
-  },
-  esriLight: {
-    name: 'نقشه مینیمال تک‌رنگ',
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-    className: '',
-    attribution: '&copy; Esri',
-    maxZoom: 16
+const NESHAN_WEB_KEY = 'web.cd0b84e26a35496f87485087bce939da';
+
+// Tehran Central Traffic Zone Polygon Coordinates (محدوده رسمی طرح ترافیک تهران)
+const TEHRAN_TRAFFIC_ZONE_GEOJSON: any = {
+  type: 'Feature',
+  properties: { name: 'محدوده طرح ترافیک تهران' },
+  geometry: {
+    type: 'Polygon',
+    coordinates: [
+      [
+        [51.3885, 35.7275], // تقاطع کارگر و فاطمی/مطهری
+        [51.4130, 35.7280], // تقاطع مطهری و ولیعصر
+        [51.4430, 35.7265], // تقاطع مطهری و شریعتی / پل سیدخندان
+        [51.4485, 35.7005], // میدان امام حسین / خیابان مازندران
+        [51.4460, 35.6600], // هفده شهریور تقاطع شوش
+        [51.4150, 35.6580], // شوش / میدان راه‌آهن
+        [51.3880, 35.6620], // شوش تقاطع کارگر جنوبی
+        [51.3900, 35.7005], // میدان انقلاب
+        [51.3885, 35.7275]  // بستن چندضلعی
+      ]
+    ]
   }
 };
 
@@ -49,122 +47,228 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
   isDarkMode = false
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<L.Map | null>(null);
-  const markersLayerRef = useRef<L.LayerGroup | null>(null);
-  const routeLayerRef = useRef<L.Polyline | null>(null);
-  const routeBorderLayerRef = useRef<L.Polyline | null>(null);
-  const tileLayerInstanceRef = useRef<L.TileLayer | null>(null);
+  const mapInstanceRef = useRef<any>(null);
+  const markersRef = useRef<any[]>([]);
+  const [isMapReady, setIsMapReady] = useState(false);
+  const [showTrafficLayer, setShowTrafficLayer] = useState(true);
+  const [showTrafficZone, setShowTrafficZone] = useState(true);
 
-  // Default to Snapp / Tap30 navigation aesthetic (muted, elegant, clear Persian street names)
-  const [currentTileKey, setCurrentTileKey] = useState<keyof typeof TILE_LAYERS>('snapp');
-  const [showTilePicker, setShowTilePicker] = useState(false);
-
-  // Initialize Map with sharp high-zoom Leaflet configuration
+  // 1. Initialize Neshan Vector Map
   useEffect(() => {
     if (!mapContainerRef.current || mapInstanceRef.current) return;
 
-    const map = L.map(mapContainerRef.current, {
-      center: [35.73, 51.42],
-      zoom: 13,
-      minZoom: 10,
-      maxZoom: 19,
-      zoomControl: false
-    });
+    const initNeshanMap = () => {
+      const nmp = (window as any).nmp_mapboxgl;
+      if (!nmp || !mapContainerRef.current) return;
 
-    L.control.zoom({ position: 'bottomleft' }).addTo(map);
+      try {
+        const map = new nmp.Map({
+          mapType: isDarkMode ? nmp.Map.mapTypes.neshanVectorNight : nmp.Map.mapTypes.neshanVector,
+          container: mapContainerRef.current,
+          zoom: 12.8,
+          pitch: 0,
+          center: [51.415, 35.725], // [lng, lat] Tehran Center
+          minZoom: 10,
+          maxZoom: 19,
+          trackResize: true,
+          mapKey: NESHAN_WEB_KEY,
+          poi: true,
+          traffic: true
+        });
 
-    const config = TILE_LAYERS[currentTileKey];
-    const tiles = L.tileLayer(config.url, {
-      attribution: config.attribution,
-      maxZoom: config.maxZoom,
-      maxNativeZoom: 19,
-      className: config.className || ''
-    }).addTo(map);
+        map.on('load', () => {
+          mapInstanceRef.current = map;
+          setIsMapReady(true);
 
-    tileLayerInstanceRef.current = tiles;
-    markersLayerRef.current = L.layerGroup().addTo(map);
-    mapInstanceRef.current = map;
+          // Add Tehran Central Traffic Zone Layer
+          try {
+            map.addSource('tehran-traffic-zone', {
+              type: 'geojson',
+              data: TEHRAN_TRAFFIC_ZONE_GEOJSON
+            });
+
+            // Fill Layer
+            map.addLayer({
+              id: 'tehran-traffic-zone-fill',
+              type: 'fill',
+              source: 'tehran-traffic-zone',
+              paint: {
+                'fill-color': '#EF4444',
+                'fill-opacity': 0.08
+              }
+            });
+
+            // Border Layer
+            map.addLayer({
+              id: 'tehran-traffic-zone-border',
+              type: 'line',
+              source: 'tehran-traffic-zone',
+              paint: {
+                'line-color': '#DC2626',
+                'line-width': 2,
+                'line-dasharray': [3, 2],
+                'line-opacity': 0.85
+              }
+            });
+          } catch (e) {
+            console.warn('[Neshan] Traffic zone layer init note:', e);
+          }
+        });
+      } catch (err) {
+        console.error('[Neshan] Map init error:', err);
+      }
+    };
+
+    if ((window as any).nmp_mapboxgl) {
+      initNeshanMap();
+    } else {
+      const interval = setInterval(() => {
+        if ((window as any).nmp_mapboxgl) {
+          clearInterval(interval);
+          initNeshanMap();
+        }
+      }, 100);
+      return () => clearInterval(interval);
+    }
 
     return () => {
-      map.remove();
-      mapInstanceRef.current = null;
+      if (mapInstanceRef.current) {
+        try {
+          mapInstanceRef.current.remove();
+        } catch {}
+        mapInstanceRef.current = null;
+      }
     };
   }, []);
 
-  // Update Tile Layer
-  useEffect(() => {
-    if (!mapInstanceRef.current) return;
-    if (tileLayerInstanceRef.current) {
-      mapInstanceRef.current.removeLayer(tileLayerInstanceRef.current);
-    }
-    const config = TILE_LAYERS[currentTileKey];
-    tileLayerInstanceRef.current = L.tileLayer(config.url, {
-      attribution: config.attribution,
-      maxZoom: config.maxZoom,
-      maxNativeZoom: config.maxZoom === 16 ? 16 : 19,
-      className: config.className || ''
-    }).addTo(mapInstanceRef.current);
-  }, [currentTileKey]);
-
-  // Update Markers & Route
+  // 2. Synchronize Dark / Light Mode with Neshan Style
   useEffect(() => {
     const map = mapInstanceRef.current;
-    const markersLayer = markersLayerRef.current;
-    if (!map || !markersLayer) return;
+    const nmp = (window as any).nmp_mapboxgl;
+    if (!map || !nmp || !isMapReady) return;
 
-    markersLayer.clearLayers();
+    try {
+      map.setMapType(isDarkMode ? nmp.Map.mapTypes.neshanVectorNight : nmp.Map.mapTypes.neshanVector);
+    } catch (e) {
+      console.warn('[Neshan] Style change note:', e);
+    }
+  }, [isDarkMode, isMapReady]);
 
-    if (routeLayerRef.current) {
-      map.removeLayer(routeLayerRef.current);
-      routeLayerRef.current = null;
+  // 3. Toggle Traffic Zone Visibility
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map || !isMapReady) return;
+
+    const visibility = showTrafficZone ? 'visible' : 'none';
+    if (map.getLayer('tehran-traffic-zone-fill')) {
+      map.setLayoutProperty('tehran-traffic-zone-fill', 'visibility', visibility);
     }
-    if (routeBorderLayerRef.current) {
-      map.removeLayer(routeBorderLayerRef.current);
-      routeBorderLayerRef.current = null;
+    if (map.getLayer('tehran-traffic-zone-border')) {
+      map.setLayoutProperty('tehran-traffic-zone-border', 'visibility', visibility);
     }
+  }, [showTrafficZone, isMapReady]);
+
+  // 4. Toggle Traffic Layer Visibility
+  const handleToggleTraffic = () => {
+    const map = mapInstanceRef.current;
+    if (!map) return;
+    const nextState = !showTrafficLayer;
+    setShowTrafficLayer(nextState);
+    if (typeof map.toggleTrafficLayer === 'function') {
+      map.toggleTrafficLayer(nextState);
+    }
+  };
+
+  // 5. Update Markers and Route on Neshan Map
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    const nmp = (window as any).nmp_mapboxgl;
+    if (!map || !nmp || !isMapReady) return;
+
+    // Clear existing markers
+    markersRef.current.forEach((m) => m.remove());
+    markersRef.current = [];
 
     const selectedIds = new Set(selectedGalleries.map((g) => g.id));
     const orderedIds = routeResult ? routeResult.orderedGalleries.map((g) => g.id) : [];
     const orderIndexMap = new Map<number, number>();
     orderedIds.forEach((id, idx) => orderIndexMap.set(id, idx + 1));
 
-    const bounds = L.latLngBounds([]);
+    // Bounds calculator
+    const bounds = new nmp.LngLatBounds();
+    let hasValidBounds = false;
 
-    // 1. Draw Route Polyline
-    if (routeResult && routeResult.geometryCoords.length > 0) {
-      const latLngs = routeResult.geometryCoords.map((c) => L.latLng(c[0], c[1]));
+    // 5.1 Render Route Line
+    try {
+      if (routeResult && routeResult.geometryCoords.length > 0) {
+        // Mapbox uses [lng, lat]
+        const coordinates = routeResult.geometryCoords.map((c) => [c[1], c[0]]);
 
-      const casing = L.polyline(latLngs, {
-        color: '#1e335a',
-        weight: 6,
-        opacity: 0.35,
-        lineCap: 'round',
-        lineJoin: 'round'
-      }).addTo(map);
-      routeBorderLayerRef.current = casing;
+        const routeGeoJson: any = {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'LineString',
+            coordinates
+          }
+        };
 
-      const line = L.polyline(latLngs, {
-        color: '#F76B1C',
-        weight: 4,
-        opacity: 0.95,
-        lineCap: 'round',
-        lineJoin: 'round',
-        dashArray: routeResult.mode === 'walking' ? '8, 8' : undefined
-      }).addTo(map);
-      routeLayerRef.current = line;
+        if (map.getSource('optimized-route')) {
+          map.getSource('optimized-route').setData(routeGeoJson);
+        } else {
+          map.addSource('optimized-route', {
+            type: 'geojson',
+            data: routeGeoJson
+          });
 
-      latLngs.forEach((ll) => bounds.extend(ll));
+          // Route casing
+          map.addLayer({
+            id: 'optimized-route-casing',
+            type: 'line',
+            source: 'optimized-route',
+            layout: { 'line-join': 'round', 'line-cap': 'round' },
+            paint: {
+              'line-color': '#1E3A8A',
+              'line-width': 7,
+              'line-opacity': 0.45
+            }
+          });
+
+          // Main line
+          map.addLayer({
+            id: 'optimized-route-line',
+            type: 'line',
+            source: 'optimized-route',
+            layout: { 'line-join': 'round', 'line-cap': 'round' },
+            paint: {
+              'line-color': '#F76B1C',
+              'line-width': 4.5
+            }
+          });
+        }
+
+        coordinates.forEach((coord: [number, number]) => {
+          bounds.extend(coord);
+          hasValidBounds = true;
+        });
+      } else {
+        // Remove existing route if cleared
+        if (map.getLayer('optimized-route-line')) map.removeLayer('optimized-route-line');
+        if (map.getLayer('optimized-route-casing')) map.removeLayer('optimized-route-casing');
+        if (map.getSource('optimized-route')) map.removeSource('optimized-route');
+      }
+    } catch (e) {
+      console.warn('[Neshan] Route update note:', e);
     }
 
-    // 2. Render Markers
+    // 5.2 Render Gallery Markers
     galleries.forEach((gallery) => {
       const isSelected = selectedIds.has(gallery.id);
       const orderNum = orderIndexMap.get(gallery.id);
       const isFocused = activeGalleryId === gallery.id;
 
-      let iconHtml = '';
-      let iconSize: [number, number] = [28, 28];
-      let iconAnchor: [number, number] = [14, 14];
+      const el = document.createElement('div');
+      el.className = 'cursor-pointer transition-transform duration-200 hover:scale-110';
 
       if (orderNum !== undefined) {
         const isFirst = orderNum === 1;
@@ -175,62 +279,46 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           ? 'bg-[#F76B1C] text-white border-2 border-white'
           : 'bg-[#1e335a] text-white border-2 border-[#A3C2E4]';
 
-        iconSize = [34, 34];
-        iconAnchor = [17, 17];
-        iconHtml = `
-          <div class="custom-tour-pin ${bgClass} w-[34px] h-[34px] text-xs font-bold shadow-lg">
+        el.innerHTML = `
+          <div class="w-[34px] h-[34px] rounded-full flex items-center justify-center font-bold text-xs shadow-xl ${bgClass}">
             ${toPersianDigits(orderNum)}
           </div>
         `;
       } else if (isSelected) {
-        iconSize = [30, 30];
-        iconAnchor = [15, 15];
-        iconHtml = `
-          <div class="custom-tour-pin bg-[#3D5B99] text-white border-2 border-white w-[30px] h-[30px] flex items-center justify-center shadow-md">
+        el.innerHTML = `
+          <div class="w-[30px] h-[30px] rounded-full bg-[#3D5B99] text-white border-2 border-white flex items-center justify-center shadow-lg">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
             </svg>
           </div>
         `;
       } else {
-        const hasExhibition = gallery.activeExhibition || (gallery.exhibitions && gallery.exhibitions.length > 0);
-        iconSize = isFocused ? [26, 26] : [20, 20];
-        iconAnchor = isFocused ? [13, 13] : [10, 10];
-        iconHtml = `
-          <div class="custom-tour-pin ${
+        const hasExhibition = Boolean(gallery.activeExhibition || gallery.posterImage);
+        el.innerHTML = `
+          <div class="w-[22px] h-[22px] rounded-full ${
             isFocused
-              ? 'bg-[#F76B1C] border-2 border-white w-[26px] h-[26px]'
+              ? 'bg-[#F76B1C] border-2 border-white ring-2 ring-[#F76B1C]'
               : hasExhibition
-              ? 'bg-[#3D5B99] text-white border border-white w-[20px] h-[20px]'
-              : 'bg-[#A3C2E4] text-[#1e335a] border border-white w-[18px] h-[18px]'
-          } flex items-center justify-center opacity-90">
+              ? 'bg-[#3D5B99] text-white border-2 border-white'
+              : 'bg-[#A3C2E4] text-[#1e335a] border border-white'
+          } flex items-center justify-center shadow-md opacity-90">
             <div class="w-2 h-2 rounded-full ${hasExhibition ? 'bg-[#F76B1C]' : 'bg-white'}"></div>
           </div>
         `;
       }
 
-      const customIcon = L.divIcon({
-        html: iconHtml,
-        className: 'custom-leaflet-marker',
-        iconSize,
-        iconAnchor
-      });
-
-      const marker = L.marker([gallery.lat, gallery.lng], { icon: customIcon });
-
-      // Rich Popup in Farsi with NO English and NO galleryinfo mentions
+      // Popup Construction
       const popupDiv = document.createElement('div');
       popupDiv.className = 'p-3 text-stone-800 dark:text-stone-100 max-w-[270px] bg-white dark:bg-[#1a202c] rounded-2xl shadow-xl font-sans';
 
       const activeEx = gallery.activeExhibition;
-      const exhibitionHtml =
-        activeEx
-          ? `<div class="mt-2 pt-2 border-t border-[#E1E1E1] dark:border-stone-700/60">
-               <div class="text-[10px] font-bold text-[#F76B1C]">نمایشگاه جاری ${activeEx.artist ? `· آثار ${activeEx.artist}` : ''}</div>
-               <div class="text-xs font-bold text-[#10335e] dark:text-[#dbeafe] mt-0.5 line-clamp-1">${activeEx.title}</div>
-               ${activeEx.openingDate ? `<div class="text-[10px] text-stone-500 dark:text-stone-400 mt-0.5">افتتاحیه: ${toPersianDigits(activeEx.openingDate)}</div>` : ''}
-             </div>`
-          : '';
+      const exhibitionHtml = activeEx
+        ? `<div class="mt-2 pt-2 border-t border-[#E1E1E1] dark:border-stone-700/60">
+             <div class="text-[10px] font-bold text-[#F76B1C]">نمایشگاه جاری ${activeEx.artist ? `· آثار ${activeEx.artist}` : ''}</div>
+             <div class="text-xs font-bold text-[#10335e] dark:text-[#dbeafe] mt-0.5 line-clamp-1">${activeEx.title}</div>
+             ${activeEx.openingDate ? `<div class="text-[10px] text-stone-500 dark:text-stone-400 mt-0.5">افتتاحیه: ${toPersianDigits(activeEx.openingDate)}</div>` : ''}
+           </div>`
+        : '';
 
       const trafficWarningHtml = gallery.isInTrafficZone
         ? `<div class="mt-1 text-[10px] font-bold text-[#F76B1C] flex items-center gap-1">
@@ -253,10 +341,10 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         ${trafficWarningHtml}
         ${exhibitionHtml}
         <div class="mt-3 flex items-center justify-between gap-2 pt-2 border-t border-[#E1E1E1] dark:border-stone-800">
-          <button id="popup-btn-details-${gallery.id}" class="text-[11px] text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] underline font-bold cursor-pointer">
+          <button id="neshan-btn-details-${gallery.id}" class="text-[11px] text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] underline font-bold cursor-pointer">
             مشاهده جزئیات کامل
           </button>
-          <button id="popup-btn-${gallery.id}" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
+          <button id="neshan-btn-toggle-${gallery.id}" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
         isSelected ? 'bg-rose-50 text-rose-700 hover:bg-rose-100' : 'bg-[#3D5B99] text-white hover:bg-[#F76B1C]'
       }">
             ${isSelected ? 'حذف از تور' : '+ افزودن'}
@@ -264,35 +352,52 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         </div>
       `;
 
-      marker.on('popupopen', () => {
-        const btn = document.getElementById(`popup-btn-${gallery.id}`);
-        if (btn) {
-          btn.onclick = () => {
+      const popup = new nmp.Popup({ offset: 25, maxWidth: '290px' }).setDOMContent(popupDiv);
+
+      popup.on('open', () => {
+        const btnToggle = document.getElementById(`neshan-btn-toggle-${gallery.id}`);
+        if (btnToggle) {
+          btnToggle.onclick = () => {
             onToggleGallery(gallery);
-            marker.closePopup();
+            popup.remove();
           };
         }
-        const btnDetails = document.getElementById(`popup-btn-details-${gallery.id}`);
+        const btnDetails = document.getElementById(`neshan-btn-details-${gallery.id}`);
         if (btnDetails && onSelectForDetails) {
           btnDetails.onclick = () => {
             onSelectForDetails(gallery);
-            marker.closePopup();
+            popup.remove();
           };
         }
       });
 
-      marker.bindPopup(popupDiv, { maxWidth: 290, minWidth: 240 });
-      marker.addTo(markersLayer);
+      const marker = new nmp.Marker({ element: el })
+        .setLngLat([gallery.lng, gallery.lat])
+        .setPopup(popup)
+        .addTo(map);
+
+      markersRef.current.push(marker);
 
       if (isSelected || (routeResult && orderNum !== undefined)) {
-        bounds.extend([gallery.lat, gallery.lng]);
+        bounds.extend([gallery.lng, gallery.lat]);
+        hasValidBounds = true;
       }
     });
 
-    if (bounds.isValid()) {
-      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 15 });
+    if (hasValidBounds) {
+      try {
+        map.fitBounds(bounds, { padding: 45, maxZoom: 15 });
+      } catch (e) {
+        console.warn('[Neshan] fitBounds note:', e);
+      }
     }
-  }, [galleries, selectedGalleries, routeResult, activeGalleryId, isDarkMode]);
+  }, [galleries, selectedGalleries, routeResult, activeGalleryId, isMapReady]);
+
+  // Recenter controls
+  const handleRecenterCluster = () => {
+    if (!mapInstanceRef.current) return;
+    mapInstanceRef.current.flyTo({ center: [51.415, 35.725], zoom: 12.8, essential: true });
+  };
 
   const handleLocateUser = () => {
     if (!navigator.geolocation) {
@@ -303,17 +408,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       (pos) => {
         const { latitude, longitude } = pos.coords;
         if (mapInstanceRef.current) {
-          mapInstanceRef.current.flyTo([latitude, longitude], 15, { duration: 1.2 });
-          L.circleMarker([latitude, longitude], {
-            radius: 8,
-            color: '#3D5B99',
-            fillColor: '#F76B1C',
-            fillOpacity: 0.95,
-            weight: 2
-          })
-            .bindPopup('موقعیت فعلی شما')
-            .addTo(mapInstanceRef.current)
-            .openPopup();
+          mapInstanceRef.current.flyTo({ center: [longitude, latitude], zoom: 15, essential: true });
         }
       },
       (err) => {
@@ -322,52 +417,34 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
     );
   };
 
-  const handleRecenterCluster = () => {
-    if (!mapInstanceRef.current) return;
-    mapInstanceRef.current.flyTo([35.73, 51.42], 13, { duration: 1.0 });
-  };
-
   return (
     <div className="clay-card relative w-full h-full min-h-[360px] sm:min-h-[420px] overflow-hidden border border-[#E1E1E1] dark:border-stone-800 shadow-md">
+      {/* Map Container */}
       <div ref={mapContainerRef} className="w-full h-full" />
 
       {/* Floating Action Controls */}
       <div className="absolute top-4 left-4 z-[400] flex flex-col gap-2">
-        {/* Layer Switcher */}
-        <div className="relative">
-          <button
-            onClick={() => setShowTilePicker(!showTilePicker)}
-            title="تغییر کیفیت و پوسته نقشه"
-            className="clay-button clay-base w-10 h-10 flex items-center justify-center text-[#3D5B99] dark:text-[#A3C2E4] hover:scale-105 active:scale-95 transition-all"
-          >
-            <Layers className="w-4 h-4" />
-          </button>
+        {/* Toggle Live Traffic */}
+        <button
+          onClick={handleToggleTraffic}
+          title={showTrafficLayer ? 'خاموش کردن ترافیک زنده' : 'روشن کردن ترافیک زنده تهران'}
+          className={`clay-button w-10 h-10 flex items-center justify-center transition-all ${
+            showTrafficLayer ? 'bg-emerald-600 text-white' : 'clay-base text-[#3D5B99] dark:text-[#A3C2E4]'
+          }`}
+        >
+          <Car className="w-4 h-4" />
+        </button>
 
-          {showTilePicker && (
-            <div className="clay-card absolute left-0 mt-2 w-64 bg-white dark:bg-[#1a202c] p-2.5 z-[500] text-xs space-y-1 border border-[#E1E1E1] dark:border-stone-800 shadow-xl">
-              <div className="font-bold text-[#3D5B99] dark:text-[#A3C2E4] mb-1.5 px-2 text-[11px]">
-                پوسته نقشه (با تفکیک کوچه‌ها)
-              </div>
-              {(Object.keys(TILE_LAYERS) as (keyof typeof TILE_LAYERS)[]).map((key) => (
-                <button
-                  key={key}
-                  onClick={() => {
-                    setCurrentTileKey(key);
-                    setShowTilePicker(false);
-                  }}
-                  className={`w-full text-right px-2.5 py-2 rounded-xl flex items-center justify-between transition-colors ${
-                    currentTileKey === key
-                      ? 'clay-darkblue font-bold text-white'
-                      : 'text-stone-700 dark:text-stone-300 hover:bg-[#E1E1E1]/40 dark:hover:bg-stone-800'
-                  }`}
-                >
-                  <span className="leading-snug">{TILE_LAYERS[key].name}</span>
-                  {currentTileKey === key && <Check className="w-3.5 h-3.5 mr-2 shrink-0" />}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+        {/* Toggle Tehran Traffic Zone Overlay */}
+        <button
+          onClick={() => setShowTrafficZone(!showTrafficZone)}
+          title={showTrafficZone ? 'مخفی کردن محدوده طرح ترافیک' : 'نمایش محدوده طرح ترافیک تهران'}
+          className={`clay-button w-10 h-10 flex items-center justify-center transition-all ${
+            showTrafficZone ? 'bg-rose-500 text-white' : 'clay-base text-[#3D5B99] dark:text-[#A3C2E4]'
+          }`}
+        >
+          <ShieldAlert className="w-4 h-4" />
+        </button>
 
         {/* Locate Me */}
         <button
@@ -398,10 +475,16 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           <span className="w-2.5 h-2.5 rounded-full bg-[#F76B1C] inline-block"></span>
           <span>نمایشگاه فعال</span>
         </div>
-        {routeResult && (
+        {showTrafficZone && (
           <div className="flex items-center gap-1.5">
-            <span className="w-4 h-0.5 bg-[#F76B1C] inline-block"></span>
-            <span>مسیر بهینه</span>
+            <span className="w-2.5 h-2.5 rounded-sm bg-rose-500/30 border border-rose-500 inline-block"></span>
+            <span>طرح ترافیک</span>
+          </div>
+        )}
+        {showTrafficLayer && (
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+            <span>ترافیک زنده</span>
           </div>
         )}
       </div>
