@@ -11,6 +11,8 @@ interface HeaderProps {
   onToggleDarkMode: () => void;
 }
 
+export const APP_VERSION = 'بتا V 1.040';
+
 export const Header: React.FC<HeaderProps> = ({
   selectedCount,
   onOpenCuratedTours,
@@ -29,9 +31,14 @@ export const Header: React.FC<HeaderProps> = ({
               <Compass className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
             </div>
             <div>
-              <span className="text-lg sm:text-xl font-bold tracking-tight text-[#1c2944] dark:text-white block leading-tight">
-                گالری‌گرد
-              </span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-lg sm:text-xl font-bold tracking-tight text-[#1c2944] dark:text-white block leading-tight">
+                  گالری‌گرد
+                </span>
+                <span className="px-1.5 py-0.5 text-[9px] font-bold rounded-md bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-none">
+                  {APP_VERSION}
+                </span>
+              </div>
               <span className="text-[10px] sm:text-[11px] font-medium text-[#3D5B99] dark:text-[#A3C2E4] hidden xs:block mt-0.5">
                 مسیریاب هوشمند گالری‌های هنری
               </span>

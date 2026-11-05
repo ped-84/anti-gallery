@@ -28,7 +28,12 @@ import {
   AlertTriangle,
   Check,
   Zap,
-  Info
+  Info,
+  ArrowUp,
+  ArrowDown,
+  ArrowUpDown,
+  Sparkles,
+  Flag
 } from 'lucide-react';
 
 interface RouteSummaryPanelProps {
@@ -43,6 +48,13 @@ interface RouteSummaryPanelProps {
     trafficCondition: TrafficCondition
   ) => void;
   onSelectGallery: (gallery: Gallery) => void;
+  onSetStartGallery?: (galleryId: number) => void;
+  onSetEndGallery?: (galleryId: number) => void;
+  onMoveStop?: (fromIdx: number, toIdx: number) => void;
+  onReverseRoute?: () => void;
+  onResetAutoOrder?: () => void;
+  startGalleryId?: number | null;
+  endGalleryId?: number | null;
 }
 
 export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
@@ -52,7 +64,14 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
   onRemoveGallery,
   onClearAll,
   onRecalculate,
-  onSelectGallery
+  onSelectGallery,
+  onSetStartGallery,
+  onSetEndGallery,
+  onMoveStop,
+  onReverseRoute,
+  onResetAutoOrder,
+  startGalleryId,
+  endGalleryId
 }) => {
   const [mode, setMode] = useState<'driving' | 'walking'>(routeResult?.mode || 'driving');
   const [isRoundTrip, setIsRoundTrip] = useState<boolean>(routeResult?.isRoundTrip ?? false);
@@ -378,11 +397,28 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
           </div>
         ) : (
           <div className="space-y-3">
-            <div className="text-xs font-bold text-[#3D5B99] dark:text-[#A3C2E4] flex items-center justify-between pb-1">
-              <span>توالی بهینه توقف‌ها (کوتاه‌ترین مسافت و زمان)</span>
-              <span className="text-[#F76B1C] font-bold">
-                ترتیب بهینه بازدید
-              </span>
+            <div className="text-xs font-bold text-[#3D5B99] dark:text-[#A3C2E4] flex items-center justify-between pb-1 flex-wrap gap-2">
+              <span>توالی توقف‌ها ({toPersianDigits(routeResult.orderedGalleries.length)} گالری)</span>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={onReverseRoute}
+                  className="clay-button clay-base text-[11px] font-bold px-2.5 py-1 rounded-xl flex items-center gap-1 text-stone-700 dark:text-stone-300 hover:text-[#F76B1C] hover:scale-105 active:scale-95 transition-all shadow-xs"
+                  title="معکوس کردن کامل مسیر (از آخر به اول)"
+                >
+                  <ArrowUpDown className="w-3.5 h-3.5 text-[#F76B1C]" />
+                  <span>معکوس مسیر</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={onResetAutoOrder}
+                  className="clay-button clay-base text-[11px] font-bold px-2.5 py-1 rounded-xl flex items-center gap-1 text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] hover:scale-105 active:scale-95 transition-all shadow-xs"
+                  title="محاسبه مجدد کوتاه‌ترین مسیر کلی به صورت خودکار"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                  <span>چینش خودکار</span>
+                </button>
+              </div>
             </div>
 
             <div className="relative pr-7 space-y-3.5 before:absolute before:right-3.5 before:top-4 before:bottom-4 before:w-0.5 before:bg-stone-200 dark:before:bg-stone-700">
@@ -421,13 +457,35 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                           </div>
                         </div>
 
-                        <button
-                          onClick={() => onRemoveGallery(gallery.id)}
-                          className="p-1.5 rounded-lg text-stone-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors shrink-0"
-                          title="حذف این توقف"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                        {/* Stop Order & Actions: Up, Down, Trash */}
+                        <div className="flex items-center gap-1 shrink-0">
+                          <button
+                            type="button"
+                            disabled={idx === 0}
+                            onClick={() => onMoveStop?.(idx, idx - 1)}
+                            className="p-1 rounded-md text-stone-400 hover:text-[#1856C7] disabled:opacity-20 disabled:pointer-events-none hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+                            title="جابجایی به یک توقف قبل‌تر (بالاتر)"
+                          >
+                            <ArrowUp className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            disabled={isLast}
+                            onClick={() => onMoveStop?.(idx, idx + 1)}
+                            className="p-1 rounded-md text-stone-400 hover:text-[#1856C7] disabled:opacity-20 disabled:pointer-events-none hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+                            title="جابجایی به یک توقف بعدتر (پایین‌تر)"
+                          >
+                            <ArrowDown className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => onRemoveGallery(gallery.id)}
+                            className="p-1 rounded-md text-stone-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                            title="حذف این توقف"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
 
                       {gallery.activeExhibition && (
@@ -442,6 +500,41 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                           )}
                         </div>
                       )}
+
+                      {/* Explicit Start / End Point Controls */}
+                      <div className="mt-2.5 pt-2 border-t border-stone-100 dark:border-stone-800/80 flex items-center justify-between gap-2 flex-wrap text-[11px]">
+                        {isFirst ? (
+                          <span className="inline-flex items-center gap-1 font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 px-2.5 py-1 rounded-lg border border-blue-200/50 dark:border-blue-800/40">
+                            <span>🚩</span> مبدأ گشت (توقف ۱)
+                          </span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => onSetStartGallery?.(gallery.id)}
+                            className="inline-flex items-center gap-1 font-bold text-[#1856C7] dark:text-[#93c5fd] hover:text-[#F76B1C] bg-[#edf3ff] dark:bg-blue-950/30 px-2.5 py-1 rounded-lg hover:scale-105 active:scale-95 transition-all"
+                            title="این گالری به عنوان نقطه شروع تعیین شده و باقی مسیر از اینجا بهینه می‌شود"
+                          >
+                            <span>🚩</span> شروع گشت از اینجا
+                          </button>
+                        )}
+
+                        {!routeResult.isRoundTrip && (
+                          isLast ? (
+                            <span className="inline-flex items-center gap-1 font-bold text-[#F76B1C] bg-orange-50 dark:bg-orange-950/40 px-2.5 py-1 rounded-lg border border-orange-200/50 dark:border-orange-800/40">
+                              <span>🏁</span> مقصد نهایی (توقف {toPersianDigits(idx + 1)})
+                            </span>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => onSetEndGallery?.(gallery.id)}
+                              className="inline-flex items-center gap-1 font-medium text-stone-600 dark:text-stone-400 hover:text-[#F76B1C] bg-stone-100 dark:bg-stone-800 px-2.5 py-1 rounded-lg hover:scale-105 active:scale-95 transition-all"
+                              title="تعیین این گالری به عنوان مقصد پایانی"
+                            >
+                              <span>🏁</span> پایان در اینجا
+                            </button>
+                          )
+                        )}
+                      </div>
                     </div>
 
                     {/* Transit Leg Info: Clean Centered Travel Pill */}

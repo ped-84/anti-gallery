@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Gallery, RouteOptimizationResult } from './types/gallery';
 import rawGalleriesData from './data/galleries.json';
 import { PERSIAN_CURATED_TOURS, PersianCuratedTour } from './data/curatedTours';
-import { optimizeGalleryRoute } from './utils/routeOptimizer';
+import { optimizeGalleryRoute, calculateFixedRoute } from './utils/routeOptimizer';
 import { toPersianDigits, TrafficCondition, getPersianNeighborhood, getGalleryDisplayName } from './utils/persianUtils';
 import { Header } from './components/Header';
 import { GalleryCard } from './components/GalleryCard';
@@ -182,10 +182,15 @@ export default function App() {
     });
   }, [galleries, searchQuery, selectedNeighborhood, filterActivePostersOnly, sortBy]);
 
+  const [startGalleryId, setStartGalleryId] = useState<number | null>(null);
+  const [endGalleryId, setEndGalleryId] = useState<number | null>(null);
+
   const runRouteOptimization = async (
     mode: 'driving' | 'walking' = routeResult?.mode || 'driving',
     isRoundTrip: boolean = routeResult?.isRoundTrip ?? false,
-    trafficCondition: TrafficCondition = routeResult?.trafficCondition || 'peak'
+    trafficCondition: TrafficCondition = routeResult?.trafficCondition || 'peak',
+    startId: number | null = startGalleryId,
+    endId: number | null = endGalleryId
   ) => {
     if (selectedGalleries.length < 2) return;
     setIsOptimizing(true);
@@ -193,7 +198,9 @@ export default function App() {
       const result = await optimizeGalleryRoute(selectedGalleries, {
         mode,
         isRoundTrip,
-        trafficCondition
+        trafficCondition,
+        startGalleryId: startId,
+        endGalleryId: endId
       });
       setRouteResult(result);
     } catch (err: any) {
@@ -210,6 +217,8 @@ export default function App() {
   const handleToggleGallery = (gallery: Gallery) => {
     setSelectedGalleryIds((prev) => {
       if (prev.includes(gallery.id)) {
+        if (startGalleryId === gallery.id) setStartGalleryId(null);
+        if (endGalleryId === gallery.id) setEndGalleryId(null);
         return prev.filter((id) => id !== gallery.id);
       } else {
         return [...prev, gallery.id];
@@ -222,12 +231,94 @@ export default function App() {
       runRouteOptimization(
         routeResult?.mode || 'driving',
         routeResult?.isRoundTrip ?? false,
-        routeResult?.trafficCondition || 'peak'
+        routeResult?.trafficCondition || 'peak',
+        startGalleryId,
+        endGalleryId
       );
     } else {
       setRouteResult(null);
     }
   }, [selectedGalleryIds]);
+
+  const handleSetStartGallery = (id: number) => {
+    setStartGalleryId(id);
+    if (endGalleryId === id) setEndGalleryId(null);
+    runRouteOptimization(
+      routeResult?.mode || 'driving',
+      routeResult?.isRoundTrip ?? false,
+      routeResult?.trafficCondition || 'peak',
+      id,
+      endGalleryId === id ? null : endGalleryId
+    );
+  };
+
+  const handleSetEndGallery = (id: number) => {
+    setEndGalleryId(id);
+    if (startGalleryId === id) setStartGalleryId(null);
+    runRouteOptimization(
+      routeResult?.mode || 'driving',
+      routeResult?.isRoundTrip ?? false,
+      routeResult?.trafficCondition || 'peak',
+      startGalleryId === id ? null : startGalleryId,
+      id
+    );
+  };
+
+  const handleReverseRoute = async () => {
+    if (!routeResult || routeResult.orderedGalleries.length < 2) return;
+    const reversed = [...routeResult.orderedGalleries].reverse();
+    setIsOptimizing(true);
+    try {
+      const newResult = await calculateFixedRoute(reversed, {
+        mode: routeResult.mode,
+        isRoundTrip: routeResult.isRoundTrip,
+        trafficCondition: routeResult.trafficCondition
+      });
+      setRouteResult(newResult);
+      setStartGalleryId(reversed[0].id);
+      setEndGalleryId(reversed[reversed.length - 1].id);
+    } catch (e) {
+      console.warn('Reverse route note:', e);
+    } finally {
+      setIsOptimizing(false);
+    }
+  };
+
+  const handleMoveStop = async (fromIdx: number, toIdx: number) => {
+    if (!routeResult) return;
+    const list = [...routeResult.orderedGalleries];
+    if (fromIdx < 0 || fromIdx >= list.length || toIdx < 0 || toIdx >= list.length) return;
+    const [moved] = list.splice(fromIdx, 1);
+    list.splice(toIdx, 0, moved);
+
+    setIsOptimizing(true);
+    try {
+      const newResult = await calculateFixedRoute(list, {
+        mode: routeResult.mode,
+        isRoundTrip: routeResult.isRoundTrip,
+        trafficCondition: routeResult.trafficCondition
+      });
+      setRouteResult(newResult);
+      setStartGalleryId(list[0].id);
+      setEndGalleryId(list[list.length - 1].id);
+    } catch (e) {
+      console.warn('Move stop note:', e);
+    } finally {
+      setIsOptimizing(false);
+    }
+  };
+
+  const handleResetAutoOrder = () => {
+    setStartGalleryId(null);
+    setEndGalleryId(null);
+    runRouteOptimization(
+      routeResult?.mode || 'driving',
+      routeResult?.isRoundTrip ?? false,
+      routeResult?.trafficCondition || 'peak',
+      null,
+      null
+    );
+  };
 
   const handleSelectCuratedTour = (tour: PersianCuratedTour) => {
     setSelectedGalleryIds(tour.galleryIds);
@@ -367,6 +458,7 @@ export default function App() {
               routeResult={routeResult}
               onToggleGallery={handleToggleGallery}
               onSelectForDetails={(g) => setActiveModalGallery(g)}
+              onSetStartGallery={handleSetStartGallery}
               activeGalleryId={highlightedGalleryId}
               isDarkMode={isDarkMode}
             />
@@ -521,6 +613,13 @@ export default function App() {
                   setHighlightedGalleryId(g.id);
                   setActiveModalGallery(g);
                 }}
+                onSetStartGallery={handleSetStartGallery}
+                onSetEndGallery={handleSetEndGallery}
+                onMoveStop={handleMoveStop}
+                onReverseRoute={handleReverseRoute}
+                onResetAutoOrder={handleResetAutoOrder}
+                startGalleryId={startGalleryId}
+                endGalleryId={endGalleryId}
               />
             </div>
           </section>

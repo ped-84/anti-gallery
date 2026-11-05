@@ -9,6 +9,7 @@ interface InteractiveMapProps {
   routeResult: RouteOptimizationResult | null;
   onToggleGallery: (gallery: Gallery) => void;
   onSelectForDetails?: (gallery: Gallery) => void;
+  onSetStartGallery?: (galleryId: number) => void;
   activeGalleryId?: number | null;
   isDarkMode?: boolean;
 }
@@ -43,6 +44,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
   routeResult,
   onToggleGallery,
   onSelectForDetails,
+  onSetStartGallery,
   activeGalleryId,
   isDarkMode = false
 }) => {
@@ -415,6 +417,20 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
            </div>`
         : '';
 
+      let startPointButtonHtml = '';
+      if (orderNum !== undefined) {
+        if (orderNum === 1) {
+          startPointButtonHtml = `<div class="mt-1.5 text-[10px] font-bold text-blue-600 dark:text-blue-400">🚩 مبدأ گشت (توقف ۱)</div>`;
+        } else if (onSetStartGallery) {
+          startPointButtonHtml = `
+            <div class="mt-2 pt-1 border-t border-[#E1E1E1] dark:border-stone-800">
+              <button id="neshan-btn-setstart-${gallery.id}" class="text-[11px] text-[#1856C7] dark:text-[#93c5fd] hover:text-[#F76B1C] font-bold underline cursor-pointer flex items-center gap-1">
+                🚩 شروع گشت از این گالری (توقف ۱)
+              </button>
+            </div>`;
+        }
+      }
+
       const posterOrImg = gallery.posterImage || activeEx?.poster || gallery.image;
       const galleryDisplayName = getGalleryDisplayName(gallery);
       const imageHtml = posterOrImg
@@ -428,6 +444,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         <div class="text-xs font-bold text-[#1d2d4c] dark:text-white leading-snug">${galleryDisplayName}</div>
         <div class="text-[11px] text-[#3D5B99] dark:text-[#A3C2E4] mt-0.5 font-medium truncate">${gallery.neighborhoodFa || 'تهران'} · ${gallery.addressFa || gallery.address}</div>
         ${trafficWarningHtml}
+        ${startPointButtonHtml}
         ${exhibitionHtml}
         <div class="mt-3 flex items-center justify-between gap-2 pt-2 border-t border-[#E1E1E1] dark:border-stone-800">
           <button id="neshan-btn-details-${gallery.id}" class="text-[11px] text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] underline font-bold cursor-pointer">
@@ -455,6 +472,13 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         if (btnDetails && onSelectForDetails) {
           btnDetails.onclick = () => {
             onSelectForDetails(gallery);
+            popup.remove();
+          };
+        }
+        const btnSetStart = document.getElementById(`neshan-btn-setstart-${gallery.id}`);
+        if (btnSetStart && onSetStartGallery) {
+          btnSetStart.onclick = () => {
+            onSetStartGallery(gallery.id);
             popup.remove();
           };
         }
