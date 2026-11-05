@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>گالری‌گرد | مسیریاب هوشمند گالری‌های هنری</title>
+    <meta name="description" content="برنامه‌ریزی و بهینه‌سازی بهترین مسیر بازدید از گالری‌های هنری با نقشه دقیق و تخمین ترافیک تهران" />
+    <meta property="og:title" content="گالری‌گرد | مسیریاب هوشمند گالری‌های هنری" />
+    <meta property="og:description" content="برنامه‌ریزی و بهینه‌سازی بهترین مسیر بازدید از گالری‌های هنری با نقشه دقیق و تخمین ترافیک تهران" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preload" href="/fonts/shabnam/Shabnam-FD.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/shabnam/Shabnam-Bold-FD.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/shabnam/Shabnam-Medium-FD.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <style>
+      @font-face {
+        font-family: 'Shabnam FD';
+        src: url('/fonts/shabnam/Shabnam-FD.woff2') format('woff2'),
+             url('/fonts/shabnam/Shabnam-FD.woff') format('woff'),
+             url('/fonts/shabnam/Shabnam-FD.ttf') format('truetype');
+        font-weight: 400;
+        font-style: normal;
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'Shabnam FD';
+        src: url('/fonts/shabnam/Shabnam-Bold-FD.woff2') format('woff2'),
+             url('/fonts/shabnam/Shabnam-Bold-FD.woff') format('woff'),
+             url('/fonts/shabnam/Shabnam-Bold-FD.ttf') format('truetype');
+        font-weight: 700;
+        font-style: normal;
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'Shabnam FD';
+        src: url('/fonts/shabnam/Shabnam-Medium-FD.woff2') format('woff2'),
+             url('/fonts/shabnam/Shabnam-Medium-FD.woff') format('woff'),
+             url('/fonts/shabnam/Shabnam-Medium-FD.ttf') format('truetype');
+        font-weight: 500;
+        font-style: normal;
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'Shabnam FD';
+        src: url('/fonts/shabnam/Shabnam-Light-FD.woff2') format('woff2'),
+             url('/fonts/shabnam/Shabnam-Light-FD.woff') format('woff'),
+             url('/fonts/shabnam/Shabnam-Light-FD.ttf') format('truetype');
+        font-weight: 300;
+        font-style: normal;
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'Shabnam';
+        src: url('/fonts/shabnam/Shabnam-FD.woff2') format('woff2'),
+             url('/fonts/shabnam/Shabnam-FD.woff') format('woff'),
+             url('/fonts/shabnam/Shabnam-FD.ttf') format('truetype');
+        font-weight: 400;
+        font-style: normal;
+        font-display: block;
+      }
+      html, body, *, input, button, select, textarea {
+        font-family: 'Shabnam FD', 'Shabnam', system-ui, sans-serif !important;
+      }
+    </style>
+  </head>
+  <body class="bg-[#f0f2f6] dark:bg-[#13161c] text-stone-800 dark:text-stone-100 antialiased font-sans transition-colors duration-300">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

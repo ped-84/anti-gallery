@@ -1,0 +1,329 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Shabnam FD', 'Shabnam', sans-serif;
+  --font-serif: 'Shabnam FD', 'Shabnam', serif;
+}
+
+/* ========================================================
+   Shabnam FD (Farsi Digits) Fonts
+   ======================================================== */
+@font-face {
+  font-family: 'Shabnam FD';
+  src: url('/fonts/shabnam/Shabnam-Thin-FD.woff2') format('woff2'),
+       url('/fonts/shabnam/Shabnam-Thin-FD.woff') format('woff'),
+       url('/fonts/shabnam/Shabnam-Thin-FD.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Shabnam FD';
+  src: url('/fonts/shabnam/Shabnam-Light-FD.woff2') format('woff2'),
+       url('/fonts/shabnam/Shabnam-Light-FD.woff') format('woff'),
+       url('/fonts/shabnam/Shabnam-Light-FD.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Shabnam FD';
+  src: url('/fonts/shabnam/Shabnam-FD.woff2') format('woff2'),
+       url('/fonts/shabnam/Shabnam-FD.woff') format('woff'),
+       url('/fonts/shabnam/Shabnam-FD.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Shabnam FD';
+  src: url('/fonts/shabnam/Shabnam-Medium-FD.woff2') format('woff2'),
+       url('/fonts/shabnam/Shabnam-Medium-FD.woff') format('woff'),
+       url('/fonts/shabnam/Shabnam-Medium-FD.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Shabnam FD';
+  src: url('/fonts/shabnam/Shabnam-Bold-FD.woff2') format('woff2'),
+       url('/fonts/shabnam/Shabnam-Bold-FD.woff') format('woff'),
+       url('/fonts/shabnam/Shabnam-Bold-FD.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Also alias 'Shabnam' to Shabnam FD */
+@font-face {
+  font-family: 'Shabnam';
+  src: url('/fonts/shabnam/Shabnam-FD.woff2') format('woff2'),
+       url('/fonts/shabnam/Shabnam-FD.woff') format('woff'),
+       url('/fonts/shabnam/Shabnam-FD.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Global Font Rule: Apply Shabnam FD everywhere */
+html, body, *, input, button, select, textarea {
+  font-family: 'Shabnam FD', 'Shabnam', system-ui, -apple-system, sans-serif !important;
+}
+
+body {
+  direction: rtl;
+  text-align: right;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', 'Shabnam FD', monospace !important;
+}
+
+/* Custom RTL select styling to guarantee dropdown arrow position */
+.clay-select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  padding-right: 0.875rem !important;
+  padding-left: 2.5rem !important; /* Plenty of room for chevron away from border */
+  cursor: pointer;
+}
+
+/* ========================================================
+   Claymorphic 3D Soft Shadow System
+   ======================================================== */
+.clay-card {
+  border-radius: 1.5rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 
+    8px 12px 24px -4px rgba(61, 91, 153, 0.15),
+    -6px -6px 18px 0px rgba(255, 255, 255, 0.95),
+    inset 1px 1px 2px 0px rgba(255, 255, 255, 0.8),
+    inset -1px -1px 2px 0px rgba(0, 0, 0, 0.04);
+}
+
+.dark .clay-card {
+  box-shadow: 
+    8px 12px 24px -4px rgba(0, 0, 0, 0.65),
+    -4px -4px 14px 0px rgba(61, 91, 153, 0.12),
+    inset 1px 1px 1px 0px rgba(255, 255, 255, 0.1),
+    inset -1px -1px 2px 0px rgba(0, 0, 0, 0.4);
+}
+
+.clay-button {
+  border-radius: 1.125rem;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 
+    4px 6px 14px -2px rgba(61, 91, 153, 0.18),
+    -3px -3px 10px 0px rgba(255, 255, 255, 0.95),
+    inset 1px 1px 1px 0px rgba(255, 255, 255, 0.8);
+}
+
+.dark .clay-button {
+  box-shadow: 
+    4px 6px 14px -2px rgba(0, 0, 0, 0.6),
+    -2px -2px 8px 0px rgba(61, 91, 153, 0.15),
+    inset 1px 1px 1px 0px rgba(255, 255, 255, 0.1);
+}
+
+.clay-button:active, .clay-pressed {
+  transform: scale(0.97);
+  box-shadow: 
+    inset 3px 4px 8px rgba(0, 0, 0, 0.15),
+    inset -2px -2px 6px rgba(255, 255, 255, 0.6) !important;
+}
+
+.dark .clay-button:active, .dark .clay-pressed {
+  box-shadow: 
+    inset 3px 4px 8px rgba(0, 0, 0, 0.55),
+    inset -2px -2px 6px rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Clay Inset Input */
+.clay-input {
+  border-radius: 1.125rem;
+  box-shadow: 
+    inset 3px 3px 6px rgba(61, 91, 153, 0.12),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.9);
+}
+
+.dark .clay-input {
+  box-shadow: 
+    inset 3px 3px 6px rgba(0, 0, 0, 0.5),
+    inset -2px -2px 5px rgba(61, 91, 153, 0.1);
+}
+
+/* ========================================================
+   Vibrant Contrast Palette (Stickdazzle 36151) & Shades
+   01 DARK BLUE:    #3D5B99
+   02 VIVID ORANGE:  #F76B1C
+   03 LIGHT GRAY:    #E1E1E1
+   04 SOFT BLUE:     #A3C2E4
+   ======================================================== */
+
+.clay-darkblue {
+  background-color: #3D5B99;
+  color: #ffffff;
+}
+.clay-darkblue-subtle {
+  background-color: #e8eef8;
+  color: #1e335a;
+}
+.dark .clay-darkblue {
+  background-color: #273b63;
+  color: #dbe5f7;
+}
+.dark .clay-darkblue-subtle {
+  background-color: #17243c;
+  color: #c0d3f2;
+}
+
+.clay-orange {
+  background-color: #F76B1C;
+  color: #ffffff;
+}
+.clay-orange-subtle {
+  background-color: #feede4;
+  color: #9c3b06;
+}
+.dark .clay-orange {
+  background-color: #bd4c09;
+  color: #fff1ea;
+}
+.dark .clay-orange-subtle {
+  background-color: #3f1a04;
+  color: #fdba94;
+}
+
+.clay-gray {
+  background-color: #E1E1E1;
+  color: #262626;
+}
+.clay-gray-subtle {
+  background-color: #f4f4f4;
+  color: #3d3d3d;
+}
+.dark .clay-gray {
+  background-color: #2a2e38;
+  color: #E1E1E1;
+}
+.dark .clay-gray-subtle {
+  background-color: #1d2027;
+  color: #d4d4d8;
+}
+
+.clay-softblue {
+  background-color: #A3C2E4;
+  color: #10335e;
+}
+.clay-softblue-subtle {
+  background-color: #ebf3fb;
+  color: #1d4b83;
+}
+.dark .clay-softblue {
+  background-color: #28476b;
+  color: #cde0f3;
+}
+.dark .clay-softblue-subtle {
+  background-color: #16273b;
+  color: #A3C2E4;
+}
+
+.clay-base {
+  background-color: #ffffff;
+  color: #1f2937;
+}
+.dark .clay-base {
+  background-color: #181d26;
+  color: #f3f4f6;
+}
+
+/* Leaflet map styles with Shabnam FD */
+.leaflet-container {
+  font-family: 'Shabnam FD', 'Shabnam', inherit !important;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  border-radius: 1.5rem;
+  background-color: #E1E1E1 !important;
+}
+
+.dark .leaflet-container {
+  background-color: #131720 !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 1.25rem !important;
+  box-shadow: 0 16px 32px -8px rgba(61, 91, 153, 0.25) !important;
+  padding: 0 !important;
+  overflow: hidden;
+  direction: rtl;
+  text-align: right;
+  border: 1px solid rgba(61, 91, 153, 0.15);
+}
+
+/* ========================================================
+   Snapp / Tap30 Style Navigation Map
+   Tones down loud OSM colors into calm, muted urban neutrals
+   while preserving razor-sharp black Persian street typography
+   ======================================================== */
+.snapp-map-tile {
+  filter: saturate(0.38) contrast(1.14) brightness(1.02);
+}
+
+.dark .snapp-map-tile {
+  filter: brightness(0.7) invert(1) contrast(2.4) hue-rotate(200deg) saturate(0.35);
+}
+
+.dark .leaflet-popup-content-wrapper {
+  background: #1a202c !important;
+  color: #f3f4f6 !important;
+  border: 1px solid rgba(163, 194, 228, 0.2);
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  line-height: 1.6;
+}
+
+.leaflet-popup-tip {
+  background: white !important;
+}
+.dark .leaflet-popup-tip {
+  background: #1a202c !important;
+}
+
+.custom-tour-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-family: 'Shabnam FD', 'Shabnam', sans-serif !important;
+  box-shadow: 0 6px 14px rgba(61, 91, 153, 0.35);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.custom-tour-pin:hover {
+  transform: scale(1.18);
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(61, 91, 153, 0.3);
+  border-radius: 9999px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(163, 194, 228, 0.25);
+}

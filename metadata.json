@@ -1,0 +1,6 @@
+{
+  "name": "Art Gallery Route Optimizer",
+  "description": "مسیریاب هوشمند و برنامه‌ریزی بهینه بازدید از گالری‌های هنری، مدل ترافیک تهران و اتصال به نشان، بلد، گوگل مپس و ویز",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
