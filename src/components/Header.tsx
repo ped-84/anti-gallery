@@ -11,7 +11,7 @@ interface HeaderProps {
   onToggleDarkMode: () => void;
 }
 
-export const APP_VERSION = 'بتا V 1.049';
+export const APP_VERSION = 'بتا V 1.050';
 
 export const Header: React.FC<HeaderProps> = ({
   selectedCount,

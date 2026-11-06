@@ -171,22 +171,22 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
           )}
         </div>
 
-        {/* Travel Mode & Round-trip segmented controls (Spacious & Clean Layout) */}
+        {/* Travel Mode, Route Type & Smart Traffic Controls (Apple Maps / Citymapper Inspired Unified Architecture) */}
         {selectedGalleries.length >= 2 && (
-          <div className="mt-3.5 space-y-2.5">
-            {/* Row 1: Travel Mode & Tour Pattern */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-              {/* Mode: Car vs Walking */}
-              <div className="flex items-center justify-between p-1 bg-[#E1E1E1]/60 dark:bg-stone-800/80 rounded-2xl">
-                <span className="text-[11px] font-bold text-stone-500 dark:text-stone-400 pr-2.5">تردد:</span>
+          <div className="mt-3 space-y-2">
+            {/* Row 1: Mode Switch & Route Pattern (Two sleek Clay Segmented Controls) */}
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              {/* Mode: Driving vs Walking */}
+              <div className="clay-card p-1 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-xl flex items-center justify-between border border-[#E1E1E1]/80 dark:border-stone-800">
+                <span className="text-[11px] font-bold text-stone-500 dark:text-stone-400 pr-2">تردد:</span>
                 <div className="flex items-center gap-1">
                   <button
                     type="button"
                     onClick={() => handleModeChange('driving')}
-                    className={`px-3 py-1.5 font-bold rounded-xl transition-all flex items-center gap-1.5 ${
+                    className={`px-2.5 py-1 rounded-lg font-bold text-xs transition-all flex items-center gap-1.5 ${
                       mode === 'driving'
-                        ? 'clay-base text-[#1d2d4c] dark:text-white shadow-sm'
-                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                        ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
+                        : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
                     }`}
                   >
                     <Car className="w-3.5 h-3.5 text-[#3D5B99]" />
@@ -195,10 +195,10 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                   <button
                     type="button"
                     onClick={() => handleModeChange('walking')}
-                    className={`px-3 py-1.5 font-bold rounded-xl transition-all flex items-center gap-1.5 ${
+                    className={`px-2.5 py-1 rounded-lg font-bold text-xs transition-all flex items-center gap-1.5 ${
                       mode === 'walking'
-                        ? 'clay-base text-[#1d2d4c] dark:text-white shadow-sm'
-                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                        ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
+                        : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
                     }`}
                   >
                     <Footprints className="w-3.5 h-3.5 text-[#F76B1C]" />
@@ -207,9 +207,9 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                 </div>
               </div>
 
-              {/* Tour Pattern: End at last gallery vs Round-trip loop */}
-              <div className="flex items-center justify-between p-1 bg-[#E1E1E1]/60 dark:bg-stone-800/80 rounded-2xl">
-                <span className="text-[11px] font-bold text-stone-500 dark:text-stone-400 pr-2.5">مسیر:</span>
+              {/* Pattern: One-Way vs Loop */}
+              <div className="clay-card p-1 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-xl flex items-center justify-between border border-[#E1E1E1]/80 dark:border-stone-800">
+                <span className="text-[11px] font-bold text-stone-500 dark:text-stone-400 pr-2">الگو:</span>
                 <div className="flex items-center gap-1">
                   <button
                     type="button"
@@ -219,12 +219,11 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                         onRecalculate(mode, false, trafficCondition);
                       }
                     }}
-                    className={`px-2.5 py-1.5 font-bold rounded-xl transition-all ${
+                    className={`px-2 py-1 rounded-lg font-bold text-xs transition-all ${
                       !isRoundTrip
-                        ? 'clay-base text-[#1d2d4c] dark:text-white shadow-sm'
-                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                        ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
+                        : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
                     }`}
-                    title="پایان در گالری آخر"
                   >
                     تک‌مسیره
                   </button>
@@ -236,31 +235,27 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                         onRecalculate(mode, true, trafficCondition);
                       }
                     }}
-                    className={`px-2.5 py-1.5 font-bold rounded-xl transition-all flex items-center gap-1 ${
+                    className={`px-2 py-1 rounded-lg font-bold text-xs transition-all flex items-center gap-1 ${
                       isRoundTrip
-                        ? 'clay-darkblue text-white shadow-md'
-                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                        ? 'clay-button clay-darkblue text-white shadow-xs'
+                        : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
                     }`}
-                    title="بازگشت به گالری مبدا"
                   >
                     <RotateCw className="w-3 h-3" />
-                    <span>رفت‌وبرگشت</span>
+                    <span>حلقه</span>
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* Row 2: Traffic Scenario Selector (Clear full labels, no cut-offs) */}
+            {/* Row 2: Traffic Scenario Selector (Sleek, integrated, low-noise segmented pill) */}
             {mode === 'driving' && (
-              <div className="pt-2 border-t border-[#E1E1E1]/70 dark:border-stone-800">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[11px] font-bold text-stone-600 dark:text-stone-300 flex items-center gap-1.5">
-                    <Zap className="w-3.5 h-3.5 text-[#F76B1C]" />
-                    <span>ساعت حرکت در تهران:</span>
-                  </span>
-                  <span className="text-[10px] text-stone-400">تخمین ترافیک هوشمند</span>
+              <div className="clay-card p-1.5 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-xl flex items-center justify-between gap-2 border border-[#E1E1E1]/80 dark:border-stone-800">
+                <div className="flex items-center gap-1.5 pr-1.5 text-stone-500 dark:text-stone-400 shrink-0">
+                  <Clock className="w-3.5 h-3.5 text-[#F76B1C]" />
+                  <span className="text-[11px] font-bold">زمان حرکت:</span>
                 </div>
-                <div className="grid grid-cols-3 gap-1.5 text-xs">
+                <div className="flex items-center gap-1 flex-1 justify-end">
                   {(Object.keys(TRAFFIC_MODELS) as TrafficCondition[]).map((cond) => {
                     const conf = TRAFFIC_MODELS[cond];
                     const isActive = trafficCondition === cond;
@@ -269,10 +264,10 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                         key={cond}
                         type="button"
                         onClick={() => handleTrafficChange(cond)}
-                        className={`py-2 px-1 rounded-xl text-center font-bold transition-all truncate ${
+                        className={`py-1 px-2.5 rounded-lg text-xs font-bold transition-all ${
                           isActive
-                            ? 'clay-orange text-white shadow-sm'
-                            : 'clay-base text-stone-600 dark:text-stone-400 hover:bg-[#E1E1E1]/40 dark:hover:bg-stone-800'
+                            ? 'clay-button clay-base text-[#F76B1C] shadow-xs'
+                            : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 hover:bg-white/50'
                         }`}
                       >
                         {conf.shortLabel}
@@ -286,57 +281,45 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
         )}
       </div>
 
-      {/* METRICS & STATUS SUMMARY: Clean Unified Card Without Crowded Double Banners */}
+      {/* TRIP STATS & INSIGHTS CARD: Clean, unified, modern typography (Citymapper / Apple Maps style) */}
       {routeResult && (
-        <div className="p-3.5 bg-[#f4f7fb] dark:bg-[#12161f] border-b border-[#E1E1E1] dark:border-stone-800 space-y-2.5">
-          {/* 3 Metric Columns with large readable numbers */}
-          <div className="grid grid-cols-3 divide-x divide-x-reverse divide-stone-200 dark:divide-stone-800 text-center">
-            {/* Metric 1: Distance */}
-            <div className="px-1 text-center">
-              <span className="text-[11px] font-bold text-stone-500 dark:text-stone-400 block mb-0.5">
-                مسافت کل
-              </span>
-              <span className="text-base sm:text-lg font-bold font-mono text-[#1d2d4c] dark:text-white">
-                {toPersianDigits(routeResult.totalDistanceKm)}{' '}
-                <span className="text-[11px] font-normal text-stone-500">کیلومتر</span>
-              </span>
-            </div>
-
-            {/* Metric 2: Average Transit Time */}
-            <div className="px-1 text-center">
-              <span className="text-[11px] font-bold text-stone-500 dark:text-stone-400 block mb-0.5">
-                زمان جابجایی
-              </span>
-              <span className="text-base sm:text-lg font-bold font-mono text-[#1d2d4c] dark:text-white">
-                ~{toPersianDigits(routeResult.totalDurationMin)}{' '}
-                <span className="text-[11px] font-normal text-stone-500">دقیقه</span>
-              </span>
-            </div>
-
-            {/* Metric 3: Total Tour Day Average */}
-            <div className="px-1 text-center">
-              <span className="text-[11px] font-bold text-stone-500 dark:text-stone-400 block mb-0.5">
-                کل برنامه (میانگین)
-              </span>
-              <span className="text-base sm:text-lg font-bold font-mono text-[#F76B1C]">
+        <div className="p-3.5 bg-gradient-to-b from-[#f7f9fc] to-[#edf2f8] dark:from-[#131722] dark:to-[#0f121a] border-b border-[#E1E1E1] dark:border-stone-800 space-y-3">
+          {/* Main Hero Summary Row */}
+          <div className="clay-card p-3 bg-white dark:bg-[#181d28] border border-[#E1E1E1]/80 dark:border-stone-800 flex items-center justify-between gap-3 shadow-xs">
+            {/* Primary ETA: Tour Duration */}
+            <div>
+              <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 mb-0.5">
+                تخمین کل برنامه (با بازدیدها)
+              </div>
+              <div className="text-lg sm:text-xl font-black text-[#F76B1C] font-mono leading-tight">
                 {avgHours > 0 ? `${toPersianDigits(avgHours)} ساعت و ` : ''}{toPersianDigits(avgMins)} دقیقه
+              </div>
+            </div>
+
+            {/* Secondary Transit Metrics */}
+            <div className="text-left flex flex-col items-end gap-1">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-[#f0f4fa] dark:bg-stone-800 text-[#1d2d4c] dark:text-stone-200 font-mono">
+                <span>{toPersianDigits(routeResult.totalDistanceKm)} کیلومتر مسافت</span>
+              </span>
+              <span className="text-[11px] font-medium text-stone-500 dark:text-stone-400 font-mono">
+                ~{toPersianDigits(routeResult.totalDurationMin)} دقیقه جابجایی
               </span>
             </div>
           </div>
 
-          {/* Combined Status Chips: Traffic zone & Peak condition (Gentle & informative) */}
+          {/* Context Alert Chips: Traffic Zone & Peak Delay (Soft, unobtrusive status pills) */}
           {(routeResult.trafficZoneWarningsCount > 0 || (trafficCondition === 'peak' && trafficDelayMin > 0)) && (
-            <div className="pt-2 border-t border-stone-200/80 dark:border-stone-800 flex items-center justify-between gap-2 flex-wrap text-xs">
+            <div className="flex items-center gap-2 flex-wrap">
               {routeResult.trafficZoneWarningsCount > 0 && (
-                <div className="inline-flex items-center gap-1.5 text-[#F76B1C] font-bold bg-[#feede4] dark:bg-[#381c0c]/70 px-2.5 py-1 rounded-xl">
-                  <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
-                  <span>{toPersianDigits(routeResult.trafficZoneWarningsCount)} گالری در محدوده طرح ترافیک</span>
+                <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 px-2.5 py-1 rounded-lg shadow-2xs">
+                  <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-amber-500" />
+                  <span>{toPersianDigits(routeResult.trafficZoneWarningsCount)} نگارخانه در طرح ترافیک</span>
                 </div>
               )}
               {trafficCondition === 'peak' && trafficDelayMin > 0 && (
-                <div className="inline-flex items-center gap-1 text-stone-600 dark:text-stone-300 font-medium bg-white dark:bg-stone-800 px-2.5 py-1 rounded-xl border border-stone-200 dark:border-stone-700">
-                  <Clock className="w-3.5 h-3.5 text-[#F76B1C] shrink-0" />
-                  <span>اوج عصر: تا +{toPersianDigits(trafficDelayMin)} دقیقه تاخیر</span>
+                <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#F76B1C] bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800/60 px-2.5 py-1 rounded-lg shadow-2xs">
+                  <Clock className="w-3.5 h-3.5 shrink-0" />
+                  <span>ترافیک اوج: +{toPersianDigits(trafficDelayMin)} دقیقه تاخیر احتمالی</span>
                 </div>
               )}
             </div>
