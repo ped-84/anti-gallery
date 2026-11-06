@@ -38,8 +38,17 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
 }) => {
   if (!gallery) return null;
 
+  const [useLocalFallback, setUseLocalFallback] = useState(false);
   const activeExhibition = gallery.activeExhibition || (gallery.exhibitions && gallery.exhibitions[0]) || null;
-  const posterUrl = activeExhibition?.poster || gallery.posterImage;
+
+  React.useEffect(() => {
+    setUseLocalFallback(false);
+  }, [gallery?.id, activeExhibition?.eventId]);
+
+  const posterUrl = (useLocalFallback && activeExhibition?.eventId === 21551)
+    ? `${import.meta.env.BASE_URL}assets/events/Event_21551.jpg`
+    : (activeExhibition?.poster || gallery.posterImage || activeExhibition?.posterSmall || gallery.posterSmall);
+
   const galleryLogoUrl = gallery.logoImage || gallery.image;
   const galleryDisplayName = getGalleryDisplayName(gallery);
 
@@ -164,7 +173,11 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                 referrerPolicy="no-referrer"
                 className="max-h-60 sm:max-h-72 w-auto h-auto max-w-full object-contain rounded-xl shadow-xs"
                 onError={(e) => {
-                  (e.target as HTMLElement).style.display = 'none';
+                  if (activeExhibition?.eventId === 21551 && !useLocalFallback) {
+                    setUseLocalFallback(true);
+                  } else {
+                    (e.target as HTMLElement).style.display = 'none';
+                  }
                 }}
               />
             </div>

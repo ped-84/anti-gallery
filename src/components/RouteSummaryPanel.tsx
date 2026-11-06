@@ -171,109 +171,124 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
           )}
         </div>
 
-        {/* Travel Mode, Route Type & Smart Traffic Controls (Apple Maps / Citymapper Inspired Unified Architecture) */}
+        {/* Travel Mode, Route Type & Smart Traffic Controls (Spacious, Mobile-First Architecture) */}
         {selectedGalleries.length >= 2 && (
-          <div className="mt-3 space-y-2">
-            {/* Row 1: Mode Switch & Route Pattern (Two sleek Clay Segmented Controls) */}
-            <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="mt-4 space-y-3">
+            {/* Row 1: Mode Switch & Route Pattern (Two spacious, balanced Segmented Controls) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {/* Mode: Driving vs Walking */}
-              <div className="clay-card p-1 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-xl flex items-center justify-between border border-[#E1E1E1]/80 dark:border-stone-800">
-                <span className="text-[11px] font-bold text-stone-500 dark:text-stone-400 pr-2">تردد:</span>
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => handleModeChange('driving')}
-                    className={`px-2.5 py-1 rounded-lg font-bold text-xs transition-all flex items-center gap-1.5 ${
-                      mode === 'driving'
-                        ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
-                        : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
-                    }`}
-                  >
-                    <Car className="w-3.5 h-3.5 text-[#3D5B99]" />
-                    <span>خودرو</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleModeChange('walking')}
-                    className={`px-2.5 py-1 rounded-lg font-bold text-xs transition-all flex items-center gap-1.5 ${
-                      mode === 'walking'
-                        ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
-                        : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
-                    }`}
-                  >
-                    <Footprints className="w-3.5 h-3.5 text-[#F76B1C]" />
-                    <span>پیاده</span>
-                  </button>
-                </div>
+              <div className="clay-card p-1.5 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-2xl flex items-center border border-[#E1E1E1]/80 dark:border-stone-800 shadow-xs">
+                <button
+                  type="button"
+                  onClick={() => handleModeChange('driving')}
+                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 ${
+                    mode === 'driving'
+                      ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
+                      : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
+                  }`}
+                >
+                  <Car className="w-4 h-4 text-[#3D5B99] shrink-0" />
+                  <span>با خودرو</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleModeChange('walking')}
+                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 ${
+                    mode === 'walking'
+                      ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
+                      : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
+                  }`}
+                >
+                  <Footprints className="w-4 h-4 text-[#F76B1C] shrink-0" />
+                  <span>پیاده‌روی</span>
+                </button>
               </div>
 
               {/* Pattern: One-Way vs Loop */}
-              <div className="clay-card p-1 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-xl flex items-center justify-between border border-[#E1E1E1]/80 dark:border-stone-800">
-                <span className="text-[11px] font-bold text-stone-500 dark:text-stone-400 pr-2">الگو:</span>
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (isRoundTrip) {
-                        setIsRoundTrip(false);
-                        onRecalculate(mode, false, trafficCondition);
-                      }
-                    }}
-                    className={`px-2 py-1 rounded-lg font-bold text-xs transition-all ${
-                      !isRoundTrip
-                        ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
-                        : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
-                    }`}
-                  >
-                    تک‌مسیره
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (!isRoundTrip) {
-                        setIsRoundTrip(true);
-                        onRecalculate(mode, true, trafficCondition);
-                      }
-                    }}
-                    className={`px-2 py-1 rounded-lg font-bold text-xs transition-all flex items-center gap-1 ${
-                      isRoundTrip
-                        ? 'clay-button clay-darkblue text-white shadow-xs'
-                        : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
-                    }`}
-                  >
-                    <RotateCw className="w-3 h-3" />
-                    <span>حلقه</span>
-                  </button>
-                </div>
+              <div className="clay-card p-1.5 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-2xl flex items-center border border-[#E1E1E1]/80 dark:border-stone-800 shadow-xs">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (isRoundTrip) {
+                      setIsRoundTrip(false);
+                      onRecalculate(mode, false, trafficCondition);
+                    }
+                  }}
+                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 ${
+                    !isRoundTrip
+                      ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
+                      : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
+                  }`}
+                >
+                  <span>تک‌مسیره</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!isRoundTrip) {
+                      setIsRoundTrip(true);
+                      onRecalculate(mode, true, trafficCondition);
+                    }
+                  }}
+                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 ${
+                    isRoundTrip
+                      ? 'clay-button clay-darkblue text-white shadow-xs'
+                      : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
+                  }`}
+                >
+                  <RotateCw className="w-3.5 h-3.5 shrink-0" />
+                  <span>رفت‌وبرگشت</span>
+                </button>
               </div>
             </div>
 
-            {/* Row 2: Traffic Scenario Selector (Sleek, integrated, low-noise segmented pill) */}
+            {/* Row 2: Traffic Scenario Selector (Generous Full-Width Card with Breathing Room) */}
             {mode === 'driving' && (
-              <div className="clay-card p-1.5 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-xl flex items-center justify-between gap-2 border border-[#E1E1E1]/80 dark:border-stone-800">
-                <div className="flex items-center gap-1.5 pr-1.5 text-stone-500 dark:text-stone-400 shrink-0">
-                  <Clock className="w-3.5 h-3.5 text-[#F76B1C]" />
-                  <span className="text-[11px] font-bold">زمان حرکت:</span>
+              <div className="clay-card p-3 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-2xl border border-[#E1E1E1]/80 dark:border-stone-800 space-y-2 shadow-xs">
+                <div className="flex items-center justify-between px-1">
+                  <span className="text-xs sm:text-sm font-bold text-stone-700 dark:text-stone-300 flex items-center gap-1.5">
+                    <Clock className="w-4 h-4 text-[#F76B1C]" />
+                    <span>ساعت حرکت در ترافیک تهران:</span>
+                  </span>
+                  <span className="text-[11px] font-medium text-stone-400 hidden xs:inline">تخمین هوشمند</span>
                 </div>
-                <div className="flex items-center gap-1 flex-1 justify-end">
-                  {(Object.keys(TRAFFIC_MODELS) as TrafficCondition[]).map((cond) => {
-                    const conf = TRAFFIC_MODELS[cond];
-                    const isActive = trafficCondition === cond;
-                    return (
-                      <button
-                        key={cond}
-                        type="button"
-                        onClick={() => handleTrafficChange(cond)}
-                        className={`py-1 px-2.5 rounded-lg text-xs font-bold transition-all ${
-                          isActive
-                            ? 'clay-button clay-base text-[#F76B1C] shadow-xs'
-                            : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 hover:bg-white/50'
-                        }`}
-                      >
-                        {conf.shortLabel}
-                      </button>
-                    );
-                  })}
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleTrafficChange('normal')}
+                    className={`py-2 px-2 rounded-xl text-center font-bold text-xs sm:text-sm transition-all flex flex-col items-center justify-center min-h-[44px] ${
+                      trafficCondition === 'normal'
+                        ? 'clay-button clay-base text-[#F76B1C] shadow-xs'
+                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 hover:bg-white/60'
+                    }`}
+                  >
+                    <span>عادی</span>
+                    <span className="text-[10px] font-normal opacity-70">(روان)</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleTrafficChange('peak')}
+                    className={`py-2 px-2 rounded-xl text-center font-bold text-xs sm:text-sm transition-all flex flex-col items-center justify-center min-h-[44px] ${
+                      trafficCondition === 'peak'
+                        ? 'clay-button clay-base text-[#F76B1C] shadow-xs'
+                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 hover:bg-white/60'
+                    }`}
+                  >
+                    <span>اوج عصر</span>
+                    <span className="text-[10px] font-normal opacity-70">(شلوغ)</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleTrafficChange('weekend')}
+                    className={`py-2 px-2 rounded-xl text-center font-bold text-xs sm:text-sm transition-all flex flex-col items-center justify-center min-h-[44px] ${
+                      trafficCondition === 'weekend'
+                        ? 'clay-button clay-base text-[#F76B1C] shadow-xs'
+                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 hover:bg-white/60'
+                    }`}
+                  >
+                    <span>جمعه</span>
+                    <span className="text-[10px] font-normal opacity-70">(تعطیلات)</span>
+                  </button>
                 </div>
               </div>
             )}
@@ -281,45 +296,45 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
         )}
       </div>
 
-      {/* TRIP STATS & INSIGHTS CARD: Clean, unified, modern typography (Citymapper / Apple Maps style) */}
+      {/* TRIP STATS & INSIGHTS CARD: Generous, readable, spacious (Apple Maps / Citymapper style) */}
       {routeResult && (
-        <div className="p-3.5 bg-gradient-to-b from-[#f7f9fc] to-[#edf2f8] dark:from-[#131722] dark:to-[#0f121a] border-b border-[#E1E1E1] dark:border-stone-800 space-y-3">
-          {/* Main Hero Summary Row */}
-          <div className="clay-card p-3 bg-white dark:bg-[#181d28] border border-[#E1E1E1]/80 dark:border-stone-800 flex items-center justify-between gap-3 shadow-xs">
+        <div className="p-4 sm:p-5 bg-gradient-to-b from-[#f7f9fc] to-[#edf2f8] dark:from-[#131722] dark:to-[#0f121a] border-b border-[#E1E1E1] dark:border-stone-800 space-y-3.5">
+          {/* Main Hero Summary Card */}
+          <div className="clay-card p-4 sm:p-5 bg-white dark:bg-[#181d28] border border-[#E1E1E1]/80 dark:border-stone-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 shadow-sm rounded-2xl">
             {/* Primary ETA: Tour Duration */}
             <div>
-              <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 mb-0.5">
-                تخمین کل برنامه (با بازدیدها)
+              <div className="text-xs sm:text-sm font-bold text-stone-500 dark:text-stone-400 mb-1">
+                تخمین کل برنامه (شامل زمان بازدید آثار)
               </div>
-              <div className="text-lg sm:text-xl font-black text-[#F76B1C] font-mono leading-tight">
+              <div className="text-2xl sm:text-3xl font-black text-[#F76B1C] font-mono tracking-tight leading-tight">
                 {avgHours > 0 ? `${toPersianDigits(avgHours)} ساعت و ` : ''}{toPersianDigits(avgMins)} دقیقه
               </div>
             </div>
 
             {/* Secondary Transit Metrics */}
-            <div className="text-left flex flex-col items-end gap-1">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-[#f0f4fa] dark:bg-stone-800 text-[#1d2d4c] dark:text-stone-200 font-mono">
-                <span>{toPersianDigits(routeResult.totalDistanceKm)} کیلومتر مسافت</span>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="inline-flex items-center px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-[#f0f4fa] dark:bg-stone-800 text-[#1d2d4c] dark:text-stone-200 border border-[#E1E1E1] dark:border-stone-700 shadow-2xs font-mono">
+                {toPersianDigits(routeResult.totalDistanceKm)} کیلومتر مسافت
               </span>
-              <span className="text-[11px] font-medium text-stone-500 dark:text-stone-400 font-mono">
-                ~{toPersianDigits(routeResult.totalDurationMin)} دقیقه جابجایی
+              <span className="inline-flex items-center px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-[#f0f4fa] dark:bg-stone-800 text-[#1d2d4c] dark:text-stone-200 border border-[#E1E1E1] dark:border-stone-700 shadow-2xs font-mono">
+                ~{toPersianDigits(routeResult.totalDurationMin)} دقیقه رانندگی
               </span>
             </div>
           </div>
 
-          {/* Context Alert Chips: Traffic Zone & Peak Delay (Soft, unobtrusive status pills) */}
+          {/* Context Alert Chips: Traffic Zone & Peak Delay (Generous, readable tags) */}
           {(routeResult.trafficZoneWarningsCount > 0 || (trafficCondition === 'peak' && trafficDelayMin > 0)) && (
-            <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-2.5 flex-wrap pt-0.5">
               {routeResult.trafficZoneWarningsCount > 0 && (
-                <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 px-2.5 py-1 rounded-lg shadow-2xs">
-                  <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-amber-500" />
-                  <span>{toPersianDigits(routeResult.trafficZoneWarningsCount)} نگارخانه در طرح ترافیک</span>
+                <div className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800/60 px-3 py-1.5 rounded-xl shadow-2xs">
+                  <AlertTriangle className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400" />
+                  <span>{toPersianDigits(routeResult.trafficZoneWarningsCount)} نگارخانه در محدوده طرح ترافیک</span>
                 </div>
               )}
               {trafficCondition === 'peak' && trafficDelayMin > 0 && (
-                <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#F76B1C] bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800/60 px-2.5 py-1 rounded-lg shadow-2xs">
-                  <Clock className="w-3.5 h-3.5 shrink-0" />
-                  <span>ترافیک اوج: +{toPersianDigits(trafficDelayMin)} دقیقه تاخیر احتمالی</span>
+                <div className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#F76B1C] bg-orange-50 dark:bg-orange-950/40 border border-orange-300 dark:border-orange-800/60 px-3 py-1.5 rounded-xl shadow-2xs">
+                  <Clock className="w-4 h-4 shrink-0" />
+                  <span>ترافیک اوج عصر: +{toPersianDigits(trafficDelayMin)} دقیقه تاخیر احتمالی</span>
                 </div>
               )}
             </div>

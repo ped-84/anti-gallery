@@ -40,15 +40,41 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
   onToggle,
   onSelectDetails
 }) => {
-  const [posterError, setPosterError] = useState(false);
-  const [logoError, setLogoError] = useState(false);
-
   const activeExhibition = gallery.activeExhibition || (gallery.exhibitions && gallery.exhibitions[0]) || null;
   const themeClass = THEME_CLASSES[colorTheme];
 
-  const posterUrl = !posterError ? (activeExhibition?.poster || gallery.posterImage) : null;
+  const [useLocalFallback, setUseLocalFallback] = useState(false);
+  const [posterError, setPosterError] = useState(false);
+  const [logoError, setLogoError] = useState(false);
+
+  // Reset errors whenever gallery or active exhibition changes
+  React.useEffect(() => {
+    setPosterError(false);
+    setUseLocalFallback(false);
+    setLogoError(false);
+  }, [gallery.id, activeExhibition?.eventId, gallery.posterImage]);
+
+  // Determine effective poster URL with robust multi-tier fallback
+  let posterUrl: string | null = null;
+  if (!posterError) {
+    if (useLocalFallback && activeExhibition?.eventId === 21551) {
+      posterUrl = `${import.meta.env.BASE_URL}assets/events/Event_21551.jpg`;
+    } else {
+      posterUrl = activeExhibition?.poster || gallery.posterImage || activeExhibition?.posterSmall || gallery.posterSmall || null;
+    }
+  }
+
   const galleryLogoUrl = gallery.logoImage || gallery.image;
   const hasActivePoster = Boolean(posterUrl);
+
+  const handlePosterError = () => {
+    // If museum of contemporary art fails remote load, try bundled high-res poster
+    if (activeExhibition?.eventId === 21551 && !useLocalFallback) {
+      setUseLocalFallback(true);
+    } else {
+      setPosterError(true);
+    }
+  };
 
   return (
     <div
@@ -69,7 +95,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
               src={posterUrl!}
               alt={activeExhibition?.title || getGalleryDisplayName(gallery)}
               referrerPolicy="no-referrer"
-              onError={() => setPosterError(true)}
+              onError={handlePosterError}
               className="max-w-full max-h-full object-contain rounded-xl group-hover:scale-[1.02] transition-transform duration-300 shadow-xs"
             />
 
