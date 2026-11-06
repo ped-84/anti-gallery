@@ -9,9 +9,10 @@ interface HeaderProps {
   isOptimizing: boolean;
   isDarkMode: boolean;
   onToggleDarkMode: () => void;
+  hasCustomOrigin?: boolean;
 }
 
-export const APP_VERSION = 'بتا V 1.056';
+export const APP_VERSION = 'بتا V 1.057';
 
 export const Header: React.FC<HeaderProps> = ({
   selectedCount,
@@ -19,8 +20,11 @@ export const Header: React.FC<HeaderProps> = ({
   onOptimizeRoute,
   isOptimizing,
   isDarkMode,
-  onToggleDarkMode
+  onToggleDarkMode,
+  hasCustomOrigin = false
 }) => {
+  const canOptimize = hasCustomOrigin ? selectedCount >= 1 : selectedCount >= 2;
+  const minRequired = hasCustomOrigin ? 1 : 2;
   return (
     <header className="sticky top-0 z-40 bg-[#f4f6fa]/95 dark:bg-[#131722]/95 backdrop-blur-md border-b border-[#E1E1E1] dark:border-stone-800 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
@@ -75,9 +79,9 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Primary Action Button (Compact on Mobile to prevent any overflow) */}
           <button
             onClick={onOptimizeRoute}
-            disabled={selectedCount < 2 || isOptimizing}
+            disabled={!canOptimize || isOptimizing}
             className={`clay-button px-3 sm:px-5 py-2 sm:py-2.5 text-xs font-bold flex items-center gap-1.5 sm:gap-2 transition-all active:scale-95 shrink-0 ${
-              selectedCount >= 2
+              canOptimize
                 ? 'clay-orange text-white shadow-md hover:brightness-105'
                 : 'clay-base text-stone-400 dark:text-stone-600 cursor-not-allowed opacity-75'
             }`}
@@ -87,17 +91,17 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="hidden sm:inline">
               {isOptimizing
                 ? 'در حال محاسبه...'
-                : selectedCount >= 2
+                : canOptimize
                 ? `مسیریابی بهینه (${toPersianDigits(selectedCount)} گالری)`
-                : `انتخاب گالری (${toPersianDigits(selectedCount)}/۲+)`}
+                : `انتخاب گالری (${toPersianDigits(selectedCount)}/${toPersianDigits(minRequired)}+)`}
             </span>
             {/* Mobile label */}
             <span className="inline sm:hidden">
               {isOptimizing
                 ? 'محاسبه...'
-                : selectedCount >= 2
+                : canOptimize
                 ? `مسیریابی (${toPersianDigits(selectedCount)})`
-                : `${toPersianDigits(selectedCount)}/۲+`}
+                : `${toPersianDigits(selectedCount)}/${toPersianDigits(minRequired)}+`}
             </span>
           </button>
         </div>

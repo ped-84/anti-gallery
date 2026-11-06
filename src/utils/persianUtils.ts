@@ -392,4 +392,32 @@ export function formatGalleryAddress(raw: string = ''): string {
     .replace(/^(تهران|کرج|مشهد|شیراز|اصفهان|تبریز|کاشان|بجنورد)\s+([^،\s])/g, '$1، $2');
 }
 
+export interface StartLocationHub {
+  id: string;
+  label: string;
+  lat: number;
+  lng: number;
+}
+
+export const TEHRAN_START_HUBS: StartLocationHub[] = [
+  { id: 'saadat_abad', label: 'سعادت‌آباد (میدان کاج)', lat: 35.7825, lng: 51.3730 },
+  { id: 'shahrak_gharb', label: 'شهرک غرب (میدان صنعت)', lat: 35.7535, lng: 51.3705 },
+  { id: 'vanak', label: 'میدان ونک', lat: 35.7575, lng: 51.4100 },
+  { id: 'valiasr', label: 'میدان ولیعصر', lat: 35.7118, lng: 51.4072 },
+  { id: 'enghelab', label: 'میدان انقلاب', lat: 35.7008, lng: 51.3912 },
+  { id: 'karimkhan', label: 'پل کریم‌خان زند', lat: 35.7180, lng: 51.4190 },
+  { id: 'tajrish', label: 'میدان تجریش', lat: 35.8052, lng: 51.4312 },
+  { id: 'niavaran', label: 'میدان باهنر (نیاوران)', lat: 35.8160, lng: 51.4700 },
+  { id: 'pasdaran', label: 'چهارراه پاسداران', lat: 35.7720, lng: 51.4650 },
+  { id: 'tehranpars', label: 'فلکه اول تهرانپارس', lat: 35.7280, lng: 51.5280 },
+  { id: 'sadeghiyeh', label: 'صادقیه (فلکه دوم)', lat: 35.7210, lng: 51.3380 },
+  { id: 'yousef_abad', label: 'یوسف‌آباد (میدان کلانتری)', lat: 35.7330, lng: 51.4080 },
+  { id: 'gisha', label: 'گیشا (کوی نصر)', lat: 35.7340, lng: 51.3760 },
+  { id: 'fereshteh', label: 'خیابان فرشته (الهیه)', lat: 35.7940, lng: 51.4240 },
+  { id: 'seyed_khandan', label: 'پل سیدخندان', lat: 35.7425, lng: 51.4440 },
+  { id: 'resalat', label: 'میدان رسالت', lat: 35.7330, lng: 51.4920 },
+  { id: 'ekbatan', label: 'شهرک اکباتان', lat: 35.7090, lng: 51.3090 }
+];
+
+
 

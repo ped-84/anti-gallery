@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Gallery, RouteOptimizationResult } from './types/gallery';
+import { Gallery, RouteOptimizationResult, CustomOrigin } from './types/gallery';
 import rawGalleriesData from './data/galleries.json';
 import { PERSIAN_CURATED_TOURS, PersianCuratedTour } from './data/curatedTours';
 import { optimizeGalleryRoute, calculateFixedRoute } from './utils/routeOptimizer';
@@ -40,7 +40,8 @@ const STORAGE_KEYS = {
   START_ID: 'gallerygardi_start_id',
   END_ID: 'gallerygardi_end_id',
   ORDERED_IDS: 'gallerygardi_ordered_ids',
-  DARK_MODE: 'gallerygardi_dark_mode'
+  DARK_MODE: 'gallerygardi_dark_mode',
+  ORIGIN_LOCATION: 'gallerygardi_origin_location'
 };
 
 const LEGACY_DEFAULT_IDS = [1023, 485, 25, 182];
@@ -279,21 +280,122 @@ export default function App() {
     return null;
   });
 
+  const [originLocation, setOriginLocation] = useState<CustomOrigin | null>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.ORIGIN_LOCATION);
+      if (saved !== null) return JSON.parse(saved);
+    } catch {}
+    return null;
+  });
+  const [isLocatingGps, setIsLocatingGps] = useState<boolean>(false);
+
+  // Gentle geolocation attempt on mount if user hasn't chosen an origin yet
+  useEffect(() => {
+    if (!originLocation && typeof navigator !== 'undefined' && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const newOrigin: CustomOrigin = {
+            type: 'gps',
+            name: 'موقعیت فعلی شما (GPS)',
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude
+          };
+          setOriginLocation(newOrigin);
+          try {
+            localStorage.setItem(STORAGE_KEYS.ORIGIN_LOCATION, JSON.stringify(newOrigin));
+          } catch {}
+        },
+        () => {
+          // Silent fallback if user ignores or denies permission prompt
+        },
+        { enableHighAccuracy: true, timeout: 6000, maximumAge: 300000 }
+      );
+    }
+  }, []);
+
+  const handleRequestGps = () => {
+    if (typeof navigator === 'undefined' || !navigator.geolocation) {
+      alert('مرورگر شما از دریافت موقعیت مکانی پشتیبانی نمی‌کند.');
+      return;
+    }
+    setIsLocatingGps(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setIsLocatingGps(false);
+        const newOrigin: CustomOrigin = {
+          type: 'gps',
+          name: 'موقعیت فعلی شما (GPS)',
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude
+        };
+        setOriginLocation(newOrigin);
+        try {
+          localStorage.setItem(STORAGE_KEYS.ORIGIN_LOCATION, JSON.stringify(newOrigin));
+        } catch {}
+        runRouteOptimization(
+          routeResult?.mode || 'driving',
+          routeResult?.isRoundTrip ?? false,
+          routeResult?.trafficCondition || 'peak',
+          startGalleryId,
+          endGalleryId,
+          newOrigin
+        );
+      },
+      (err) => {
+        setIsLocatingGps(false);
+        console.warn('Geolocation error:', err.message);
+        alert('امکان دریافت خودکار موقعیت مکانی وجود نداشت. لطفاً دسترسی GPS را در تنظیمات مرورگر تأیید کنید یا محله خود را از منو انتخاب کنید.');
+      },
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+    );
+  };
+
+  const handleChangeOrigin = (origin: CustomOrigin | null) => {
+    setOriginLocation(origin);
+    try {
+      if (origin) {
+        localStorage.setItem(STORAGE_KEYS.ORIGIN_LOCATION, JSON.stringify(origin));
+      } else {
+        localStorage.removeItem(STORAGE_KEYS.ORIGIN_LOCATION);
+      }
+    } catch {}
+    runRouteOptimization(
+      routeResult?.mode || 'driving',
+      routeResult?.isRoundTrip ?? false,
+      routeResult?.trafficCondition || 'peak',
+      startGalleryId,
+      endGalleryId,
+      origin
+    );
+  };
+
   const runRouteOptimization = async (
     mode: 'driving' | 'walking' = routeResult?.mode || 'driving',
     isRoundTrip: boolean = routeResult?.isRoundTrip ?? false,
     trafficCondition: TrafficCondition = routeResult?.trafficCondition || 'peak',
     startId: number | null = startGalleryId,
-    endId: number | null = endGalleryId
+    endId: number | null = endGalleryId,
+    origin: CustomOrigin | null = originLocation
   ) => {
-    if (selectedGalleries.length < 2) return;
+    const hasCustomStart = Boolean(origin && origin.lat !== 0);
+    const minRequired = hasCustomStart ? 1 : 2;
+    if (selectedGalleries.length < minRequired) {
+      setRouteResult(null);
+      return;
+    }
+
     setIsOptimizing(true);
     try {
+      const customStart = hasCustomStart && origin
+        ? { name: origin.name, lat: origin.lat, lng: origin.lng }
+        : undefined;
+
       const result = await optimizeGalleryRoute(selectedGalleries, {
         mode,
         isRoundTrip,
         trafficCondition,
-        startGalleryId: startId,
+        customStart,
+        startGalleryId: customStart ? null : startId,
         endGalleryId: endId
       });
       setRouteResult(result);
@@ -350,16 +452,18 @@ export default function App() {
           orderedIds.length === selectedGalleryIds.length &&
           orderedIds.every((id) => selectedGalleryIds.includes(id));
 
-        if (isValid && orderedIds.length >= 2) {
+        if (isValid && orderedIds.length >= 1) {
           const matchingGalleries = orderedIds
             .map((id) => galleries.find((g) => g.id === id))
             .filter((g): g is Gallery => !!g);
 
           if (matchingGalleries.length === orderedIds.length) {
-            calculateFixedRoute(matchingGalleries).then((res) => {
+            calculateFixedRoute(matchingGalleries, {
+              customStart: originLocation && originLocation.lat !== 0 ? { name: originLocation.name, lat: originLocation.lat, lng: originLocation.lng } : undefined
+            }).then((res) => {
               setRouteResult(res);
             }).catch(() => {
-              runRouteOptimization('driving', false, 'peak', startGalleryId, endGalleryId);
+              runRouteOptimization('driving', false, 'peak', startGalleryId, endGalleryId, originLocation);
             });
             return;
           }
@@ -369,8 +473,10 @@ export default function App() {
       console.warn('Restore order note:', e);
     }
 
-    if (selectedGalleries.length >= 2) {
-      runRouteOptimization('driving', false, 'peak', startGalleryId, endGalleryId);
+    const hasCustomStart = Boolean(originLocation && originLocation.lat !== 0);
+    const minRequired = hasCustomStart ? 1 : 2;
+    if (selectedGalleries.length >= minRequired) {
+      runRouteOptimization('driving', false, 'peak', startGalleryId, endGalleryId, originLocation);
     }
   }, []);
 
@@ -387,18 +493,21 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (selectedGalleries.length >= 2) {
+    const hasCustomStart = Boolean(originLocation && originLocation.lat !== 0);
+    const minRequired = hasCustomStart ? 1 : 2;
+    if (selectedGalleries.length >= minRequired) {
       runRouteOptimization(
         routeResult?.mode || 'driving',
         routeResult?.isRoundTrip ?? false,
         routeResult?.trafficCondition || 'peak',
         startGalleryId,
-        endGalleryId
+        endGalleryId,
+        originLocation
       );
     } else {
       setRouteResult(null);
     }
-  }, [selectedGalleryIds]);
+  }, [selectedGalleryIds, originLocation]);
 
   const handleSetStartGallery = (id: number) => {
     setStartGalleryId(id);
@@ -408,7 +517,8 @@ export default function App() {
       routeResult?.isRoundTrip ?? false,
       routeResult?.trafficCondition || 'peak',
       id,
-      endGalleryId === id ? null : endGalleryId
+      endGalleryId === id ? null : endGalleryId,
+      originLocation
     );
   };
 
@@ -420,7 +530,8 @@ export default function App() {
       routeResult?.isRoundTrip ?? false,
       routeResult?.trafficCondition || 'peak',
       startGalleryId === id ? null : startGalleryId,
-      id
+      id,
+      originLocation
     );
   };
 
@@ -432,7 +543,8 @@ export default function App() {
       const newResult = await calculateFixedRoute(reversed, {
         mode: routeResult.mode,
         isRoundTrip: routeResult.isRoundTrip,
-        trafficCondition: routeResult.trafficCondition
+        trafficCondition: routeResult.trafficCondition,
+        customStart: routeResult.originPoint
       });
       setRouteResult(newResult);
       setStartGalleryId(reversed[0].id);
@@ -456,7 +568,8 @@ export default function App() {
       const newResult = await calculateFixedRoute(list, {
         mode: routeResult.mode,
         isRoundTrip: routeResult.isRoundTrip,
-        trafficCondition: routeResult.trafficCondition
+        trafficCondition: routeResult.trafficCondition,
+        customStart: routeResult.originPoint
       });
       setRouteResult(newResult);
       setStartGalleryId(list[0].id);
@@ -476,7 +589,8 @@ export default function App() {
       routeResult?.isRoundTrip ?? false,
       routeResult?.trafficCondition || 'peak',
       null,
-      null
+      null,
+      originLocation
     );
   };
 
@@ -512,6 +626,7 @@ export default function App() {
       {/* Top Bar (Claymorphic with Stickdazzle Palette, Fully Responsive) */}
       <Header
         selectedCount={selectedGalleries.length}
+        hasCustomOrigin={Boolean(originLocation && originLocation.lat !== 0)}
         onOpenCuratedTours={() => setIsCuratedModalOpen(true)}
         onOptimizeRoute={() => {
           runRouteOptimization();
@@ -785,7 +900,16 @@ export default function App() {
                   setSelectedGalleryIds((prev) => prev.filter((gid) => gid !== id));
                 }}
                 onClearAll={handleClearAll}
-                onRecalculate={(m, rt, tc) => runRouteOptimization(m, rt, tc)}
+                onRecalculate={(m, rt, tc, o) =>
+                  runRouteOptimization(
+                    m,
+                    rt,
+                    tc,
+                    startGalleryId,
+                    endGalleryId,
+                    o !== undefined ? o : originLocation
+                  )
+                }
                 onSelectGallery={(g) => {
                   setHighlightedGalleryId(g.id);
                   setActiveModalGallery(g);
@@ -797,6 +921,10 @@ export default function App() {
                 onResetAutoOrder={handleResetAutoOrder}
                 startGalleryId={startGalleryId}
                 endGalleryId={endGalleryId}
+                originLocation={originLocation}
+                onChangeOrigin={handleChangeOrigin}
+                onRequestGps={handleRequestGps}
+                isLocatingGps={isLocatingGps}
               />
             </div>
           </section>

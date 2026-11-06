@@ -625,8 +625,16 @@ export function buildWazeUrl(gallery: Gallery): string {
 export function exportToGpx(
   title: string,
   orderedGalleries: Gallery[],
-  coords: [number, number][]
+  coords: [number, number][],
+  origin?: { name: string; lat: number; lng: number }
 ): string {
+  const originXml = origin
+    ? `  <wpt lat="${origin.lat}" lon="${origin.lng}">
+    <name>مبدأ حرکت: ${escapeXml(origin.name)}</name>
+    <desc>نقطه شروع تور گالری‌های هنری</desc>
+  </wpt>\n`
+    : '';
+
   const waypointsXml = orderedGalleries
     .map(
       (g, idx) => `  <wpt lat="${g.lat}" lon="${g.lng}">
@@ -647,7 +655,7 @@ export function exportToGpx(
     <desc>مسیر بهینه گالری‌گردی هنری تهران</desc>
     <time>${new Date().toISOString()}</time>
   </metadata>
-${waypointsXml}
+${originXml}${waypointsXml}
   <trk>
     <name>${escapeXml(title)} Track</name>
     <trkseg>

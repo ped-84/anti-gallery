@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { RouteOptimizationResult, Gallery } from '../types/gallery';
+import { RouteOptimizationResult, Gallery, CustomOrigin } from '../types/gallery';
 import {
   toPersianDigits,
   TRAFFIC_MODELS,
   TrafficCondition,
   getGalleryDisplayName,
-  formatGalleryAddress
+  formatGalleryAddress,
+  TEHRAN_START_HUBS
 } from '../utils/persianUtils';
 import { ClayDropdown, DropdownOption } from './ClayDropdown';
 import {
@@ -37,7 +38,9 @@ import {
   Sparkles,
   Flag,
   Timer,
-  ChevronDown
+  ChevronDown,
+  Home,
+  Compass
 } from 'lucide-react';
 
 const VISIT_OPTIONS = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
@@ -51,7 +54,8 @@ interface RouteSummaryPanelProps {
   onRecalculate: (
     mode: 'driving' | 'walking',
     isRoundTrip: boolean,
-    trafficCondition: TrafficCondition
+    trafficCondition: TrafficCondition,
+    origin?: CustomOrigin | null
   ) => void;
   onSelectGallery: (gallery: Gallery) => void;
   onSetStartGallery?: (galleryId: number) => void;
@@ -61,6 +65,10 @@ interface RouteSummaryPanelProps {
   onResetAutoOrder?: () => void;
   startGalleryId?: number | null;
   endGalleryId?: number | null;
+  originLocation: CustomOrigin | null;
+  onChangeOrigin: (origin: CustomOrigin | null) => void;
+  onRequestGps: () => void;
+  isLocatingGps?: boolean;
 }
 
 export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
@@ -77,7 +85,11 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
   onReverseRoute,
   onResetAutoOrder,
   startGalleryId,
-  endGalleryId
+  endGalleryId,
+  originLocation,
+  onChangeOrigin,
+  onRequestGps,
+  isLocatingGps = false
 }) => {
   const [mode, setMode] = useState<'driving' | 'walking'>(routeResult?.mode || 'driving');
   const [isRoundTrip, setIsRoundTrip] = useState<boolean>(routeResult?.isRoundTrip ?? false);
@@ -122,7 +134,8 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
     const gpxContent = exportToGpx(
       'تور بهینه گالری‌های هنری',
       routeResult.orderedGalleries,
-      routeResult.geometryCoords
+      routeResult.geometryCoords,
+      routeResult.originPoint
     );
     const blob = new Blob([gpxContent], { type: 'application/gpx+xml' });
     const url = URL.createObjectURL(blob);
@@ -137,14 +150,17 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
 
   const handleCopySummary = () => {
     if (!routeResult) return;
+    const originText = routeResult.originPoint
+      ? `مبدأ حرکت: ${routeResult.originPoint.name}\n\n`
+      : '';
     const summary = routeResult.orderedGalleries
       .map(
         (g, i) =>
-          `${toPersianDigits(i + 1)}. ${getGalleryDisplayName(g)} - ${formatGalleryAddress(g.addressFa || g.address)} (${g.neighborhoodFa || g.cityFa || g.city})`
+          `توقف ${toPersianDigits(i + 1)}: ${getGalleryDisplayName(g)} - ${formatGalleryAddress(g.addressFa || g.address)} (${g.neighborhoodFa || g.cityFa || g.city})`
       )
       .join('\n\n');
 
-    const textToCopy = `برنامه بازدید و تور بهینه گالری‌های هنری (${toPersianDigits(routeResult.orderedGalleries.length)} گالری)\nمسافت کل: ${toPersianDigits(routeResult.totalDistanceKm)} کیلومتر | زمان میانگین جابجایی: ~${toPersianDigits(routeResult.totalDurationMin)} دقیقه\n\n${summary}\n\nلینک مستقیم گوگل مپس: ${buildGoogleMapsUrl(routeResult.orderedGalleries)}`;
+    const textToCopy = `برنامه بازدید و تور بهینه گالری‌های هنری (${toPersianDigits(routeResult.orderedGalleries.length)} گالری)\n${originText}مسافت کل: ${toPersianDigits(routeResult.totalDistanceKm)} کیلومتر | زمان میانگین جابجایی: ~${toPersianDigits(routeResult.totalDurationMin)} دقیقه\n\n${summary}\n\nلینک مستقیم گوگل مپس: ${buildGoogleMapsUrl(routeResult.orderedGalleries, routeResult.originPoint)}`;
 
     navigator.clipboard.writeText(textToCopy);
     setCopied(true);
@@ -152,8 +168,47 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
   };
 
   const googleMapsUrl = routeResult
-    ? buildGoogleMapsUrl(routeResult.orderedGalleries)
+    ? buildGoogleMapsUrl(routeResult.orderedGalleries, routeResult.originPoint)
     : '';
+
+  const originDropdownOptions: DropdownOption[] = [
+    { value: 'gps', label: '📍 موقعیت زنده من (GPS)' },
+    { value: 'none', label: '🏛️ شروع از اولین نگارخانه (بدون موقعیت من)' },
+    ...TEHRAN_START_HUBS.map((hub) => ({
+      value: hub.id,
+      label: `محله: ${hub.label}`
+    }))
+  ];
+
+  let currentOriginValue = 'none';
+  if (originLocation) {
+    if (originLocation.type === 'gps') {
+      currentOriginValue = 'gps';
+    } else if (originLocation.type === 'hub') {
+      const matched = TEHRAN_START_HUBS.find(
+        (h) => h.label === originLocation.name || (Math.abs(h.lat - originLocation.lat) < 0.002 && Math.abs(h.lng - originLocation.lng) < 0.002)
+      );
+      currentOriginValue = matched ? matched.id : 'saadat_abad';
+    }
+  }
+
+  const handleOriginChange = (val: string) => {
+    if (val === 'gps') {
+      onRequestGps();
+    } else if (val === 'none') {
+      onChangeOrigin(null);
+    } else {
+      const hub = TEHRAN_START_HUBS.find((h) => h.id === val);
+      if (hub) {
+        onChangeOrigin({
+          type: 'hub',
+          name: hub.label,
+          lat: hub.lat,
+          lng: hub.lng
+        });
+      }
+    }
+  };
 
   // Calculate Average Times as the main large metrics (Based on user-selected visit duration per gallery)
   const dwellTimeMin = (routeResult?.orderedGalleries.length || 0) * visitDurationMin;
@@ -193,8 +248,70 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
         </div>
 
         {/* Travel Mode, Route Type & Smart Traffic Controls (Spacious, Mobile-First Architecture) */}
-        {selectedGalleries.length >= 2 && (
+        {selectedGalleries.length >= 1 && (
           <div className="mt-4 space-y-3">
+            {/* Origin / Starting Location Selector Card */}
+            <div className="clay-card p-3 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-2xl border border-[#E1E1E1]/80 dark:border-stone-800 space-y-2.5 shadow-xs">
+              <div className="flex items-center justify-between px-1">
+                <span className="text-xs sm:text-sm font-bold text-stone-700 dark:text-stone-300 flex items-center gap-1.5">
+                  <Navigation className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <span>مبدأ حرکت (شروع مسیریابی):</span>
+                </span>
+                {originLocation?.type === 'gps' && (
+                  <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>موقعیت زنده GPS</span>
+                  </span>
+                )}
+                {originLocation?.type === 'hub' && (
+                  <span className="text-[11px] font-bold text-[#1856C7] dark:text-[#93c5fd]">
+                    محله انتخابی
+                  </span>
+                )}
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-stretch gap-2">
+                {/* 1-Click GPS Button */}
+                <button
+                  type="button"
+                  onClick={onRequestGps}
+                  className={`py-2 px-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shrink-0 ${
+                    originLocation?.type === 'gps'
+                      ? 'clay-button bg-emerald-600 text-white shadow-xs'
+                      : 'clay-button clay-base text-stone-700 dark:text-stone-300 hover:text-emerald-600'
+                  }`}
+                  title="مسیریابی از موقعیت مکانی فعلی شما"
+                >
+                  <Navigation className={`w-3.5 h-3.5 ${isLocatingGps ? 'animate-spin' : ''}`} />
+                  <span>{isLocatingGps ? 'دریافت موقعیت...' : 'موقعیت من (GPS)'}</span>
+                </button>
+
+                {/* Dropdown for Hubs or Gallery-Start */}
+                <div className="flex-1">
+                  <ClayDropdown
+                    value={currentOriginValue}
+                    onChange={handleOriginChange}
+                    options={originDropdownOptions}
+                    prefix={<MapPin className="w-3.5 h-3.5 text-[#3D5B99]" />}
+                    className="w-full text-xs"
+                    size="sm"
+                  />
+                </div>
+              </div>
+
+              {originLocation && (
+                <div className="px-1 text-[11px] text-stone-500 dark:text-stone-400 flex items-center justify-between border-t border-stone-200/60 dark:border-stone-800 pt-1.5">
+                  <span>مبدأ فعال: <strong>{originLocation.name}</strong></span>
+                  <button
+                    type="button"
+                    onClick={() => onChangeOrigin(null)}
+                    className="text-rose-500 hover:text-rose-600 font-bold"
+                  >
+                    حذف مبدأ (شروع از گالری اول)
+                  </button>
+                </div>
+              )}
+            </div>
             {/* Row 1: Mode Switch & Route Pattern (Two spacious, balanced Segmented Controls) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {/* Mode: Driving vs Walking */}
@@ -459,17 +576,65 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
             </div>
 
             <div className="relative pr-7 space-y-3.5 before:absolute before:right-3.5 before:top-4 before:bottom-4 before:w-0.5 before:bg-stone-200 dark:before:bg-stone-700">
+              {/* Origin Point Stop (If user location/hub is active) */}
+              {routeResult.originPoint && (
+                <div className="relative group">
+                  {/* Origin Pin on Timeline */}
+                  <div className="absolute -right-7 top-2 w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center border-2 border-white dark:border-stone-900 shadow-sm z-10 bg-emerald-600 text-white">
+                    <Navigation className="w-3.5 h-3.5" />
+                  </div>
+
+                  {/* Origin Item Card */}
+                  <div className="clay-card p-3.5 bg-emerald-50/70 dark:bg-emerald-950/30 text-xs border border-emerald-200 dark:border-emerald-800/60 shadow-xs">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 truncate">
+                        <div className="flex items-center gap-1.5 font-bold text-emerald-800 dark:text-emerald-300 text-sm truncate">
+                          <span>{routeResult.originPoint.name}</span>
+                          <span className="text-[10px] bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 px-2 py-0.5 rounded-full font-bold">
+                            مبدأ حرکت
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5">
+                          شروع حرکت از این نقطه به سمت نزدیک‌ترین نگارخانه منتخب شما
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Transit Leg 0: Origin to First Gallery */}
+                  {routeResult.legs[0] && (
+                    <div className="my-2.5 flex items-center justify-center">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f1f4fa] dark:bg-[#151a24] text-[11px] text-stone-600 dark:text-stone-300 border border-emerald-200/80 dark:border-emerald-800/50 shadow-2xs font-mono">
+                        {mode === 'walking' ? (
+                          <Footprints className="w-3.5 h-3.5 text-[#F76B1C]" />
+                        ) : (
+                          <Car className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                        )}
+                        <span className="font-bold text-stone-800 dark:text-stone-200">
+                          {toPersianDigits(routeResult.legs[0].distanceKm)} کیلومتر
+                        </span>
+                        <span className="text-stone-300 dark:text-stone-600">·</span>
+                        <span className="font-bold text-[#1d2d4c] dark:text-white">
+                          ~{toPersianDigits(routeResult.legs[0].durationWithTrafficMin || routeResult.legs[0].durationMin)} دقیقه تا اولین نگارخانه
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {routeResult.orderedGalleries.map((gallery, idx) => {
-                const leg = routeResult.legs[idx];
+                const hasOrigin = Boolean(routeResult.originPoint);
                 const isFirst = idx === 0;
                 const isLast = idx === routeResult.orderedGalleries.length - 1;
+                const leg = hasOrigin ? routeResult.legs[idx + 1] : routeResult.legs[idx];
 
                 return (
                   <div key={gallery.id} className="relative group">
                     {/* Order Pin on Timeline */}
                     <div
                       className={`absolute -right-7 top-2 w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center border-2 border-white dark:border-stone-900 shadow-sm z-10 font-mono ${
-                        isFirst
+                        isFirst && !hasOrigin
                           ? 'bg-[#1856C7] text-white'
                           : isLast && !routeResult.isRoundTrip
                           ? 'bg-[#F76B1C] text-white'
@@ -541,19 +706,26 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                       {/* Distinct Start / End Point Controls & Badges */}
                       <div className="mt-2.5 pt-2 border-t border-stone-100 dark:border-stone-800/80 flex items-center justify-between gap-2 flex-wrap text-[11px]">
                         {isFirst ? (
-                          <span className="inline-flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1 rounded-xl border border-emerald-300 dark:border-emerald-700/60 shadow-xs">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span>مبدأ گشت</span>
-                          </span>
+                          hasOrigin ? (
+                            <span className="inline-flex items-center gap-1.5 font-bold text-[#1856C7] dark:text-[#93c5fd] bg-[#edf3ff] dark:bg-blue-950/40 px-3 py-1 rounded-xl border border-blue-200 dark:border-blue-800/50 shadow-xs">
+                              <span className="w-2 h-2 rounded-full bg-[#1856C7]"></span>
+                              <span>اولین توقف گالری</span>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1 rounded-xl border border-emerald-300 dark:border-emerald-700/60 shadow-xs">
+                              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                              <span>مبدأ گشت</span>
+                            </span>
+                          )
                         ) : (
                           <button
                             type="button"
                             onClick={() => onSetStartGallery?.(gallery.id)}
                             className="inline-flex items-center gap-1.5 font-bold text-[#1856C7] dark:text-[#93c5fd] hover:text-white hover:bg-[#1856C7] bg-[#edf3ff] dark:bg-blue-950/40 px-3 py-1 rounded-xl border border-blue-200 dark:border-blue-800/50 hover:scale-105 active:scale-95 transition-all shadow-2xs"
-                            title="این گالری به عنوان نقطه شروع تعیین شده و باقی مسیر از اینجا بهینه می‌شود"
+                            title={hasOrigin ? "این گالری به عنوان اولین مقصد بعد از خروج از خانه/مبدأ تعیین می‌شود" : "این گالری به عنوان نقطه شروع تعیین شده و باقی مسیر از اینجا بهینه می‌شود"}
                           >
                             <span>📍</span>
-                            <span>شروع از این گالری</span>
+                            <span>{hasOrigin ? "اولین گالری بعد از مبدأ" : "شروع از این گالری"}</span>
                           </button>
                         )}
 
@@ -592,7 +764,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                           </span>
                           <span className="text-stone-300 dark:text-stone-600">·</span>
                           <span className="font-bold text-[#1d2d4c] dark:text-white">
-                            ~{toPersianDigits(leg.durationMin)} دقیقه جابجایی
+                            ~{toPersianDigits(leg.durationWithTrafficMin || leg.durationMin)} دقیقه {isLast && routeResult.isRoundTrip ? 'بازگشت به مبدأ' : 'جابجایی'}
                           </span>
                         </div>
                       </div>
@@ -600,6 +772,23 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                   </div>
                 );
               })}
+
+              {/* Final Return Card for Round-Trip */}
+              {routeResult.isRoundTrip && (
+                <div className="relative group">
+                  <div className="absolute -right-7 top-2 w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center border-2 border-white dark:border-stone-900 shadow-sm z-10 bg-amber-600 text-white font-mono">
+                    🏁
+                  </div>
+                  <div className="clay-card p-3 bg-amber-50/70 dark:bg-amber-950/30 text-xs border border-amber-200 dark:border-amber-800/60 shadow-xs flex items-center justify-between">
+                    <span className="font-bold text-amber-800 dark:text-amber-300">
+                      بازگشت به {routeResult.originPoint ? routeResult.originPoint.name : 'نقطه آغاز (گالری اول)'}
+                    </span>
+                    <span className="text-[10px] bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 px-2 py-0.5 rounded-full font-bold">
+                      پایان مسیر رفت‌وبرگشت
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -611,6 +800,19 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
           <div className="text-xs font-bold text-[#3D5B99] dark:text-[#A3C2E4] flex items-center justify-between">
             <span>مسیریابی در اپلیکیشن‌ها</span>
             <span className="text-[10px] text-stone-400 font-normal">ترافیک زنده و ناوبری سخنگو</span>
+          </div>
+
+          {/* Navigation Destination Context Info */}
+          <div className="text-[11px] text-stone-600 dark:text-stone-300 bg-white/70 dark:bg-stone-900/70 p-2.5 rounded-xl border border-stone-200/80 dark:border-stone-800 flex items-center justify-between">
+            <span>مقصد ناوبری در اپ‌ها: <strong>{getGalleryDisplayName(routeResult.orderedGalleries[0])}</strong></span>
+            {routeResult.originPoint ? (
+              <span className="text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                <span>از مبدأ: {routeResult.originPoint.name}</span>
+              </span>
+            ) : (
+              <span className="text-stone-400 font-medium">اولین توقف گالری</span>
+            )}
           </div>
 
           {/* 2x2 Grid: Row 1 = Google Maps + Waze, Row 2 = نشان + بلد */}

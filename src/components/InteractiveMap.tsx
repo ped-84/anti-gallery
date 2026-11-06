@@ -350,7 +350,37 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       console.warn('[Neshan] Route update note:', e);
     }
 
-    // 5.2 Render Gallery Markers
+    // 5.2 Render Origin / Starting Point Marker if available
+    if (routeResult?.originPoint) {
+      const origin = routeResult.originPoint;
+      const el = document.createElement('div');
+      el.className = 'cursor-pointer select-none';
+      el.title = `${origin.name} (مبدأ حرکت شما)`;
+
+      el.innerHTML = `
+        <div class="relative flex flex-col items-center group -translate-y-2">
+          <div class="absolute -top-1 w-10 h-10 rounded-full bg-emerald-500/35 animate-ping pointer-events-none"></div>
+          <div class="w-9 h-9 rounded-full bg-emerald-600 text-white border-2 border-white flex items-center justify-center shadow-xl transition-transform duration-150 ease-out hover:scale-115 active:scale-95 origin-center z-10">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 2l7 19-7-4-7 4 7-19z"></path>
+            </svg>
+          </div>
+          <div class="mt-1 bg-emerald-900/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-md border border-emerald-500/50 whitespace-nowrap pointer-events-none">
+            ${origin.name}
+          </div>
+        </div>
+      `;
+
+      const originMarker = new nmp.Marker({ element: el })
+        .setLngLat([origin.lng, origin.lat])
+        .addTo(map);
+
+      markersRef.current.push(originMarker);
+      bounds.extend([origin.lng, origin.lat]);
+      hasValidBounds = true;
+    }
+
+    // 5.3 Render Gallery Markers
     galleries.forEach((gallery) => {
       const isSelected = selectedIds.has(gallery.id);
       const orderNum = orderIndexMap.get(gallery.id);
@@ -502,6 +532,12 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
       {/* Map Legend Overlay */}
       <div className="absolute bottom-4 right-4 z-10 clay-card bg-white/95 dark:bg-[#161a22]/95 px-3 py-1.5 text-xs text-stone-600 dark:text-stone-300 hidden sm:flex items-center gap-3 border border-[#E1E1E1] dark:border-stone-800">
+        {routeResult?.originPoint && (
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 inline-block"></span>
+            <span>مبدأ حرکت</span>
+          </div>
+        )}
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full bg-[#3D5B99] inline-block"></span>
           <span>در برنامه گشت</span>

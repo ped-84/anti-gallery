@@ -57,6 +57,13 @@ export interface RouteLeg {
   }[];
 }
 
+export interface CustomOrigin {
+  type: 'gps' | 'hub' | 'none';
+  name: string;
+  lat: number;
+  lng: number;
+}
+
 export interface RouteOptimizationResult {
   orderedGalleries: Gallery[];
   totalDistanceKm: number;
@@ -70,7 +77,7 @@ export interface RouteOptimizationResult {
   isRoundTrip: boolean;
   mode: 'driving' | 'walking';
   originPoint?: { name: string; lat: number; lng: number };
-  algorithmUsed: 'osrm-trip' | 'tsp-matrix';
+  algorithmUsed: 'osrm-trip' | 'tsp-matrix' | 'osrm-route' | 'fixed-matrix';
 }
 
 export interface CuratedTour {
