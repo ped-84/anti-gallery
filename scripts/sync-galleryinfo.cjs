@@ -65,19 +65,122 @@ function fetchHtml(url) {
   });
 }
 
-// Neighborhood detector
-function getNeighborhood(address, name) {
+// City & Neighborhood detector
+function getCityAndNeighborhood(address, name, lat = 35.715) {
   const t = ((address || '') + ' ' + (name || '')).toLowerCase();
-  if (t.includes('شیراز') && !t.includes('میرزای شیرازی')) return 'شیراز';
-  if (t.includes('اصفهان')) return 'اصفهان';
-  if (t.includes('پونک') || t.includes('سعادت‌آباد') || t.includes('سعادت آباد') || t.includes('شهرک غرب') || t.includes('جلال آل احمد') || t.includes('جهان‌آرا')) return 'غرب تهران';
-  if (t.includes('امیرآباد') || t.includes('کارگر') || t.includes('انقلاب') || t.includes('فاطمی') || t.includes('وصال') || t.includes('دانشگاه') || t.includes('نوفل‌لوشاتو') || t.includes('نوفل لوشاتو')) return 'مرکز، انقلاب و امیرآباد';
-  if (t.includes('مطهری') || t.includes('بهشتی') || t.includes('سهروردی') || t.includes('قائم‌مقام') || t.includes('قائم مقام') || t.includes('میرزای شیرازی') || t.includes('هفت تیر') || t.includes('مفتح')) return 'بهشتی و مطهری';
-  if (t.includes('کریمخان') || t.includes('کریم‌خان') || t.includes('سنایی') || t.includes('ایرانشهر') || t.includes('ویلا') || t.includes('سمیه') || t.includes('پورموسی') || t.includes('سپهبد قرنی') || t.includes('حافظ')) return 'کریم‌خان و مرکز';
-  if (t.includes('فرشته') || t.includes('الهیه') || t.includes('سام سنتر') || t.includes('آقا بزرگی')) return 'الهیه و فرشته';
-  if (t.includes('نیاوران') || t.includes('فرمانیه') || t.includes('اندرزگو') || t.includes('پاسداران') || t.includes('دولت') || t.includes('کامرانیه') || t.includes('آجودانیه') || t.includes('اقدسیه')) return 'نیاوران و شمال تهران';
-  if (t.includes('ونک') || t.includes('ملاصدرا') || t.includes('شیخ بهایی') || t.includes('میرداماد') || t.includes('ظفر') || t.includes('گاندی')) return 'ونک، میرداماد و ظفر';
-  return 'کریم‌خان و مرکز';
+
+  // 1. Detect non-Tehran cities
+  if (t.includes('کرج') || t.includes('مهرشهر') || t.includes('البرز') || t.includes('فردیس') || t.includes('عظیمیه')) {
+    return { city: 'Karaj', cityFa: 'کرج', neighborhood: 'Karaj', neighborhoodFa: 'کرج' };
+  }
+  if (t.includes('مشهد') || t.includes('خراسان')) {
+    return { city: 'Mashhad', cityFa: 'مشهد', neighborhood: 'Mashhad', neighborhoodFa: 'مشهد' };
+  }
+  if (t.includes('شیراز') && !t.includes('میرزای شیرازی') && !t.includes('خیابان شیراز')) {
+    return { city: 'Shiraz', cityFa: 'شیراز', neighborhood: 'Shiraz', neighborhoodFa: 'شیراز' };
+  }
+  if (t.includes('اصفهان') && !t.includes('خیابان اصفهان')) {
+    return { city: 'Isfahan', cityFa: 'اصفهان', neighborhood: 'Isfahan', neighborhoodFa: 'اصفهان' };
+  }
+  if (t.includes('کاشان') && !t.includes('خیابان کاشان')) {
+    return { city: 'Kashan', cityFa: 'کاشان', neighborhood: 'Kashan', neighborhoodFa: 'کاشان' };
+  }
+  if (t.includes('بجنورد')) {
+    return { city: 'Bojnurd', cityFa: 'بجنورد', neighborhood: 'Bojnurd', neighborhoodFa: 'بجنورد' };
+  }
+  if (t.includes('استانبول') || t.includes('ترکیه')) {
+    return { city: 'Istanbul', cityFa: 'استانبول', neighborhood: 'Istanbul', neighborhoodFa: 'استانبول' };
+  }
+  if (t.includes('تبریز')) {
+    return { city: 'Tabriz', cityFa: 'تبریز', neighborhood: 'Tabriz', neighborhoodFa: 'تبریز' };
+  }
+
+  // 2. Tehran zones
+  const city = 'Tehran';
+  const cityFa = 'تهران';
+
+  // Niavaran & North Tehran
+  if (
+    t.includes('نیاوران') || t.includes('فرمانیه') || t.includes('اندرزگو') || t.includes('پاسداران') ||
+    t.includes('دولت') || t.includes('کامرانیه') || t.includes('آجودانیه') || t.includes('اقدسیه') ||
+    t.includes('ارتش') || t.includes('نخل') || t.includes('قیطریه') || t.includes('دروس') ||
+    t.includes('دیباجی') || t.includes('پل رومی') || t.includes('تهرانپارس') || t.includes('سیدخندان') ||
+    t.includes('تجریش') || t.includes('دزاشیب')
+  ) {
+    return { city, cityFa, neighborhood: 'North Tehran & Niavaran', neighborhoodFa: 'نیاوران و شمال تهران' };
+  }
+
+  // Elahiyeh & Fereshteh
+  if (
+    t.includes('فرشته') || t.includes('الهیه') || t.includes('سام سنتر') || t.includes('آقا بزرگی') ||
+    t.includes('آقابزرگی') || t.includes('فیاضی') || t.includes('بیدار') || t.includes('چناران') ||
+    t.includes('زعفرانیه') || t.includes('محمودیه') || t.includes('ولنجک') || t.includes('پسیان') ||
+    t.includes('پارک وی') || t.includes('پارک‌وی') || t.includes('مریم غربی')
+  ) {
+    return { city, cityFa, neighborhood: 'Elahiyeh & Fereshteh', neighborhoodFa: 'الهیه و فرشته' };
+  }
+
+  // Vanak, Mirdamad & Zafar
+  if (
+    t.includes('ونک') || t.includes('ملاصدرا') || t.includes('شیخ بهایی') || t.includes('میرداماد') ||
+    t.includes('ظفر') || t.includes('گاندی') || t.includes('کردستان') || t.includes('سئول') ||
+    t.includes('آفریقا') || t.includes('جردن') || t.includes('خدامی')
+  ) {
+    return { city, cityFa, neighborhood: 'Vanak, Mirdamad & Zafar', neighborhoodFa: 'ونک، میرداماد و ظفر' };
+  }
+
+  // Beheshti & Motahari
+  if (
+    t.includes('مطهری') || t.includes('بهشتی') || t.includes('سهروردی') || t.includes('قائم‌مقام') ||
+    t.includes('قائم مقام') || t.includes('میرزای شیرازی') || t.includes('هفت تیر') || t.includes('مفتح') ||
+    t.includes('لارستان') || t.includes('عباس‌آباد') || t.includes('عباس آباد') || t.includes('میرعماد') ||
+    t.includes('پاکستان') || t.includes('خرمشهر') || t.includes('عشقیار') || t.includes('وزرا')
+  ) {
+    return { city, cityFa, neighborhood: 'Beheshti & Motahari', neighborhoodFa: 'بهشتی و مطهری' };
+  }
+
+  // Downtown, Enghelab & Amirabad
+  if (
+    t.includes('امیرآباد') || t.includes('کارگر') || t.includes('انقلاب') || t.includes('فاطمی') ||
+    t.includes('وصال') || t.includes('دانشگاه') || t.includes('نوفل‌لوشاتو') || t.includes('نوفل لوشاتو') ||
+    t.includes('لولاگر') || t.includes('کشاورز') || t.includes('بلوار کشاورز') || t.includes('میدان ولیعصر') ||
+    t.includes('میدان ولی‌عصر') || t.includes('زرتشت') || t.includes('فردوسی') || t.includes('کالج') ||
+    t.includes('حوزه هنری') || t.includes('موزه هنرهای معاصر')
+  ) {
+    return { city, cityFa, neighborhood: 'Downtown, Enghelab & Amirabad', neighborhoodFa: 'مرکز، انقلاب و امیرآباد' };
+  }
+
+  // West Tehran
+  if (
+    t.includes('پونک') || t.includes('سعادت‌آباد') || t.includes('سعادت آباد') || t.includes('شهرک غرب') ||
+    t.includes('جلال آل احمد') || t.includes('جهان‌آرا') || t.includes('مرزداران') || t.includes('صادقیه') ||
+    t.includes('ستارخان') || t.includes('اکباتان')
+  ) {
+    return { city, cityFa, neighborhood: 'West Tehran', neighborhoodFa: 'غرب تهران' };
+  }
+
+  // Karimkhan & Center
+  if (
+    t.includes('کریمخان') || t.includes('کریم‌خان') || t.includes('سنایی') || t.includes('ایرانشهر') ||
+    t.includes('ویلا') || t.includes('سمیه') || t.includes('پورموسی') || t.includes('سپهبد قرنی') ||
+    t.includes('حافظ') || t.includes('طالقانی') || t.includes('عضدی') || t.includes('آبان') ||
+    t.includes('سپند') || t.includes('باغ هنر')
+  ) {
+    return { city, cityFa, neighborhood: 'Karimkhan & Center', neighborhoodFa: 'کریم‌خان و مرکز' };
+  }
+
+  // Geographic fallback based on latitude if no keyword matched
+  if (lat >= 35.78) {
+    return { city, cityFa, neighborhood: 'North Tehran & Niavaran', neighborhoodFa: 'نیاوران و شمال تهران' };
+  }
+  if (lat >= 35.74) {
+    return { city, cityFa, neighborhood: 'Vanak, Mirdamad & Zafar', neighborhoodFa: 'ونک، میرداماد و ظفر' };
+  }
+  if (lat >= 35.71) {
+    return { city, cityFa, neighborhood: 'Beheshti & Motahari', neighborhoodFa: 'بهشتی و مطهری' };
+  }
+
+  return { city, cityFa, neighborhood: 'Karimkhan & Center', neighborhoodFa: 'کریم‌خان و مرکز' };
 }
 
 async function main() {
@@ -181,12 +284,12 @@ async function main() {
       const lat = latMatch ? parseFloat(latMatch[1]) : 35.715;
       const lng = lngMatch ? parseFloat(lngMatch[1]) : 51.415;
 
-      const nFa = getNeighborhood(cleanAddr, galleryName);
+      const locationInfo = getCityAndNeighborhood(cleanAddr, galleryName, lat);
 
       gallery = {
         id: e.GalleryId,
         name: galleryName,
-        city: 'Tehran',
+        city: locationInfo.city,
         lat,
         lng,
         address: cleanAddr,
@@ -197,10 +300,10 @@ async function main() {
         image: `https://galleryinfo.ir/Images/Galleries/GallerySmall_${e.GalleryId}.jpg`,
         sourceUrl: `https://galleryinfo.ir/Gallery/fa/${e.GalleryId}`,
         exhibitions: [exObj],
-        neighborhood: nFa,
+        neighborhood: locationInfo.neighborhood,
         nameFa: galleryName,
-        cityFa: 'تهران',
-        neighborhoodFa: nFa,
+        cityFa: locationInfo.cityFa,
+        neighborhoodFa: locationInfo.neighborhoodFa,
         isInTrafficZone: cleanAddr.includes('مطهری') || cleanAddr.includes('کریم‌خان') || cleanAddr.includes('انقلاب'),
         activeExhibition: exObj,
         posterImage: posterUrl,

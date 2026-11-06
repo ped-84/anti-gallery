@@ -51,7 +51,14 @@ function isLegacyDefaultList(ids: any): boolean {
 }
 
 export default function App() {
-  const galleries = rawGalleriesData as Gallery[];
+  // Filter for Tehran-only display per user instructions (non-Tehran preserved in DB for future expansion)
+  const galleries = useMemo(() => {
+    return (rawGalleriesData as Gallery[]).filter((g) => {
+      const city = (g.city || '').toLowerCase();
+      const cityFa = g.cityFa || '';
+      return city === 'tehran' || cityFa === 'تهران';
+    });
+  }, []);
 
   // Restore user selected galleries or default to an empty itinerary
   const [selectedGalleryIds, setSelectedGalleryIds] = useState<number[]>(() => {
