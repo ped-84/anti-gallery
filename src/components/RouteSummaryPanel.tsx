@@ -691,14 +691,25 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                       </div>
 
                       {gallery.activeExhibition && (
-                        <div className="mt-2 pt-2 border-t border-stone-100 dark:border-stone-800/80 flex items-center gap-1.5 flex-wrap text-[11px]">
-                          <span className="px-2 py-0.5 rounded-md bg-[#F76B1C]/10 text-[#F76B1C] font-bold">
-                            نمایشگاه: {gallery.activeExhibition.title}
-                          </span>
-                          {gallery.activeExhibition.artist && (
-                            <span className="text-stone-600 dark:text-stone-400 font-medium">
-                              آثار: {gallery.activeExhibition.artist}
+                        <div className="mt-2 pt-2 border-t border-stone-100 dark:border-stone-800/80 space-y-1.5 text-[11px]">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="px-2 py-0.5 rounded-md bg-[#F76B1C]/10 text-[#F76B1C] font-bold">
+                              نمایشگاه: {gallery.activeExhibition.title}
                             </span>
+                          </div>
+                          {gallery.activeExhibition.artist && (
+                            <p
+                              className="text-stone-600 dark:text-stone-400 font-medium leading-relaxed line-clamp-2"
+                              style={{
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                overflow: 'hidden'
+                              }}
+                              title={gallery.activeExhibition.artist}
+                            >
+                              آثار: {gallery.activeExhibition.artist}
+                            </p>
                           )}
                         </div>
                       )}

@@ -201,10 +201,19 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
             {/* Artist Name & Art Subject Tag */}
             <div className="space-y-1.5 pt-1.5 border-t border-[#E1E1E1]/60 dark:border-stone-700/60">
               {activeExhibition.artist && (
-                <div className="flex items-center gap-1.5 text-xs text-[#1d2d4c] dark:text-stone-200 font-bold">
-                  <User className="w-3.5 h-3.5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
-                  <span className="text-[11px] text-stone-500 dark:text-stone-400 font-medium">هنرمند:</span>
-                  <span className="truncate">
+                <div className="flex items-start gap-1.5 text-xs text-[#1d2d4c] dark:text-stone-200 font-bold">
+                  <User className="w-3.5 h-3.5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0 mt-0.5" />
+                  <span className="text-[11px] text-stone-500 dark:text-stone-400 font-medium shrink-0">هنرمند:</span>
+                  <span
+                    className="line-clamp-2 leading-snug"
+                    style={{
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden'
+                    }}
+                    title={activeExhibition.artist}
+                  >
                     {activeExhibition.artist.trim() === 'نمایشگاه گروهی' ? 'گروهی از هنرمندان' : activeExhibition.artist}
                   </span>
                 </div>
