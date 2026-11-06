@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Gallery } from '../types/gallery';
-import { toPersianDigits, getGalleryDisplayName } from '../utils/persianUtils';
+import { toPersianDigits, getGalleryDisplayName, getExhibitionMedium } from '../utils/persianUtils';
 import {
   Plus,
   Check,
@@ -11,7 +11,8 @@ import {
   Clock,
   Image as ImageIcon,
   Maximize2,
-  Sparkles
+  Sparkles,
+  Palette
 } from 'lucide-react';
 
 interface GalleryCardProps {
@@ -190,24 +191,36 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
               </div>
             </div>
 
-            {/* Exhibition Title & Type */}
+            {/* Exhibition Title (Clean, without redundant type subtitle) */}
             <div>
               <div className="text-sm font-bold text-[#10335e] dark:text-[#dbeafe] leading-tight">
                 {activeExhibition.title}
               </div>
-              <div className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5">
-                {activeExhibition.type || 'نمایشگاه انفرادی'}
-              </div>
             </div>
 
-            {/* Artist Name */}
-            {activeExhibition.artist && (
-              <div className="flex items-center gap-1.5 text-xs text-[#1d2d4c] dark:text-stone-200 font-bold pt-1 border-t border-[#E1E1E1]/50 dark:border-stone-700/50">
-                <User className="w-3.5 h-3.5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
-                <span className="text-[11px] text-stone-500 dark:text-stone-400 font-medium">هنرمند:</span>
-                <span className="truncate">{activeExhibition.artist}</span>
+            {/* Artist Name & Art Subject Tag */}
+            <div className="space-y-1.5 pt-1.5 border-t border-[#E1E1E1]/60 dark:border-stone-700/60">
+              {activeExhibition.artist && (
+                <div className="flex items-center gap-1.5 text-xs text-[#1d2d4c] dark:text-stone-200 font-bold">
+                  <User className="w-3.5 h-3.5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
+                  <span className="text-[11px] text-stone-500 dark:text-stone-400 font-medium">هنرمند:</span>
+                  <span className="truncate">
+                    {activeExhibition.artist.trim() === 'نمایشگاه گروهی' ? 'گروهی از هنرمندان' : activeExhibition.artist}
+                  </span>
+                </div>
+              )}
+
+              {/* Subject / Medium Tag */}
+              <div className="flex items-center justify-between gap-1.5 text-xs">
+                <div className="flex items-center gap-1.5 text-stone-500 dark:text-stone-400 font-medium text-[11px]">
+                  <Palette className="w-3.5 h-3.5 text-[#F76B1C] shrink-0" />
+                  <span>موضوع:</span>
+                </div>
+                <span className="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-[#edf3ff] dark:bg-blue-950/50 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/60 dark:border-blue-800/50 shadow-2xs">
+                  {getExhibitionMedium(activeExhibition.title, activeExhibition.artist, activeExhibition.type)}
+                </span>
               </div>
-            )}
+            </div>
           </div>
         ) : (
           /* Clean compact status for galleries between exhibition cycles (NO dummy image!) */

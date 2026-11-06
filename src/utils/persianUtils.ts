@@ -333,4 +333,43 @@ export function isThisWeekOpening(openingDate?: string, maxScore?: number): bool
   return score >= maxScore - 2 && score <= maxScore;
 }
 
+/**
+ * Detects the exhibition art medium or subject (نقاشی، عکاسی، مجسمه‌سازی، خوشنویسی، و غیره)
+ */
+export function getExhibitionMedium(title?: string, artist?: string, type?: string): string {
+  const combined = `${title || ''} ${artist || ''} ${type || ''}`.toLowerCase();
+  
+  if (combined.includes('نقاش') || combined.includes('رنگ روغن') || combined.includes('آبرنگ') || combined.includes('اکریلیک')) {
+    return 'نقاشی';
+  }
+  if (combined.includes('عکس') || combined.includes('عکاس') || combined.includes('فوتوگراف') || combined.includes('photo')) {
+    return 'عکاسی';
+  }
+  if (combined.includes('مجسم') || combined.includes('تندیس') || combined.includes('حجم') || combined.includes('سرامیک') || combined.includes('سفال')) {
+    return 'مجسمه‌سازی و حجم';
+  }
+  if (combined.includes('خوشنویس') || combined.includes('خطاط') || combined.includes('کالیگراف') || combined.includes('مرقع') || combined.includes('خط ')) {
+    return 'خوشنویسی و خط';
+  }
+  if (combined.includes('طراح') || combined.includes('فیگور') || combined.includes('اسکیس')) {
+    return 'طراحی';
+  }
+  if (combined.includes('چاپ') || combined.includes('سیلک') || combined.includes('لیتوگراف')) {
+    return 'چاپ دستی';
+  }
+  if (combined.includes('چیدمان') || combined.includes('اینستالیشن') || combined.includes('کانسپچوال')) {
+    return 'چیدمان (اینستالیشن)';
+  }
+  if (combined.includes('ویدیو') || combined.includes('ویدئو') || combined.includes('چندرسان') || combined.includes('نیومدیا')) {
+    return 'چندرسانه‌ای';
+  }
+  if (combined.includes('گنجینه') || combined.includes('موزه هنر')) {
+    return 'گنجینه موزه';
+  }
+  if (combined.includes('گره') || combined.includes('فرش') || combined.includes('الیاف') || combined.includes('بافت')) {
+    return 'هنر الیاف و بافت';
+  }
+  return 'هنرهای تجسمی';
+}
+
 

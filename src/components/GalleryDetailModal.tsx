@@ -1,6 +1,6 @@
 import React from 'react';
 import { Gallery } from '../types/gallery';
-import { toPersianDigits, getGalleryDisplayName } from '../utils/persianUtils';
+import { toPersianDigits, getGalleryDisplayName, getExhibitionMedium } from '../utils/persianUtils';
 import {
   X,
   MapPin,
@@ -138,18 +138,27 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                 <h3 className="text-base font-bold text-[#10335e] dark:text-[#dbeafe] leading-snug">
                   {activeExhibition.title}
                 </h3>
-                <div className="text-xs text-stone-600 dark:text-stone-300 mt-0.5 font-medium">
-                  {activeExhibition.type || 'نمایشگاه انفرادی'}
-                </div>
               </div>
 
+              {/* Artist Name */}
               {activeExhibition.artist && (
                 <div className="flex items-center gap-1.5 text-xs text-[#1d2d4c] dark:text-stone-200 font-bold pt-1.5 border-t border-[#F76B1C]/20">
                   <User className="w-3.5 h-3.5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
-                  <span className="text-stone-500 dark:text-stone-400 font-normal">آثار هنرمند:</span>
-                  <span>{activeExhibition.artist}</span>
+                  <span className="text-stone-500 dark:text-stone-400 font-normal">هنرمند:</span>
+                  <span>{activeExhibition.artist.trim() === 'نمایشگاه گروهی' ? 'گروهی از هنرمندان' : activeExhibition.artist}</span>
                 </div>
               )}
+
+              {/* Subject / Medium Tag */}
+              <div className="flex items-center justify-between gap-1.5 text-xs pt-1.5 border-t border-[#F76B1C]/15">
+                <div className="flex items-center gap-1.5 text-stone-500 dark:text-stone-400 font-medium text-xs">
+                  <Palette className="w-3.5 h-3.5 text-[#F76B1C] shrink-0" />
+                  <span>موضوع و مدیوم آثار:</span>
+                </div>
+                <span className="px-2.5 py-0.5 rounded-lg text-xs font-bold bg-[#edf3ff] dark:bg-blue-950/50 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/60 dark:border-blue-800/50 shadow-2xs">
+                  {getExhibitionMedium(activeExhibition.title, activeExhibition.artist, activeExhibition.type)}
+                </span>
+              </div>
 
               {activeExhibition.fullDateRange && (
                 <div className="text-[11px] text-stone-500 dark:text-stone-400 flex items-center gap-1.5 pt-0.5">
