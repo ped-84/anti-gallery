@@ -29,7 +29,7 @@ export const TRAFFIC_MODELS: Record<TrafficCondition, TrafficConfig> = {
   peak: {
     condition: 'peak',
     label: 'اوج شلوغی عصر (۱۶ تا ۲۰:۳۰)',
-    shortLabel: 'اوج عصر (شلوغ)',
+    shortLabel: 'عصر (شلوغ)',
     multiplier: 1.55,
     description: 'همزمانی با ساعت اوج ترافیک و گالری‌گردی در معابر پرتردد تهران'
   },

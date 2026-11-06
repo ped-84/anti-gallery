@@ -382,8 +382,8 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
 
             {/* Row 2: Traffic Scenario Selector (Generous Full-Width Card with Breathing Room) */}
             {mode === 'driving' && (
-              <div className="clay-card p-3 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-2xl border border-[#E1E1E1]/80 dark:border-stone-800 space-y-2 shadow-xs">
-                <div className="flex items-center justify-between px-1">
+              <div className="clay-card p-3 sm:p-3.5 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-2xl border border-[#E1E1E1]/80 dark:border-stone-800 space-y-2.5 shadow-xs">
+                <div className="flex items-center justify-between px-1 mb-0.5">
                   <span className="text-xs sm:text-sm font-bold text-stone-700 dark:text-stone-300 flex items-center gap-1.5">
                     <Clock className="w-4 h-4 text-[#F76B1C]" />
                     <span>ساعت حرکت در ترافیک تهران:</span>
@@ -412,7 +412,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 hover:bg-white/60'
                     }`}
                   >
-                    <span>اوج عصر</span>
+                    <span>عصر</span>
                     <span className="text-[10px] font-normal opacity-70">(شلوغ)</span>
                   </button>
                   <button
@@ -490,7 +490,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
               {trafficCondition === 'peak' && trafficDelayMin > 0 && (
                 <div className="inline-flex items-center gap-1.5 text-xs font-medium text-[#F76B1C] bg-orange-50 dark:bg-orange-950/40 border border-orange-300 dark:border-orange-800/60 px-2.5 py-1 rounded-lg shadow-2xs">
                   <Clock className="w-3.5 h-3.5 shrink-0" />
-                  <span>ترافیک اوج عصر: +{toPersianDigits(trafficDelayMin)} دقیقه تاخیر احتمالی</span>
+                  <span>ترافیک عصر: +{toPersianDigits(trafficDelayMin)} دقیقه تاخیر احتمالی</span>
                 </div>
               )}
             </div>
