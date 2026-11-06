@@ -372,4 +372,24 @@ export function getExhibitionMedium(title?: string, artist?: string, type?: stri
   return 'هنرهای تجسمی';
 }
 
+/**
+ * Cleans up raw gallery addresses, stripping out HTML entities like &nbsp;,
+ * excess spaces, and duplicate city names.
+ */
+export function formatGalleryAddress(raw: string = ''): string {
+  if (!raw) return '';
+  return raw
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&zwnj;/gi, '\u200c')
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&#[0-9]+;/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/^(تهران|کرج|مشهد|شیراز|اصفهان|تبریز|کاشان|بجنورد)[،\s]+(تهران|کرج|مشهد|شیراز|اصفهان|تبریز|کاشان|بجنورد)[،\s]+/g, '$1، ')
+    .replace(/^(تهران|کرج|مشهد|شیراز|اصفهان|تبریز|کاشان|بجنورد)\s+([^،\s])/g, '$1، $2');
+}
+
 

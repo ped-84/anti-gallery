@@ -4,8 +4,10 @@ import {
   toPersianDigits,
   TRAFFIC_MODELS,
   TrafficCondition,
-  getGalleryDisplayName
+  getGalleryDisplayName,
+  formatGalleryAddress
 } from '../utils/persianUtils';
+import { ClayDropdown, DropdownOption } from './ClayDropdown';
 import {
   buildGoogleMapsUrl,
   buildNeshanUrl,
@@ -138,7 +140,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
     const summary = routeResult.orderedGalleries
       .map(
         (g, i) =>
-          `${toPersianDigits(i + 1)}. ${getGalleryDisplayName(g)} - ${g.addressFa || g.address} (${g.neighborhoodFa || g.cityFa || g.city})`
+          `${toPersianDigits(i + 1)}. ${getGalleryDisplayName(g)} - ${formatGalleryAddress(g.addressFa || g.address)} (${g.neighborhoodFa || g.cityFa || g.city})`
       )
       .join('\n\n');
 
@@ -317,20 +319,17 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                 <Timer className="w-4 h-4 text-[#3D5B99] shrink-0" />
                 <span>زمان بازدید هر گالری:</span>
               </div>
-              <div className="relative">
-                <select
-                  value={visitDurationMin}
-                  onChange={(e) => handleVisitDurationChange(Number(e.target.value))}
-                  className="clay-button clay-base text-xs sm:text-sm font-bold py-1.5 pr-3 pl-7 text-[#1d2d4c] dark:text-white rounded-xl border border-[#E1E1E1] dark:border-stone-700 cursor-pointer focus:outline-none appearance-none shadow-2xs"
-                >
-                  {VISIT_OPTIONS.map((m) => (
-                    <option key={m} value={m}>
-                      {toPersianDigits(m)} دقیقه{m === 15 ? ' (پیش‌فرض)' : m === 60 ? ' (۱ ساعت)' : ''}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="w-3.5 h-3.5 text-stone-400 absolute left-2 top-1/2 -translate-y-1/2 pointer-events-none" />
-              </div>
+              <ClayDropdown
+                value={String(visitDurationMin)}
+                onChange={(val) => handleVisitDurationChange(Number(val))}
+                options={VISIT_OPTIONS.map((m) => ({
+                  value: String(m),
+                  label: `${toPersianDigits(m)} دقیقه`,
+                  badge: m === 15 ? 'پیش‌فرض' : m === 60 ? '۱ ساعت' : undefined,
+                }))}
+                size="sm"
+                align="left"
+              />
             </div>
           </div>
         )}
@@ -418,7 +417,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                         {getGalleryDisplayName(g)}
                       </div>
                       <div className="text-stone-500 dark:text-stone-400 truncate text-[11px]">
-                        {g.neighborhoodFa} · {g.addressFa || g.address}
+                        {g.neighborhoodFa} · {formatGalleryAddress(g.addressFa || g.address)}
                       </div>
                     </div>
                   </div>
@@ -491,7 +490,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                             {getGalleryDisplayName(gallery)}
                           </span>
                           <div className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5 truncate">
-                            {gallery.neighborhoodFa} · {gallery.addressFa || gallery.address}
+                            {gallery.neighborhoodFa} · {formatGalleryAddress(gallery.addressFa || gallery.address)}
                           </div>
                         </div>
 

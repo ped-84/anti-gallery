@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Gallery } from '../types/gallery';
-import { toPersianDigits, getGalleryDisplayName, getExhibitionMedium } from '../utils/persianUtils';
+import { toPersianDigits, getGalleryDisplayName, getExhibitionMedium, formatGalleryAddress } from '../utils/persianUtils';
 import {
   Plus,
   Check,
@@ -152,7 +152,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
             <div className="text-[11px] text-[#3D5B99] dark:text-[#A3C2E4] font-medium truncate mt-0.5">
               <span>{gallery.neighborhoodFa || 'تهران'}</span>
               <span className="mx-1 text-stone-300 dark:text-stone-600">·</span>
-              <span className="text-stone-500 dark:text-stone-400">{gallery.addressFa || gallery.address}</span>
+              <span className="text-stone-500 dark:text-stone-400">{formatGalleryAddress(gallery.addressFa || gallery.address)}</span>
             </div>
           </div>
 

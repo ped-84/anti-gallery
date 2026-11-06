@@ -155,7 +155,19 @@ async function main() {
       const addrMatch = html.match(/class=["']address["'][^>]*>([\s\S]*?)<\/(?:div|p|span)>/i) ||
                         html.match(/نشانی[\s\S]*?<p[^>]*>([\s\S]*?)<\/p>/i) ||
                         html.match(/<div class="col-sm-8 col-xs-12">[\s\S]*?<p>([\s\S]*?)<\/p>/i);
-      const cleanAddr = addrMatch ? addrMatch[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim() : 'تهران، مرکز شهر';
+      const rawAddr = addrMatch ? addrMatch[1] : '';
+      const cleanAddr = rawAddr
+        ? rawAddr
+            .replace(/<[^>]+>/g, ' ')
+            .replace(/&nbsp;/gi, ' ')
+            .replace(/&zwnj;/gi, '\u200c')
+            .replace(/&amp;/gi, '&')
+            .replace(/&[a-zA-Z0-9#]+;/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .replace(/^(تهران|کرج|مشهد|شیراز|اصفهان|تبریز|کاشان|بجنورد)[،\s]+(تهران|کرج|مشهد|شیراز|اصفهان|تبریز|کاشان|بجنورد)[،\s]+/g, '$1، ')
+            .replace(/^(تهران|کرج|مشهد|شیراز|اصفهان|تبریز|کاشان|بجنورد)\s+([^،\s])/g, '$1، $2')
+        : 'تهران، مرکز شهر';
 
       const phoneMatch = html.match(/(?:تلفن|تماس)[\s\S]*?([0-9\-\s+]{7,15})/i);
       const cleanPhone = phoneMatch ? phoneMatch[1].trim() : '۰۲۱';

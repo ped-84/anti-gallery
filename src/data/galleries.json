@@ -2199,7 +2199,7 @@
     "city": "Isfahan",
     "lat": 32.627982,
     "lng": 51.654553,
-    "address": "اصفهان خیابان دکتر شریعتی غربی، حدفاصل حکیم نظامی و چهارراه پلیس، پلاک ۱۸۶",
+    "address": "اصفهان، خیابان دکتر شریعتی غربی، حدفاصل حکیم نظامی و چهارراه پلیس، پلاک ۱۸۶",
     "phone": "031",
     "hours": "۱۶ - ۲۰",
     "website": "",
@@ -2214,7 +2214,7 @@
     "isInTrafficZone": false,
     "activeExhibition": null,
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_422.jpg",
-    "addressFa": "اصفهان خیابان دکتر شریعتی غربی، حدفاصل حکیم نظامی و چهارراه پلیس، پلاک ۱۸۶",
+    "addressFa": "اصفهان، خیابان دکتر شریعتی غربی، حدفاصل حکیم نظامی و چهارراه پلیس، پلاک ۱۸۶",
     "hoursFa": "۱۶ - ۲۰"
   },
   {
@@ -2247,7 +2247,7 @@
     "city": "Isfahan",
     "lat": 32.636603,
     "lng": 51.687961,
-    "address": "اصفهان، خیابان آبشار اول،  پلاک 25",
+    "address": "اصفهان، خیابان آبشار اول، پلاک 25",
     "phone": "03136617831",
     "hours": "۱۶:۳۰ - ۲۰:۳۰",
     "website": "http://www.t.me/matn_gallery",
@@ -2262,7 +2262,7 @@
     "isInTrafficZone": false,
     "activeExhibition": null,
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_264.jpg",
-    "addressFa": "اصفهان، خیابان آبشار اول،  پلاک 25",
+    "addressFa": "اصفهان، خیابان آبشار اول، پلاک 25",
     "hoursFa": "۱۶:۳۰ - ۲۰:۳۰"
   },
   {
@@ -3267,8 +3267,8 @@
     "cityFa": "تهران",
     "lat": 35.718686,
     "lng": 51.420512,
-    "address": "تهران، آدرس  خیابان کریمخان   خیابان حسینی   کوچه دوازدهم  پلاک ۱۳  طبقه۳",
-    "addressFa": "تهران، آدرس  خیابان کریمخان   خیابان حسینی   کوچه دوازدهم  پلاک ۱۳  طبقه۳",
+    "address": "تهران، آدرس خیابان کریمخان خیابان حسینی کوچه دوازدهم پلاک ۱۳ طبقه۳",
+    "addressFa": "تهران، آدرس خیابان کریمخان خیابان حسینی کوچه دوازدهم پلاک ۱۳ طبقه۳",
     "phone": "",
     "hours": "۱۴ - ۲۰",
     "hoursFa": "۱۴ - ۲۰",
@@ -3375,8 +3375,8 @@
     "cityFa": "تهران",
     "lat": 35.803732,
     "lng": 51.412098,
-    "address": "تهران، زعفرانیه   خیابان پسیان   کوچه سینایی پلاک ۲۴",
-    "addressFa": "تهران، زعفرانیه   خیابان پسیان   کوچه سینایی پلاک ۲۴",
+    "address": "تهران، زعفرانیه خیابان پسیان کوچه سینایی پلاک ۲۴",
+    "addressFa": "تهران، زعفرانیه خیابان پسیان کوچه سینایی پلاک ۲۴",
     "phone": "",
     "hours": "۱۲ - ۲۰",
     "hoursFa": "۱۲ - ۲۰",
@@ -3535,8 +3535,8 @@
     "cityFa": "تهران",
     "lat": 35.7908554,
     "lng": 51.4206772,
-    "address": "تهران، خیابان فیاضی (فرشته)، نبش خیابان بوسنی  هرزگووین، بوتیک مال ملل، طبقه اول واحد 110",
-    "addressFa": "تهران، خیابان فیاضی (فرشته)، نبش خیابان بوسنی  هرزگووین، بوتیک مال ملل، طبقه اول واحد 110",
+    "address": "تهران، خیابان فیاضی (فرشته)، نبش خیابان بوسنی هرزگووین، بوتیک مال ملل، طبقه اول واحد 110",
+    "addressFa": "تهران، خیابان فیاضی (فرشته)، نبش خیابان بوسنی هرزگووین، بوتیک مال ملل، طبقه اول واحد 110",
     "phone": "02126353179",
     "hours": "۱۱ - ۲۰",
     "hoursFa": "۱۱ - ۲۰",
@@ -3857,7 +3857,7 @@
     "city": "Tehran",
     "lat": 35.702687,
     "lng": 51.414183,
-    "address": "تهران &nbsp; &nbsp; تهران، خیابان ویلا، خیابان سمیه، خیابان پورموسى، شماره ۳۰ 021-88809808 021-88946451 روزهای تعطیل: شنبه و یکشنبه ساعات کار: ۱۶ - ۲۰ https://soocontemporary.com مسیریابی",
+    "address": "تهران، خیابان ویلا، خیابان سمیه، خیابان پورموسى، شماره ۳۰ 021-88809808 021-88946451 روزهای تعطیل: شنبه و یکشنبه ساعات کار: ۱۶ - ۲۰ https://soocontemporary.com مسیریابی",
     "phone": "",
     "hours": "۱۶:۰۰ تا ۲۰:۰۰",
     "website": "https://galleryinfo.ir/Gallery/fa/418",
@@ -3902,7 +3902,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21540.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21540.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_418.jpg",
-    "addressFa": "تهران &nbsp; &nbsp; تهران، خیابان ویلا، خیابان سمیه، خیابان پورموسى، شماره ۳۰ 021-88809808 021-88946451 روزهای تعطیل: شنبه و یکشنبه ساعات کار: ۱۶ - ۲۰ https://soocontemporary.com مسیریابی",
+    "addressFa": "تهران، خیابان ویلا، خیابان سمیه، خیابان پورموسى، شماره ۳۰ 021-88809808 021-88946451 روزهای تعطیل: شنبه و یکشنبه ساعات کار: ۱۶ - ۲۰ https://soocontemporary.com مسیریابی",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
   },
   {
@@ -3911,7 +3911,7 @@
     "city": "Tehran",
     "lat": 35.7935478,
     "lng": 51.415,
-    "address": "کرج &nbsp; &nbsp; اتوبان تهران کرج، غرب میدان استاندارد، مجتمع هارمونیک، طبقه دوم 02632828300 روزهای تعطیل: - ساعات کار: ۱۰ - ۲۱ https://harmony.ir/harmonic-art-home/ Arthome.Harmonic@Gmail.com",
+    "address": "کرج، اتوبان تهران کرج، غرب میدان استاندارد، مجتمع هارمونیک، طبقه دوم 02632828300 روزهای تعطیل: - ساعات کار: ۱۰ - ۲۱ https://harmony.ir/harmonic-art-home/ Arthome.Harmonic@Gmail.com",
     "phone": "",
     "hours": "۱۶:۰۰ تا ۲۰:۰۰",
     "website": "https://galleryinfo.ir/Gallery/fa/314",
@@ -3956,7 +3956,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21499.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21499.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_314.jpg",
-    "addressFa": "کرج &nbsp; &nbsp; اتوبان تهران کرج، غرب میدان استاندارد، مجتمع هارمونیک، طبقه دوم 02632828300 روزهای تعطیل: - ساعات کار: ۱۰ - ۲۱ https://harmony.ir/harmonic-art-home/ Arthome.Harmonic@Gmail.com",
+    "addressFa": "کرج، اتوبان تهران کرج، غرب میدان استاندارد، مجتمع هارمونیک، طبقه دوم 02632828300 روزهای تعطیل: - ساعات کار: ۱۰ - ۲۱ https://harmony.ir/harmonic-art-home/ Arthome.Harmonic@Gmail.com",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
   },
   {
@@ -3965,7 +3965,7 @@
     "city": "Tehran",
     "lat": 35.715,
     "lng": 51.415,
-    "address": "بجنورد &nbsp; &nbsp; بجنورد- خیابان نادر- نادر ۱- پلاک ۲۵ 05832750014 09366094115 روزهای تعطیل: پنجشنبه ها و جمعه های غیر افتتاحیه ساعات کار: ۱۷ - ۲۱ http://www.zaghebanafsh.art/ Saghiparseh@gmail.com",
+    "address": "بجنورد، بجنورد- خیابان نادر- نادر ۱- پلاک ۲۵ 05832750014 09366094115 روزهای تعطیل: پنجشنبه ها و جمعه های غیر افتتاحیه ساعات کار: ۱۷ - ۲۱ http://www.zaghebanafsh.art/ Saghiparseh@gmail.com",
     "phone": "",
     "hours": "۱۶:۰۰ تا ۲۰:۰۰",
     "website": "https://galleryinfo.ir/Gallery/fa/1017",
@@ -4010,7 +4010,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21493.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21493.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1017.jpg",
-    "addressFa": "بجنورد &nbsp; &nbsp; بجنورد- خیابان نادر- نادر ۱- پلاک ۲۵ 05832750014 09366094115 روزهای تعطیل: پنجشنبه ها و جمعه های غیر افتتاحیه ساعات کار: ۱۷ - ۲۱ http://www.zaghebanafsh.art/ Saghiparseh@gmail.com",
+    "addressFa": "بجنورد، بجنورد- خیابان نادر- نادر ۱- پلاک ۲۵ 05832750014 09366094115 روزهای تعطیل: پنجشنبه ها و جمعه های غیر افتتاحیه ساعات کار: ۱۷ - ۲۱ http://www.zaghebanafsh.art/ Saghiparseh@gmail.com",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
   },
   {
@@ -4019,7 +4019,7 @@
     "city": "Tehran",
     "lat": 35.715,
     "lng": 51.444832,
-    "address": "کاشان &nbsp; &nbsp; خیابان ملافتح‌الله، کوچه مفسر۵، پلاک۴۴ 03155221537 روزهای تعطیل: دوشنبه‌ها ساعات کار: ۱۷ - ۲۱",
+    "address": "کاشان، خیابان ملافتح‌الله، کوچه مفسر۵، پلاک۴۴ 03155221537 روزهای تعطیل: دوشنبه‌ها ساعات کار: ۱۷ - ۲۱",
     "phone": "",
     "hours": "۱۶:۰۰ تا ۲۰:۰۰",
     "website": "https://galleryinfo.ir/Gallery/fa/472",
@@ -4064,7 +4064,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21466.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21466.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_472.jpg",
-    "addressFa": "کاشان &nbsp; &nbsp; خیابان ملافتح‌الله، کوچه مفسر۵، پلاک۴۴ 03155221537 روزهای تعطیل: دوشنبه‌ها ساعات کار: ۱۷ - ۲۱",
+    "addressFa": "کاشان، خیابان ملافتح‌الله، کوچه مفسر۵، پلاک۴۴ 03155221537 روزهای تعطیل: دوشنبه‌ها ساعات کار: ۱۷ - ۲۱",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
   },
   {
@@ -4073,7 +4073,7 @@
     "city": "Tehran",
     "lat": 35.715,
     "lng": 51.415,
-    "address": "ترکیه - استانبول &nbsp; &nbsp; +90 212 252 1852 +90 532 271 1070 روزهای تعطیل: دوشنبه‌ها ساعات کار: ۱۱ - ۱۹ http://www.shivazahed.art",
+    "address": "ترکیه - استانبول +90 212 252 1852 +90 532 271 1070 روزهای تعطیل: دوشنبه‌ها ساعات کار: ۱۱ - ۱۹ http://www.shivazahed.art",
     "phone": "",
     "hours": "۱۶:۰۰ تا ۲۰:۰۰",
     "website": "https://galleryinfo.ir/Gallery/fa/1024",
@@ -4118,7 +4118,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21417.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21417.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1024.jpg",
-    "addressFa": "ترکیه - استانبول &nbsp; &nbsp; +90 212 252 1852 +90 532 271 1070 روزهای تعطیل: دوشنبه‌ها ساعات کار: ۱۱ - ۱۹ http://www.shivazahed.art",
+    "addressFa": "ترکیه - استانبول +90 212 252 1852 +90 532 271 1070 روزهای تعطیل: دوشنبه‌ها ساعات کار: ۱۱ - ۱۹ http://www.shivazahed.art",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
   },
   {
@@ -4127,7 +4127,7 @@
     "city": "Tehran",
     "lat": 35.790081,
     "lng": 51.4194832,
-    "address": "تهران &nbsp; &nbsp; تهران،خیابان الهیه، کوچه اخگری، کوچه آناهیتا، پلاک10 09120139055 روزهای تعطیل: روز تعطیل ندارد. ساعات کار: ۱۵ - ۲۱ http://keimangallery.com/",
+    "address": "تهران، خیابان الهیه، کوچه اخگری، کوچه آناهیتا، پلاک10 09120139055 روزهای تعطیل: روز تعطیل ندارد. ساعات کار: ۱۵ - ۲۱ http://keimangallery.com/",
     "phone": "",
     "hours": "۱۶:۰۰ تا ۲۰:۰۰",
     "website": "https://galleryinfo.ir/Gallery/fa/1005",
@@ -4172,7 +4172,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21556.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21556.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1005.jpg",
-    "addressFa": "تهران &nbsp; &nbsp; تهران،خیابان الهیه، کوچه اخگری، کوچه آناهیتا، پلاک10 09120139055 روزهای تعطیل: روز تعطیل ندارد. ساعات کار: ۱۵ - ۲۱ http://keimangallery.com/",
+    "addressFa": "تهران، خیابان الهیه، کوچه اخگری، کوچه آناهیتا، پلاک10 09120139055 روزهای تعطیل: روز تعطیل ندارد. ساعات کار: ۱۵ - ۲۱ http://keimangallery.com/",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
   },
   {
@@ -4181,7 +4181,7 @@
     "city": "Tehran",
     "lat": 35.720487,
     "lng": 51.419346,
-    "address": "تهران &nbsp; &nbsp; خیابان سنایی، خیابان شاهین (خدری)، پلاک ۱۸، طبقه ی اول 02188324828 روزهای تعطیل: شنبه‌ها و یکشنبه‌ها ساعات کار: ۱۲ - ۲۰ http://ogallery.net/ info@ogallery.net",
+    "address": "تهران، خیابان سنایی، خیابان شاهین (خدری)، پلاک ۱۸، طبقه ی اول 02188324828 روزهای تعطیل: شنبه‌ها و یکشنبه‌ها ساعات کار: ۱۲ - ۲۰ http://ogallery.net/ info@ogallery.net",
     "phone": "",
     "hours": "۱۶:۰۰ تا ۲۰:۰۰",
     "website": "https://galleryinfo.ir/Gallery/fa/65",
@@ -4240,7 +4240,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21579.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21579.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_65.jpg",
-    "addressFa": "تهران &nbsp; &nbsp; خیابان سنایی، خیابان شاهین (خدری)، پلاک ۱۸، طبقه ی اول 02188324828 روزهای تعطیل: شنبه‌ها و یکشنبه‌ها ساعات کار: ۱۲ - ۲۰ http://ogallery.net/ info@ogallery.net",
+    "addressFa": "تهران، خیابان سنایی، خیابان شاهین (خدری)، پلاک ۱۸، طبقه ی اول 02188324828 روزهای تعطیل: شنبه‌ها و یکشنبه‌ها ساعات کار: ۱۲ - ۲۰ http://ogallery.net/ info@ogallery.net",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
   },
   {
@@ -4249,7 +4249,7 @@
     "city": "Tehran",
     "lat": 35.7164119,
     "lng": 51.4192182,
-    "address": "تهران &nbsp; &nbsp; خیابان کریم خان زند، خیابان سنایی، کوچه چهارم غربی، پلاک ۸، واحد یک 02188863596 02188863597 02188863598 روزهای تعطیل: ندارد ساعات کار: ۱۱ - ۱۹ http://www.homaartgallery.com/ info@homaartgallery.com",
+    "address": "تهران، خیابان کریم خان زند، خیابان سنایی، کوچه چهارم غربی، پلاک ۸، واحد یک 02188863596 02188863597 02188863598 روزهای تعطیل: ندارد ساعات کار: ۱۱ - ۱۹ http://www.homaartgallery.com/ info@homaartgallery.com",
     "phone": "",
     "hours": "۱۶:۰۰ تا ۲۰:۰۰",
     "website": "https://galleryinfo.ir/Gallery/fa/24",
@@ -4294,7 +4294,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21577.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21577.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_24.jpg",
-    "addressFa": "تهران &nbsp; &nbsp; خیابان کریم خان زند، خیابان سنایی، کوچه چهارم غربی، پلاک ۸، واحد یک 02188863596 02188863597 02188863598 روزهای تعطیل: ندارد ساعات کار: ۱۱ - ۱۹ http://www.homaartgallery.com/ info@homaartgallery.com",
+    "addressFa": "تهران، خیابان کریم خان زند، خیابان سنایی، کوچه چهارم غربی، پلاک ۸، واحد یک 02188863596 02188863597 02188863598 روزهای تعطیل: ندارد ساعات کار: ۱۱ - ۱۹ http://www.homaartgallery.com/ info@homaartgallery.com",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
   },
   {
@@ -4303,7 +4303,7 @@
     "city": "Tehran",
     "lat": 35.7013435,
     "lng": 51.4147949,
-    "address": "تهران &nbsp; &nbsp; تهران،خیابان انقلاب، مابین چهارراه کالج و میدان فردوسی، پلاک ۸۵۴، طبقه اول/ بالای حیاط 02166745132 روزهای تعطیل: شنبه‌ها ساعات کار: ۱۴ - ۲۰ http://www.inja.gallery/ info@inja.gallery",
+    "address": "تهران، خیابان انقلاب، مابین چهارراه کالج و میدان فردوسی، پلاک ۸۵۴، طبقه اول/ بالای حیاط 02166745132 روزهای تعطیل: شنبه‌ها ساعات کار: ۱۴ - ۲۰ http://www.inja.gallery/ info@inja.gallery",
     "phone": "",
     "hours": "۱۶:۰۰ تا ۲۰:۰۰",
     "website": "https://galleryinfo.ir/Gallery/fa/405",
@@ -4348,7 +4348,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21580.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21580.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_405.jpg",
-    "addressFa": "تهران &nbsp; &nbsp; تهران،خیابان انقلاب، مابین چهارراه کالج و میدان فردوسی، پلاک ۸۵۴، طبقه اول/ بالای حیاط 02166745132 روزهای تعطیل: شنبه‌ها ساعات کار: ۱۴ - ۲۰ http://www.inja.gallery/ info@inja.gallery",
+    "addressFa": "تهران، خیابان انقلاب، مابین چهارراه کالج و میدان فردوسی، پلاک ۸۵۴، طبقه اول/ بالای حیاط 02166745132 روزهای تعطیل: شنبه‌ها ساعات کار: ۱۴ - ۲۰ http://www.inja.gallery/ info@inja.gallery",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
   },
   {
@@ -4357,7 +4357,7 @@
     "city": "Tehran",
     "lat": 35.7287266,
     "lng": 51.4268807,
-    "address": "تهران &nbsp; &nbsp; خیابان مطهری، خیابان میرعماد، کوچه دوازدهم، پلاک 11 02188513933 02188513934 روزهای تعطیل: شنبه ها ساعات کار: ۱۶ - ۱۹ http://vistaart.gallery/ info@vistahonar.com",
+    "address": "تهران، خیابان مطهری، خیابان میرعماد، کوچه دوازدهم، پلاک 11 02188513933 02188513934 روزهای تعطیل: شنبه ها ساعات کار: ۱۶ - ۱۹ http://vistaart.gallery/ info@vistahonar.com",
     "phone": "",
     "hours": "۱۶:۰۰ تا ۲۰:۰۰",
     "website": "https://galleryinfo.ir/Gallery/fa/41",
@@ -4402,7 +4402,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21583.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21583.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_41.jpg",
-    "addressFa": "تهران &nbsp; &nbsp; خیابان مطهری، خیابان میرعماد، کوچه دوازدهم، پلاک 11 02188513933 02188513934 روزهای تعطیل: شنبه ها ساعات کار: ۱۶ - ۱۹ http://vistaart.gallery/ info@vistahonar.com",
+    "addressFa": "تهران، خیابان مطهری، خیابان میرعماد، کوچه دوازدهم، پلاک 11 02188513933 02188513934 روزهای تعطیل: شنبه ها ساعات کار: ۱۶ - ۱۹ http://vistaart.gallery/ info@vistahonar.com",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
   },
   {
@@ -4411,7 +4411,7 @@
     "city": "Tehran",
     "lat": 35.7644969,
     "lng": 51.4013104,
-    "address": "تهران &nbsp; &nbsp; میدان ونک، خیابان شهید خدامی، پلاک 72 02188047698 روزهای تعطیل: شنبه‌ها و یکشنبه‌ها ساعات کار: ۱۲ - ۲۰ http://www.valiartgallery.com/ info@valiartgallery.com",
+    "address": "تهران، میدان ونک، خیابان شهید خدامی، پلاک 72 02188047698 روزهای تعطیل: شنبه‌ها و یکشنبه‌ها ساعات کار: ۱۲ - ۲۰ http://www.valiartgallery.com/ info@valiartgallery.com",
     "phone": "",
     "hours": "۱۶:۰۰ تا ۲۰:۰۰",
     "website": "https://galleryinfo.ir/Gallery/fa/26",
@@ -4456,7 +4456,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21555.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21555.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_26.jpg",
-    "addressFa": "تهران &nbsp; &nbsp; میدان ونک، خیابان شهید خدامی، پلاک 72 02188047698 روزهای تعطیل: شنبه‌ها و یکشنبه‌ها ساعات کار: ۱۲ - ۲۰ http://www.valiartgallery.com/ info@valiartgallery.com",
+    "addressFa": "تهران، میدان ونک، خیابان شهید خدامی، پلاک 72 02188047698 روزهای تعطیل: شنبه‌ها و یکشنبه‌ها ساعات کار: ۱۲ - ۲۰ http://www.valiartgallery.com/ info@valiartgallery.com",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
   },
   {
@@ -4465,7 +4465,7 @@
     "city": "Tehran",
     "lat": 35.715097,
     "lng": 51.3920212,
-    "address": "تهران &nbsp; &nbsp; خیابان دکتر فاطمی، ضلع شمالی پارک لاله،روبروی پارکینگ طبقاتی 02188960492 روزهای تعطیل: جمعه‌ها به جز گشایش‌ها ساعات کار: ۱۰ - ۱۸ http://www.lalehartgallery.ir/ mailto:lalehgallery.art@gmail.com",
+    "address": "تهران، خیابان دکتر فاطمی، ضلع شمالی پارک لاله،روبروی پارکینگ طبقاتی 02188960492 روزهای تعطیل: جمعه‌ها به جز گشایش‌ها ساعات کار: ۱۰ - ۱۸ http://www.lalehartgallery.ir/ mailto:lalehgallery.art@gmail.com",
     "phone": "",
     "hours": "17 تا 19",
     "website": "https://galleryinfo.ir/Gallery/fa/43",
@@ -4510,7 +4510,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21584.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21584.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_43.jpg",
-    "addressFa": "تهران &nbsp; &nbsp; خیابان دکتر فاطمی، ضلع شمالی پارک لاله،روبروی پارکینگ طبقاتی 02188960492 روزهای تعطیل: جمعه‌ها به جز گشایش‌ها ساعات کار: ۱۰ - ۱۸ http://www.lalehartgallery.ir/ mailto:lalehgallery.art@gmail.com",
+    "addressFa": "تهران، خیابان دکتر فاطمی، ضلع شمالی پارک لاله،روبروی پارکینگ طبقاتی 02188960492 روزهای تعطیل: جمعه‌ها به جز گشایش‌ها ساعات کار: ۱۰ - ۱۸ http://www.lalehartgallery.ir/ mailto:lalehgallery.art@gmail.com",
     "hoursFa": "17 تا 19"
   },
   {
@@ -4519,7 +4519,7 @@
     "city": "Tehran",
     "lat": 35.7985535,
     "lng": 51.5054321,
-    "address": "تهران &nbsp; &nbsp; بلوار ارتش غرب، خیابان نخل، خیابان بهاران، بن بست نسترن، پلاک ۱، ساختمان مدرن پلازا، واحد ۶۰۲ و ۶۰۳ 02122454657 روزهای تعطیل: شنبه‌ها ساعات کار: ۱۶ - ۲۰ http://www.bagallerytehran.com ba@bagallerytehran.com",
+    "address": "تهران، بلوار ارتش غرب، خیابان نخل، خیابان بهاران، بن بست نسترن، پلاک ۱، ساختمان مدرن پلازا، واحد ۶۰۲ و ۶۰۳ 02122454657 روزهای تعطیل: شنبه‌ها ساعات کار: ۱۶ - ۲۰ http://www.bagallerytehran.com ba@bagallerytehran.com",
     "phone": "",
     "hours": "۱۶:۰۰ تا ۲۰:۰۰",
     "website": "https://galleryinfo.ir/Gallery/fa/497",
@@ -4564,7 +4564,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21576.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21576.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_497.jpg",
-    "addressFa": "تهران &nbsp; &nbsp; بلوار ارتش غرب، خیابان نخل، خیابان بهاران، بن بست نسترن، پلاک ۱، ساختمان مدرن پلازا، واحد ۶۰۲ و ۶۰۳ 02122454657 روزهای تعطیل: شنبه‌ها ساعات کار: ۱۶ - ۲۰ http://www.bagallerytehran.com ba@bagallerytehran.com",
+    "addressFa": "تهران، بلوار ارتش غرب، خیابان نخل، خیابان بهاران، بن بست نسترن، پلاک ۱، ساختمان مدرن پلازا، واحد ۶۰۲ و ۶۰۳ 02122454657 روزهای تعطیل: شنبه‌ها ساعات کار: ۱۶ - ۲۰ http://www.bagallerytehran.com ba@bagallerytehran.com",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
   },
   {
@@ -4573,7 +4573,7 @@
     "city": "Tehran",
     "lat": 35.812256,
     "lng": 51.415,
-    "address": "کرج &nbsp; &nbsp; مهرشهر کرج، بلوار ارم، بعد از باغ سیب، جنب سه راه شهرداری، پلاک 2 0263-3408647 0263-3409401 روزهای تعطیل: ندارد ساعات کار: ۱۶ - ۲۰ http://www.ivansepid.com/ ivan.sepid@yahoo.com",
+    "address": "کرج، مهرشهر کرج، بلوار ارم، بعد از باغ سیب، جنب سه راه شهرداری، پلاک 2 0263-3408647 0263-3409401 روزهای تعطیل: ندارد ساعات کار: ۱۶ - ۲۰ http://www.ivansepid.com/ ivan.sepid@yahoo.com",
     "phone": "",
     "hours": "",
     "website": "https://galleryinfo.ir/Gallery/fa/93",
@@ -4618,7 +4618,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21570.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21570.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_93.jpg",
-    "addressFa": "کرج &nbsp; &nbsp; مهرشهر کرج، بلوار ارم، بعد از باغ سیب، جنب سه راه شهرداری، پلاک 2 0263-3408647 0263-3409401 روزهای تعطیل: ندارد ساعات کار: ۱۶ - ۲۰ http://www.ivansepid.com/ ivan.sepid@yahoo.com",
+    "addressFa": "کرج، مهرشهر کرج، بلوار ارم، بعد از باغ سیب، جنب سه راه شهرداری، پلاک 2 0263-3408647 0263-3409401 روزهای تعطیل: ندارد ساعات کار: ۱۶ - ۲۰ http://www.ivansepid.com/ ivan.sepid@yahoo.com",
     "hoursFa": ""
   },
   {
@@ -4627,7 +4627,7 @@
     "city": "Tehran",
     "lat": 35.717375,
     "lng": 51.421177,
-    "address": "تهران &nbsp; &nbsp; خیابان کریم خان زند. خیابان خردمند شمالی . کوچه اعرابی ۳ . پلاک ۵ . طبقه همکف و اول 021-8882 5322 روزهای تعطیل: شنبه‌ها، یکشنبه‌ها ساعات کار: ۱۴ - ۱۹ http://www.ev-artgallery.com info@ev-artgallery.com",
+    "address": "تهران، خیابان کریم خان زند. خیابان خردمند شمالی . کوچه اعرابی ۳ . پلاک ۵ . طبقه همکف و اول 021-8882 5322 روزهای تعطیل: شنبه‌ها، یکشنبه‌ها ساعات کار: ۱۴ - ۱۹ http://www.ev-artgallery.com info@ev-artgallery.com",
     "phone": "",
     "hours": "۱۶:۰۰ تا ۲۰:۰۰",
     "website": "https://galleryinfo.ir/Gallery/fa/443",
@@ -4672,7 +4672,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21552.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21552.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_443.jpg",
-    "addressFa": "تهران &nbsp; &nbsp; خیابان کریم خان زند. خیابان خردمند شمالی . کوچه اعرابی ۳ . پلاک ۵ . طبقه همکف و اول 021-8882 5322 روزهای تعطیل: شنبه‌ها، یکشنبه‌ها ساعات کار: ۱۴ - ۱۹ http://www.ev-artgallery.com info@ev-artgallery.com",
+    "addressFa": "تهران، خیابان کریم خان زند. خیابان خردمند شمالی . کوچه اعرابی ۳ . پلاک ۵ . طبقه همکف و اول 021-8882 5322 روزهای تعطیل: شنبه‌ها، یکشنبه‌ها ساعات کار: ۱۴ - ۱۹ http://www.ev-artgallery.com info@ev-artgallery.com",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
   },
   {
@@ -4681,7 +4681,7 @@
     "city": "Tehran",
     "lat": 35.70837,
     "lng": 51.426689,
-    "address": "تهران &nbsp; &nbsp; خیابان مفتح جنوبی، کوچه ی مبینی، پلاک 10 02188301702 02186074037 روزهای تعطیل: پنجشنبه ساعات کار: ۱۶ - ۲۰ http://www.",
+    "address": "تهران، خیابان مفتح جنوبی، کوچه ی مبینی، پلاک 10 02188301702 02186074037 روزهای تعطیل: پنجشنبه ساعات کار: ۱۶ - ۲۰ http://www.",
     "phone": "",
     "hours": "۱۶:۰۰ تا ۲۰:۰۰",
     "website": "https://galleryinfo.ir/Gallery/fa/755",
@@ -4726,7 +4726,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21581.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21581.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_755.jpg",
-    "addressFa": "تهران &nbsp; &nbsp; خیابان مفتح جنوبی، کوچه ی مبینی، پلاک 10 02188301702 02186074037 روزهای تعطیل: پنجشنبه ساعات کار: ۱۶ - ۲۰ http://www.",
+    "addressFa": "تهران، خیابان مفتح جنوبی، کوچه ی مبینی، پلاک 10 02188301702 02186074037 روزهای تعطیل: پنجشنبه ساعات کار: ۱۶ - ۲۰ http://www.",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
   },
   {
@@ -4735,7 +4735,7 @@
     "city": "Tehran",
     "lat": 36.3177447,
     "lng": 51.415,
-    "address": "مشهد &nbsp; &nbsp; بلوار خیام، خیابان ارشاد، شماره ۹۲/۱ 05137612971 روزهای تعطیل: شنبه‌ها، پنجشنبه‌ها ساعات کار: ۱۷ - ۲۰ http://www.hengamgallery.com info@hengamgallery.com",
+    "address": "مشهد، بلوار خیام، خیابان ارشاد، شماره ۹۲/۱ 05137612971 روزهای تعطیل: شنبه‌ها، پنجشنبه‌ها ساعات کار: ۱۷ - ۲۰ http://www.hengamgallery.com info@hengamgallery.com",
     "phone": "",
     "hours": "۱۶:۰۰ تا ۲۰:۰۰",
     "website": "https://galleryinfo.ir/Gallery/fa/494",
@@ -4780,7 +4780,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21557.jpg#mdo",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21557.jpg#mdo",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_494.jpg",
-    "addressFa": "مشهد &nbsp; &nbsp; بلوار خیام، خیابان ارشاد، شماره ۹۲/۱ 05137612971 روزهای تعطیل: شنبه‌ها، پنجشنبه‌ها ساعات کار: ۱۷ - ۲۰ http://www.hengamgallery.com info@hengamgallery.com",
+    "addressFa": "مشهد، بلوار خیام، خیابان ارشاد، شماره ۹۲/۱ 05137612971 روزهای تعطیل: شنبه‌ها، پنجشنبه‌ها ساعات کار: ۱۷ - ۲۰ http://www.hengamgallery.com info@hengamgallery.com",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
   },
   {
@@ -4789,7 +4789,7 @@
     "city": "Tehran",
     "lat": 35.7928505,
     "lng": 51.4241219,
-    "address": "تهران &nbsp; &nbsp; فرشته، خیابان آقابزرگی، ساختمان شیرین، پلاک 21، طبقه 6 واحد 603 روزهای تعطیل: شنبه‌ها ساعات کار: ۱۶ - ۲۰ http://www.Bazdidartgallery.com",
+    "address": "تهران، فرشته، خیابان آقابزرگی، ساختمان شیرین، پلاک 21، طبقه 6 واحد 603 روزهای تعطیل: شنبه‌ها ساعات کار: ۱۶ - ۲۰ http://www.Bazdidartgallery.com",
     "phone": "",
     "hours": "",
     "website": "https://galleryinfo.ir/Gallery/fa/1019",
@@ -4834,7 +4834,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21568.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21568.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1019.jpg",
-    "addressFa": "تهران &nbsp; &nbsp; فرشته، خیابان آقابزرگی، ساختمان شیرین، پلاک 21، طبقه 6 واحد 603 روزهای تعطیل: شنبه‌ها ساعات کار: ۱۶ - ۲۰ http://www.Bazdidartgallery.com",
+    "addressFa": "تهران، فرشته، خیابان آقابزرگی، ساختمان شیرین، پلاک 21، طبقه 6 واحد 603 روزهای تعطیل: شنبه‌ها ساعات کار: ۱۶ - ۲۰ http://www.Bazdidartgallery.com",
     "hoursFa": ""
   },
   {
@@ -4843,7 +4843,7 @@
     "city": "Tehran",
     "lat": 35.77395,
     "lng": 51.39283,
-    "address": "تهران &nbsp; &nbsp; ونک ، شیخ بهایی شمالی، میدان پرسپولیس، خیابان پرسپولیس( پیروزان)، پلاک ۲۰، طبقه اول 02188064277 09109105174 روزهای تعطیل: ساعات کار: ۱۶ - ۲۰",
+    "address": "تهران، ونک ، شیخ بهایی شمالی، میدان پرسپولیس، خیابان پرسپولیس( پیروزان)، پلاک ۲۰، طبقه اول 02188064277 09109105174 روزهای تعطیل: ساعات کار: ۱۶ - ۲۰",
     "phone": "",
     "hours": "۱۶:۰۰ تا ۲۰:۰۰",
     "website": "https://galleryinfo.ir/Gallery/fa/1026",
@@ -4888,7 +4888,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21554.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21554.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1026.jpg",
-    "addressFa": "تهران &nbsp; &nbsp; ونک ، شیخ بهایی شمالی، میدان پرسپولیس، خیابان پرسپولیس( پیروزان)، پلاک ۲۰، طبقه اول 02188064277 09109105174 روزهای تعطیل: ساعات کار: ۱۶ - ۲۰",
+    "addressFa": "تهران، ونک ، شیخ بهایی شمالی، میدان پرسپولیس، خیابان پرسپولیس( پیروزان)، پلاک ۲۰، طبقه اول 02188064277 09109105174 روزهای تعطیل: ساعات کار: ۱۶ - ۲۰",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
   },
   {
@@ -4897,7 +4897,7 @@
     "city": "Tehran",
     "lat": 35.7114187,
     "lng": 51.4164743,
-    "address": "تهران &nbsp; &nbsp; کریمخان،خیابان نجات آللهی، خیابان آستاد جعفر شهری، پلاک 22 خانه سپند 88912331 88901955 روزهای تعطیل: ندارد. ساعات کار: ۱۶ - ۲۰ https://www.sepandhouse.com sepandartgallery@gmail.com مسیریابی",
+    "address": "تهران، کریمخان،خیابان نجات آللهی، خیابان آستاد جعفر شهری، پلاک 22 خانه سپند 88912331 88901955 روزهای تعطیل: ندارد. ساعات کار: ۱۶ - ۲۰ https://www.sepandhouse.com sepandartgallery@gmail.com مسیریابی",
     "phone": "",
     "hours": "۱۶:۰۰ تا ۲۰:۰۰",
     "website": "https://galleryinfo.ir/Gallery/fa/999",
@@ -4942,7 +4942,7 @@
     "posterImage": "https://galleryinfo.ir/Images/Events/Event_21558.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21558.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_999.jpg",
-    "addressFa": "تهران &nbsp; &nbsp; کریمخان،خیابان نجات آللهی، خیابان آستاد جعفر شهری، پلاک 22 خانه سپند 88912331 88901955 روزهای تعطیل: ندارد. ساعات کار: ۱۶ - ۲۰ https://www.sepandhouse.com sepandartgallery@gmail.com مسیریابی",
+    "addressFa": "تهران، کریمخان،خیابان نجات آللهی، خیابان آستاد جعفر شهری، پلاک 22 خانه سپند 88912331 88901955 روزهای تعطیل: ندارد. ساعات کار: ۱۶ - ۲۰ https://www.sepandhouse.com sepandartgallery@gmail.com مسیریابی",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
   }
 ]

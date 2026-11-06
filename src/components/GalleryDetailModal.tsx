@@ -1,6 +1,6 @@
 import React from 'react';
 import { Gallery } from '../types/gallery';
-import { toPersianDigits, getGalleryDisplayName, getExhibitionMedium } from '../utils/persianUtils';
+import { toPersianDigits, getGalleryDisplayName, getExhibitionMedium, formatGalleryAddress } from '../utils/persianUtils';
 import {
   X,
   MapPin,
@@ -85,7 +85,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
               <div className="text-[11px] text-[#3D5B99] dark:text-[#A3C2E4] truncate mt-0.5 font-medium flex items-center gap-1.5">
                 <span>{gallery.neighborhoodFa || 'تهران'}</span>
                 <span className="text-stone-300 dark:text-stone-600">·</span>
-                <span className="truncate text-stone-500 dark:text-stone-400">{gallery.addressFa || gallery.address}</span>
+                <span className="truncate text-stone-500 dark:text-stone-400">{formatGalleryAddress(gallery.addressFa || gallery.address)}</span>
               </div>
             </div>
           </div>
@@ -212,7 +212,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
               <div>
                 <span className="font-bold text-stone-800 dark:text-stone-200 block">نشانی:</span>
                 <span className="text-stone-600 dark:text-stone-400 text-[11px] leading-relaxed block mt-0.5">
-                  {gallery.addressFa || gallery.address}
+                  {formatGalleryAddress(gallery.addressFa || gallery.address)}
                 </span>
               </div>
             </div>
