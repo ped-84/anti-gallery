@@ -296,44 +296,44 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
         )}
       </div>
 
-      {/* TRIP STATS & INSIGHTS CARD: Generous, readable, spacious (Apple Maps / Citymapper style) */}
+      {/* TRIP STATS & INSIGHTS CARD: Harmonious, balanced, and clean */}
       {routeResult && (
-        <div className="p-4 sm:p-5 bg-gradient-to-b from-[#f7f9fc] to-[#edf2f8] dark:from-[#131722] dark:to-[#0f121a] border-b border-[#E1E1E1] dark:border-stone-800 space-y-3.5">
+        <div className="p-3 sm:p-3.5 bg-gradient-to-b from-[#f7f9fc] to-[#edf2f8] dark:from-[#131722] dark:to-[#0f121a] border-b border-[#E1E1E1] dark:border-stone-800 space-y-2.5">
           {/* Main Hero Summary Card */}
-          <div className="clay-card p-4 sm:p-5 bg-white dark:bg-[#181d28] border border-[#E1E1E1]/80 dark:border-stone-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 shadow-sm rounded-2xl">
+          <div className="clay-card p-3 sm:p-3.5 bg-white dark:bg-[#181d28] border border-[#E1E1E1]/80 dark:border-stone-800 flex items-center justify-between gap-2.5 shadow-xs rounded-xl">
             {/* Primary ETA: Tour Duration */}
             <div>
-              <div className="text-xs sm:text-sm font-bold text-stone-500 dark:text-stone-400 mb-1">
-                تخمین کل برنامه (شامل زمان بازدید آثار)
-              </div>
-              <div className="text-2xl sm:text-3xl font-black text-[#F76B1C] font-mono tracking-tight leading-tight">
+              <span className="text-[11px] sm:text-xs font-medium text-stone-500 dark:text-stone-400 block mb-0.5">
+                زمان کل برنامه (با بازدیدها)
+              </span>
+              <span className="text-base sm:text-lg font-bold text-[#F76B1C] font-mono">
                 {avgHours > 0 ? `${toPersianDigits(avgHours)} ساعت و ` : ''}{toPersianDigits(avgMins)} دقیقه
-              </div>
+              </span>
             </div>
 
             {/* Secondary Transit Metrics */}
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="inline-flex items-center px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-[#f0f4fa] dark:bg-stone-800 text-[#1d2d4c] dark:text-stone-200 border border-[#E1E1E1] dark:border-stone-700 shadow-2xs font-mono">
+            <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1.5 shrink-0">
+              <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-[#f0f4fa] dark:bg-stone-800 text-[#1d2d4c] dark:text-stone-200 border border-[#E1E1E1]/80 dark:border-stone-700/80 font-mono">
                 {toPersianDigits(routeResult.totalDistanceKm)} کیلومتر مسافت
               </span>
-              <span className="inline-flex items-center px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-[#f0f4fa] dark:bg-stone-800 text-[#1d2d4c] dark:text-stone-200 border border-[#E1E1E1] dark:border-stone-700 shadow-2xs font-mono">
-                ~{toPersianDigits(routeResult.totalDurationMin)} دقیقه رانندگی
+              <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-[#f0f4fa] dark:bg-stone-800 text-[#1d2d4c] dark:text-stone-200 border border-[#E1E1E1]/80 dark:border-stone-700/80 font-mono">
+                ~{toPersianDigits(routeResult.totalDurationMin)} دقیقه {mode === 'walking' ? 'پیاده' : 'رانندگی'}
               </span>
             </div>
           </div>
 
-          {/* Context Alert Chips: Traffic Zone & Peak Delay (Generous, readable tags) */}
+          {/* Context Alert Chips: Traffic Zone & Peak Delay */}
           {(routeResult.trafficZoneWarningsCount > 0 || (trafficCondition === 'peak' && trafficDelayMin > 0)) && (
-            <div className="flex items-center gap-2.5 flex-wrap pt-0.5">
+            <div className="flex items-center gap-2 flex-wrap pt-0.5">
               {routeResult.trafficZoneWarningsCount > 0 && (
-                <div className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800/60 px-3 py-1.5 rounded-xl shadow-2xs">
-                  <AlertTriangle className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400" />
+                <div className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800/60 px-2.5 py-1 rounded-lg shadow-2xs">
+                  <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-amber-600 dark:text-amber-400" />
                   <span>{toPersianDigits(routeResult.trafficZoneWarningsCount)} نگارخانه در محدوده طرح ترافیک</span>
                 </div>
               )}
               {trafficCondition === 'peak' && trafficDelayMin > 0 && (
-                <div className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#F76B1C] bg-orange-50 dark:bg-orange-950/40 border border-orange-300 dark:border-orange-800/60 px-3 py-1.5 rounded-xl shadow-2xs">
-                  <Clock className="w-4 h-4 shrink-0" />
+                <div className="inline-flex items-center gap-1.5 text-xs font-medium text-[#F76B1C] bg-orange-50 dark:bg-orange-950/40 border border-orange-300 dark:border-orange-800/60 px-2.5 py-1 rounded-lg shadow-2xs">
+                  <Clock className="w-3.5 h-3.5 shrink-0" />
                   <span>ترافیک اوج عصر: +{toPersianDigits(trafficDelayMin)} دقیقه تاخیر احتمالی</span>
                 </div>
               )}
