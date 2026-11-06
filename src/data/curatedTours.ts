@@ -1,4 +1,5 @@
-import { CuratedTour } from '../types/gallery';
+import { CuratedTour, Gallery } from '../types/gallery';
+import { parsePersianDateToScore, isThisWeekOpening } from '../utils/persianUtils';
 
 export interface PersianCuratedTour extends CuratedTour {
   titleFa: string;
@@ -6,78 +7,242 @@ export interface PersianCuratedTour extends CuratedTour {
   descriptionFa: string;
   neighborhoodFa: string;
   themeColor: 'darkblue' | 'orange' | 'softblue' | 'gray';
+  isOpeningThisWeek?: boolean;
 }
 
+/**
+ * Curated Tours of exhibitions opening THIS WEEK (یا امروز)
+ * All galleries in these tours have an active opening in the current cycle.
+ */
 export const PERSIAN_CURATED_TOURS: PersianCuratedTour[] = [
   {
-    id: 'karimkhan-corridor',
-    title: 'Karimkhan Contemporary Corridor',
-    subtitle: 'Heart of Tehran Art Scene',
+    id: 'openings-karimkhan',
+    title: 'Karimkhan Contemporary Openings Circuit',
+    subtitle: 'This Week Openings in Karimkhan',
     city: 'Tehran',
     neighborhood: 'Karimkhan & Center',
-    titleFa: 'گذر هنر معاصر کریم‌خان',
-    subtitleFa: 'قلب گالری‌های هنری تهران',
+    titleFa: 'گذر افتتاحیه‌های معاصر کریم‌خان',
+    subtitleFa: 'افتتاحیه این هفته در قلب پایتخت',
     neighborhoodFa: 'کریم‌خان و مرکز',
     themeColor: 'darkblue',
-    galleryIds: [406, 217, 1025, 486, 666], // 009821 Projects, A Gallery, Bina Gallery, Aban Art House, 009821 2nd floor
+    isOpeningThisWeek: true,
+    galleryIds: [406, 65, 24, 443], // 009821 Kheradmand, O Gallery, Homa Gallery, Ev Gallery
     description:
-      'Stroll through historic Karimkhan Zand, South Aban, and Kheradmand streets featuring avant-garde photography, experimental installations, and vibrant studio spaces.',
+      'A curated walking tour of brand new exhibitions opening this week around historic Karimkhan, South Kheradmand, and Sanai streets.',
     descriptionFa:
-      'پیاده‌روی هنری در خیابان‌های خاطره‌انگیز کریم‌خان زند، آبان جنوبی و خردمند با مجموعه‌ای از عکاسی پیشرو، چیدمان‌های مفهومی و نگارخانه‌های معتبر.',
+      'پیاده‌روی اختصاصی بین نگارخانه‌هایی که این هفته در محله خاطره‌انگیز کریم‌خان، خردمند و سنایی نمایشگاه تازه افتتاح کرده‌اند.',
     estimatedHours: 3.0
   },
   {
-    id: 'fereshteh-luxury-walk',
-    title: 'Elahiyeh & Fereshteh High-Art Walk',
-    subtitle: 'Premier Modern Curations',
-    city: 'Tehran',
-    neighborhood: 'Elahiyeh & Fereshteh',
-    titleFa: 'گشت هنری الهیه و فرشته',
-    subtitleFa: 'هنر مدرن و معاصر شمال تهران',
-    neighborhoodFa: 'الهیه و فرشته',
-    themeColor: 'orange',
-    galleryIds: [1023, 28, 225, 1009], // +2 Fereshteh (Sam Center), Dastan Basement, Dastan Did, Melal Boutique Mall
-    description:
-      'An upscale gallery crawl through Northern Tehran showcases solo master retrospectives, cutting-edge sculpture, and design platforms.',
-    descriptionFa:
-      'تور بازدید از نگارخانه‌های شاخص فرشته، سام سنتر و خیابان بیدار شامل مرور آثار اساتید تجسمی، مجسمه‌سازی معاصر و فضاهای مدرن طراحی.',
-    estimatedHours: 2.5
-  },
-  {
-    id: 'downtown-cultural-trail',
-    title: 'Downtown & Enghelab Art Trail',
-    subtitle: 'Heritage & Experimental Art',
-    city: 'Tehran',
-    neighborhood: 'Downtown, Enghelab & Amirabad',
-    titleFa: 'مسیر تاریخی مرکز، انقلاب و لولاگر',
-    subtitleFa: 'معماری کهن و هنرهای تجربی',
-    neighborhoodFa: 'مرکز، انقلاب و امیرآباد',
-    themeColor: 'softblue',
-    galleryIds: [111, 1020, 63, 212], // Aaran Projects, Aartmaart Space, Ab/Anbar, Delgosha
-    description:
-      'Immerse in the historic alleys of Lolagar, Neauphle-le-Château, and 12th Farvardin, featuring converted architectural spaces, documentary photography, and conceptual works.',
-    descriptionFa:
-      'غوطه‌وری در کوچه‌های تاریخی لولاگر، نوفل‌لوشاتو و خیابان انقلاب با ساختمان‌های احیاشده، آثار مستند اجتماعی، چیدمان و هنر مفهومی.',
-    estimatedHours: 2.5
-  },
-  {
-    id: 'motahari-beheshti-circuit',
-    title: 'Motahari & Beheshti Art Circuit',
-    subtitle: 'Modernism & Mixed Media',
+    id: 'openings-beheshti',
+    title: 'Beheshti & Motahari New Openings',
+    subtitle: 'This Week Openings in Beheshti & Motahari',
     city: 'Tehran',
     neighborhood: 'Beheshti & Motahari',
-    titleFa: 'مدار هنری بهشتی و مطهری',
-    subtitleFa: 'نقاشی معاصر، طراحی و فضاهای مستقل',
+    titleFa: 'مدار افتتاحیه‌های بهشتی و مطهری',
+    subtitleFa: 'افتتاحیه این هفته در محور مطهری و بهشتی',
     neighborhoodFa: 'بهشتی و مطهری',
-    themeColor: 'gray',
-    galleryIds: [496, 226, 467, 25], // 1- Gallery, Negah, Asr, Hoor
+    themeColor: 'orange',
+    isOpeningThisWeek: true,
+    galleryIds: [938, 8, 41, 755], // Boostan Gallery, Arya Gallery, Vista Gallery, Didar Gallery
     description:
-      'A relaxed circuit through Larestan, Motahari, and Mirzay-e Shirazi exploring contemporary painting and solo retrospectives.',
+      'Explore fresh solo and group exhibitions opening this week across Motahari, Beheshti, and Mirzay-e Shirazi art circuit.',
     descriptionFa:
-      'گشت‌وگذار پیاده در خیابان‌های لارستان، مطهری و میرزای شیرازی برای تماشای نقاشی فیگوراتیو و انتزاعی معاصر و نمایشگاه‌های انفرادی.',
+      'گشت پیاده و فشرده بین گالری‌های شاخص خیابان مطهری، بهشتی و میرزای شیرازی با افتتاحیه‌های تازه و داغ این هفته.',
+    estimatedHours: 3.0
+  },
+  {
+    id: 'openings-central',
+    title: 'Museum & Downtown Historic Trail',
+    subtitle: 'Contemporary Museum & Downtown Openings',
+    city: 'Tehran',
+    neighborhood: 'Downtown, Enghelab & Amirabad',
+    titleFa: 'مسیر طلایی موزه معاصر، انقلاب و مرکز',
+    subtitleFa: 'افتتاحیه این هفته در محور فرهنگ و لاله',
+    neighborhoodFa: 'مرکز، انقلاب و امیرآباد',
+    themeColor: 'softblue',
+    isOpeningThisWeek: true,
+    galleryIds: [263, 405, 43], // Tehran Museum of Contemporary Art, In/Ja Gallery, Laleh Gallery
+    description:
+      'A cultural journey visiting new exhibition openings at the prestigious Tehran Museum of Contemporary Art, In/Ja, and Laleh Gallery.',
+    descriptionFa:
+      'بازدید از افتتاحیه‌های برجسته این هفته در موزه هنرهای معاصر تهران، گالری این/جا (نوفل‌لوشاتو) و نگارخانه لاله.',
     estimatedHours: 2.5
+  },
+  {
+    id: 'openings-north',
+    title: 'North, Elahiyeh & Niavaran Openings',
+    subtitle: 'New Curations in Northern Tehran',
+    city: 'Tehran',
+    neighborhood: 'Elahiyeh & Fereshteh',
+    titleFa: 'گشت افتتاحیه‌های شمال، الهیه و نیاوران',
+    subtitleFa: 'افتتاحیه این هفته در شمال تهران',
+    neighborhoodFa: 'الهیه، فرشته و نیاوران',
+    themeColor: 'gray',
+    isOpeningThisWeek: true,
+    galleryIds: [1005, 1019, 497], // Kyman Gallery, Bazdid Gallery, Ba Gallery
+    description:
+      'A refined tour visiting contemporary openings this week in Elahiyeh, Fereshteh, and Niavaran.',
+    descriptionFa:
+      'مسیر گالری‌گردی در نگارخانه‌های مدرن الهیه، فرشته و نیاوران که این هفته نمایشگاه جدید افتتاح کرده‌اند.',
+    estimatedHours: 2.5
+  },
+  {
+    id: 'openings-vanak',
+    title: 'Vanak & Zafar Contemporary Circuit',
+    subtitle: 'Fresh Openings in Vanak & Zafar',
+    city: 'Tehran',
+    neighborhood: 'Vanak, Mirdamad & Zafar',
+    titleFa: 'محور افتتاحیه‌های ونک و ظفر',
+    subtitleFa: 'افتتاحیه این هفته در ونک و ظفر',
+    neighborhoodFa: 'ونک، میرداماد و ظفر',
+    themeColor: 'darkblue',
+    isOpeningThisWeek: true,
+    galleryIds: [26, 1026], // Vali Gallery, Zhour-A Gallery
+    description:
+      'A focused gallery walk covering newly opened solo exhibitions in Vanak, Khodami, and Dastgerdi (Zafar) streets.',
+    descriptionFa:
+      'بازدید متمرکز از نگارخانه‌های فعال با افتتاحیه جدید این هفته در محدوده ونک، خیابان خدامی و دستگردی (ظفر).',
+    estimatedHours: 1.5
   }
 ];
 
-
 export const CURATED_TOURS = PERSIAN_CURATED_TOURS;
+
+/**
+ * Dynamically clusters and generates curated tours exclusively from galleries
+ * that have an exhibition opening THIS WEEK (یا امروز) in the current cycle.
+ */
+export function getCuratedOpeningTours(allGalleries: Gallery[]): PersianCuratedTour[] {
+  if (!allGalleries || allGalleries.length === 0) {
+    return PERSIAN_CURATED_TOURS;
+  }
+
+  const tehranGalleries = allGalleries.filter(
+    (g) => g.city === 'Tehran' || !g.city || g.cityFa === 'تهران'
+  );
+
+  const scores = tehranGalleries
+    .map((g) => parsePersianDateToScore(g.activeExhibition?.openingDate))
+    .filter((s) => s > 0);
+  const maxScore = scores.length > 0 ? Math.max(...scores) : 0;
+
+  const thisWeekGalleries = tehranGalleries.filter((g) =>
+    isThisWeekOpening(g.activeExhibition?.openingDate, maxScore)
+  );
+
+  if (thisWeekGalleries.length === 0) {
+    return PERSIAN_CURATED_TOURS;
+  }
+
+  interface ClusterDef {
+    id: string;
+    title: string;
+    titleFa: string;
+    subtitleFa: string;
+    neighborhoodFa: string;
+    themeColor: 'darkblue' | 'orange' | 'softblue' | 'gray';
+    descriptionFa: string;
+    targetNeighs: string[];
+    galleries: Gallery[];
+  }
+
+  const clusters: Record<string, ClusterDef> = {
+    karimkhan: {
+      id: 'openings-karimkhan',
+      title: 'Karimkhan Contemporary Openings Circuit',
+      titleFa: 'گذر افتتاحیه‌های معاصر کریم‌خان',
+      subtitleFa: 'افتتاحیه این هفته در قلب پایتخت',
+      neighborhoodFa: 'کریم‌خان و مرکز',
+      themeColor: 'darkblue',
+      descriptionFa:
+        'پیاده‌روی اختصاصی بین نگارخانه‌هایی که این هفته در محله خاطره‌انگیز کریم‌خان، خردمند و سنایی نمایشگاه تازه افتتاح کرده‌اند.',
+      targetNeighs: ['کریم‌خان و مرکز'],
+      galleries: []
+    },
+    beheshti: {
+      id: 'openings-beheshti',
+      title: 'Beheshti & Motahari New Openings',
+      titleFa: 'مدار افتتاحیه‌های بهشتی و مطهری',
+      subtitleFa: 'افتتاحیه این هفته در محور مطهری و بهشتی',
+      neighborhoodFa: 'بهشتی و مطهری',
+      themeColor: 'orange',
+      descriptionFa:
+        'گشت پیاده و فشرده بین گالری‌های شاخص خیابان مطهری، بهشتی و میرزای شیرازی با افتتاحیه‌های تازه و داغ این هفته.',
+      targetNeighs: ['بهشتی و مطهری'],
+      galleries: []
+    },
+    central: {
+      id: 'openings-central',
+      title: 'Museum & Downtown Historic Trail',
+      titleFa: 'مسیر طلایی موزه معاصر، انقلاب و مرکز',
+      subtitleFa: 'افتتاحیه این هفته در محور فرهنگ و لاله',
+      neighborhoodFa: 'مرکز، انقلاب و امیرآباد',
+      themeColor: 'softblue',
+      descriptionFa:
+        'بازدید از افتتاحیه‌های برجسته این هفته در موزه هنرهای معاصر تهران، گالری این/جا (نوفل‌لوشاتو) و نگارخانه لاله.',
+      targetNeighs: ['مرکز، انقلاب و امیرآباد'],
+      galleries: []
+    },
+    north: {
+      id: 'openings-north',
+      title: 'North, Elahiyeh & Niavaran Openings',
+      titleFa: 'گشت افتتاحیه‌های شمال، الهیه و نیاوران',
+      subtitleFa: 'افتتاحیه این هفته در شمال تهران',
+      neighborhoodFa: 'الهیه، فرشته و نیاوران',
+      themeColor: 'gray',
+      descriptionFa:
+        'مسیر گالری‌گردی در نگارخانه‌های مدرن الهیه، فرشته و نیاوران که این هفته نمایشگاه جدید افتتاح کرده‌اند.',
+      targetNeighs: ['الهیه و فرشته', 'نیاوران و شمال تهران'],
+      galleries: []
+    },
+    vanak: {
+      id: 'openings-vanak',
+      title: 'Vanak & Zafar Contemporary Circuit',
+      titleFa: 'محور افتتاحیه‌های ونک و ظفر',
+      subtitleFa: 'افتتاحیه این هفته در ونک و ظفر',
+      neighborhoodFa: 'ونک، میرداماد و ظفر',
+      themeColor: 'darkblue',
+      descriptionFa:
+        'بازدید متمرکز از نگارخانه‌های فعال با افتتاحیه جدید این هفته در محدوده ونک، خیابان خدامی و دستگردی (ظفر).',
+      targetNeighs: ['ونک، میرداماد و ظفر'],
+      galleries: []
+    }
+  };
+
+  thisWeekGalleries.forEach((g) => {
+    const n = g.neighborhoodFa || g.neighborhood || '';
+    let matched = false;
+    for (const c of Object.values(clusters)) {
+      if (c.targetNeighs.some((tn) => n.includes(tn) || tn.includes(n))) {
+        c.galleries.push(g);
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) {
+      clusters.karimkhan.galleries.push(g);
+    }
+  });
+
+  const generated = Object.values(clusters)
+    .filter((c) => c.galleries.length >= 2)
+    .map((c) => ({
+      id: c.id,
+      title: c.title,
+      subtitle: c.subtitleFa,
+      city: 'Tehran',
+      neighborhood: c.neighborhoodFa,
+      titleFa: c.titleFa,
+      subtitleFa: c.subtitleFa,
+      neighborhoodFa: c.neighborhoodFa,
+      themeColor: c.themeColor,
+      isOpeningThisWeek: true,
+      galleryIds: c.galleries.map((g) => g.id),
+      description: c.descriptionFa,
+      descriptionFa: c.descriptionFa,
+      estimatedHours: Math.round((c.galleries.length * 0.6 + 0.5) * 2) / 2
+    }));
+
+  return generated.length > 0 ? generated : PERSIAN_CURATED_TOURS;
+}
