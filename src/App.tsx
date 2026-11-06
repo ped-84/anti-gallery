@@ -875,7 +875,7 @@ export default function App() {
                   onClick={() => {
                     setSearchQuery('');
                     setSelectedNeighborhood('All');
-                    setFilterActivePostersOnly(false);
+                    setGalleryFilterTab('all');
                   }}
                   className="clay-button clay-softblue px-4 py-2 text-xs font-bold inline-flex items-center gap-1.5 mt-2 text-[#10335e]"
                 >

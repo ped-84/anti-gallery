@@ -336,9 +336,11 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           });
         }
 
-        coordinates.forEach((coord: [number, number]) => {
-          bounds.extend(coord);
-          hasValidBounds = true;
+        coordinates.forEach((coord: number[]) => {
+          if (coord.length >= 2) {
+            bounds.extend([coord[0], coord[1]]);
+            hasValidBounds = true;
+          }
         });
       } else {
         // Remove existing route if cleared

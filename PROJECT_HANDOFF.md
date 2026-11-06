@@ -14,8 +14,8 @@
 * **Git Repository:** `https://github.com/ped-84/anti-gallery.git`
   * Branch `main`: Source code repository.
   * Branch `gh-pages`: Production static site build (serves `dist/`).
-* **Current Version:** `بتا V 1.059`
-* **Next Version:** `بتا V 1.060`
+* **Current Version:** `بتا V 1.060`
+* **Next Version:** `بتا V 1.061`
 
 ---
 
