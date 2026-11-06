@@ -33,8 +33,12 @@ import {
   ArrowDown,
   ArrowUpDown,
   Sparkles,
-  Flag
+  Flag,
+  Timer,
+  ChevronDown
 } from 'lucide-react';
+
+const VISIT_OPTIONS = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
 
 interface RouteSummaryPanelProps {
   routeResult: RouteOptimizationResult | null;
@@ -79,6 +83,21 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
     routeResult?.trafficCondition || 'peak'
   );
   const [copied, setCopied] = useState(false);
+  const [visitDurationMin, setVisitDurationMin] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('gallery_visit_duration_min');
+      return saved ? parseInt(saved, 10) : 15;
+    } catch {
+      return 15;
+    }
+  });
+
+  const handleVisitDurationChange = (val: number) => {
+    setVisitDurationMin(val);
+    try {
+      localStorage.setItem('gallery_visit_duration_min', val.toString());
+    } catch {}
+  };
 
   const handleModeChange = (newMode: 'driving' | 'walking') => {
     setMode(newMode);
@@ -134,8 +153,8 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
     ? buildGoogleMapsUrl(routeResult.orderedGalleries)
     : '';
 
-  // Calculate Average Times as the main large metrics
-  const dwellTimeMin = (routeResult?.orderedGalleries.length || 0) * 45;
+  // Calculate Average Times as the main large metrics (Based on user-selected visit duration per gallery)
+  const dwellTimeMin = (routeResult?.orderedGalleries.length || 0) * visitDurationMin;
   const avgTotalTourTimeMin = (routeResult?.totalDurationMin || 0) + dwellTimeMin;
   const avgHours = Math.floor(avgTotalTourTimeMin / 60);
   const avgMins = avgTotalTourTimeMin % 60;
@@ -292,6 +311,27 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                 </div>
               </div>
             )}
+            {/* Row 3: Gallery Visit Duration Dropdown: 5 to 60 min (Default: 15 min) */}
+            <div className="clay-card p-2 sm:p-2.5 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-2xl border border-[#E1E1E1]/80 dark:border-stone-800 flex items-center justify-between gap-2 shadow-xs">
+              <div className="flex items-center gap-2 text-stone-700 dark:text-stone-300 font-bold text-xs sm:text-sm pr-1">
+                <Timer className="w-4 h-4 text-[#3D5B99] shrink-0" />
+                <span>زمان بازدید هر گالری:</span>
+              </div>
+              <div className="relative">
+                <select
+                  value={visitDurationMin}
+                  onChange={(e) => handleVisitDurationChange(Number(e.target.value))}
+                  className="clay-button clay-base text-xs sm:text-sm font-bold py-1.5 pr-3 pl-7 text-[#1d2d4c] dark:text-white rounded-xl border border-[#E1E1E1] dark:border-stone-700 cursor-pointer focus:outline-none appearance-none shadow-2xs"
+                >
+                  {VISIT_OPTIONS.map((m) => (
+                    <option key={m} value={m}>
+                      {toPersianDigits(m)} دقیقه{m === 15 ? ' (پیش‌فرض)' : m === 60 ? ' (۱ ساعت)' : ''}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="w-3.5 h-3.5 text-stone-400 absolute left-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -304,7 +344,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
             {/* Primary ETA: Tour Duration */}
             <div>
               <span className="text-[11px] sm:text-xs font-medium text-stone-500 dark:text-stone-400 block mb-0.5">
-                زمان کل برنامه (با بازدیدها)
+                زمان کل برنامه ({toPersianDigits(visitDurationMin)} دقیقه بازدید در هر گالری)
               </span>
               <span className="text-base sm:text-lg font-bold text-[#F76B1C] font-mono">
                 {avgHours > 0 ? `${toPersianDigits(avgHours)} ساعت و ` : ''}{toPersianDigits(avgMins)} دقیقه
