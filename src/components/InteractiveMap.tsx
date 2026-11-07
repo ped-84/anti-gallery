@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { Gallery, RouteOptimizationResult } from '../types/gallery';
-import { toPersianDigits, getGalleryDisplayName } from '../utils/persianUtils';
+import { toPersianDigits, getGalleryDisplayName, parsePersianDateToScore, isThisWeekOpening } from '../utils/persianUtils';
 import { Navigation, Compass, Layers, Car, ShieldAlert } from 'lucide-react';
 
 interface InteractiveMapProps {
@@ -54,6 +54,46 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
   const [isMapReady, setIsMapReady] = useState(false);
   const [showTrafficLayer, setShowTrafficLayer] = useState(true);
   const [showTrafficZone, setShowTrafficZone] = useState(true);
+  const [mapFilterMode, setMapFilterMode] = useState<'all' | 'active-only' | 'openings-only'>('all');
+
+  // Compute maximum Persian opening score for the current Friday cycle
+  const maxOpeningScore = useMemo(() => {
+    const scores = galleries
+      .map((g) => parsePersianDateToScore(g.activeExhibition?.openingDate))
+      .filter((s) => s > 0);
+    return scores.length > 0 ? Math.max(...scores) : 0;
+  }, [galleries]);
+
+  // Aggregate galleries by physical building / venue coordinates
+  const mapKey = (lat: number, lng: number) => `${lat.toFixed(4)},${lng.toFixed(4)}`;
+  const venueMap = useMemo(() => {
+    const map = new Map<string, Gallery[]>();
+    galleries.forEach((g) => {
+      const key = mapKey(g.lat, g.lng);
+      if (!map.has(key)) map.set(key, []);
+      map.get(key)!.push(g);
+    });
+    return map;
+  }, [galleries]);
+
+  // Count venues by category for map declutter filter tabs
+  const { openingsCount, activeCount, allCount } = useMemo(() => {
+    let openings = 0;
+    let active = 0;
+    venueMap.forEach((vg) => {
+      if (vg.some((g) => isThisWeekOpening(g.activeExhibition?.openingDate, maxOpeningScore))) {
+        openings++;
+      }
+      if (vg.some((g) => Boolean(g.activeExhibition || g.posterImage))) {
+        active++;
+      }
+    });
+    return {
+      openingsCount: openings,
+      activeCount: active,
+      allCount: venueMap.size
+    };
+  }, [venueMap, maxOpeningScore]);
 
   // 1. Initialize Neshan Vector Map
   useEffect(() => {
@@ -383,14 +423,6 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
     }
 
     // 5.3 Render Gallery Markers (Aggregating co-located spaces into single venue markers)
-    const mapKey = (lat: number, lng: number) => `${lat.toFixed(4)},${lng.toFixed(4)}`;
-    const venueMap = new Map<string, Gallery[]>();
-    galleries.forEach((g) => {
-      const key = mapKey(g.lat, g.lng);
-      if (!venueMap.has(key)) venueMap.set(key, []);
-      venueMap.get(key)!.push(g);
-    });
-
     venueMap.forEach((venueGalleries) => {
       // Find the representative gallery for this venue marker:
       // Priority 1: Has route order
@@ -412,15 +444,38 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       const orderNum = orderIndexMap.get(gallery.id);
       const isFocused = venueGalleries.some((g) => activeGalleryId === g.id);
 
+      const hasOpeningThisWeek = venueGalleries.some((g) =>
+        isThisWeekOpening(g.activeExhibition?.openingDate, maxOpeningScore)
+      );
       const activeSpacesCount = venueGalleries.filter((g) => Boolean(g.activeExhibition || g.posterImage)).length;
       const hasExhibition = activeSpacesCount > 0;
+
+      // Smart Decluttering: filter markers based on active mapFilterMode
+      // Selected tour destinations and route waypoints are NEVER hidden!
+      const isPartOfRoute = isSelected || orderNum !== undefined;
+      if (!isPartOfRoute) {
+        if (mapFilterMode === 'openings-only' && !hasOpeningThisWeek) {
+          return;
+        }
+        if (mapFilterMode === 'active-only' && !hasExhibition) {
+          return;
+        }
+      }
 
       const el = document.createElement('div');
       // Keep outer marker element free of any CSS transforms so Mapbox geolocation positioning never glitches!
       el.className = 'cursor-pointer select-none';
       const galleryDisplayName = getGalleryDisplayName(gallery);
       const multiBadgeText = activeSpacesCount > 1 ? ` (${toPersianDigits(activeSpacesCount)} نمایشگاه فعال همزمان)` : '';
-      el.title = `${galleryDisplayName}${multiBadgeText} (کلیک برای جزئیات کامل و افزودن به مسیر)`;
+
+      let statusTooltip = ' (بین دو دوره نمایشگاه)';
+      if (hasOpeningThisWeek) {
+        statusTooltip = ' (🔥 افتتاحیه این هفته)';
+      } else if (hasExhibition) {
+        statusTooltip = ' (نمایشگاه فعال)';
+      }
+
+      el.title = `${galleryDisplayName}${multiBadgeText}${statusTooltip} (کلیک برای جزئیات کامل و افزودن به مسیر)`;
 
       // Clicking any marker opens the full darkened overlay modal directly
       el.onclick = (e) => {
@@ -466,23 +521,51 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
             ` : ''}
           </div>
         `;
-      } else {
+      } else if (hasOpeningThisWeek) {
+        // State 1: Fresh Opening This Week (High priority, fiery orange glow + white pulse dot)
+        el.innerHTML = `
+          <div class="relative">
+            <div class="w-[26px] h-[26px] rounded-full bg-[#F76B1C] text-white border-2 border-white flex items-center justify-center shadow-lg ring-2 ring-[#F76B1C]/50 ${
+              isFocused ? 'ring-4 ring-[#1e335a]' : ''
+            } transition-transform duration-150 ease-out hover:scale-125 active:scale-95 origin-center animate-pulse">
+              <div class="w-2.5 h-2.5 rounded-full bg-white shadow-xs"></div>
+            </div>
+            ${activeSpacesCount > 1 ? `
+              <span class="absolute -top-1.5 -right-1.5 bg-[#1e335a] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-white shadow-xs">
+                ${toPersianDigits(activeSpacesCount)}
+              </span>
+            ` : ''}
+          </div>
+        `;
+      } else if (hasExhibition) {
+        // State 2: Active Ongoing Exhibition (Solid deep navy with orange center dot)
         el.innerHTML = `
           <div class="relative">
             <div class="w-[22px] h-[22px] rounded-full ${
               isFocused
-                ? 'bg-[#F76B1C] border-2 border-white ring-2 ring-[#F76B1C]'
-                : hasExhibition
-                ? 'bg-[#3D5B99] text-white border-2 border-white'
-                : 'bg-[#A3C2E4] text-[#1e335a] border border-white'
-            } flex items-center justify-center shadow-md opacity-90 transition-transform duration-150 ease-out hover:scale-125 active:scale-95 origin-center">
-              <div class="w-2 h-2 rounded-full ${hasExhibition ? 'bg-[#F76B1C]' : 'bg-white'}"></div>
+                ? 'bg-[#1e335a] border-2 border-white ring-2 ring-[#F76B1C]'
+                : 'bg-[#3D5B99] text-white border-2 border-white'
+            } flex items-center justify-center shadow-md opacity-95 transition-transform duration-150 ease-out hover:scale-125 active:scale-95 origin-center">
+              <div class="w-2 h-2 rounded-full bg-[#F76B1C]"></div>
             </div>
             ${activeSpacesCount > 1 ? `
               <span class="absolute -top-1.5 -right-1.5 bg-[#F76B1C] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-white shadow-xs">
                 ${toPersianDigits(activeSpacesCount)}
               </span>
             ` : ''}
+          </div>
+        `;
+      } else {
+        // State 3: Inactive / Between Cycles (Pale muted soft-blue with white dot)
+        el.innerHTML = `
+          <div class="relative">
+            <div class="w-[18px] h-[18px] rounded-full ${
+              isFocused
+                ? 'bg-[#A3C2E4] border-2 border-[#1e335a] ring-2 ring-[#F76B1C]'
+                : 'bg-[#A3C2E4]/80 text-[#1e335a] border border-white'
+            } flex items-center justify-center shadow-2xs opacity-75 transition-transform duration-150 ease-out hover:scale-125 active:scale-95 origin-center">
+              <div class="w-1.5 h-1.5 rounded-full bg-white"></div>
+            </div>
           </div>
         `;
       }
@@ -506,7 +589,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         console.warn('[Neshan] fitBounds note:', e);
       }
     }
-  }, [galleries, selectedGalleries, routeResult, activeGalleryId, isMapReady]);
+  }, [galleries, selectedGalleries, routeResult, activeGalleryId, isMapReady, mapFilterMode, maxOpeningScore, venueMap]);
 
   // Recenter controls
   const handleRecenterCluster = () => {
@@ -580,8 +663,79 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         </button>
       </div>
 
+      {/* Floating Map Declutter Toggle Bar (خلوت‌سازی هوشمند نقشه) */}
+      <div className="absolute top-3.5 right-3.5 z-10 clay-card bg-white/95 dark:bg-[#151922]/95 backdrop-blur-md p-1 rounded-2xl border border-[#E1E1E1] dark:border-stone-800 shadow-md flex items-center gap-1 text-xs font-bold">
+        <button
+          type="button"
+          onClick={() => setMapFilterMode('openings-only')}
+          className={`px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
+            mapFilterMode === 'openings-only'
+              ? 'bg-[#F76B1C] text-white shadow-xs'
+              : 'text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800'
+          }`}
+          title="فقط نمایش گالری‌های دارای افتتاحیه این هفته (خلوت‌ترین حالت)"
+        >
+          <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+          <span>افتتاحیه‌ها</span>
+          <span
+            className={`text-[10px] px-1.5 py-0.2 rounded-md ${
+              mapFilterMode === 'openings-only'
+                ? 'bg-white/25 text-white'
+                : 'bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300'
+            }`}
+          >
+            {toPersianDigits(openingsCount)}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setMapFilterMode('active-only')}
+          className={`px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
+            mapFilterMode === 'active-only'
+              ? 'bg-[#3D5B99] text-white shadow-xs'
+              : 'text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800'
+          }`}
+          title="نمایش تمام گالری‌های دارای نمایشگاه فعال"
+        >
+          <span className="w-2 h-2 rounded-full bg-[#F76B1C]" />
+          <span>همه فعال‌ها</span>
+          <span
+            className={`text-[10px] px-1.5 py-0.2 rounded-md ${
+              mapFilterMode === 'active-only'
+                ? 'bg-white/25 text-white'
+                : 'bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300'
+            }`}
+          >
+            {toPersianDigits(activeCount)}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setMapFilterMode('all')}
+          className={`px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
+            mapFilterMode === 'all'
+              ? 'bg-[#1e335a] text-white shadow-xs'
+              : 'text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800'
+          }`}
+          title="نمایش تمام نگارخانه‌ها (شامل بین دو دوره)"
+        >
+          <span>همه</span>
+          <span
+            className={`text-[10px] px-1.5 py-0.2 rounded-md ${
+              mapFilterMode === 'all'
+                ? 'bg-white/25 text-white'
+                : 'bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300'
+            }`}
+          >
+            {toPersianDigits(allCount)}
+          </span>
+        </button>
+      </div>
+
       {/* Map Legend Overlay */}
-      <div className="absolute bottom-4 right-4 z-10 clay-card bg-white/95 dark:bg-[#161a22]/95 px-3 py-1.5 text-xs text-stone-600 dark:text-stone-300 hidden sm:flex items-center gap-3 border border-[#E1E1E1] dark:border-stone-800">
+      <div className="absolute bottom-3.5 right-3.5 z-10 clay-card bg-white/95 dark:bg-[#161a22]/95 px-3 py-1.5 text-[11px] text-stone-600 dark:text-stone-300 hidden md:flex items-center gap-3 border border-[#E1E1E1] dark:border-stone-800">
         {routeResult?.originPoint && (
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 inline-block"></span>
@@ -589,16 +743,24 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           </div>
         )}
         <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#3D5B99] inline-block"></span>
+          <span className="w-2.5 h-2.5 rounded-full bg-[#1e335a] text-white text-[8px] font-bold flex items-center justify-center">۱</span>
           <span>در برنامه گشت</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#F76B1C] inline-block"></span>
+          <span className="w-2.5 h-2.5 rounded-full bg-[#F76B1C] ring-2 ring-[#F76B1C]/40 border border-white inline-block animate-pulse"></span>
+          <span className="font-bold text-[#F76B1C]">افتتاحیه این هفته</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#3D5B99] border border-white inline-block"></span>
           <span>نمایشگاه فعال</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#A3C2E4] border border-white inline-block"></span>
+          <span>بین دو دوره</span>
         </div>
         {showTrafficZone && (
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-sm bg-rose-500/30 border border-rose-500 inline-block"></span>
+            <span className="w-2.5 h-2.5 rounded-xs bg-rose-500/30 border border-rose-500 inline-block"></span>
             <span>طرح ترافیک</span>
           </div>
         )}
