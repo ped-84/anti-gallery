@@ -124,22 +124,22 @@ export const PERSIAN_OPENING_TOURS: PersianCuratedTour[] = [
 export const PERSIAN_ACTIVE_TOURS: PersianCuratedTour[] = [
   {
     id: 'active-sanai-hub',
-    title: 'Sanai & Hosseini Art Walk',
-    subtitle: 'Heart of Sanai Street Art Corridor',
+    title: 'Sanai, Hosseini & Kheradmand Art Trail',
+    subtitle: '6 Premier Galleries in the Cultural Core',
     city: 'Tehran',
     neighborhood: 'Karimkhan & Center',
-    titleFa: 'گذر هنر سنایی و حسینی',
-    subtitleFa: 'شیرین، اُ، کارشیو، باشگاه و هما',
-    neighborhoodFa: 'سنایی و کریم‌خان',
+    titleFa: 'گذر طلایی سنایی، حسینی و خردمند',
+    subtitleFa: 'اُ، شیرین، کارشیو، باشگاه، اِو و هما',
+    neighborhoodFa: 'سنایی، حسینی و خردمند',
     themeColor: 'darkblue',
     isOpeningThisWeek: false,
-    galleryIds: [18, 65, 1003, 952, 24], // Shirin, O, Karshio, Bashgah ("روزی یادت می‌آید"), Homa
+    galleryIds: [65, 18, 1003, 952, 443, 24], // O, Shirin, Karshio, Bashgah, Ev (12,497 Knots), Homa
     description:
-      'Five iconic active galleries along Sanai and Hosseini streets within walking distance under 280 meters.',
+      'Six premier active galleries along Sanai, Hosseini, and North Kheradmand streets, all within walking distance under 210 meters.',
     descriptionFa:
-      'پیاده‌روی ۵ گالری شاخص و فعال در خیابان سنایی و کوچه دوازدهم شامل گالری شیرین، گالری اُ، گالری کارشیو، گالری باشگاه (نمایشگاه «روزی یادت می‌آید») و گالری هما (فواصل زیر ۲۸۰ متر).',
+      'پیاده‌روی استثنایی ۶ گالری شاخص در قلب فرهنگی سنایی و خردمند شامل گالری اُ، گالری شیرین، گالری کارشیو، گالری باشگاه، گالری اِو (نمایشگاه «۱۲,۴۹۷ گره») و گالری هما (فواصل بین هر ایستگاه کمتر از ۲۱۰ متر).',
     estimatedHours: 3.0,
-    maxHopKm: 0.28
+    maxHopKm: 0.21
   },
   {
     id: 'active-kheradmand-corridor',
