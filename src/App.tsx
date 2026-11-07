@@ -1,7 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Gallery, RouteOptimizationResult, CustomOrigin } from './types/gallery';
 import rawGalleriesData from './data/galleries.json';
-import { PERSIAN_CURATED_TOURS, PersianCuratedTour, getCuratedOpeningTours } from './data/curatedTours';
+import {
+  PERSIAN_CURATED_TOURS,
+  PersianCuratedTour,
+  CuratedTourFilterMode,
+  getCuratedToursByMode
+} from './data/curatedTours';
 import { optimizeGalleryRoute, calculateFixedRoute } from './utils/routeOptimizer';
 import {
   toPersianDigits,
@@ -188,9 +193,11 @@ export default function App() {
     return galleries.filter((g) => isThisWeekOpening(g.activeExhibition?.openingDate, maxOpeningScore)).length;
   }, [galleries, maxOpeningScore]);
 
-  const curatedOpeningTours = useMemo(() => {
-    return getCuratedOpeningTours(galleries);
-  }, [galleries]);
+  const [curatedTourMode, setCuratedTourMode] = useState<CuratedTourFilterMode>('openings-only');
+
+  const currentCuratedTours = useMemo(() => {
+    return getCuratedToursByMode(galleries, curatedTourMode);
+  }, [galleries, curatedTourMode]);
 
   const neighborhoods = useMemo(() => {
     const set = new Set<string>();
@@ -705,21 +712,49 @@ export default function App() {
 
           {/* Quick Tour Presets */}
           <div className="mt-4 pt-3.5 border-t border-[#E1E1E1] dark:border-stone-800 flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-bold text-[#1d2d4c] dark:text-stone-300 ml-1 flex items-center gap-1.5">
-              <Flame className="w-3.5 h-3.5 text-[#F76B1C]" />
-              تورهای افتتاحیه این هفته:
-            </span>
-            {curatedOpeningTours.map((tour, idx) => {
+            {/* Mode Switcher Pill */}
+            <div className="flex items-center p-0.5 rounded-xl bg-stone-200/80 dark:bg-stone-800/80 text-[11px] font-bold shrink-0 ml-1">
+              <button
+                type="button"
+                onClick={() => setCuratedTourMode('openings-only')}
+                className={`px-2.5 py-1 rounded-lg transition-all flex items-center gap-1 ${
+                  curatedTourMode === 'openings-only'
+                    ? 'bg-white dark:bg-[#1f2636] text-[#F76B1C] shadow-xs'
+                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                }`}
+                title="فقط تورهای گالری‌هایی که این هفته افتتاحیه دارند"
+              >
+                <Flame className="w-3 h-3 text-[#F76B1C]" />
+                <span>فقط افتتاحیه</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setCuratedTourMode('all-active')}
+                className={`px-2.5 py-1 rounded-lg transition-all flex items-center gap-1 ${
+                  curatedTourMode === 'all-active'
+                    ? 'bg-white dark:bg-[#1f2636] text-[#1856C7] dark:text-[#93c5fd] shadow-xs'
+                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                }`}
+                title="همه گالری‌های باز و فعالِ پیوسته در مسیر"
+              >
+                <Sparkles className="w-3 h-3 text-[#1856C7] dark:text-[#93c5fd]" />
+                <span>همه فعال و باز</span>
+              </button>
+            </div>
+
+            <span className="text-stone-300 dark:text-stone-700 hidden sm:inline">|</span>
+
+            {/* Tour buttons for current mode */}
+            {currentCuratedTours.map((tour, idx) => {
               const theme = STICKDAZZLE_THEMES[idx % STICKDAZZLE_THEMES.length];
-              const shortName = tour.neighborhoodFa.split(' ')[0] + (tour.neighborhoodFa.includes('کریم‌خان') ? ' کریم‌خان' : '');
               return (
                 <button
                   key={tour.id}
                   onClick={() => handleSelectCuratedTour(tour)}
-                  className={`clay-button clay-${theme}-subtle text-xs px-3 py-1.5 font-bold transition-all hover:scale-105 active:scale-95 flex items-center gap-1 border border-[#E1E1E1] dark:border-stone-700`}
-                  title={`${tour.titleFa} (${toPersianDigits(tour.galleryIds.length)} گالری دارای افتتاحیه)`}
+                  className={`clay-button clay-${theme}-subtle text-xs px-2.5 py-1.5 font-bold transition-all hover:scale-105 active:scale-95 flex items-center gap-1 border border-[#E1E1E1] dark:border-stone-700`}
+                  title={`${tour.titleFa} (${toPersianDigits(tour.galleryIds.length)} گالری - فاصله ایستگاه‌ها زیر ${toPersianDigits(tour.maxHopKm || 1.5)} کم)`}
                 >
-                  <span>{tour.titleFa.replace('گذر افتتاحیه‌های ', '').replace('مدار افتتاحیه‌های ', '').replace('مسیر طلایی ', '').replace('گشت افتتاحیه‌های ', '').replace('محور افتتاحیه‌های ', '')}</span>
+                  <span>{tour.titleFa.replace('گذر افتتاحیه‌های ', '').replace('مدار افتتاحیه‌های ', '').replace('مسیر هنری ', '').replace('گشت افتتاحیه‌های ', '').replace('محور افتتاحیه‌های ', '').replace('محور هنر ', '').replace('گشت طلایی ', '').replace('گذر هنر معاصر ', '').replace('مدار هنری ', '').replace('مسیر تاریخی ', '').replace('مثلث ', '')}</span>
                   <span className="opacity-70 text-[10px] font-mono">({toPersianDigits(tour.galleryIds.length)})</span>
                 </button>
               );
@@ -967,6 +1002,8 @@ export default function App() {
         onClose={() => setIsCuratedModalOpen(false)}
         onSelectTour={handleSelectCuratedTour}
         allGalleries={galleries}
+        initialMode={curatedTourMode}
+        onModeChange={setCuratedTourMode}
       />
     </div>
   );

@@ -1,14 +1,16 @@
-import React, { useMemo } from 'react';
-import { getCuratedOpeningTours, PersianCuratedTour } from '../data/curatedTours';
+import React, { useState, useMemo, useEffect } from 'react';
+import { getCuratedToursByMode, PersianCuratedTour, CuratedTourFilterMode } from '../data/curatedTours';
 import { Gallery } from '../types/gallery';
 import { toPersianDigits, getGalleryDisplayName } from '../utils/persianUtils';
-import { X, Sparkles, Clock, ArrowLeft, Flame } from 'lucide-react';
+import { X, Clock, ArrowLeft, Flame, Sparkles, MapPin } from 'lucide-react';
 
 interface CuratedToursModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectTour: (tour: PersianCuratedTour) => void;
   allGalleries: Gallery[];
+  initialMode?: CuratedTourFilterMode;
+  onModeChange?: (mode: CuratedTourFilterMode) => void;
 }
 
 const THEME_BUTTON_CLASSES = {
@@ -22,12 +24,25 @@ export const CuratedToursModal: React.FC<CuratedToursModalProps> = ({
   isOpen,
   onClose,
   onSelectTour,
-  allGalleries
+  allGalleries,
+  initialMode = 'openings-only',
+  onModeChange
 }) => {
-  // Dynamically compute curated tours strictly among galleries with openings this week
+  const [activeTab, setActiveTab] = useState<CuratedTourFilterMode>(initialMode);
+
+  useEffect(() => {
+    setActiveTab(initialMode);
+  }, [initialMode]);
+
+  const handleTabChange = (mode: CuratedTourFilterMode) => {
+    setActiveTab(mode);
+    onModeChange?.(mode);
+  };
+
+  // Dynamically compute curated tours strictly based on the chosen mode
   const curatedTours = useMemo(() => {
-    return getCuratedOpeningTours(allGalleries);
-  }, [allGalleries]);
+    return getCuratedToursByMode(allGalleries, activeTab);
+  }, [allGalleries, activeTab]);
 
   if (!isOpen) return null;
 
@@ -41,28 +56,69 @@ export const CuratedToursModal: React.FC<CuratedToursModalProps> = ({
         className="clay-card relative w-full max-w-2xl bg-white dark:bg-[#181d27] rounded-3xl overflow-hidden flex flex-col max-h-[90vh] border border-[#E1E1E1] dark:border-stone-800 shadow-2xl"
       >
         {/* Modal Header */}
-        <div className="p-4 sm:p-5 border-b border-[#E1E1E1] dark:border-stone-800 bg-[#f7f9fc] dark:bg-[#141822] flex items-center justify-between gap-3 shrink-0">
-          <div className="flex items-center gap-3 truncate">
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl clay-card clay-orange flex items-center justify-center text-white shrink-0 shadow-md">
-              <Flame className="w-5 h-5 sm:w-6 sm:h-6 text-white animate-pulse" />
+        <div className="p-4 sm:p-5 border-b border-[#E1E1E1] dark:border-stone-800 bg-[#f7f9fc] dark:bg-[#141822] shrink-0">
+          <div className="flex items-center justify-between gap-3 mb-3">
+            <div className="flex items-center gap-3 truncate">
+              <div
+                className={`w-10 h-10 sm:w-11 sm:h-11 rounded-2xl clay-card flex items-center justify-center text-white shrink-0 shadow-md ${
+                  activeTab === 'openings-only' ? 'clay-orange' : 'clay-darkblue'
+                }`}
+              >
+                {activeTab === 'openings-only' ? (
+                  <Flame className="w-5 h-5 sm:w-6 sm:h-6 text-white animate-pulse" />
+                ) : (
+                  <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-[#A3C2E4]" />
+                )}
+              </div>
+              <div className="truncate">
+                <h2 className="text-base sm:text-lg font-bold text-[#1d2d4c] dark:text-white truncate">
+                  گشت‌های هنری و تورهای آماده
+                </h2>
+                <p className="text-xs text-[#3D5B99] dark:text-[#A3C2E4] font-medium truncate mt-0.5">
+                  {activeTab === 'openings-only'
+                    ? 'مسیرهای متمرکز و نزدیک منحصراً بین نگارخانه‌های دارای افتتاحیه این هفته'
+                    : 'مسیرهای پیوسته و جذاب شامل افتتاحیه‌ها و گالری‌های فعالِ میان‌راه'}
+                </p>
+              </div>
             </div>
-            <div className="truncate">
-              <h2 className="text-base sm:text-lg font-bold text-[#1d2d4c] dark:text-white truncate">
-                گشت‌های هنری و تورهای افتتاحیه این هفته
-              </h2>
-              <p className="text-xs text-[#3D5B99] dark:text-[#A3C2E4] font-medium truncate mt-0.5">
-                مسیرهای گلچین‌شده منحصراً بین نگارخانه‌هایی که این هفته یا امروز افتتاحیه دارند
-              </p>
-            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-9 h-9 rounded-full clay-button clay-base text-stone-600 dark:text-stone-300 flex items-center justify-center transition-all shrink-0"
+              title="بستن"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="w-9 h-9 rounded-full clay-button clay-base text-stone-600 dark:text-stone-300 flex items-center justify-center transition-all shrink-0"
-            title="بستن"
-          >
-            <X className="w-4 h-4" />
-          </button>
+
+          {/* Dual Mode Switcher Tabs */}
+          <div className="grid grid-cols-2 p-1 rounded-2xl bg-stone-200/70 dark:bg-stone-800/80 gap-1 text-xs font-bold">
+            <button
+              type="button"
+              onClick={() => handleTabChange('openings-only')}
+              className={`py-2 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-2xs ${
+                activeTab === 'openings-only'
+                  ? 'bg-white dark:bg-[#1f2636] text-[#F76B1C] shadow-sm font-extrabold'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
+              }`}
+            >
+              <Flame className={`w-3.5 h-3.5 ${activeTab === 'openings-only' ? 'text-[#F76B1C]' : 'opacity-70'}`} />
+              <span>فقط افتتاحیه‌های این هفته</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleTabChange('all-active')}
+              className={`py-2 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-2xs ${
+                activeTab === 'all-active'
+                  ? 'bg-white dark:bg-[#1f2636] text-[#1856C7] dark:text-[#93c5fd] shadow-sm font-extrabold'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
+              }`}
+            >
+              <Sparkles className={`w-3.5 h-3.5 ${activeTab === 'all-active' ? 'text-[#1856C7] dark:text-[#93c5fd]' : 'opacity-70'}`} />
+              <span>همه گالری‌های باز و فعال</span>
+            </button>
+          </div>
         </div>
 
         {/* Modal Content */}
@@ -78,12 +134,19 @@ export const CuratedToursModal: React.FC<CuratedToursModalProps> = ({
               >
                 <div className="flex items-start justify-between gap-3 sm:gap-4">
                   <div>
-                    {/* Opening This Week Badge */}
+                    {/* Badge and Neighborhood */}
                     <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                      <span className="text-[10px] sm:text-[11px] font-bold text-[#F76B1C] bg-[#F76B1C]/10 border border-[#F76B1C]/25 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 shadow-2xs">
-                        <Flame className="w-3 h-3 text-[#F76B1C]" />
-                        <span>افتتاحیه این هفته (امروز)</span>
-                      </span>
+                      {tour.isOpeningThisWeek ? (
+                        <span className="text-[10px] sm:text-[11px] font-bold text-[#F76B1C] bg-[#F76B1C]/10 border border-[#F76B1C]/25 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 shadow-2xs">
+                          <Flame className="w-3 h-3 text-[#F76B1C]" />
+                          <span>فقط افتتاحیه این هفته</span>
+                        </span>
+                      ) : (
+                        <span className="text-[10px] sm:text-[11px] font-bold text-[#1856C7] dark:text-[#93c5fd] bg-[#edf3ff] dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/50 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 shadow-2xs">
+                          <Sparkles className="w-3 h-3 text-[#1856C7] dark:text-[#93c5fd]" />
+                          <span>گالری‌های باز و فعال (پیوسته)</span>
+                        </span>
+                      )}
                       <span className="text-[11px] text-stone-400">·</span>
                       <span className="text-[11px] font-bold text-[#3D5B99] dark:text-[#A3C2E4]">
                         {tour.neighborhoodFa}
@@ -106,6 +169,12 @@ export const CuratedToursModal: React.FC<CuratedToursModalProps> = ({
                       <Clock className="w-3.5 h-3.5" />
                       <span>~{toPersianDigits(tour.estimatedHours)} ساعت</span>
                     </span>
+                    {tour.maxHopKm && (
+                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 flex items-center justify-end gap-1 mt-1 font-medium">
+                        <MapPin className="w-3 h-3" />
+                        <span>فاصله ایستگاه‌ها: زیر {toPersianDigits(tour.maxHopKm)} کم</span>
+                      </span>
+                    )}
                   </div>
                 </div>
 
