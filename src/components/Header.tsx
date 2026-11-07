@@ -12,7 +12,7 @@ interface HeaderProps {
   hasCustomOrigin?: boolean;
 }
 
-export const APP_VERSION = 'بتا V 1.070';
+export const APP_VERSION = 'بتا V 1.071';
 
 export const Header: React.FC<HeaderProps> = ({
   selectedCount,
@@ -27,22 +27,22 @@ export const Header: React.FC<HeaderProps> = ({
   const minRequired = hasCustomOrigin ? 1 : 2;
   return (
     <header className="sticky top-0 z-40 bg-[#f4f6fa]/95 dark:bg-[#131722]/95 backdrop-blur-md border-b border-[#E1E1E1] dark:border-stone-800 transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
         {/* Zone 1: Brand Wordmark (Compact on mobile, full on desktop) */}
-        <div className="flex items-center gap-2.5 sm:gap-3.5 shrink-0">
-          <a href="/" className="flex items-center gap-2.5 sm:gap-3.5 text-inherit no-underline group">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 clay-card clay-darkblue flex items-center justify-center text-white group-hover:scale-105 transition-transform shrink-0">
-              <Compass className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
+        <div className="flex items-center gap-2 sm:gap-3.5 shrink-0">
+          <a href="/" className="flex items-center gap-2 sm:gap-3.5 text-inherit no-underline group">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 clay-card clay-darkblue flex items-center justify-center text-white group-hover:scale-105 transition-transform shrink-0">
+              <Compass className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.2]" />
             </div>
             <div className="flex flex-col justify-center">
-              <span className="text-lg sm:text-2xl font-black tracking-tight text-[#1c2944] dark:text-white block leading-tight">
+              <span className="text-base sm:text-xl font-black tracking-tight text-[#1c2944] dark:text-white block leading-tight">
                 گالری‌گردی
               </span>
-              <div className="flex items-center gap-2 mt-1">
-                <span className="px-2 py-0.5 text-[9px] sm:text-[10px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug shrink-0 font-mono">
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <span className="px-1.5 py-0.2 text-[8px] sm:text-[9px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug shrink-0 font-mono">
                   {APP_VERSION}
                 </span>
-                <p className="text-[10px] sm:text-[11px] font-medium text-[#3D5B99] dark:text-[#A3C2E4] hidden xs:block">
+                <p className="text-[10px] sm:text-[11px] font-medium text-[#3D5B99] dark:text-[#A3C2E4] hidden md:block">
                   مسیریاب هوشمند گالری‌های هنری
                 </p>
               </div>
@@ -50,26 +50,35 @@ export const Header: React.FC<HeaderProps> = ({
           </a>
         </div>
 
-        {/* Zone 2: Curated Tours Button (Orange, responsive on all screens) */}
-        <div className="flex items-center">
+        {/* Zone 2: Curated Tours Button (Desktop / Tablet Only - centered) */}
+        <div className="hidden md:flex items-center">
           <button
             onClick={onOpenCuratedTours}
             title="گشت‌های هنری آماده (تهران)"
-            className="clay-button clay-orange text-white px-3 sm:px-4 py-2 sm:py-2.5 flex items-center gap-1.5 sm:gap-2 hover:brightness-105 active:scale-95 transition-all shadow-md shrink-0 text-xs font-bold"
+            className="clay-button clay-orange text-white px-4 py-2.5 flex items-center gap-2 hover:brightness-105 active:scale-95 transition-all shadow-md shrink-0 text-xs font-bold cursor-pointer"
           >
-            <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white stroke-[2.2] shrink-0" />
-            <span className="hidden md:inline">گشت‌های هنری آماده (تهران)</span>
-            <span className="inline md:hidden text-[11px]">گشت‌های آماده</span>
+            <Sparkles className="w-4 h-4 text-white stroke-[2.2] shrink-0" />
+            <span>گشت‌های هنری آماده (تهران)</span>
           </button>
         </div>
 
-        {/* Zone 3: Dark Mode Switcher & Primary Action (Fully Responsive on Mobile) */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {/* Zone 3: Actions Group (Curated trigger on mobile + Dark mode + Optimize) */}
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          {/* Mobile Curated Tours Trigger (Visible only on screens < md, perfectly spaced with actions) */}
+          <button
+            onClick={onOpenCuratedTours}
+            title="گشت‌های هنری آماده (تهران)"
+            className="md:hidden clay-button clay-orange text-white px-2.5 py-2 flex items-center gap-1.5 rounded-xl shadow-xs active:scale-95 transition-all shrink-0 text-xs font-bold cursor-pointer"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-white stroke-[2.2] shrink-0" />
+            <span>گشت‌ها</span>
+          </button>
+
           {/* Dark Mode Switch */}
           <button
             onClick={onToggleDarkMode}
             title={isDarkMode ? 'تغییر به تم روشن' : 'تغییر به تم تاریک'}
-            className="clay-button clay-base w-9 h-9 sm:w-11 sm:h-10 flex items-center justify-center text-[#3D5B99] dark:text-[#A3C2E4] hover:scale-105 active:scale-95 transition-all shrink-0"
+            className="clay-button clay-base w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-[#3D5B99] dark:text-[#A3C2E4] hover:scale-105 active:scale-95 transition-all shrink-0 cursor-pointer rounded-xl"
           >
             {isDarkMode ? (
               <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-amber-300" />
@@ -78,11 +87,11 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </button>
 
-          {/* Primary Action Button (Compact on Mobile to prevent any overflow) */}
+          {/* Primary Action Button */}
           <button
             onClick={onOptimizeRoute}
             disabled={!canOptimize || isOptimizing}
-            className={`clay-button px-3 sm:px-5 py-2 sm:py-2.5 text-xs font-bold flex items-center gap-1.5 sm:gap-2 transition-all active:scale-95 shrink-0 ${
+            className={`clay-button px-3 sm:px-5 py-2 sm:py-2.5 text-xs font-bold flex items-center gap-1.5 sm:gap-2 transition-all active:scale-95 shrink-0 rounded-xl cursor-pointer ${
               canOptimize
                 ? 'clay-orange text-white shadow-md hover:brightness-105'
                 : 'clay-base text-stone-400 dark:text-stone-600 cursor-not-allowed opacity-75'

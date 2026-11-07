@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Gallery } from '../types/gallery';
 import { toPersianDigits } from '../utils/persianUtils';
 import {
@@ -28,6 +28,9 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
   allGalleries
 }) => {
   const [selectedRouteIdx, setSelectedRouteIdx] = useState<number>(0);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [modalScale, setModalScale] = useState<number>(1);
+  const [contentHeight, setContentHeight] = useState<number>(0);
 
   // Close with ESC key
   useEffect(() => {
@@ -39,6 +42,43 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
+
+  // Compute responsive scale for mobile screens (< 580px) so map NEVER cuts off
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const updateScale = () => {
+      const vw = window.innerWidth;
+      const pad = vw < 640 ? 16 : 32;
+      const available = Math.min(vw - pad, 560);
+      const s = Math.min(1, Math.max(0.48, available / 560));
+      setModalScale(s);
+    };
+
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateScale);
+  }, [isOpen]);
+
+  // Measure content height with ResizeObserver so scaled wrapper height is exact to the pixel
+  useEffect(() => {
+    if (!isOpen || !contentRef.current) return;
+
+    setContentHeight(contentRef.current.offsetHeight);
+
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.borderBoxSize?.[0]) {
+          setContentHeight(entry.borderBoxSize[0].blockSize);
+        } else {
+          setContentHeight(entry.contentRect.height);
+        }
+      }
+    });
+
+    ro.observe(contentRef.current);
+    return () => ro.disconnect();
+  }, [isOpen, selectedRouteIdx]);
 
   const currentRoute: RoadRoute = CURATED_ROAD_ROUTES[selectedRouteIdx] || CURATED_ROAD_ROUTES[0];
 
@@ -58,18 +98,45 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
   const roofHi = mix(pin, '#ffffff', 0.45);
   const roofLo = mix(pin, '#ffffff', 0.18);
 
+  // Scaled dimensions on mobile
+  const isScaled = modalScale < 0.999;
+  const scaledW = isScaled ? Math.round(560 * modalScale) : 560;
+  const effectiveH = contentHeight || (280 + layout.mapH);
+  const scaledH = isScaled ? Math.round(effectiveH * modalScale) : undefined;
+
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-[1000] flex items-center justify-center p-2.5 sm:p-4 bg-stone-950/80 backdrop-blur-md animate-fade-in font-sans"
+      className="fixed inset-0 z-[1000] flex items-start sm:items-center justify-center p-2 sm:p-4 bg-stone-950/80 backdrop-blur-md animate-fade-in font-sans overflow-y-auto"
     >
+      {/* Responsive Scaler Wrapper (Guarantees zero cutoff and perfect fit on any phone screen) */}
       <div
-        onClick={(e) => e.stopPropagation()}
-        className="ag-overlay-root relative w-full max-w-[560px] max-h-[96vh] flex flex-col overflow-y-auto no-scrollbar rounded-3xl mx-auto"
+        className="relative my-auto shrink-0 transition-all duration-150"
+        style={{
+          width: `${scaledW}px`,
+          height: scaledH ? `${scaledH}px` : 'auto',
+          maxWidth: '100%'
+        }}
       >
-        <div className="flex flex-col gap-3.5 w-full items-center">
-          {/* Header Card: Title, Stats, Route Tabs & Close */}
-          <div className="ag-head relative">
+        <div
+          ref={contentRef}
+          onClick={(e) => e.stopPropagation()}
+          className="ag-overlay-root relative w-[560px] flex flex-col no-scrollbar rounded-3xl mx-auto"
+          style={
+            isScaled
+              ? {
+                  transform: `scale(${modalScale})`,
+                  transformOrigin: 'top center',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0
+                }
+              : undefined
+          }
+        >
+          <div className="flex flex-col gap-3.5 w-full items-center">
+            {/* Header Card: Title, Stats, Route Tabs & Close */}
+            <div className="ag-head relative">
             {/* Close Button */}
             <button
               type="button"
@@ -365,5 +432,6 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
         </div>
       </div>
     </div>
+  </div>
   );
 };
