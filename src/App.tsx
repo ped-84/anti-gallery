@@ -754,7 +754,7 @@ export default function App() {
                   className={`clay-button clay-${theme}-subtle text-xs px-2.5 py-1.5 font-bold transition-all hover:scale-105 active:scale-95 flex items-center gap-1 border border-[#E1E1E1] dark:border-stone-700`}
                   title={`${tour.titleFa} (${toPersianDigits(tour.galleryIds.length)} گالری - فاصله ایستگاه‌ها زیر ${toPersianDigits(tour.maxHopKm || 1.5)} کم)`}
                 >
-                  <span>{tour.titleFa.replace('گذر افتتاحیه‌های ', '').replace('مدار افتتاحیه‌های ', '').replace('مسیر هنری ', '').replace('گشت افتتاحیه‌های ', '').replace('محور افتتاحیه‌های ', '').replace('محور هنر ', '').replace('گشت طلایی ', '').replace('گذر هنر معاصر ', '').replace('مدار هنری ', '').replace('مسیر تاریخی ', '').replace('مثلث ', '')}</span>
+                  <span>{tour.titleFa.replace('گذر افتتاحیه‌های ', '').replace('مدار افتتاحیه‌های ', '').replace('مسیر هنری ', '').replace('گشت افتتاحیه‌های ', '').replace('محور افتتاحیه‌های ', '').replace('گذر هنر ', '').replace('محور هنر ', '').replace('محور ', '').replace('گشت طلایی ', '').replace('مدار هنری ', '').replace('مسیر تاریخی ', '').replace('مثلث ', '')}</span>
                   <span className="opacity-70 text-[10px] font-mono">({toPersianDigits(tour.galleryIds.length)})</span>
                 </button>
               );

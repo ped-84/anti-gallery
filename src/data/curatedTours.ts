@@ -27,7 +27,7 @@ export const PERSIAN_OPENING_TOURS: PersianCuratedTour[] = [
     neighborhood: 'Karimkhan & Center',
     titleFa: 'گذر افتتاحیه‌های معاصر کریم‌خان',
     subtitleFa: 'افتتاحیه این هفته در قلب پایتخت',
-    neighborhoodFa: 'کریم‌خان و مرکز',
+    neighborhoodFa: 'کریم‌خان و سنایی',
     themeColor: 'darkblue',
     isOpeningThisWeek: true,
     galleryIds: [406, 65, 24, 443], // 009821 Kheradmand, O Gallery, Homa Gallery, Ev Gallery
@@ -49,7 +49,7 @@ export const PERSIAN_OPENING_TOURS: PersianCuratedTour[] = [
     neighborhoodFa: 'بهشتی و مطهری',
     themeColor: 'orange',
     isOpeningThisWeek: true,
-    galleryIds: [938, 8, 41], // Boostan, Arya, Vista (outlier Didar removed)
+    galleryIds: [938, 8, 41], // Boostan, Arya, Vista
     description:
       'Explore fresh solo and group exhibitions opening this week across Motahari, Larestan, and Abbas Abad (all within 1.1 km).',
     descriptionFa:
@@ -123,21 +123,59 @@ export const PERSIAN_OPENING_TOURS: PersianCuratedTour[] = [
  */
 export const PERSIAN_ACTIVE_TOURS: PersianCuratedTour[] = [
   {
+    id: 'active-sanai-hub',
+    title: 'Sanai & Hosseini Art Walk',
+    subtitle: 'Heart of Sanai Street Art Corridor',
+    city: 'Tehran',
+    neighborhood: 'Karimkhan & Center',
+    titleFa: 'گذر هنر سنایی و حسینی',
+    subtitleFa: 'شیرین، اُ، کارشیو، باشگاه و هما',
+    neighborhoodFa: 'سنایی و کریم‌خان',
+    themeColor: 'darkblue',
+    isOpeningThisWeek: false,
+    galleryIds: [18, 65, 1003, 952, 24], // Shirin, O, Karshio, Bashgah ("روزی یادت می‌آید"), Homa
+    description:
+      'Five iconic active galleries along Sanai and Hosseini streets within walking distance under 280 meters.',
+    descriptionFa:
+      'پیاده‌روی ۵ گالری شاخص و فعال در خیابان سنایی و کوچه دوازدهم شامل گالری شیرین، گالری اُ، گالری کارشیو، گالری باشگاه (نمایشگاه «روزی یادت می‌آید») و گالری هما (فواصل زیر ۲۸۰ متر).',
+    estimatedHours: 3.0,
+    maxHopKm: 0.28
+  },
+  {
+    id: 'active-kheradmand-corridor',
+    title: 'Kheradmand & Karimkhan Corridor',
+    subtitle: 'Premier Contemporary Art in Kheradmand',
+    city: 'Tehran',
+    neighborhood: 'Karimkhan & Center',
+    titleFa: 'محور خردمند، کریم‌خان و هفت‌تیر',
+    subtitleFa: '۰۰۹۸۲۱ خردمند، اِو، ثالث و اعتماد',
+    neighborhoodFa: 'خردمند و کریم‌خان',
+    themeColor: 'orange',
+    isOpeningThisWeek: false,
+    galleryIds: [406, 443, 235, 301], // 009821 Kheradmand (active), Ev, Sales, Etemad 1
+    description:
+      'Four celebrated active galleries along Kheradmand, Karimkhan, and Haft-e Tir with max hop under 450 meters.',
+    descriptionFa:
+      'مسیر پیاده‌روی محبوب خیابان خردمند، کریم‌خان و میدان هفت‌تیر شامل پروژه ۰۰۹۸۲۱ (واحد فعال خردمند ۱۸)، گالری اِو، گالری ثالث و گالری اعتماد ۱ (فواصل زیر ۴۵۰ متر).',
+    estimatedHours: 2.5,
+    maxHopKm: 0.45
+  },
+  {
     id: 'active-vanak-corridor',
     title: 'Vanak, Khodami & Deh-Vanak Corridor',
     subtitle: 'Continuous Art Trail in Vanak',
     city: 'Tehran',
     neighborhood: 'Vanak, Mirdamad & Zafar',
     titleFa: 'محور هنر ونک، خدامی و ده ونک',
-    subtitleFa: 'گشت پیوسته با گالری‌های فعال میان‌راه',
+    subtitleFa: 'والی، مدار موازی (میان‌راه) و ژورآ',
     neighborhoodFa: 'ونک و شیخ بهایی',
-    themeColor: 'darkblue',
+    themeColor: 'softblue',
     isOpeningThisWeek: false,
     galleryIds: [26, 551, 1026], // Vali Gallery, Parallel Circuit Gallery (middle), Zhour-A Gallery
     description:
-      'A continuous 3-gallery art trail connecting Vali Gallery, Parallel Circuit (in the middle), and Zhour-A with max hop under 700 meters.',
+      'A continuous 3-gallery art trail connecting Vali Gallery, Parallel Circuit (in the middle), and Zhour-A with max hop under 680 meters.',
     descriptionFa:
-      'مسیر پیوسته و جذاب در ونک که گالری والی، گالری مدار موازی (دقیقاً در میانه راه) و گالری ژورآ را با فواصل کمتر از ۷۰۰ متر به هم متصل می‌کند.',
+      'مسیر پیوسته و جذاب در ونک که گالری والی، گالری مدار موازی (دقیقاً در میانه راه در سئول/خدامی) و گالری ژورآ را با فواصل کمتر از ۶۸۰ متر به هم متصل می‌کند.',
     estimatedHours: 2.0,
     maxHopKm: 0.68
   },
@@ -148,36 +186,17 @@ export const PERSIAN_ACTIVE_TOURS: PersianCuratedTour[] = [
     city: 'Tehran',
     neighborhood: 'Elahiyeh & Fereshteh',
     titleFa: 'گشت طلایی الهیه، فرشته و سام سنتر',
-    subtitleFa: 'هنر معاصر و مدرن شمال تهران',
+    subtitleFa: 'کیمن، دستان ۲+، زیرزمین دستان و کانون دید',
     neighborhoodFa: 'الهیه و فرشته',
-    themeColor: 'orange',
+    themeColor: 'gray',
     isOpeningThisWeek: false,
     galleryIds: [1005, 1023, 28, 225], // Kyman, Dastan +2 (Sam Center), Dastan Basement, Dastan Did
     description:
       'Four premier galleries clustered within a 300-meter radius around Fereshteh street and Sam Center, featuring active exhibitions.',
     descriptionFa:
-      'چهار نگارخانه شاخص در شعاع ۳۰۰ متری خیابان فرشته، بیدار و سام‌سنتر شامل گالری کیمن، دستان ۲+، زیرزمین دستان و کانون دید.',
+      'چهار نگارخانه شاخص در شعاع ۳۰۰ متری خیابان فرشته، بیدار و سام‌سنتر شامل گالری کیمن، دستان ۲+، زیرزمین دستان و کانون دید (فواصل زیر ۲۹۰ متر).',
     estimatedHours: 2.5,
     maxHopKm: 0.29
-  },
-  {
-    id: 'active-karimkhan-corridor',
-    title: 'Karimkhan Contemporary Walk',
-    subtitle: 'Historic Art Hub of Tehran',
-    city: 'Tehran',
-    neighborhood: 'Karimkhan & Center',
-    titleFa: 'گذر هنر معاصر کریم‌خان',
-    subtitleFa: 'قلب گالری‌های هنری تهران',
-    neighborhoodFa: 'کریم‌خان و مرکز',
-    themeColor: 'darkblue',
-    isOpeningThisWeek: false,
-    galleryIds: [406, 65, 24, 443], // 009821 Kheradmand, O Gallery, Homa, Ev
-    description:
-      'Four tightly clustered active galleries in Kheradmand and Sanai streets with maximum hop under 450 meters.',
-    descriptionFa:
-      'مسیر پیاده‌روی محبوب خیابان‌های خردمند و سنایی شامل پروژه ۰۰۹۸۲۱، گالری اُ، گالری هما و گالری اِو (فواصل زیر ۴۵۰ متر).',
-    estimatedHours: 2.5,
-    maxHopKm: 0.45
   },
   {
     id: 'active-motahari-circuit',
@@ -186,7 +205,7 @@ export const PERSIAN_ACTIVE_TOURS: PersianCuratedTour[] = [
     city: 'Tehran',
     neighborhood: 'Beheshti & Motahari',
     titleFa: 'مدار هنری بهشتی و مطهری',
-    subtitleFa: 'نقاشی معاصر، طراحی و فضاهای مستقل',
+    subtitleFa: 'آریا، عصر، هور و بوستان',
     neighborhoodFa: 'بهشتی و مطهری',
     themeColor: 'orange',
     isOpeningThisWeek: false,
@@ -205,7 +224,7 @@ export const PERSIAN_ACTIVE_TOURS: PersianCuratedTour[] = [
     city: 'Tehran',
     neighborhood: 'Downtown, Enghelab & Amirabad',
     titleFa: 'مسیر تاریخی لولاگر و نوفل‌لوشاتو',
-    subtitleFa: 'معماری کهن و هنرهای تجربی مرکز شهر',
+    subtitleFa: 'آرت‌مارت، این/جا، سو و ایرانشهر',
     neighborhoodFa: 'مرکز، لولاگر و حافظ',
     themeColor: 'softblue',
     isOpeningThisWeek: false,
@@ -226,13 +245,13 @@ export const PERSIAN_ACTIVE_TOURS: PersianCuratedTour[] = [
     titleFa: 'مثلث موزه معاصر، لاله و کشاورز',
     subtitleFa: 'موزه معاصر، لاله و گالری ۳۳',
     neighborhoodFa: 'کارگر شمالی و کشاورز',
-    themeColor: 'gray',
+    themeColor: 'darkblue',
     isOpeningThisWeek: false,
     galleryIds: [1014, 263, 43], // Gallery 33, Tehran Museum of Contemporary Art, Laleh Gallery
     description:
-      'A triangle of 3 active galleries around Laleh Park and Keshavarz boulevard with hops under 800 meters.',
+      'A triangle of 3 active galleries around Laleh Park and Keshavarz boulevard with hops under 825 meters.',
     descriptionFa:
-      'مسیر فرهنگی و جذاب در پیرامون پارک لاله و بلوار کشاورز شامل گالری ۳۳، موزه هنرهای معاصر تهران و نگارخانه لاله (فواصل زیر ۸۰۰ متر).',
+      'مسیر فرهنگی و جذاب در پیرامون پارک لاله و بلوار کشاورز شامل گالری ۳۳، موزه هنرهای معاصر تهران و نگارخانه لاله (فواصل زیر ۸۲۵ متر).',
     estimatedHours: 2.5,
     maxHopKm: 0.82
   }
