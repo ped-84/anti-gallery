@@ -810,6 +810,7 @@ export default function App() {
                   />
                   <span>
                     {tour.titleFa
+                      .replace('معاصر کریم‌خان', 'کریم‌خان')
                       .replace('گذر افتتاحیه‌های ', '')
                       .replace('مدار افتتاحیه‌های ', '')
                       .replace('مسیر هنری ', '')

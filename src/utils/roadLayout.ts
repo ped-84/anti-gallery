@@ -341,7 +341,7 @@ export function computeRoadLayout(
 export const CURATED_ROAD_ROUTES: RoadRoute[] = [
   {
     id: 'karimkhan',
-    label: 'معاصر کریم‌خان',
+    label: 'کریم‌خان',
     color: '#3D5B99',
     pinTone: 'cool',
     galleryIds: [65, 18, 1003, 952, 443, 24] // O, Shirin, Karshio, Bashgah, Ev, Homa (6 stops)

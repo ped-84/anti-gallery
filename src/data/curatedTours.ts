@@ -25,7 +25,7 @@ export const PERSIAN_OPENING_TOURS: PersianCuratedTour[] = [
     subtitle: 'This Week Openings in Karimkhan',
     city: 'Tehran',
     neighborhood: 'Karimkhan & Center',
-    titleFa: 'گذر افتتاحیه‌های معاصر کریم‌خان',
+    titleFa: 'گذر افتتاحیه‌های کریم‌خان',
     subtitleFa: 'افتتاحیه این هفته در قلب پایتخت',
     neighborhoodFa: 'کریم‌خان و سنایی',
     themeColor: 'darkblue',
