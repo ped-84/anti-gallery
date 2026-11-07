@@ -173,6 +173,25 @@ export function computeRoadLayout(
 
   const n = resolvedGalleries.length;
 
+  // Safe fallback if route has fewer than 2 stops
+  if (n < 2) {
+    return {
+      n,
+      mapH: C.PAD_TOP + C.PAD_BOTTOM,
+      dense: false,
+      pathD: `M ${C.LANE_L} 0 L ${C.LANE_L} 200`,
+      pts: resolvedGalleries.map(() => ({ x: C.LANE_L, y: C.PAD_TOP })),
+      stops: [],
+      legs: [],
+      stats: {
+        stops: `${toPersianDigits(n)} گالری`,
+        km: '۰ کیلومتر',
+        time: '۰ دقیقه'
+      },
+      carSeconds: 6
+    };
+  }
+
   // Real Driving/Walking Legs (km + minutes)
   const legData: Array<[number, number] | null> = [];
   for (let i = 0; i < n - 1; i++) {

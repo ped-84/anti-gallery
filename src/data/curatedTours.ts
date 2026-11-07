@@ -283,13 +283,43 @@ export const CURATED_TOURS = PERSIAN_CURATED_TOURS;
  * Returns curated tours by mode:
  * 'openings-only': Strictly current week openings with hops <= 1.3 km.
  * 'all-active': All active open exhibitions including middle bridging galleries with hops <= 0.85 km.
+ *
+ * RULE: Hubs with 0 or 1 gallery are strictly hidden (tours require >= 2 galleries).
  */
 export function getCuratedToursByMode(
-  _allGalleries: Gallery[],
+  allGalleries: Gallery[],
   mode: CuratedTourFilterMode = 'openings-only'
 ): PersianCuratedTour[] {
-  if (mode === 'all-active') {
-    return PERSIAN_ACTIVE_TOURS;
-  }
-  return PERSIAN_OPENING_TOURS;
+  const baseTours = mode === 'all-active' ? PERSIAN_ACTIVE_TOURS : PERSIAN_OPENING_TOURS;
+
+  // Compute maximum Persian opening score for the current Friday cycle
+  const maxOpeningScore = Math.max(
+    0,
+    ...allGalleries
+      .map((g) => parsePersianDateToScore(g.activeExhibition?.openingDate))
+      .filter((s) => s > 0)
+  );
+
+  return baseTours
+    .map((tour) => {
+      // 1. Resolve which gallery IDs actually exist in the current gallery catalog
+      let validGalleryIds = tour.galleryIds.filter((id) =>
+        allGalleries.some((g) => g.id === id)
+      );
+
+      // 2. In openings-only mode, only retain galleries that actually have an active opening this week!
+      if (mode === 'openings-only') {
+        validGalleryIds = validGalleryIds.filter((id) => {
+          const g = allGalleries.find((x) => x.id === id);
+          return g && isThisWeekOpening(g.activeExhibition?.openingDate, maxOpeningScore);
+        });
+      }
+
+      return {
+        ...tour,
+        galleryIds: validGalleryIds
+      };
+    })
+    // 3. User Rule: Only show hubs with >= 2 galleries! If 0 or 1, do NOT show!
+    .filter((tour) => tour.galleryIds.length >= 2);
 }

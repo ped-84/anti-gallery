@@ -31,23 +31,42 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
 }) => {
   const [selectedRouteIdx, setSelectedRouteIdx] = useState<number>(0);
 
+  // Only show routes that have at least 2 valid galleries in the current catalog
+  const validRoutes = useMemo(() => {
+    return CURATED_ROAD_ROUTES.map((route) => {
+      const validIds = route.galleryIds.filter((id) =>
+        allGalleries.some((g) => g.id === id)
+      );
+      return {
+        ...route,
+        galleryIds: validIds
+      };
+    }).filter((route) => route.galleryIds.length >= 2);
+  }, [allGalleries]);
+
+  const activeRouteIdx = Math.max(0, Math.min(selectedRouteIdx, Math.max(0, validRoutes.length - 1)));
+  const currentRoute: RoadRoute = validRoutes[activeRouteIdx] || CURATED_ROAD_ROUTES[0];
+
   // Sync with initialRouteId whenever modal opens or route id changes
   useEffect(() => {
     if (isOpen && initialRouteId) {
-      const idx = CURATED_ROAD_ROUTES.findIndex((r) => r.id === initialRouteId);
+      const idx = validRoutes.findIndex((r) => r.id === initialRouteId);
       if (idx !== -1) {
         setSelectedRouteIdx(idx);
       }
     }
-  }, [isOpen, initialRouteId]);
+  }, [isOpen, initialRouteId, validRoutes]);
   const contentRef = useRef<HTMLDivElement>(null);
   const [modalScale, setModalScale] = useState<number>(1);
   const [contentHeight, setContentHeight] = useState<number>(0);
 
-  // Close with ESC key
+  // Close with ESC key only if child modal (detail modal) isn't on top
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
+        if (document.querySelector('.ag-gallery-detail-modal') || document.querySelector('.z-\\[1200\\]')) {
+          return;
+        }
         onClose();
       }
     };
@@ -90,9 +109,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
 
     ro.observe(contentRef.current);
     return () => ro.disconnect();
-  }, [isOpen, selectedRouteIdx]);
-
-  const currentRoute: RoadRoute = CURATED_ROAD_ROUTES[selectedRouteIdx] || CURATED_ROAD_ROUTES[0];
+  }, [isOpen, activeRouteIdx]);
 
   // Compute dynamic road layout (road height, Bezier curves, pins, and distance bubbles)
   const layout = useMemo(() => {
@@ -180,10 +197,10 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
 
             <div className="ag-divider" />
 
-            {/* 6 Curated Route Tabs */}
+            {/* Curated Route Tabs (Only hubs with >= 2 galleries) */}
             <div className="ag-tabs">
-              {CURATED_ROAD_ROUTES.map((r, idx) => {
-                const isSelected = idx === selectedRouteIdx;
+              {validRoutes.map((r, idx) => {
+                const isSelected = idx === activeRouteIdx;
                 const fill = r.tab || safeFillForWhiteText(r.color);
                 const tabBg = isSelected ? fill : mix(r.color, '#ffffff', 0.88);
                 const tabInk = isSelected ? (r.tabInk || '#ffffff') : mix(r.color, '#000000', 0.45);
