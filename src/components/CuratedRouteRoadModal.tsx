@@ -65,9 +65,9 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="ag-overlay-root relative w-full max-w-[600px] max-h-[96vh] flex flex-col overflow-y-auto no-scrollbar rounded-3xl"
+        className="ag-overlay-root relative w-full max-w-[560px] max-h-[96vh] flex flex-col overflow-y-auto no-scrollbar rounded-3xl mx-auto"
       >
-        <div className="flex flex-col gap-3.5 p-2 sm:p-3">
+        <div className="flex flex-col gap-3.5 w-full items-center">
           {/* Header Card: Title, Stats, Route Tabs & Close */}
           <div className="ag-head relative">
             {/* Close Button */}
@@ -338,7 +338,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
           </div>
 
           {/* Bottom Docked CTA Bar: Start This Tour */}
-          <div className="flex items-center justify-between gap-3 bg-white border border-[#E1E1E1] p-3 rounded-2xl shadow-sm shrink-0">
+          <div className="ag-foot">
             <div className="flex items-center gap-2 text-xs truncate">
               <Compass className="w-4 h-4 text-[#3D5B99] shrink-0" />
               <span className="font-bold text-[#1f2a44] truncate">

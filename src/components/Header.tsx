@@ -12,7 +12,7 @@ interface HeaderProps {
   hasCustomOrigin?: boolean;
 }
 
-export const APP_VERSION = 'بتا V 1.068';
+export const APP_VERSION = 'بتا V 1.069';
 
 export const Header: React.FC<HeaderProps> = ({
   selectedCount,
