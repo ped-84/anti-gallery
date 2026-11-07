@@ -113,6 +113,25 @@ export const PERSIAN_OPENING_TOURS: PersianCuratedTour[] = [
       'بازدید متمرکز از نگارخانه‌های دارای افتتاحیه جدید این هفته در محدوده ونک و شیخ بهایی (فاصله ۱.۳ کیلومتر).',
     estimatedHours: 1.5,
     maxHopKm: 1.30
+  },
+  {
+    id: 'openings-lolagar',
+    title: 'Downtown & Lolagar Historic Openings',
+    subtitle: 'Fresh Openings in Central Tehran',
+    city: 'Tehran',
+    neighborhood: 'Downtown, Enghelab & Amirabad',
+    titleFa: 'مسیر تاریخی لولاگر و مرکز',
+    subtitleFa: 'افتتاحیه این هفته در لولاگر و مرکز',
+    neighborhoodFa: 'مرکز، لولاگر و انقلاب',
+    themeColor: 'gray',
+    isOpeningThisWeek: true,
+    galleryIds: [196, 212], // Iranshahr Gallery, Delgosha Gallery
+    description:
+      'A historic walk through central Tehran visiting new contemporary exhibitions in Iran Shahr and Delgosha.',
+    descriptionFa:
+      'پیاده‌روی فرهنگی در بافت تاریخی لولاگر و مرکز بین نگارخانه‌های دارای افتتاحیه جدید این هفته.',
+    estimatedHours: 2.0,
+    maxHopKm: 1.25
   }
 ];
 

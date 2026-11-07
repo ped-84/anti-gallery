@@ -379,9 +379,9 @@ export const CURATED_ROAD_ROUTES: RoadRoute[] = [
   {
     id: 'lolagar-enghelab',
     label: 'تاریخی لولاگر و مرکز',
-    color: '#01C3FF',
-    tab: '#01C3FF',
-    tabInk: '#1f2a44',
+    color: '#979DB1',
+    tab: '#979DB1',
+    tabInk: '#ffffff',
     pinTone: 'cool',
     galleryIds: [1020, 405, 487, 196] // Aartmaart, In/Ja, Soo, Iranshahr (4 stops)
   }
@@ -486,19 +486,19 @@ export const TOUR_COLOR_THEMES: Record<string, TourColorTheme> = {
     routeId: 'vanak-zafar'
   },
   'lolagar-enghelab': {
-    color: '#01C3FF',
-    bg: '#e6f9ff',
-    bgDark: '#082736',
-    text: '#0369a1',
-    textDark: '#bae6fd',
-    border: '#bae6fd',
-    borderDark: '#0e4963',
-    dot: '#01C3FF',
-    activeBg: '#01C3FF',
-    activeText: '#10335e',
-    activeDot: '#10335e',
-    activeBorder: '#0284c7',
-    activeGlow: 'rgba(1, 195, 255, 0.35)',
+    color: '#979DB1',
+    bg: '#f1f3f7',
+    bgDark: '#1e222d',
+    text: '#2d3342',
+    textDark: '#dce0ec',
+    border: '#cbd1e0',
+    borderDark: '#363d50',
+    dot: '#979DB1',
+    activeBg: '#979DB1',
+    activeText: '#ffffff',
+    activeDot: '#ffffff',
+    activeBorder: '#7d8499',
+    activeGlow: 'rgba(151, 157, 177, 0.45)',
     routeId: 'lolagar-enghelab'
   }
 };
