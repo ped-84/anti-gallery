@@ -18,6 +18,7 @@ interface CuratedRouteRoadModalProps {
   onSelectRoute: (galleryIds: number[]) => void;
   onSelectGalleryDetails: (gallery: Gallery) => void;
   allGalleries: Gallery[];
+  initialRouteId?: string | null;
 }
 
 export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
@@ -25,9 +26,20 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
   onClose,
   onSelectRoute,
   onSelectGalleryDetails,
-  allGalleries
+  allGalleries,
+  initialRouteId
 }) => {
   const [selectedRouteIdx, setSelectedRouteIdx] = useState<number>(0);
+
+  // Sync with initialRouteId whenever modal opens or route id changes
+  useEffect(() => {
+    if (isOpen && initialRouteId) {
+      const idx = CURATED_ROAD_ROUTES.findIndex((r) => r.id === initialRouteId);
+      if (idx !== -1) {
+        setSelectedRouteIdx(idx);
+      }
+    }
+  }, [isOpen, initialRouteId]);
   const contentRef = useRef<HTMLDivElement>(null);
   const [modalScale, setModalScale] = useState<number>(1);
   const [contentHeight, setContentHeight] = useState<number>(0);

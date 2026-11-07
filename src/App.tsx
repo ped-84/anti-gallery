@@ -22,6 +22,7 @@ import { InteractiveMap } from './components/InteractiveMap';
 import { RouteSummaryPanel } from './components/RouteSummaryPanel';
 import { GalleryDetailModal } from './components/GalleryDetailModal';
 import { CuratedRouteRoadModal } from './components/CuratedRouteRoadModal';
+import { getTourColorTheme } from './utils/roadLayout';
 import { ClayDropdown } from './components/ClayDropdown';
 import {
   Search,
@@ -133,6 +134,7 @@ export default function App() {
   const [activeModalGallery, setActiveModalGallery] = useState<Gallery | null>(null);
   const [isCuratedModalOpen, setIsCuratedModalOpen] = useState<boolean>(false);
   const [highlightedGalleryId, setHighlightedGalleryId] = useState<number | null>(null);
+  const [activeCuratedRouteId, setActiveCuratedRouteId] = useState<string | null>(null);
 
   // Background Auto-Sync State
   const [syncStatus, setSyncStatus] = useState<{
@@ -648,6 +650,8 @@ export default function App() {
 
   const handleSelectCuratedTour = (tour: PersianCuratedTour) => {
     setSelectedGalleryIds(tour.galleryIds);
+    const theme = getTourColorTheme(tour.id + ' ' + tour.titleFa + ' ' + tour.neighborhoodFa);
+    setActiveCuratedRouteId(theme.routeId);
   };
 
   const galleryOrderMap = useMemo(() => {
@@ -763,17 +767,68 @@ export default function App() {
             <span className="text-stone-300 dark:text-stone-700 hidden sm:inline">|</span>
 
             {/* Tour buttons for current mode */}
-            {currentCuratedTours.map((tour, idx) => {
-              const theme = STICKDAZZLE_THEMES[idx % STICKDAZZLE_THEMES.length];
+            {currentCuratedTours.map((tour) => {
+              const theme = getTourColorTheme(tour.id + ' ' + tour.titleFa + ' ' + tour.neighborhoodFa);
+              const isSelected =
+                tour.galleryIds.length > 0 &&
+                tour.galleryIds.length === selectedGalleryIds.length &&
+                tour.galleryIds.every((id) => selectedGalleryIds.includes(id));
+
               return (
                 <button
                   key={tour.id}
+                  type="button"
                   onClick={() => handleSelectCuratedTour(tour)}
-                  className={`clay-button clay-${theme}-subtle text-xs px-2.5 py-1.5 font-bold transition-all hover:scale-105 active:scale-95 flex items-center gap-1 border border-[#E1E1E1] dark:border-stone-700`}
+                  style={
+                    isSelected
+                      ? {
+                          backgroundColor: theme.activeBg,
+                          color: theme.activeText,
+                          borderColor: theme.activeBorder,
+                          boxShadow: `0 4px 14px -2px ${theme.activeGlow}`
+                        }
+                      : isDarkMode
+                      ? {
+                          backgroundColor: theme.bgDark,
+                          color: theme.textDark,
+                          borderColor: theme.borderDark
+                        }
+                      : {
+                          backgroundColor: theme.bg,
+                          color: theme.text,
+                          borderColor: theme.border
+                        }
+                  }
+                  className="clay-button text-xs px-3 py-1.5 font-bold transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5 rounded-full border outline-none focus:outline-none cursor-pointer"
                   title={`${tour.titleFa} (${toPersianDigits(tour.galleryIds.length)} گالری - فاصله ایستگاه‌ها زیر ${toPersianDigits(tour.maxHopKm || 1.5)} کم)`}
                 >
-                  <span>{tour.titleFa.replace('گذر افتتاحیه‌های ', '').replace('مدار افتتاحیه‌های ', '').replace('مسیر هنری ', '').replace('گشت افتتاحیه‌های ', '').replace('محور افتتاحیه‌های ', '').replace('گذر هنر ', '').replace('محور هنر ', '').replace('محور ', '').replace('گشت طلایی ', '').replace('مدار هنری ', '').replace('مسیر تاریخی ', '').replace('مثلث ', '')}</span>
-                  <span className="opacity-70 text-[10px] font-mono">({toPersianDigits(tour.galleryIds.length)})</span>
+                  <span
+                    className="w-2 h-2 rounded-full shrink-0 transition-transform"
+                    style={{
+                      backgroundColor: isSelected ? theme.activeDot : theme.dot
+                    }}
+                  />
+                  <span>
+                    {tour.titleFa
+                      .replace('گذر افتتاحیه‌های ', '')
+                      .replace('مدار افتتاحیه‌های ', '')
+                      .replace('مسیر هنری ', '')
+                      .replace('گشت افتتاحیه‌های ', '')
+                      .replace('محور افتتاحیه‌های ', '')
+                      .replace('گذر هنر ', '')
+                      .replace('محور هنر ', '')
+                      .replace('محور ', '')
+                      .replace('گشت طلایی ', '')
+                      .replace('مدار هنری ', '')
+                      .replace('مسیر تاریخی ', '')
+                      .replace('مثلث ', '')}
+                  </span>
+                  <span
+                    className="text-[10px] font-mono"
+                    style={{ opacity: isSelected ? 0.9 : 0.7 }}
+                  >
+                    ({toPersianDigits(tour.galleryIds.length)})
+                  </span>
                 </button>
               );
             })}
@@ -1018,6 +1073,7 @@ export default function App() {
         }}
         onSelectGalleryDetails={(g) => setActiveModalGallery(g)}
         allGalleries={galleries}
+        initialRouteId={activeCuratedRouteId}
       />
 
       <GalleryDetailModal

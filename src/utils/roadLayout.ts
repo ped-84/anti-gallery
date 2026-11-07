@@ -386,3 +386,178 @@ export const CURATED_ROAD_ROUTES: RoadRoute[] = [
     galleryIds: [1020, 405, 487, 196] // Aartmaart, In/Ja, Soo, Iranshahr (4 stops)
   }
 ];
+
+export interface TourColorTheme {
+  color: string;
+  bg: string;
+  bgDark: string;
+  text: string;
+  textDark: string;
+  border: string;
+  borderDark: string;
+  dot: string;
+  activeBg: string;
+  activeText: string;
+  activeDot: string;
+  activeBorder: string;
+  activeGlow: string;
+  routeId: string;
+}
+
+export const TOUR_COLOR_THEMES: Record<string, TourColorTheme> = {
+  karimkhan: {
+    color: '#3D5B99',
+    bg: '#edf3fc',
+    bgDark: '#1c273e',
+    text: '#223a68',
+    textDark: '#d0e1fc',
+    border: '#c2d6f4',
+    borderDark: '#2c3f66',
+    dot: '#3D5B99',
+    activeBg: '#3D5B99',
+    activeText: '#ffffff',
+    activeDot: '#ffffff',
+    activeBorder: '#273c68',
+    activeGlow: 'rgba(61, 91, 153, 0.35)',
+    routeId: 'karimkhan'
+  },
+  'beheshti-motahari': {
+    color: '#E58B2E',
+    bg: '#fff4ea',
+    bgDark: '#351f0b',
+    text: '#b45309',
+    textDark: '#fed7aa',
+    border: '#fed7aa',
+    borderDark: '#663910',
+    dot: '#E58B2E',
+    activeBg: '#E58B2E',
+    activeText: '#ffffff',
+    activeDot: '#ffffff',
+    activeBorder: '#b45309',
+    activeGlow: 'rgba(229, 139, 46, 0.35)',
+    routeId: 'beheshti-motahari'
+  },
+  'museum-laleh': {
+    color: '#00A892',
+    bg: '#e6f7f5',
+    bgDark: '#0b2a26',
+    text: '#0f766e',
+    textDark: '#99f6e4',
+    border: '#99f6e4',
+    borderDark: '#134e48',
+    dot: '#00A892',
+    activeBg: '#00A892',
+    activeText: '#ffffff',
+    activeDot: '#ffffff',
+    activeBorder: '#0f766e',
+    activeGlow: 'rgba(0, 168, 146, 0.35)',
+    routeId: 'museum-laleh'
+  },
+  'elahiyeh-fereshteh': {
+    color: '#6D01AD',
+    bg: '#f6effc',
+    bgDark: '#2b0b42',
+    text: '#6b21a8',
+    textDark: '#e9d5ff',
+    border: '#e9d5ff',
+    borderDark: '#4c1d75',
+    dot: '#6D01AD',
+    activeBg: '#6D01AD',
+    activeText: '#ffffff',
+    activeDot: '#ffffff',
+    activeBorder: '#581c87',
+    activeGlow: 'rgba(109, 1, 173, 0.35)',
+    routeId: 'elahiyeh-fereshteh'
+  },
+  'vanak-zafar': {
+    color: '#BF1932',
+    bg: '#fdf0f2',
+    bgDark: '#380c14',
+    text: '#9f1239',
+    textDark: '#fecdd3',
+    border: '#fecdd3',
+    borderDark: '#5e1322',
+    dot: '#BF1932',
+    activeBg: '#BF1932',
+    activeText: '#ffffff',
+    activeDot: '#ffffff',
+    activeBorder: '#9f1239',
+    activeGlow: 'rgba(191, 25, 50, 0.35)',
+    routeId: 'vanak-zafar'
+  },
+  'lolagar-enghelab': {
+    color: '#01C3FF',
+    bg: '#e6f9ff',
+    bgDark: '#082736',
+    text: '#0369a1',
+    textDark: '#bae6fd',
+    border: '#bae6fd',
+    borderDark: '#0e4963',
+    dot: '#01C3FF',
+    activeBg: '#01C3FF',
+    activeText: '#10335e',
+    activeDot: '#10335e',
+    activeBorder: '#0284c7',
+    activeGlow: 'rgba(1, 195, 255, 0.35)',
+    routeId: 'lolagar-enghelab'
+  }
+};
+
+export function getTourColorTheme(tourIdentifier: string): TourColorTheme {
+  const s = tourIdentifier.toLowerCase();
+  if (
+    s.includes('karimkhan') ||
+    s.includes('sanai') ||
+    s.includes('kheradmand') ||
+    s.includes('کریم‌خان') ||
+    s.includes('کریم خان') ||
+    s.includes('سنایی') ||
+    s.includes('خردمند')
+  ) {
+    return TOUR_COLOR_THEMES.karimkhan;
+  }
+  if (
+    s.includes('beheshti') ||
+    s.includes('motahari') ||
+    s.includes('بهشتی') ||
+    s.includes('مطهری') ||
+    s.includes('لارستان')
+  ) {
+    return TOUR_COLOR_THEMES['beheshti-motahari'];
+  }
+  if (
+    s.includes('museum') ||
+    s.includes('laleh') ||
+    s.includes('موزه') ||
+    s.includes('لاله')
+  ) {
+    return TOUR_COLOR_THEMES['museum-laleh'];
+  }
+  if (
+    s.includes('elahiyeh') ||
+    s.includes('fereshteh') ||
+    s.includes('الهیه') ||
+    s.includes('فرشته')
+  ) {
+    return TOUR_COLOR_THEMES['elahiyeh-fereshteh'];
+  }
+  if (
+    s.includes('vanak') ||
+    s.includes('zafar') ||
+    s.includes('ونک') ||
+    s.includes('ظفر')
+  ) {
+    return TOUR_COLOR_THEMES['vanak-zafar'];
+  }
+  if (
+    s.includes('lolagar') ||
+    s.includes('enghelab') ||
+    s.includes('center') ||
+    s.includes('لولاگر') ||
+    s.includes('انقلاب') ||
+    s.includes('مرکز')
+  ) {
+    return TOUR_COLOR_THEMES['lolagar-enghelab'];
+  }
+  return TOUR_COLOR_THEMES.karimkhan;
+}
