@@ -21,7 +21,7 @@ import { GalleryCard } from './components/GalleryCard';
 import { InteractiveMap } from './components/InteractiveMap';
 import { RouteSummaryPanel } from './components/RouteSummaryPanel';
 import { GalleryDetailModal } from './components/GalleryDetailModal';
-import { CuratedToursModal } from './components/CuratedToursModal';
+import { CuratedRouteRoadModal } from './components/CuratedRouteRoadModal';
 import { ClayDropdown } from './components/ClayDropdown';
 import {
   Search,
@@ -1039,13 +1039,18 @@ export default function App() {
         onSetStart={handleSetStartGallery}
       />
 
-      <CuratedToursModal
+      <CuratedRouteRoadModal
         isOpen={isCuratedModalOpen}
         onClose={() => setIsCuratedModalOpen(false)}
-        onSelectTour={handleSelectCuratedTour}
+        onSelectRoute={(ids) => {
+          setSelectedGalleryIds(ids);
+          setStartGalleryId(ids[0] || null);
+          setEndGalleryId(ids[ids.length - 1] || null);
+          setMobileActiveTab('map');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        onSelectGalleryDetails={(g) => setActiveModalGallery(g)}
         allGalleries={galleries}
-        initialMode={curatedTourMode}
-        onModeChange={setCuratedTourMode}
       />
     </div>
   );
