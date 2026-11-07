@@ -12,7 +12,7 @@ interface HeaderProps {
   hasCustomOrigin?: boolean;
 }
 
-export const APP_VERSION = 'بتا V 1.069';
+export const APP_VERSION = 'بتا V 1.070';
 
 export const Header: React.FC<HeaderProps> = ({
   selectedCount,
@@ -50,16 +50,18 @@ export const Header: React.FC<HeaderProps> = ({
           </a>
         </div>
 
-        {/* Zone 2: Navigation Links (Desktop only, zero galleryinfo links) */}
-        <nav className="hidden lg:flex items-center gap-3 text-xs font-medium">
+        {/* Zone 2: Curated Tours Button (Orange, responsive on all screens) */}
+        <div className="flex items-center">
           <button
             onClick={onOpenCuratedTours}
-            className="clay-button clay-softblue px-4 py-2.5 flex items-center gap-2 hover:scale-[1.02] active:scale-95 transition-transform"
+            title="گشت‌های هنری آماده (تهران)"
+            className="clay-button clay-orange text-white px-3 sm:px-4 py-2 sm:py-2.5 flex items-center gap-1.5 sm:gap-2 hover:brightness-105 active:scale-95 transition-all shadow-md shrink-0 text-xs font-bold"
           >
-            <Sparkles className="w-4 h-4 text-[#10335e] dark:text-[#cde0f3]" />
-            <span>گشت‌های هنری آماده (تهران)</span>
+            <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white stroke-[2.2] shrink-0" />
+            <span className="hidden md:inline">گشت‌های هنری آماده (تهران)</span>
+            <span className="inline md:hidden text-[11px]">گشت‌های آماده</span>
           </button>
-        </nav>
+        </div>
 
         {/* Zone 3: Dark Mode Switcher & Primary Action (Fully Responsive on Mobile) */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">

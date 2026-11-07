@@ -682,18 +682,8 @@ export default function App() {
           <div className="flex items-center gap-2.5 shrink-0">
             <span className="w-2.5 h-2.5 rounded-full bg-[#F76B1C] inline-block shadow-sm shrink-0"></span>
             <span className="text-xs">
-              <strong>{toPersianDigits(totalWithPosters)} نمایشگاه جاری</strong> از میان {toPersianDigits(galleries.length)} نگارخانه
+              <strong>{toPersianDigits(totalWithPosters)} نمایشگاه جاری</strong> از میان {toPersianDigits(galleries.length)} نگارخانه فعال در تهران
             </span>
-          </div>
-
-          <div className="flex items-center shrink-0">
-            <button
-              onClick={() => setIsCuratedModalOpen(true)}
-              className="clay-button clay-orange-subtle px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 hover:scale-105 active:scale-95 transition-all text-[#F76B1C] shrink-0 shadow-xs"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>۴ گشت هنری آماده</span>
-            </button>
           </div>
         </div>
       </div>
