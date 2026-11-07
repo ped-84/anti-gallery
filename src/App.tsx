@@ -811,6 +811,7 @@ export default function App() {
                   <span>
                     {tour.titleFa
                       .replace('معاصر کریم‌خان', 'کریم‌خان')
+                      .replace('موزه معاصر و پارک لاله', 'پارک لاله و کشاورز')
                       .replace('گذر افتتاحیه‌های ', '')
                       .replace('مدار افتتاحیه‌های ', '')
                       .replace('مسیر هنری ', '')

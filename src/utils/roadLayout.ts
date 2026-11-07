@@ -357,7 +357,7 @@ export const CURATED_ROAD_ROUTES: RoadRoute[] = [
   },
   {
     id: 'museum-laleh',
-    label: 'موزه معاصر و پارک لاله',
+    label: 'پارک لاله و کشاورز',
     color: '#00A892',
     pinTone: 'cool',
     galleryIds: [1014, 263, 43] // 33, TMoCA, Laleh (3 stops)
@@ -528,8 +528,10 @@ export function getTourColorTheme(tourIdentifier: string): TourColorTheme {
   if (
     s.includes('museum') ||
     s.includes('laleh') ||
+    s.includes('keshavarz') ||
     s.includes('موزه') ||
-    s.includes('لاله')
+    s.includes('لاله') ||
+    s.includes('کشاورز')
   ) {
     return TOUR_COLOR_THEMES['museum-laleh'];
   }
