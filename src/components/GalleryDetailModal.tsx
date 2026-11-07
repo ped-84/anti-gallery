@@ -23,6 +23,7 @@ import { GoogleMapsIcon, WazeIcon, NeshanIcon, BaladIcon } from './NavIcons';
 interface GalleryDetailModalProps {
   gallery: Gallery | null;
   isSelected: boolean;
+  selectedGalleryIds?: number[];
   isStartGallery?: boolean;
   onClose: () => void;
   onToggle: (gallery: Gallery) => void;
@@ -32,6 +33,7 @@ interface GalleryDetailModalProps {
 export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
   gallery,
   isSelected,
+  selectedGalleryIds,
   isStartGallery,
   onClose,
   onToggle,
@@ -41,14 +43,33 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
   const [useLocalFallback, setUseLocalFallback] = useState<boolean>(false);
   const [isPosterEnlarged, setIsPosterEnlarged] = useState<boolean>(false);
   const [posterLoadError, setPosterLoadError] = useState<boolean>(false);
+  const [selectedSpaceIndex, setSelectedSpaceIndex] = useState<number>(0);
 
-  const activeExhibition = gallery?.activeExhibition || (gallery?.exhibitions && gallery.exhibitions[0]) || null;
+  // Group all co-located sibling spaces at this venue (active exhibitions first)
+  const allSpaces = React.useMemo(() => {
+    if (!gallery) return [];
+    const list = [gallery, ...(gallery.siblingSpaces || [])];
+    const unique = Array.from(new Map(list.map((item) => [item.id, item])).values());
+    return unique.sort((a, b) => {
+      const aActive = Boolean(a.activeExhibition || a.posterImage) ? 1 : 0;
+      const bActive = Boolean(b.activeExhibition || b.posterImage) ? 1 : 0;
+      return bActive - aActive;
+    });
+  }, [gallery]);
+
+  useEffect(() => {
+    setSelectedSpaceIndex(0);
+  }, [gallery?.id]);
+
+  const currentSpace = allSpaces[selectedSpaceIndex] || gallery;
+  const activeExhibition =
+    currentSpace?.activeExhibition || (currentSpace?.exhibitions && currentSpace.exhibitions[0]) || null;
 
   useEffect(() => {
     setUseLocalFallback(false);
     setIsPosterEnlarged(false);
     setPosterLoadError(false);
-  }, [gallery?.id, activeExhibition?.eventId]);
+  }, [currentSpace?.id, activeExhibition?.eventId]);
 
   // Handle ESC key to close modal or lightbox
   useEffect(() => {
@@ -68,18 +89,33 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
   // Early return if no gallery selected
   if (!gallery) return null;
 
-  // Determine effective poster URL with robust fallback
+  // Determine effective poster URL with robust fallback for currentSpace
   let posterUrl: string | null = null;
-  if (!posterLoadError) {
+  if (!posterLoadError && currentSpace) {
     if (useLocalFallback && activeExhibition?.eventId === 21551) {
       posterUrl = `${import.meta.env.BASE_URL}assets/events/Event_21551.jpg`;
     } else {
-      posterUrl = activeExhibition?.poster || gallery.posterImage || activeExhibition?.posterSmall || gallery.posterSmall || null;
+      posterUrl =
+        activeExhibition?.poster ||
+        currentSpace.posterImage ||
+        activeExhibition?.posterSmall ||
+        currentSpace.posterSmall ||
+        null;
     }
   }
 
-  const galleryLogoUrl = gallery.logoImage || gallery.image;
+  const galleryLogoUrl = currentSpace.logoImage || currentSpace.image || gallery.logoImage || gallery.image;
   const galleryDisplayName = getGalleryDisplayName(gallery);
+  const currentSpaceDisplayName = getGalleryDisplayName(currentSpace);
+
+  // Check if this venue is part of current tour
+  const isVenueSelected = selectedGalleryIds
+    ? allSpaces.some((s) => selectedGalleryIds.includes(s.id))
+    : isSelected;
+
+  const isVenueStart = selectedGalleryIds && gallery
+    ? Boolean(isStartGallery || allSpaces.some((s) => s.id === gallery.id && isStartGallery))
+    : Boolean(isStartGallery);
 
   const handlePosterError = () => {
     if (activeExhibition?.eventId === 21551 && !useLocalFallback) {
@@ -122,15 +158,17 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   {galleryDisplayName}
                 </h2>
                 <div className="text-[11px] text-[#3D5B99] dark:text-[#A3C2E4] truncate mt-0.5 font-medium flex items-center gap-1.5">
-                  <span>{gallery.neighborhoodFa || 'تهران'}</span>
+                  <span>{currentSpace.neighborhoodFa || gallery.neighborhoodFa || 'تهران'}</span>
                   <span className="text-stone-300 dark:text-stone-600">·</span>
-                  <span className="truncate text-stone-500 dark:text-stone-400">{formatGalleryAddress(gallery.addressFa || gallery.address)}</span>
+                  <span className="truncate text-stone-500 dark:text-stone-400">
+                    {formatGalleryAddress(currentSpace.addressFa || currentSpace.address || gallery.addressFa || gallery.address)}
+                  </span>
                 </div>
               </div>
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
-              {gallery.isInTrafficZone && (
+              {(currentSpace.isInTrafficZone || gallery.isInTrafficZone) && (
                 <span className="bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 text-[10px] font-bold px-2 py-0.5 rounded-full hidden sm:inline-flex items-center gap-1">
                   <AlertTriangle className="w-3 h-3" />
                   <span>طرح ترافیک</span>
@@ -146,6 +184,75 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
               </button>
             </div>
           </div>
+
+          {/* Space / Hall Switcher Tabs for venues with multiple spaces/floors */}
+          {allSpaces.length > 1 && (
+            <div className="px-4 py-2 bg-[#edf3fb] dark:bg-[#10141e] border-b border-[#E1E1E1] dark:border-stone-800 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0">
+              <span className="text-[11px] font-bold text-stone-600 dark:text-stone-300 shrink-0">
+                سالن‌ها و فضاها ({toPersianDigits(allSpaces.length)}):
+              </span>
+              <div className="flex items-center gap-1.5 flex-nowrap">
+                {allSpaces.map((space, idx) => {
+                  const isSpaceActive = Boolean(space.activeExhibition || space.posterImage);
+                  const isSelectedTab = idx === selectedSpaceIndex;
+                  const rawName = space.nameFa || space.name;
+                  let tabLabel = '';
+                  if (rawName.includes('(')) {
+                    const match = rawName.match(/\(([^)]+)\)/);
+                    tabLabel = match ? match[1] : rawName;
+                  } else if (space.activeExhibition?.title) {
+                    tabLabel = `سالن ${toPersianDigits(idx + 1)}: ${space.activeExhibition.title}`;
+                  } else {
+                    tabLabel = `سالن ${toPersianDigits(idx + 1)}`;
+                  }
+
+                  return (
+                    <button
+                      key={space.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedSpaceIndex(idx);
+                        setPosterLoadError(false);
+                      }}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
+                        isSelectedTab
+                          ? 'bg-[#3D5B99] text-white shadow-xs'
+                          : 'bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-[#E1E1E1] dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-700'
+                      }`}
+                    >
+                      <span
+                        className={`w-2 h-2 rounded-full ${
+                          isSpaceActive ? 'bg-[#F76B1C]' : 'bg-stone-300 dark:bg-stone-600'
+                        }`}
+                      />
+                      <span className="truncate max-w-[150px]">{tabLabel}</span>
+                      {isSpaceActive ? (
+                        <span
+                          className={`text-[9px] px-1.5 py-0.2 rounded-md ${
+                            isSelectedTab
+                              ? 'bg-white/20 text-white'
+                              : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                          }`}
+                        >
+                          فعال
+                        </span>
+                      ) : (
+                        <span
+                          className={`text-[9px] px-1.5 py-0.2 rounded-md ${
+                            isSelectedTab
+                              ? 'bg-white/20 text-white'
+                              : 'bg-stone-200 text-stone-600 dark:bg-stone-700 dark:text-stone-400'
+                          }`}
+                        >
+                          بین دو نمایشگاه
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* 2. Scrollable Body: Content is FRONT AND CENTER! */}
           <div className="p-4 sm:p-5 overflow-y-auto space-y-4 text-xs text-stone-700 dark:text-stone-300 flex-1">
@@ -311,7 +418,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
               </span>
               <div className="grid grid-cols-4 gap-2 text-xs">
                 <a
-                  href={buildNeshanUrl(gallery)}
+                  href={buildNeshanUrl(currentSpace)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="clay-button clay-base py-2 px-1 flex flex-col items-center justify-center gap-1 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
@@ -321,7 +428,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                 </a>
 
                 <a
-                  href={buildBaladUrl(gallery)}
+                  href={buildBaladUrl(currentSpace)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="clay-button clay-base py-2 px-1 flex flex-col items-center justify-center gap-1 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
@@ -331,7 +438,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                 </a>
 
                 <a
-                  href={buildGoogleMapsUrl([gallery])}
+                  href={buildGoogleMapsUrl([currentSpace])}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="clay-button clay-base py-2 px-1 flex flex-col items-center justify-center gap-1 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
@@ -341,7 +448,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                 </a>
 
                 <a
-                  href={buildWazeUrl(gallery)}
+                  href={buildWazeUrl(currentSpace)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="clay-button clay-base py-2 px-1 flex flex-col items-center justify-center gap-1 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
@@ -356,9 +463,9 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
           {/* 4. Docked Action Footer: Clean & Focused on Tour Actions */}
           <div className="p-3.5 sm:p-4 bg-[#f6f9fc] dark:bg-[#131722] border-t border-[#E1E1E1] dark:border-stone-800 space-y-2 shrink-0">
             {/* Start Point Button / Indicator (if in tour) */}
-            {isSelected && (
+            {isVenueSelected && (
               <div>
-                {isStartGallery ? (
+                {isVenueStart ? (
                   <div className="text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 py-1.5 px-3 rounded-xl border border-emerald-300 dark:border-emerald-700/60 flex items-center justify-center gap-1.5 shadow-xs">
                     <span>🟢</span>
                     <span>مبدأ گشت (نقطه شروع مسیر)</span>
@@ -366,7 +473,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                 ) : onSetStart ? (
                   <button
                     type="button"
-                    onClick={() => onSetStart(gallery.id)}
+                    onClick={() => onSetStart(currentSpace.id)}
                     className="w-full clay-button clay-base text-xs font-bold py-2 px-3 text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] flex items-center justify-center gap-1.5 transition-all shadow-xs rounded-xl"
                   >
                     <MapPin className="w-3.5 h-3.5 text-[#F76B1C]" />
@@ -379,14 +486,14 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
             {/* Primary Action Button: Add to / Remove from Tour */}
             <button
               type="button"
-              onClick={() => onToggle(gallery)}
+              onClick={() => onToggle(currentSpace)}
               className={`w-full clay-button py-2.5 px-4 text-xs font-bold flex items-center justify-center gap-2 transition-all active:scale-95 rounded-xl ${
-                isSelected
+                isVenueSelected
                   ? 'clay-base text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900 shadow-xs'
                   : 'clay-orange text-white shadow-md hover:brightness-105'
               }`}
             >
-              {isSelected ? (
+              {isVenueSelected ? (
                 <>
                   <Check className="w-4 h-4 text-rose-600 dark:text-rose-400" />
                   <span>در برنامه گشت شما قرار دارد (کلیک برای حذف)</span>

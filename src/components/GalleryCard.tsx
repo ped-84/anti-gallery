@@ -44,6 +44,12 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
   const activeExhibition = gallery.activeExhibition || (gallery.exhibitions && gallery.exhibitions[0]) || null;
   const themeClass = THEME_CLASSES[colorTheme];
 
+  const activeSiblingCount = (gallery.siblingSpaces || []).filter(
+    (s) => Boolean(s.activeExhibition || s.posterImage)
+  ).length;
+  const totalActiveAtVenue =
+    (Boolean(gallery.activeExhibition || gallery.posterImage) ? 1 : 0) + activeSiblingCount;
+
   const [useLocalFallback, setUseLocalFallback] = useState(false);
   const [posterError, setPosterError] = useState(false);
   const [logoError, setLogoError] = useState(false);
@@ -154,6 +160,12 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
               <span className="mx-1 text-stone-300 dark:text-stone-600">·</span>
               <span className="text-stone-500 dark:text-stone-400">{formatGalleryAddress(gallery.addressFa || gallery.address)}</span>
             </div>
+            {totalActiveAtVenue > 1 && (
+              <div className="mt-1 flex items-center gap-1 text-[10px] font-bold text-[#F76B1C] bg-[#F76B1C]/10 border border-[#F76B1C]/25 px-2 py-0.5 rounded-md w-fit">
+                <Sparkles className="w-2.5 h-2.5 shrink-0" />
+                <span>{toPersianDigits(totalActiveAtVenue)} نمایشگاه همزمان</span>
+              </div>
+            )}
           </div>
 
           {/* Order badge for cards without poster */}

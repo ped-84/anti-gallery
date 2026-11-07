@@ -382,17 +382,45 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       hasValidBounds = true;
     }
 
-    // 5.3 Render Gallery Markers
-    galleries.forEach((gallery) => {
+    // 5.3 Render Gallery Markers (Aggregating co-located spaces into single venue markers)
+    const mapKey = (lat: number, lng: number) => `${lat.toFixed(4)},${lng.toFixed(4)}`;
+    const venueMap = new Map<string, Gallery[]>();
+    galleries.forEach((g) => {
+      const key = mapKey(g.lat, g.lng);
+      if (!venueMap.has(key)) venueMap.set(key, []);
+      venueMap.get(key)!.push(g);
+    });
+
+    venueMap.forEach((venueGalleries) => {
+      // Find the representative gallery for this venue marker:
+      // Priority 1: Has route order
+      // Priority 2: Is selected
+      // Priority 3: Has active exhibition / poster
+      // Priority 4: First entry
+      const orderedSpace = venueGalleries.find((g) => orderIndexMap.has(g.id));
+      const selectedSpace = venueGalleries.find((g) => selectedIds.has(g.id));
+      const activeSpace = venueGalleries.find((g) => Boolean(g.activeExhibition || g.posterImage));
+      const representative = orderedSpace || selectedSpace || activeSpace || venueGalleries[0];
+
+      const siblings = venueGalleries.filter((g) => g.id !== representative.id);
+      const gallery: Gallery = {
+        ...representative,
+        siblingSpaces: siblings.length > 0 ? siblings : representative.siblingSpaces
+      };
+
       const isSelected = selectedIds.has(gallery.id);
       const orderNum = orderIndexMap.get(gallery.id);
-      const isFocused = activeGalleryId === gallery.id;
+      const isFocused = venueGalleries.some((g) => activeGalleryId === g.id);
+
+      const activeSpacesCount = venueGalleries.filter((g) => Boolean(g.activeExhibition || g.posterImage)).length;
+      const hasExhibition = activeSpacesCount > 0;
 
       const el = document.createElement('div');
       // Keep outer marker element free of any CSS transforms so Mapbox geolocation positioning never glitches!
       el.className = 'cursor-pointer select-none';
       const galleryDisplayName = getGalleryDisplayName(gallery);
-      el.title = `${galleryDisplayName} (کلیک برای جزئیات کامل و افزودن به مسیر)`;
+      const multiBadgeText = activeSpacesCount > 1 ? ` (${toPersianDigits(activeSpacesCount)} نمایشگاه فعال همزمان)` : '';
+      el.title = `${galleryDisplayName}${multiBadgeText} (کلیک برای جزئیات کامل و افزودن به مسیر)`;
 
       // Clicking any marker opens the full darkened overlay modal directly
       el.onclick = (e) => {
@@ -412,29 +440,49 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           : 'bg-[#1e335a] text-white border-2 border-[#A3C2E4]';
 
         el.innerHTML = `
-          <div class="w-[34px] h-[34px] rounded-full flex items-center justify-center font-bold text-xs shadow-xl ${bgClass} transition-transform duration-150 ease-out hover:scale-110 active:scale-95 origin-center">
-            ${toPersianDigits(orderNum)}
+          <div class="relative">
+            <div class="w-[34px] h-[34px] rounded-full flex items-center justify-center font-bold text-xs shadow-xl ${bgClass} transition-transform duration-150 ease-out hover:scale-110 active:scale-95 origin-center">
+              ${toPersianDigits(orderNum)}
+            </div>
+            ${activeSpacesCount > 1 ? `
+              <span class="absolute -top-1.5 -right-1.5 bg-[#F76B1C] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-white shadow-xs">
+                ${toPersianDigits(activeSpacesCount)}
+              </span>
+            ` : ''}
           </div>
         `;
       } else if (isSelected) {
         el.innerHTML = `
-          <div class="w-[30px] h-[30px] rounded-full bg-[#3D5B99] text-white border-2 border-white flex items-center justify-center shadow-lg transition-transform duration-150 ease-out hover:scale-110 active:scale-95 origin-center">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
-            </svg>
+          <div class="relative">
+            <div class="w-[30px] h-[30px] rounded-full bg-[#3D5B99] text-white border-2 border-white flex items-center justify-center shadow-lg transition-transform duration-150 ease-out hover:scale-110 active:scale-95 origin-center">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            ${activeSpacesCount > 1 ? `
+              <span class="absolute -top-1.5 -right-1.5 bg-[#F76B1C] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-white shadow-xs">
+                ${toPersianDigits(activeSpacesCount)}
+              </span>
+            ` : ''}
           </div>
         `;
       } else {
-        const hasExhibition = Boolean(gallery.activeExhibition || gallery.posterImage);
         el.innerHTML = `
-          <div class="w-[22px] h-[22px] rounded-full ${
-            isFocused
-              ? 'bg-[#F76B1C] border-2 border-white ring-2 ring-[#F76B1C]'
-              : hasExhibition
-              ? 'bg-[#3D5B99] text-white border-2 border-white'
-              : 'bg-[#A3C2E4] text-[#1e335a] border border-white'
-          } flex items-center justify-center shadow-md opacity-90 transition-transform duration-150 ease-out hover:scale-125 active:scale-95 origin-center">
-            <div class="w-2 h-2 rounded-full ${hasExhibition ? 'bg-[#F76B1C]' : 'bg-white'}"></div>
+          <div class="relative">
+            <div class="w-[22px] h-[22px] rounded-full ${
+              isFocused
+                ? 'bg-[#F76B1C] border-2 border-white ring-2 ring-[#F76B1C]'
+                : hasExhibition
+                ? 'bg-[#3D5B99] text-white border-2 border-white'
+                : 'bg-[#A3C2E4] text-[#1e335a] border border-white'
+            } flex items-center justify-center shadow-md opacity-90 transition-transform duration-150 ease-out hover:scale-125 active:scale-95 origin-center">
+              <div class="w-2 h-2 rounded-full ${hasExhibition ? 'bg-[#F76B1C]' : 'bg-white'}"></div>
+            </div>
+            ${activeSpacesCount > 1 ? `
+              <span class="absolute -top-1.5 -right-1.5 bg-[#F76B1C] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-white shadow-xs">
+                ${toPersianDigits(activeSpacesCount)}
+              </span>
+            ` : ''}
           </div>
         `;
       }

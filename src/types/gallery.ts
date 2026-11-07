@@ -41,6 +41,7 @@ export interface Gallery {
   exhibitions?: Exhibition[];
   activeExhibition?: Exhibition | null;
   isInTrafficZone?: boolean;
+  siblingSpaces?: Gallery[];
 }
 
 export interface RouteLeg {

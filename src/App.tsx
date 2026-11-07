@@ -58,11 +58,30 @@ function isLegacyDefaultList(ids: any): boolean {
 
 export default function App() {
   // Filter for Tehran-only display per user instructions (non-Tehran preserved in DB for future expansion)
-  const galleries = useMemo(() => {
-    return (rawGalleriesData as Gallery[]).filter((g) => {
+  const galleries = useMemo<Gallery[]>(() => {
+    const tehranList = (rawGalleriesData as Gallery[]).filter((g) => {
       const city = (g.city || '').toLowerCase();
       const cityFa = g.cityFa || '';
       return city === 'tehran' || cityFa === 'تهران';
+    });
+
+    // Link sibling spaces / halls sharing the exact same physical building
+    const mapKey = (lat: number, lng: number) => `${lat.toFixed(4)},${lng.toFixed(4)}`;
+    const locGroups = new Map<string, Gallery[]>();
+    tehranList.forEach((g) => {
+      const key = mapKey(g.lat, g.lng);
+      if (!locGroups.has(key)) locGroups.set(key, []);
+      locGroups.get(key)!.push(g);
+    });
+
+    return tehranList.map((g): Gallery => {
+      const key = mapKey(g.lat, g.lng);
+      const coLocated = locGroups.get(key) || [];
+      const siblings = coLocated.filter((s) => s.id !== g.id);
+      return {
+        ...g,
+        siblingSpaces: siblings.length > 0 ? siblings : undefined
+      };
     });
   }, []);
 
@@ -492,11 +511,15 @@ export default function App() {
   }, []);
 
   const handleToggleGallery = (gallery: Gallery) => {
+    const siblingIds = gallery.siblingSpaces?.map((s) => s.id) || [];
+    const allVenueIds = [gallery.id, ...siblingIds];
+
     setSelectedGalleryIds((prev) => {
-      if (prev.includes(gallery.id)) {
-        if (startGalleryId === gallery.id) setStartGalleryId(null);
-        if (endGalleryId === gallery.id) setEndGalleryId(null);
-        return prev.filter((id) => id !== gallery.id);
+      const isAnySelected = prev.some((id) => allVenueIds.includes(id));
+      if (isAnySelected) {
+        if (startGalleryId && allVenueIds.includes(startGalleryId)) setStartGalleryId(null);
+        if (endGalleryId && allVenueIds.includes(endGalleryId)) setEndGalleryId(null);
+        return prev.filter((id) => !allVenueIds.includes(id));
       } else {
         return [...prev, gallery.id];
       }
@@ -521,14 +544,19 @@ export default function App() {
   }, [selectedGalleryIds, originLocation]);
 
   const handleSetStartGallery = (id: number) => {
-    setStartGalleryId(id);
-    if (endGalleryId === id) setEndGalleryId(null);
+    const venueGallery = galleries.find((g) => g.id === id);
+    const siblingIds = venueGallery?.siblingSpaces?.map((s) => s.id) || [];
+    const allVenueIds = [id, ...siblingIds];
+    const matchingSelectedId = selectedGalleryIds.find((sid) => allVenueIds.includes(sid)) || id;
+
+    setStartGalleryId(matchingSelectedId);
+    if (endGalleryId === matchingSelectedId) setEndGalleryId(null);
     runRouteOptimization(
       routeResult?.mode || 'driving',
       routeResult?.isRoundTrip ?? false,
       routeResult?.trafficCondition || 'peak',
-      id,
-      endGalleryId === id ? null : endGalleryId,
+      matchingSelectedId,
+      endGalleryId === matchingSelectedId ? null : endGalleryId,
       originLocation
     );
   };
@@ -990,8 +1018,22 @@ export default function App() {
       {/* Modals */}
       <GalleryDetailModal
         gallery={activeModalGallery}
-        isSelected={activeModalGallery ? selectedGalleryIds.includes(activeModalGallery.id) : false}
-        isStartGallery={activeModalGallery ? startGalleryId === activeModalGallery.id : false}
+        isSelected={
+          activeModalGallery
+            ? selectedGalleryIds.some(
+                (id) =>
+                  id === activeModalGallery.id ||
+                  (activeModalGallery.siblingSpaces?.some((s) => s.id === id) ?? false)
+              )
+            : false
+        }
+        selectedGalleryIds={selectedGalleryIds}
+        isStartGallery={
+          activeModalGallery
+            ? startGalleryId === activeModalGallery.id ||
+              (activeModalGallery.siblingSpaces?.some((s) => s.id === startGalleryId) ?? false)
+            : false
+        }
         onClose={() => setActiveModalGallery(null)}
         onToggle={handleToggleGallery}
         onSetStart={handleSetStartGallery}
