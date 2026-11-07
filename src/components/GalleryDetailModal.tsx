@@ -130,7 +130,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
       {/* Main Detail Modal */}
       <div
         onClick={onClose}
-        className="fixed inset-0 z-[1000] flex items-center justify-center p-3 sm:p-4 bg-stone-950/80 backdrop-blur-md animate-fade-in font-sans"
+        className="fixed inset-0 z-[1200] flex items-center justify-center p-3 sm:p-4 bg-stone-950/80 backdrop-blur-md animate-fade-in font-sans"
       >
         <div
           onClick={(e) => e.stopPropagation()}
@@ -513,7 +513,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
       {isPosterEnlarged && posterUrl && (
         <div
           onClick={() => setIsPosterEnlarged(false)}
-          className="fixed inset-0 z-[1100] flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-lg animate-fade-in font-sans cursor-zoom-out"
+          className="fixed inset-0 z-[1300] flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-lg animate-fade-in font-sans cursor-zoom-out"
         >
           <div
             onClick={(e) => e.stopPropagation()}

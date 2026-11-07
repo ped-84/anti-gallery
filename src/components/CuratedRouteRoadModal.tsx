@@ -125,11 +125,12 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
           style={
             isScaled
               ? {
-                  transform: `scale(${modalScale})`,
+                  width: '560px',
+                  transform: `translateX(-50%) scale(${modalScale})`,
                   transformOrigin: 'top center',
                   position: 'absolute',
                   top: 0,
-                  left: 0
+                  left: '50%'
                 }
               : undefined
           }
@@ -172,15 +173,15 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
               {CURATED_ROAD_ROUTES.map((r, idx) => {
                 const isSelected = idx === selectedRouteIdx;
                 const fill = r.tab || safeFillForWhiteText(r.color);
-                const tabBg = mix(r.color, '#ffffff', 0.88);
-                const tabInk = mix(r.color, '#000000', 0.42);
+                const tabBg = isSelected ? fill : mix(r.color, '#ffffff', 0.88);
+                const tabInk = isSelected ? (r.tabInk || '#ffffff') : mix(r.color, '#000000', 0.45);
                 const tabGlow = mix(r.color, '#ffffff', 0.4) + '66';
-                const tabBorder = mix(fill, '#000000', 0.15);
+                const tabBorder = isSelected ? mix(fill, '#000000', 0.15) : mix(r.color, '#ffffff', 0.65);
 
                 const style: React.CSSProperties = {
                   '--tab-bg': tabBg,
                   '--tab-ink': tabInk,
-                  '--tab-dot': r.color,
+                  '--tab-dot': isSelected ? (r.tabInk || '#ffffff') : r.color,
                   '--tab-fill': fill,
                   '--tab-sel-ink': r.tabInk || '#ffffff',
                   '--tab-border': tabBorder,
@@ -423,7 +424,11 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                 onSelectRoute(currentRoute.galleryIds);
                 onClose();
               }}
-              className="clay-button clay-orange px-5 py-2.5 text-xs font-bold text-white flex items-center gap-2 rounded-xl shadow-md hover:brightness-105 active:scale-95 transition-all shrink-0 cursor-pointer"
+              style={{
+                backgroundColor: road,
+                color: '#ffffff'
+              }}
+              className="clay-button px-5 py-2.5 text-xs font-bold text-white flex items-center gap-2 rounded-xl shadow-md hover:brightness-105 active:scale-95 transition-all shrink-0 cursor-pointer"
             >
               <Navigation className="w-4 h-4 stroke-[2.2]" />
               <span>شروع این گشت</span>

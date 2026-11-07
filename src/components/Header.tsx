@@ -12,7 +12,7 @@ interface HeaderProps {
   hasCustomOrigin?: boolean;
 }
 
-export const APP_VERSION = 'بتا V 1.071';
+export const APP_VERSION = 'بتا V 1.072';
 
 export const Header: React.FC<HeaderProps> = ({
   selectedCount,
@@ -87,17 +87,17 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </button>
 
-          {/* Primary Action Button */}
+          {/* Primary Action Button: آبی کمرنگ (Light Blue) */}
           <button
             onClick={onOptimizeRoute}
             disabled={!canOptimize || isOptimizing}
             className={`clay-button px-3 sm:px-5 py-2 sm:py-2.5 text-xs font-bold flex items-center gap-1.5 sm:gap-2 transition-all active:scale-95 shrink-0 rounded-xl cursor-pointer ${
               canOptimize
-                ? 'clay-orange text-white shadow-md hover:brightness-105'
+                ? 'clay-softblue text-[#10335e] dark:text-[#cde0f3] shadow-sm hover:brightness-105'
                 : 'clay-base text-stone-400 dark:text-stone-600 cursor-not-allowed opacity-75'
             }`}
           >
-            <Navigation className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isOptimizing ? 'animate-spin' : ''}`} />
+            <Navigation className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#10335e] dark:text-[#cde0f3] stroke-[2.2] ${isOptimizing ? 'animate-spin' : ''}`} />
             {/* Desktop label */}
             <span className="hidden sm:inline">
               {isOptimizing

@@ -1006,6 +1006,20 @@ export default function App() {
       </footer>
 
       {/* Modals */}
+      <CuratedRouteRoadModal
+        isOpen={isCuratedModalOpen}
+        onClose={() => setIsCuratedModalOpen(false)}
+        onSelectRoute={(ids) => {
+          setSelectedGalleryIds(ids);
+          setStartGalleryId(ids[0] || null);
+          setEndGalleryId(ids[ids.length - 1] || null);
+          setMobileActiveTab('map');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        onSelectGalleryDetails={(g) => setActiveModalGallery(g)}
+        allGalleries={galleries}
+      />
+
       <GalleryDetailModal
         gallery={activeModalGallery}
         isSelected={
@@ -1029,19 +1043,6 @@ export default function App() {
         onSetStart={handleSetStartGallery}
       />
 
-      <CuratedRouteRoadModal
-        isOpen={isCuratedModalOpen}
-        onClose={() => setIsCuratedModalOpen(false)}
-        onSelectRoute={(ids) => {
-          setSelectedGalleryIds(ids);
-          setStartGalleryId(ids[0] || null);
-          setEndGalleryId(ids[ids.length - 1] || null);
-          setMobileActiveTab('map');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        onSelectGalleryDetails={(g) => setActiveModalGallery(g)}
-        allGalleries={galleries}
-      />
     </div>
   );
 }
