@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Gallery } from '../types/gallery';
-import { toPersianDigits, getGalleryDisplayName, getExhibitionMedium, formatGalleryAddress } from '../utils/persianUtils';
+import { toPersianDigits, getGalleryDisplayName, getExhibitionMedium, formatGalleryAddress, formatArtistName } from '../utils/persianUtils';
 import {
   Plus,
   Check,
@@ -226,18 +226,18 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
                     }}
                     title={activeExhibition.artist}
                   >
-                    {activeExhibition.artist.trim() === 'نمایشگاه گروهی' ? 'گروهی از هنرمندان' : activeExhibition.artist}
+                    {formatArtistName(activeExhibition.artist)}
                   </span>
                 </div>
               )}
 
               {/* Subject / Medium Tag */}
-              <div className="flex items-center justify-between gap-2 text-sm sm:text-base">
-                <div className="flex items-center gap-2 text-stone-500 dark:text-stone-400 font-medium text-sm sm:text-base">
+              <div className="flex items-center justify-between gap-2 text-base">
+                <div className="flex items-center gap-2 text-stone-600 dark:text-stone-300 font-bold text-sm sm:text-base">
                   <Palette className="w-4 h-4 text-[#F76B1C] shrink-0" />
                   <span>موضوع:</span>
                 </div>
-                <span className="px-3 py-1 rounded-xl text-xs sm:text-sm font-bold bg-[#edf3ff] dark:bg-blue-950/50 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/60 dark:border-blue-800/50 shadow-2xs">
+                <span className="px-3.5 py-1 rounded-xl text-sm font-black bg-[#edf3ff] dark:bg-blue-950/50 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/60 dark:border-blue-800/50 shadow-2xs">
                   {getExhibitionMedium(activeExhibition.title, activeExhibition.artist, activeExhibition.type)}
                 </span>
               </div>

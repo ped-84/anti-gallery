@@ -268,6 +268,18 @@ export function getGalleryDisplayName(gallery?: { nameFa?: string; name?: string
   return 'گالری هنر';
 }
 
+/**
+ * Clean and format artist names (trims trailing slashes, formats group exhibitions cleanly).
+ */
+export function formatArtistName(artist?: string | null): string {
+  if (!artist) return '';
+  let cleaned = artist.trim().replace(/[/\\]+$/, '').trim();
+  if (cleaned === 'نمایشگاه گروهی' || cleaned.startsWith('نمایشگاه گروهی')) {
+    return cleaned.replace(/^نمایشگاه گروهی(\s+نقاشی|\s+عکس|\s+مجسمه|\s+هنرهای تجسمی)?/g, 'گروهی از هنرمندان$1');
+  }
+  return cleaned;
+}
+
 const PERSIAN_MONTHS: Record<string, number> = {
   'فروردین': 1,
   'اردیبهشت': 2,
