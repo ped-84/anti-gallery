@@ -22,6 +22,7 @@ import { InteractiveMap } from './components/InteractiveMap';
 import { RouteSummaryPanel } from './components/RouteSummaryPanel';
 import { GalleryDetailModal } from './components/GalleryDetailModal';
 import { CuratedRouteRoadModal } from './components/CuratedRouteRoadModal';
+import { PwaInstallPrompt } from './components/PwaInstallPrompt';
 import { getTourColorTheme } from './utils/roadLayout';
 import { ClayDropdown } from './components/ClayDropdown';
 import {
@@ -135,6 +136,13 @@ export default function App() {
   const [isCuratedModalOpen, setIsCuratedModalOpen] = useState<boolean>(false);
   const [highlightedGalleryId, setHighlightedGalleryId] = useState<number | null>(null);
   const [activeCuratedRouteId, setActiveCuratedRouteId] = useState<string | null>(null);
+  const [pwaInstallTrigger, setPwaInstallTrigger] = useState<number>(0);
+
+  // Check if running in standalone mode (already installed PWA)
+  const isStandalone =
+    typeof window !== 'undefined' &&
+    (window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as any).standalone === true);
 
   // Background Auto-Sync State
   const [syncStatus, setSyncStatus] = useState<{
@@ -678,6 +686,8 @@ export default function App() {
         isOptimizing={isOptimizing}
         isDarkMode={isDarkMode}
         onToggleDarkMode={toggleDarkMode}
+        onTriggerInstall={() => setPwaInstallTrigger((prev) => prev + 1)}
+        isStandalone={isStandalone}
       />
 
       {/* Operational Ribbon */}
@@ -1100,6 +1110,9 @@ export default function App() {
         onToggle={handleToggleGallery}
         onSetStart={handleSetStartGallery}
       />
+
+      {/* PWA Installation Prompt (Android / iOS / Desktop) */}
+      <PwaInstallPrompt externalTrigger={pwaInstallTrigger} />
 
     </div>
   );

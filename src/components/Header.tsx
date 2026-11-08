@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, Sparkles, Navigation, Sun, Moon } from 'lucide-react';
+import { Compass, Sparkles, Navigation, Sun, Moon, Download } from 'lucide-react';
 import { toPersianDigits } from '../utils/persianUtils';
 
 interface HeaderProps {
@@ -10,9 +10,11 @@ interface HeaderProps {
   isDarkMode: boolean;
   onToggleDarkMode: () => void;
   hasCustomOrigin?: boolean;
+  onTriggerInstall?: () => void;
+  isStandalone?: boolean;
 }
 
-export const APP_VERSION = 'بتا V 1.077';
+export const APP_VERSION = 'بتا V 1.078';
 
 export const Header: React.FC<HeaderProps> = ({
   selectedCount,
@@ -21,7 +23,9 @@ export const Header: React.FC<HeaderProps> = ({
   isOptimizing,
   isDarkMode,
   onToggleDarkMode,
-  hasCustomOrigin = false
+  hasCustomOrigin = false,
+  onTriggerInstall,
+  isStandalone = false
 }) => {
   const canOptimize = hasCustomOrigin ? selectedCount >= 1 : selectedCount >= 2;
   const minRequired = hasCustomOrigin ? 1 : 2;
@@ -73,6 +77,18 @@ export const Header: React.FC<HeaderProps> = ({
             <Sparkles className="w-3.5 h-3.5 text-white stroke-[2.2] shrink-0" />
             <span>گشت‌ها</span>
           </button>
+
+          {/* PWA Install Button (Hidden if already in standalone app mode) */}
+          {!isStandalone && onTriggerInstall && (
+            <button
+              onClick={onTriggerInstall}
+              title="نصب اپلیکیشن روی گوشی یا رایانه (PWA)"
+              className="clay-button clay-base w-9 h-9 sm:w-auto sm:px-3 sm:py-2.5 flex items-center justify-center gap-1.5 text-xs font-bold text-[#3D5B99] dark:text-[#A3C2E4] hover:scale-105 active:scale-95 transition-all shrink-0 cursor-pointer rounded-xl"
+            >
+              <Download className="w-4 h-4 sm:w-3.5 sm:h-3.5 stroke-[2.2]" />
+              <span className="hidden sm:inline">نصب اپ</span>
+            </button>
+          )}
 
           {/* Dark Mode Switch */}
           <button
