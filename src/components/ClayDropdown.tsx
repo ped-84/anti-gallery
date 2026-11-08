@@ -74,7 +74,7 @@ export const ClayDropdown: React.FC<ClayDropdownProps> = ({
   return (
     <div ref={containerRef} className={`relative inline-block ${className}`}>
       {label && (
-        <label className="block text-[11px] font-bold text-stone-600 dark:text-stone-400 mb-1">
+        <label className="block text-xs sm:text-sm font-bold text-stone-600 dark:text-stone-400 mb-1">
           {label}
         </label>
       )}
@@ -99,7 +99,7 @@ export const ClayDropdown: React.FC<ClayDropdownProps> = ({
           {selectedOption?.badge && (
             <span
               className={`rounded-md bg-[#3D5B99]/15 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0 font-medium ${
-                isSmall ? 'text-[10px] px-1.5 py-0.5' : 'text-[11px] px-2 py-0.5'
+                isSmall ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'
               }`}
             >
               {selectedOption.badge}

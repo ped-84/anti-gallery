@@ -107,9 +107,9 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
   if (isInstalled) {
     if (!showSuccessToast) return null;
     return (
-      <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 bg-emerald-600 text-white px-4 py-2.5 rounded-2xl shadow-xl flex items-center gap-2 text-xs font-bold animate-in fade-in slide-in-from-bottom duration-300">
+      <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 bg-emerald-600 text-white px-4 py-2.5 rounded-2xl shadow-xl flex items-center gap-2 text-xs sm:text-sm font-bold animate-in fade-in slide-in-from-bottom duration-300">
         <CheckCircle2 className="w-4 h-4" />
-        <span>اپلیکیشن گالری‌گردی با موفقیت نصب شد!</span>
+        <span>اپلیکیشن آرت‌گشت با موفقیت نصب شد!</span>
       </div>
     );
   }
@@ -127,10 +127,10 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
                   <Compass className="w-6 h-6 stroke-[2.2]" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-black text-[#1c2944] dark:text-white leading-tight">
-                    نصب اپلیکیشن گالری‌گردی
+                  <h3 className="text-sm sm:text-base font-black text-[#1c2944] dark:text-white leading-tight">
+                    نصب اپلیکیشن آرت‌گشت
                   </h3>
-                  <p className="text-[11px] text-stone-600 dark:text-stone-300 mt-1 leading-relaxed font-medium">
+                  <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 mt-1 leading-relaxed font-medium">
                     برای دسترسی سریع، تمام‌صفحه و بدون نوار آدرس، اپلیکیشن را روی گوشی خود نصب کنید.
                   </p>
                 </div>
@@ -150,14 +150,14 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
               <button
                 type="button"
                 onClick={dismissBanner}
-                className="px-3 py-2 text-xs font-bold text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 rounded-xl transition-colors cursor-pointer"
+                className="px-3.5 py-2 text-xs sm:text-sm font-bold text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 rounded-xl transition-colors cursor-pointer"
               >
                 بعداً
               </button>
               <button
                 type="button"
                 onClick={triggerInstall}
-                className="clay-button clay-orange text-white px-4 py-2 text-xs font-bold flex items-center gap-1.5 rounded-xl shadow-md hover:brightness-105 active:scale-95 transition-all cursor-pointer"
+                className="clay-button clay-orange text-white px-4 py-2.5 text-xs sm:text-sm font-bold flex items-center gap-1.5 rounded-xl shadow-md hover:brightness-105 active:scale-95 transition-all cursor-pointer"
               >
                 <Download className="w-4 h-4 stroke-[2.2]" />
                 <span>نصب اپلیکیشن</span>
@@ -179,7 +179,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
                 <div className="w-9 h-9 clay-card clay-darkblue flex items-center justify-center text-white rounded-xl">
                   <Compass className="w-5 h-5 stroke-[2.2]" />
                 </div>
-                <h3 className="text-sm font-black text-[#1c2944] dark:text-white">
+                <h3 className="text-sm sm:text-base font-black text-[#1c2944] dark:text-white">
                   نصب روی آیفون (iOS)
                 </h3>
               </div>
@@ -191,15 +191,15 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
               </button>
             </div>
 
-            <div className="space-y-3 text-xs text-stone-700 dark:text-stone-300 leading-relaxed font-medium">
+            <div className="space-y-3 text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed font-medium">
               <div className="flex items-start gap-2.5 p-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700">
-                <div className="w-6 h-6 rounded-lg bg-[#3D5B99]/15 text-[#3D5B99] dark:text-[#A3C2E4] flex items-center justify-center shrink-0 font-bold">
+                <div className="w-6 h-6 rounded-lg bg-[#3D5B99]/15 text-[#3D5B99] dark:text-[#A3C2E4] flex items-center justify-center shrink-0 font-bold text-xs sm:text-sm">
                   ۱
                 </div>
                 <div className="flex items-center gap-1.5 flex-wrap">
                   <span>در نوار پایین مرورگر سافاری روی آیکون</span>
-                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-200 dark:bg-stone-700 font-bold text-[11px]">
-                    <Share2 className="w-3 h-3" />
+                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-200 dark:bg-stone-700 font-bold text-xs">
+                    <Share2 className="w-3.5 h-3.5" />
                     Share
                   </span>
                   <span>بزنید.</span>
@@ -207,13 +207,13 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
               </div>
 
               <div className="flex items-start gap-2.5 p-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700">
-                <div className="w-6 h-6 rounded-lg bg-[#F76B1C]/15 text-[#F76B1C] flex items-center justify-center shrink-0 font-bold">
+                <div className="w-6 h-6 rounded-lg bg-[#F76B1C]/15 text-[#F76B1C] flex items-center justify-center shrink-0 font-bold text-xs sm:text-sm">
                   ۲
                 </div>
                 <div className="flex items-center gap-1.5 flex-wrap">
                   <span>به پایین اسکرول کرده و گزینه</span>
-                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-200 dark:bg-stone-700 font-bold text-[11px]">
-                    <PlusSquare className="w-3 h-3" />
+                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-200 dark:bg-stone-700 font-bold text-xs">
+                    <PlusSquare className="w-3.5 h-3.5" />
                     Add to Home Screen
                   </span>
                   <span>را انتخاب کنید.</span>
@@ -224,7 +224,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
             <button
               type="button"
               onClick={() => setShowIosModal(false)}
-              className="clay-button clay-base w-full py-2.5 text-xs font-bold text-[#3D5B99] dark:text-[#A3C2E4] rounded-xl hover:brightness-105 active:scale-95 transition-all mt-1"
+              className="clay-button clay-base w-full py-2.5 text-xs sm:text-sm font-bold text-[#3D5B99] dark:text-[#A3C2E4] rounded-xl hover:brightness-105 active:scale-95 transition-all mt-1"
             >
               متوجه شدم
             </button>

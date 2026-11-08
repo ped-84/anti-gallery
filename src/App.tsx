@@ -189,17 +189,25 @@ export default function App() {
   const toggleDarkMode = () => {
     setIsDarkMode((prev) => {
       const next = !prev;
-      if (next) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
       try {
         localStorage.setItem(STORAGE_KEYS.DARK_MODE, JSON.stringify(next));
       } catch {}
       return next;
     });
   };
+
+  // Sync dark class and mobile browser status/navigation bar theme-color
+  useEffect(() => {
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) {
+      metaTheme.setAttribute('content', isDarkMode ? '#131722' : '#f4f6fa');
+    }
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
   const selectedGalleries = useMemo(() => {
     return selectedGalleryIds
@@ -480,10 +488,6 @@ export default function App() {
 
   // Restore saved itinerary order or calculate on mount
   useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    }
-
     try {
       const savedOrdered = localStorage.getItem(STORAGE_KEYS.ORDERED_IDS);
       if (savedOrdered) {
@@ -691,11 +695,11 @@ export default function App() {
       />
 
       {/* Operational Ribbon */}
-      <div className="bg-[#e4ebf5] dark:bg-[#161a24] text-stone-700 dark:text-stone-300 text-xs py-2.5 border-b border-[#E1E1E1] dark:border-stone-800">
+      <div className="bg-[#e4ebf5] dark:bg-[#161a24] text-stone-700 dark:text-stone-300 py-2.5 sm:py-3 border-b border-[#E1E1E1] dark:border-stone-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 font-medium">
           <div className="flex items-center gap-2.5 shrink-0">
             <span className="w-2.5 h-2.5 rounded-full bg-[#F76B1C] inline-block shadow-sm shrink-0"></span>
-            <span className="text-xs">
+            <span className="text-xs sm:text-sm font-medium">
               <strong>{toPersianDigits(totalWithPosters)} نمایشگاه جاری</strong> از میان {toPersianDigits(galleries.length)} نگارخانه فعال در تهران
             </span>
           </div>
@@ -706,7 +710,7 @@ export default function App() {
       <div className="lg:hidden sticky top-18 z-30 bg-[#f3f5f8]/95 dark:bg-[#12151e]/95 backdrop-blur-md px-4 py-2 border-b border-[#E1E1E1] dark:border-stone-800 flex items-center gap-2">
         <button
           onClick={() => setMobileActiveTab('catalog')}
-          className={`flex-1 py-2 px-3 text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition-all ${
+          className={`flex-1 py-2 px-3 text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-all ${
             mobileActiveTab === 'catalog'
               ? 'clay-darkblue text-white shadow-sm'
               : 'clay-base text-stone-600 dark:text-stone-300'
@@ -717,7 +721,7 @@ export default function App() {
         </button>
         <button
           onClick={() => setMobileActiveTab('map')}
-          className={`flex-1 py-2 px-3 text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition-all ${
+          className={`flex-1 py-2 px-3 text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-all ${
             mobileActiveTab === 'map'
               ? 'clay-orange text-white shadow-sm'
               : 'clay-base text-stone-600 dark:text-stone-300'
@@ -732,37 +736,37 @@ export default function App() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6">
         {/* Editorial Claymorphic Banner */}
         <section className="clay-card p-4 sm:p-6 bg-white dark:bg-[#181d27] border border-[#E1E1E1] dark:border-stone-800">
-          <span className="text-[11px] font-bold text-[#F76B1C] block mb-1">
+          <span className="text-xs sm:text-sm font-bold text-[#F76B1C] block mb-1">
             برنامه‌ریزی تور گالری‌های هنری و نمایشگاه‌های جاری
           </span>
           <h1 className="text-xl sm:text-3xl font-bold text-[#1d2d4c] dark:text-white tracking-tight leading-snug">
-            بهترین مسیر گالری‌گردی در تهران
+            بهترین مسیر آرت‌گشت در تهران
           </h1>
-          <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 mt-2 leading-relaxed">
+          <p className="text-sm sm:text-base text-stone-600 dark:text-stone-300 mt-2 leading-relaxed">
             پوسترهای مربعی نمایشگاه‌ها، تاریخ افتتاحیه و نام هنرمندان را بررسی کرده و مقصدهای بازدید خود را انتخاب کنید تا کوتاه‌ترین مسیر با احتساب ترافیک تهران محاسبه شود.
           </p>
 
           {/* Quick Tour Presets */}
           <div className="mt-4 pt-3.5 border-t border-[#E1E1E1] dark:border-stone-800 flex items-center gap-2 flex-wrap">
             {/* Mode Switcher Pill */}
-            <div className="flex items-center p-0.5 rounded-xl bg-stone-200/80 dark:bg-stone-800/80 text-[11px] font-bold shrink-0 ml-1">
+            <div className="flex items-center p-0.5 rounded-xl bg-stone-200/80 dark:bg-stone-800/80 text-xs sm:text-[13px] font-bold shrink-0 ml-1">
               <button
                 type="button"
                 onClick={() => setCuratedTourMode('openings-only')}
-                className={`px-2.5 py-1 rounded-lg transition-all flex items-center gap-1 ${
+                className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
                   curatedTourMode === 'openings-only'
                     ? 'bg-white dark:bg-[#1f2636] text-[#F76B1C] shadow-xs'
                     : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
                 }`}
                 title="فقط تورهای گالری‌هایی که این هفته افتتاحیه دارند"
               >
-                <Flame className="w-3 h-3 text-[#F76B1C]" />
+                <Flame className="w-3.5 h-3.5 text-[#F76B1C]" />
                 <span>فقط افتتاحیه</span>
               </button>
               <button
                 type="button"
                 onClick={() => setCuratedTourMode('all-active')}
-                className={`px-2.5 py-1 rounded-lg transition-all flex items-center gap-1 ${
+                className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
                   curatedTourMode === 'all-active'
                     ? 'bg-white dark:bg-[#1f2636] text-[#1856C7] dark:text-[#93c5fd] shadow-xs'
                     : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
@@ -809,7 +813,7 @@ export default function App() {
                           borderColor: theme.border
                         }
                   }
-                  className="clay-button text-xs px-3 py-1.5 font-bold transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5 rounded-full border outline-none focus:outline-none cursor-pointer"
+                  className="clay-button text-xs sm:text-sm px-3.5 py-1.5 font-bold transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5 rounded-full border outline-none focus:outline-none cursor-pointer"
                   title={`${tour.titleFa} (${toPersianDigits(tour.galleryIds.length)} گالری - فاصله ایستگاه‌ها زیر ${toPersianDigits(tour.maxHopKm || 1.5)} کم)`}
                 >
                   <span
@@ -836,7 +840,7 @@ export default function App() {
                       .replace('مثلث ', '')}
                   </span>
                   <span
-                    className="text-[10px] font-mono"
+                    className="text-xs font-mono"
                     style={{ opacity: isSelected ? 0.9 : 0.7 }}
                   >
                     ({toPersianDigits(tour.galleryIds.length)})
@@ -905,7 +909,7 @@ export default function App() {
                     <Flame className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${galleryFilterTab === 'this-week' ? 'text-[#F76B1C]' : 'text-amber-500'}`} />
                     <span className="hidden sm:inline">افتتاحیه‌های این هفته</span>
                     <span className="sm:hidden">این هفته</span>
-                    <span className="text-[11px] font-mono opacity-85">({toPersianDigits(totalThisWeek)})</span>
+                    <span className="text-xs font-mono opacity-85">({toPersianDigits(totalThisWeek)})</span>
                   </button>
                   <button
                     type="button"
@@ -919,7 +923,7 @@ export default function App() {
                     <Palette className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                     <span className="hidden sm:inline">نمایشگاه‌های جاری</span>
                     <span className="sm:hidden">جاری</span>
-                    <span className="text-[11px] font-mono opacity-85">({toPersianDigits(totalWithPosters)})</span>
+                    <span className="text-xs font-mono opacity-85">({toPersianDigits(totalWithPosters)})</span>
                   </button>
                   <button
                     type="button"
@@ -933,7 +937,7 @@ export default function App() {
                     <Grid className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                     <span className="hidden sm:inline">همه نگارخانه‌ها</span>
                     <span className="sm:hidden">همه</span>
-                    <span className="text-[11px] font-mono opacity-85">({toPersianDigits(galleries.length)})</span>
+                    <span className="text-xs font-mono opacity-85">({toPersianDigits(galleries.length)})</span>
                   </button>
                 </div>
 
@@ -967,7 +971,7 @@ export default function App() {
             </div>
 
             {/* Catalog Header Info */}
-            <div className="flex items-center justify-between text-xs text-[#3D5B99] dark:text-[#A3C2E4] px-1 font-bold">
+            <div className="flex items-center justify-between text-xs sm:text-sm text-[#3D5B99] dark:text-[#A3C2E4] px-1 font-bold">
               <span>
                 نمایش <strong>{toPersianDigits(filteredGalleries.length)}</strong> نگارخانه
               </span>
@@ -1064,7 +1068,7 @@ export default function App() {
           <div className="flex items-center gap-2">
             <Compass className="w-4 h-4 text-[#F76B1C]" />
             <span className="font-bold text-[#1d2d4c] dark:text-white text-sm">
-              سامانه گالری‌گردی
+              سامانه آرت‌گشت
             </span>
             <span className="text-stone-400">·</span>
             <span>مسیریاب هوشمند نگارخانه‌ها و رویدادهای هنرهای تجسمی تهران</span>

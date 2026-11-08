@@ -1,21 +1,21 @@
-# گالری‌گردی (Anti-Gallery) — Master Project Handoff & Architecture Brief
+# آرت‌گشت (Anti-Gallery) — Master Project Handoff & Architecture Brief
 
 > **MANDATORY INSTRUCTION FOR AGENTS READING THIS FILE:**
 > 1. **QUALITY IS PARAMOUNT:** Never ever sacrifice quality, correctness, visual smoothness, or robust error-free code for speed or quick answering. The user values a production-grade, bug-free, beautifully crafted app above everything else. Speed should come from eliminating redundant speculative roundtrips, NOT by cutting corners, skipping checks, or rushing incomplete work.
-> 2. **VERSION INCREMENT RULE:** Every single change request MUST increment `APP_VERSION` in `src/components/Header.tsx` by `0.001` (Current: `بتا V 1.078`, Next: `بتا V 1.079`).
+> 2. **VERSION INCREMENT RULE:** Every single change request MUST increment `APP_VERSION` in `src/components/Header.tsx` by `0.001` (Current: `بتا V 1.079`, Next: `بتا V 1.080`).
 > 3. **TEHRAN-FIRST SCOPE:** Only display Tehran galleries to the user for now. Non-Tehran galleries (Shiraz, Isfahan, Karaj, Mashhad, etc.) are preserved in `src/data/galleries.json` but filtered out in `src/App.tsx`. Never delete them.
 
 ---
 
 ## 1. Project Identity & Production URLs
-* **Brand Name:** گالری‌گردی (Anti-Gallery / Gallery Gardi)
+* **Brand Name:** آرت‌گشت (Anti-Gallery / Art Gasht)
 * **Target Audience:** Art enthusiasts, gallery-goers, curators, and tourists exploring art exhibitions in Tehran.
 * **Live GitHub Pages URL:** [https://ped-84.github.io/anti-gallery/](https://ped-84.github.io/anti-gallery/)
 * **Git Repository:** `https://github.com/ped-84/anti-gallery.git`
   * Branch `main`: Source code repository.
   * Branch `gh-pages`: Production static site build (serves `dist/`).
-* **Current Version:** `بتا V 1.078`
-* **Next Version:** `بتا V 1.079`
+* **Current Version:** `بتا V 1.079`
+* **Next Version:** `بتا V 1.080`
 
 ---
 

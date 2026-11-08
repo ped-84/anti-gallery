@@ -31,7 +31,7 @@ export const TRAFFIC_MODELS: Record<TrafficCondition, TrafficConfig> = {
     label: 'اوج شلوغی عصر (۱۶ تا ۲۰:۳۰)',
     shortLabel: 'عصر (شلوغ)',
     multiplier: 1.55,
-    description: 'همزمانی با ساعت اوج ترافیک و گالری‌گردی در معابر پرتردد تهران'
+    description: 'همزمانی با ساعت اوج ترافیک و آرت‌گشت در معابر پرتردد تهران'
   },
   weekend: {
     condition: 'weekend',

@@ -258,13 +258,13 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                   <span>مبدأ حرکت (شروع مسیریابی):</span>
                 </span>
                 {originLocation?.type === 'gps' && (
-                  <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                  <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span>موقعیت زنده GPS</span>
                   </span>
                 )}
                 {originLocation?.type === 'hub' && (
-                  <span className="text-[11px] font-bold text-[#1856C7] dark:text-[#93c5fd]">
+                  <span className="text-xs font-bold text-[#1856C7] dark:text-[#93c5fd]">
                     محله انتخابی
                   </span>
                 )}
@@ -275,7 +275,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                 <button
                   type="button"
                   onClick={onRequestGps}
-                  className={`py-2 px-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shrink-0 ${
+                  className={`py-2 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 shrink-0 ${
                     originLocation?.type === 'gps'
                       ? 'clay-button bg-emerald-600 text-white shadow-xs'
                       : 'clay-button clay-base text-stone-700 dark:text-stone-300 hover:text-emerald-600'
@@ -300,7 +300,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
               </div>
 
               {originLocation && (
-                <div className="px-1 text-[11px] text-stone-500 dark:text-stone-400 flex items-center justify-between border-t border-stone-200/60 dark:border-stone-800 pt-1.5">
+                <div className="px-1 text-xs text-stone-500 dark:text-stone-400 flex items-center justify-between border-t border-stone-200/60 dark:border-stone-800 pt-1.5">
                   <span>مبدأ فعال: <strong>{originLocation.name}</strong></span>
                   <button
                     type="button"
@@ -533,7 +533,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                       <div className="font-bold text-[#1d2d4c] dark:text-white truncate">
                         {getGalleryDisplayName(g)}
                       </div>
-                      <div className="text-stone-500 dark:text-stone-400 truncate text-[11px]">
+                      <div className="text-stone-500 dark:text-stone-400 truncate text-xs sm:text-[13px]">
                         {g.neighborhoodFa} · {formatGalleryAddress(g.addressFa || g.address)}
                       </div>
                     </div>
@@ -551,13 +551,13 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
           </div>
         ) : (
           <div className="space-y-3">
-            <div className="text-xs font-bold text-[#3D5B99] dark:text-[#A3C2E4] flex items-center justify-between pb-1 flex-wrap gap-2">
+            <div className="text-xs sm:text-sm font-bold text-[#3D5B99] dark:text-[#A3C2E4] flex items-center justify-between pb-1 flex-wrap gap-2">
               <span>توالی توقف‌ها ({toPersianDigits(routeResult.orderedGalleries.length)} گالری)</span>
               <div className="flex items-center gap-1.5">
                 <button
                   type="button"
                   onClick={onReverseRoute}
-                  className="clay-button clay-base text-[11px] font-bold px-2.5 py-1 rounded-xl flex items-center gap-1 text-stone-700 dark:text-stone-300 hover:text-[#F76B1C] hover:scale-105 active:scale-95 transition-all shadow-xs"
+                  className="clay-button clay-base text-xs font-bold px-2.5 py-1 rounded-xl flex items-center gap-1 text-stone-700 dark:text-stone-300 hover:text-[#F76B1C] hover:scale-105 active:scale-95 transition-all shadow-xs"
                   title="معکوس کردن کامل مسیر (از آخر به اول)"
                 >
                   <ArrowUpDown className="w-3.5 h-3.5 text-[#F76B1C]" />
@@ -566,7 +566,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                 <button
                   type="button"
                   onClick={onResetAutoOrder}
-                  className="clay-button clay-base text-[11px] font-bold px-2.5 py-1 rounded-xl flex items-center gap-1 text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] hover:scale-105 active:scale-95 transition-all shadow-xs"
+                  className="clay-button clay-base text-xs font-bold px-2.5 py-1 rounded-xl flex items-center gap-1 text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] hover:scale-105 active:scale-95 transition-all shadow-xs"
                   title="محاسبه مجدد کوتاه‌ترین مسیر کلی به صورت خودکار"
                 >
                   <Sparkles className="w-3.5 h-3.5 text-amber-500" />
@@ -590,11 +590,11 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                       <div className="flex-1 truncate">
                         <div className="flex items-center gap-1.5 font-bold text-emerald-800 dark:text-emerald-300 text-sm truncate">
                           <span>{routeResult.originPoint.name}</span>
-                          <span className="text-[10px] bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 px-2 py-0.5 rounded-full font-bold">
+                          <span className="text-xs bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 px-2 py-0.5 rounded-full font-bold">
                             مبدأ حرکت
                           </span>
                         </div>
-                        <div className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5">
+                        <div className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
                           شروع حرکت از این نقطه به سمت نزدیک‌ترین نگارخانه منتخب شما
                         </div>
                       </div>
@@ -604,7 +604,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                   {/* Transit Leg 0: Origin to First Gallery */}
                   {routeResult.legs[0] && (
                     <div className="my-2.5 flex items-center justify-center">
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f1f4fa] dark:bg-[#151a24] text-[11px] text-stone-600 dark:text-stone-300 border border-emerald-200/80 dark:border-emerald-800/50 shadow-2xs font-mono">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f1f4fa] dark:bg-[#151a24] text-xs text-stone-600 dark:text-stone-300 border border-emerald-200/80 dark:border-emerald-800/50 shadow-2xs font-mono">
                         {mode === 'walking' ? (
                           <Footprints className="w-3.5 h-3.5 text-[#F76B1C]" />
                         ) : (
@@ -654,7 +654,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                           >
                             {getGalleryDisplayName(gallery)}
                           </span>
-                          <div className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5 truncate">
+                          <div className="text-xs sm:text-[13px] text-stone-500 dark:text-stone-400 mt-0.5 truncate">
                             {gallery.neighborhoodFa} · {formatGalleryAddress(gallery.addressFa || gallery.address)}
                           </div>
                         </div>
@@ -691,7 +691,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                       </div>
 
                       {gallery.activeExhibition && (
-                        <div className="mt-2 pt-2 border-t border-stone-100 dark:border-stone-800/80 space-y-1.5 text-[11px]">
+                        <div className="mt-2 pt-2 border-t border-stone-100 dark:border-stone-800/80 space-y-1.5 text-xs">
                           <div className="flex items-center gap-1.5 flex-wrap">
                             <span className="px-2 py-0.5 rounded-md bg-[#F76B1C]/10 text-[#F76B1C] font-bold">
                               نمایشگاه: {gallery.activeExhibition.title}
@@ -699,7 +699,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                           </div>
                           {gallery.activeExhibition.artist && (
                             <p
-                              className="text-stone-600 dark:text-stone-400 font-medium leading-relaxed line-clamp-2"
+                              className="text-stone-600 dark:text-stone-400 font-medium leading-relaxed line-clamp-2 text-xs"
                               style={{
                                 display: '-webkit-box',
                                 WebkitLineClamp: 2,
@@ -715,7 +715,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                       )}
 
                       {/* Distinct Start / End Point Controls & Badges */}
-                      <div className="mt-2.5 pt-2 border-t border-stone-100 dark:border-stone-800/80 flex items-center justify-between gap-2 flex-wrap text-[11px]">
+                      <div className="mt-2.5 pt-2 border-t border-stone-100 dark:border-stone-800/80 flex items-center justify-between gap-2 flex-wrap text-xs sm:text-[13px]">
                         {isFirst ? (
                           hasOrigin ? (
                             <span className="inline-flex items-center gap-1.5 font-bold text-[#1856C7] dark:text-[#93c5fd] bg-[#edf3ff] dark:bg-blue-950/40 px-3 py-1 rounded-xl border border-blue-200 dark:border-blue-800/50 shadow-xs">
@@ -764,7 +764,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                     {/* Transit Leg Info: Clean Centered Travel Pill */}
                     {leg && (
                       <div className="my-2.5 flex items-center justify-center">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f1f4fa] dark:bg-[#151a24] text-[11px] text-stone-600 dark:text-stone-300 border border-stone-200/70 dark:border-stone-800 shadow-2xs font-mono">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f1f4fa] dark:bg-[#151a24] text-xs text-stone-600 dark:text-stone-300 border border-stone-200/70 dark:border-stone-800 shadow-2xs font-mono">
                           {mode === 'walking' ? (
                             <Footprints className="w-3.5 h-3.5 text-[#F76B1C]" />
                           ) : (
@@ -810,11 +810,11 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
         <div className="p-4 sm:p-5 pb-7 border-t border-[#E1E1E1] dark:border-stone-800 bg-[#f7f9fc] dark:bg-[#141822] space-y-3 shrink-0">
           <div className="text-xs font-bold text-[#3D5B99] dark:text-[#A3C2E4] flex items-center justify-between">
             <span>مسیریابی در اپلیکیشن‌ها</span>
-            <span className="text-[10px] text-stone-400 font-normal">ترافیک زنده و ناوبری سخنگو</span>
+            <span className="text-xs text-stone-400 font-normal">ترافیک زنده و ناوبری سخنگو</span>
           </div>
 
           {/* Navigation Destination Context Info */}
-          <div className="text-[11px] text-stone-600 dark:text-stone-300 bg-white/70 dark:bg-stone-900/70 p-2.5 rounded-xl border border-stone-200/80 dark:border-stone-800 flex items-center justify-between">
+          <div className="text-xs sm:text-[13px] text-stone-600 dark:text-stone-300 bg-white/70 dark:bg-stone-900/70 p-2.5 rounded-xl border border-stone-200/80 dark:border-stone-800 flex items-center justify-between">
             <span>مقصد ناوبری در اپ‌ها: <strong>{getGalleryDisplayName(routeResult.orderedGalleries[0])}</strong></span>
             {routeResult.originPoint ? (
               <span className="text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-1">

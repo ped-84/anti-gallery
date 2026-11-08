@@ -137,18 +137,18 @@ export const CuratedToursModal: React.FC<CuratedToursModalProps> = ({
                     {/* Badge and Neighborhood */}
                     <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                       {tour.isOpeningThisWeek ? (
-                        <span className="text-[10px] sm:text-[11px] font-bold text-[#F76B1C] bg-[#F76B1C]/10 border border-[#F76B1C]/25 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 shadow-2xs">
-                          <Flame className="w-3 h-3 text-[#F76B1C]" />
+                        <span className="text-xs sm:text-[13px] font-bold text-[#F76B1C] bg-[#F76B1C]/10 border border-[#F76B1C]/25 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 shadow-2xs">
+                          <Flame className="w-3.5 h-3.5 text-[#F76B1C]" />
                           <span>فقط افتتاحیه این هفته</span>
                         </span>
                       ) : (
-                        <span className="text-[10px] sm:text-[11px] font-bold text-[#1856C7] dark:text-[#93c5fd] bg-[#edf3ff] dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/50 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 shadow-2xs">
-                          <Sparkles className="w-3 h-3 text-[#1856C7] dark:text-[#93c5fd]" />
+                        <span className="text-xs sm:text-[13px] font-bold text-[#1856C7] dark:text-[#93c5fd] bg-[#edf3ff] dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/50 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 shadow-2xs">
+                          <Sparkles className="w-3.5 h-3.5 text-[#1856C7] dark:text-[#93c5fd]" />
                           <span>گالری‌های باز و فعال (پیوسته)</span>
                         </span>
                       )}
-                      <span className="text-[11px] text-stone-400">·</span>
-                      <span className="text-[11px] font-bold text-[#3D5B99] dark:text-[#A3C2E4]">
+                      <span className="text-xs text-stone-400">·</span>
+                      <span className="text-xs sm:text-[13px] font-bold text-[#3D5B99] dark:text-[#A3C2E4]">
                         {tour.neighborhoodFa}
                       </span>
                     </div>
@@ -156,22 +156,22 @@ export const CuratedToursModal: React.FC<CuratedToursModalProps> = ({
                     <h3 className="text-sm sm:text-base font-bold text-[#1d2d4c] dark:text-white group-hover:text-[#F76B1C] transition-colors leading-snug">
                       {tour.titleFa}
                     </h3>
-                    <p className="text-xs text-stone-600 dark:text-stone-300 mt-1.5 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 mt-1.5 leading-relaxed">
                       {tour.descriptionFa}
                     </p>
                   </div>
 
                   <div className="text-left shrink-0">
-                    <span className="text-xs font-bold text-[#3D5B99] dark:text-[#A3C2E4] block">
+                    <span className="text-xs sm:text-sm font-bold text-[#3D5B99] dark:text-[#A3C2E4] block">
                       {toPersianDigits(tourGalleries.length)} گالری
                     </span>
-                    <span className="text-[11px] text-stone-500 dark:text-stone-400 flex items-center justify-end gap-1 mt-1 font-medium font-mono">
+                    <span className="text-xs sm:text-[13px] text-stone-500 dark:text-stone-400 flex items-center justify-end gap-1 mt-1 font-medium font-mono">
                       <Clock className="w-3.5 h-3.5" />
                       <span>~{toPersianDigits(tour.estimatedHours)} ساعت</span>
                     </span>
                     {tour.maxHopKm && (
-                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 flex items-center justify-end gap-1 mt-1 font-medium">
-                        <MapPin className="w-3 h-3" />
+                      <span className="text-xs text-emerald-600 dark:text-emerald-400 flex items-center justify-end gap-1 mt-1 font-medium">
+                        <MapPin className="w-3.5 h-3.5" />
                         <span>فاصله ایستگاه‌ها: زیر {toPersianDigits(tour.maxHopKm)} کم</span>
                       </span>
                     )}

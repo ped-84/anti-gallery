@@ -155,13 +155,13 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
               {getGalleryDisplayName(gallery)}
             </h3>
             {/* Single location line: neighborhood · street address */}
-            <div className="text-[11px] text-[#3D5B99] dark:text-[#A3C2E4] font-medium truncate mt-0.5">
+            <div className="text-xs sm:text-[13px] text-[#3D5B99] dark:text-[#A3C2E4] font-medium truncate mt-0.5">
               <span>{gallery.neighborhoodFa || 'تهران'}</span>
               <span className="mx-1 text-stone-300 dark:text-stone-600">·</span>
               <span className="text-stone-500 dark:text-stone-400">{formatGalleryAddress(gallery.addressFa || gallery.address)}</span>
             </div>
             {totalActiveAtVenue > 1 && (
-              <div className="mt-1 flex items-center gap-1 text-[10px] font-bold text-[#F76B1C] bg-[#F76B1C]/10 border border-[#F76B1C]/25 px-2 py-0.5 rounded-md w-fit">
+              <div className="mt-1 flex items-center gap-1 text-xs font-bold text-[#F76B1C] bg-[#F76B1C]/10 border border-[#F76B1C]/25 px-2 py-0.5 rounded-md w-fit">
                 <Sparkles className="w-2.5 h-2.5 shrink-0" />
                 <span>{toPersianDigits(totalActiveAtVenue)} نمایشگاه همزمان</span>
               </div>
@@ -181,7 +181,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
           <div className="p-3 rounded-2xl bg-[#f0f4fa] dark:bg-[#1b2230] shadow-sm space-y-2 border border-[#A3C2E4]/40 dark:border-stone-700/60">
             {/* Opening & Visiting Days: Friday Opening + Weekdays */}
             <div className="space-y-1">
-              <div className="flex items-center justify-between gap-1.5 bg-white/95 dark:bg-stone-900/95 text-[#F76B1C] px-2.5 py-1 rounded-xl text-xs font-bold shadow-xs border border-[#F76B1C]/20">
+              <div className="flex items-center justify-between gap-1.5 bg-white/95 dark:bg-stone-900/95 text-[#F76B1C] px-2.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold shadow-xs border border-[#F76B1C]/20">
                 <div className="flex items-center gap-1.5 truncate">
                   <Calendar className="w-3.5 h-3.5 shrink-0" />
                   <span className="truncate">
@@ -191,13 +191,13 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
                   </span>
                 </div>
                 {isOpeningThisWeek && (
-                  <span className="shrink-0 text-[10px] bg-[#F76B1C] text-white px-2 py-0.5 rounded-lg font-extrabold shadow-xs flex items-center gap-1 animate-pulse">
-                    <Sparkles className="w-2.5 h-2.5" />
+                  <span className="shrink-0 text-xs bg-[#F76B1C] text-white px-2.5 py-0.5 rounded-lg font-extrabold shadow-xs flex items-center gap-1 animate-pulse">
+                    <Sparkles className="w-3 h-3" />
                     <span>این هفته</span>
                   </span>
                 )}
               </div>
-              <div className="text-[10px] text-stone-500 dark:text-stone-400 px-1 font-medium flex items-center justify-between">
+              <div className="text-xs sm:text-[13px] text-stone-500 dark:text-stone-400 px-1 font-medium flex items-center justify-between">
                 <span>بازدید عادی: یکشنبه تا پنجشنبه {toPersianDigits(gallery.hoursFa || gallery.hours || '۱۶ الی ۲۰')}</span>
                 <span className="text-stone-400">شنبه تعطیل</span>
               </div>
@@ -205,7 +205,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
 
             {/* Exhibition Title (Clean, without redundant type subtitle) */}
             <div>
-              <div className="text-sm font-bold text-[#10335e] dark:text-[#dbeafe] leading-tight">
+              <div className="text-sm sm:text-base font-bold text-[#10335e] dark:text-[#dbeafe] leading-tight">
                 {activeExhibition.title}
               </div>
             </div>
@@ -213,9 +213,9 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
             {/* Artist Name & Art Subject Tag */}
             <div className="space-y-1.5 pt-1.5 border-t border-[#E1E1E1]/60 dark:border-stone-700/60">
               {activeExhibition.artist && (
-                <div className="flex items-start gap-1.5 text-xs text-[#1d2d4c] dark:text-stone-200 font-bold">
+                <div className="flex items-start gap-1.5 text-xs sm:text-sm text-[#1d2d4c] dark:text-stone-200 font-bold">
                   <User className="w-3.5 h-3.5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0 mt-0.5" />
-                  <span className="text-[11px] text-stone-500 dark:text-stone-400 font-medium shrink-0">هنرمند:</span>
+                  <span className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 font-medium shrink-0">هنرمند:</span>
                   <span
                     className="line-clamp-2 leading-snug"
                     style={{
@@ -232,12 +232,12 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
               )}
 
               {/* Subject / Medium Tag */}
-              <div className="flex items-center justify-between gap-1.5 text-xs">
-                <div className="flex items-center gap-1.5 text-stone-500 dark:text-stone-400 font-medium text-[11px]">
+              <div className="flex items-center justify-between gap-1.5 text-xs sm:text-sm">
+                <div className="flex items-center gap-1.5 text-stone-500 dark:text-stone-400 font-medium text-xs sm:text-sm">
                   <Palette className="w-3.5 h-3.5 text-[#F76B1C] shrink-0" />
                   <span>موضوع:</span>
                 </div>
-                <span className="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-[#edf3ff] dark:bg-blue-950/50 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/60 dark:border-blue-800/50 shadow-2xs">
+                <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#edf3ff] dark:bg-blue-950/50 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/60 dark:border-blue-800/50 shadow-2xs">
                   {getExhibitionMedium(activeExhibition.title, activeExhibition.artist, activeExhibition.type)}
                 </span>
               </div>
@@ -248,10 +248,10 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
           <div className="clay-card clay-gray-subtle p-3 rounded-2xl text-xs space-y-1 border border-[#E1E1E1] dark:border-stone-800">
             <div className="font-bold text-stone-700 dark:text-stone-300 flex items-center justify-between">
               <span>ساعات کاری عادی نگارخانه</span>
-              <span className="text-[10px] bg-white dark:bg-stone-800 px-2 py-0.5 rounded-full text-stone-500">بین دو نمایشگاه</span>
+              <span className="text-xs bg-white dark:bg-stone-800 px-2.5 py-0.5 rounded-full text-stone-500">بین دو نمایشگاه</span>
             </div>
-            <div className="text-[11px] text-stone-500 dark:text-stone-400 flex items-center gap-1.5 font-mono">
-              <Clock className="w-3 h-3 text-[#3D5B99]" />
+            <div className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 flex items-center gap-1.5 font-mono">
+              <Clock className="w-3.5 h-3.5 text-[#3D5B99]" />
               <span>{toPersianDigits(gallery.hoursFa || gallery.hours || '۱۶ الی ۲۰')}</span>
             </div>
           </div>
@@ -263,7 +263,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
         <button
           type="button"
           onClick={() => onSelectDetails(gallery)}
-          className="text-xs text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] font-bold underline transition-colors"
+          className="text-xs sm:text-sm text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] font-bold underline transition-colors"
         >
           {hasActivePoster ? 'مشاهده پوستر و آثار' : 'اطلاعات نگارخانه'}
         </button>
@@ -271,7 +271,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
         <button
           type="button"
           onClick={() => onToggle(gallery)}
-          className={`clay-button px-3.5 py-1.5 text-xs font-bold flex items-center gap-1.5 transition-all active:scale-95 ${
+          className={`clay-button px-3.5 py-1.5 text-xs sm:text-sm font-bold flex items-center gap-1.5 transition-all active:scale-95 ${
             isSelected
               ? 'clay-darkblue text-white shadow-md'
               : 'clay-base text-stone-700 dark:text-stone-200 hover:scale-[1.02]'

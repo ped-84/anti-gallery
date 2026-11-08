@@ -652,7 +652,7 @@ export function exportToGpx(
 <gpx version="1.1" creator="Art Gallery Route Optimizer" xmlns="http://www.topografix.com/GPX/1/1">
   <metadata>
     <name>${escapeXml(title)}</name>
-    <desc>مسیر بهینه گالری‌گردی هنری تهران</desc>
+    <desc>مسیر بهینه آرت‌گشت تهران</desc>
     <time>${new Date().toISOString()}</time>
   </metadata>
 ${originXml}${waypointsXml}

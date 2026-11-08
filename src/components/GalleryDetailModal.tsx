@@ -157,7 +157,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                 <h2 className="font-bold text-base text-[#1d2d4c] dark:text-white truncate leading-tight">
                   {galleryDisplayName}
                 </h2>
-                <div className="text-[11px] text-[#3D5B99] dark:text-[#A3C2E4] truncate mt-0.5 font-medium flex items-center gap-1.5">
+                <div className="text-xs sm:text-[13px] text-[#3D5B99] dark:text-[#A3C2E4] truncate mt-0.5 font-medium flex items-center gap-1.5">
                   <span>{currentSpace.neighborhoodFa || gallery.neighborhoodFa || 'تهران'}</span>
                   <span className="text-stone-300 dark:text-stone-600">·</span>
                   <span className="truncate text-stone-500 dark:text-stone-400">
@@ -169,7 +169,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
 
             <div className="flex items-center gap-2 shrink-0">
               {(currentSpace.isInTrafficZone || gallery.isInTrafficZone) && (
-                <span className="bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 text-[10px] font-bold px-2 py-0.5 rounded-full hidden sm:inline-flex items-center gap-1">
+                <span className="bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 text-xs font-bold px-2.5 py-0.5 rounded-full hidden sm:inline-flex items-center gap-1">
                   <AlertTriangle className="w-3 h-3" />
                   <span>طرح ترافیک</span>
                 </span>
@@ -188,7 +188,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
           {/* Space / Hall Switcher Tabs for venues with multiple spaces/floors */}
           {allSpaces.length > 1 && (
             <div className="px-4 py-2 bg-[#edf3fb] dark:bg-[#10141e] border-b border-[#E1E1E1] dark:border-stone-800 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0">
-              <span className="text-[11px] font-bold text-stone-600 dark:text-stone-300 shrink-0">
+              <span className="text-xs sm:text-[13px] font-bold text-stone-600 dark:text-stone-300 shrink-0">
                 سالن‌ها و فضاها ({toPersianDigits(allSpaces.length)}):
               </span>
               <div className="flex items-center gap-1.5 flex-nowrap">
@@ -258,7 +258,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
           <div className="p-4 sm:p-5 overflow-y-auto space-y-4 text-xs text-stone-700 dark:text-stone-300 flex-1">
             {/* Traffic Zone notice for mobile */}
             {gallery.isInTrafficZone && (
-              <div className="sm:hidden bg-[#F76B1C]/10 text-[#F76B1C] border border-[#F76B1C]/25 text-[11px] font-bold px-3 py-1.5 rounded-xl flex items-center gap-1.5">
+              <div className="sm:hidden bg-[#F76B1C]/10 text-[#F76B1C] border border-[#F76B1C]/25 text-xs sm:text-sm font-bold px-3 py-1.5 rounded-xl flex items-center gap-1.5">
                 <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
                 <span>این نگارخانه در محدوده طرح ترافیک تهران واقع شده است</span>
               </div>
@@ -268,7 +268,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
             {activeExhibition ? (
               <div className="clay-card clay-orange-subtle p-4 rounded-2xl shadow-xs border border-[#F76B1C]/30 space-y-2.5">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#F76B1C]">
+                  <div className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#F76B1C]">
                     <Calendar className="w-4 h-4 shrink-0" />
                     <span>
                       {activeExhibition.openingDate
@@ -276,46 +276,46 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                         : 'افتتاحیه: جمعه‌ها ۱۶:۰۰ الی ۲۰:۰۰'}
                     </span>
                   </div>
-                  <span className="text-[10px] font-bold bg-[#F76B1C] text-white px-2 py-0.5 rounded-md shadow-xs">
+                  <span className="text-xs font-bold bg-[#F76B1C] text-white px-2.5 py-1 rounded-lg shadow-xs">
                     ساعت ۱۶ تا ۲۰
                   </span>
                 </div>
 
                 <div>
-                  <h3 className="text-base font-bold text-[#10335e] dark:text-[#dbeafe] leading-snug">
+                  <h3 className="text-base sm:text-lg font-bold text-[#10335e] dark:text-[#dbeafe] leading-snug">
                     {activeExhibition.title}
                   </h3>
                 </div>
 
                 {/* Artist Name */}
                 {activeExhibition.artist && (
-                  <div className="flex items-center gap-1.5 text-xs text-[#1d2d4c] dark:text-stone-200 font-bold pt-1.5 border-t border-[#F76B1C]/20">
-                    <User className="w-3.5 h-3.5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
+                  <div className="flex items-center gap-1.5 text-xs sm:text-sm text-[#1d2d4c] dark:text-stone-200 font-bold pt-1.5 border-t border-[#F76B1C]/20">
+                    <User className="w-4 h-4 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
                     <span className="text-stone-500 dark:text-stone-400 font-normal">هنرمند:</span>
                     <span>{activeExhibition.artist.trim() === 'نمایشگاه گروهی' ? 'گروهی از هنرمندان' : activeExhibition.artist}</span>
                   </div>
                 )}
 
                 {/* Subject / Medium Tag */}
-                <div className="flex items-center justify-between gap-1.5 text-xs pt-1.5 border-t border-[#F76B1C]/15">
-                  <div className="flex items-center gap-1.5 text-stone-500 dark:text-stone-400 font-medium text-xs">
-                    <Palette className="w-3.5 h-3.5 text-[#F76B1C] shrink-0" />
+                <div className="flex items-center justify-between gap-1.5 text-xs sm:text-sm pt-1.5 border-t border-[#F76B1C]/15">
+                  <div className="flex items-center gap-1.5 text-stone-500 dark:text-stone-400 font-medium text-xs sm:text-sm">
+                    <Palette className="w-4 h-4 text-[#F76B1C] shrink-0" />
                     <span>موضوع و مدیوم آثار:</span>
                   </div>
-                  <span className="px-2.5 py-0.5 rounded-lg text-xs font-bold bg-[#edf3ff] dark:bg-blue-950/50 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/60 dark:border-blue-800/50 shadow-2xs">
+                  <span className="px-3 py-1 rounded-lg text-xs sm:text-[13px] font-bold bg-[#edf3ff] dark:bg-blue-950/50 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/60 dark:border-blue-800/50 shadow-2xs">
                     {getExhibitionMedium(activeExhibition.title, activeExhibition.artist, activeExhibition.type)}
                   </span>
                 </div>
 
                 {activeExhibition.fullDateRange && (
-                  <div className="text-[11px] text-stone-500 dark:text-stone-400 flex items-center gap-1.5 pt-0.5">
-                    <Clock className="w-3 h-3 text-[#F76B1C]" />
+                  <div className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 flex items-center gap-1.5 pt-0.5">
+                    <Clock className="w-3.5 h-3.5 text-[#F76B1C]" />
                     <span>دوره برگزاری: {toPersianDigits(activeExhibition.fullDateRange)}</span>
                   </div>
                 )}
               </div>
             ) : (
-              <div className="clay-card clay-gray-subtle p-3.5 rounded-2xl border border-[#E1E1E1] dark:border-stone-800 text-stone-600 dark:text-stone-400 text-xs">
+              <div className="clay-card clay-gray-subtle p-3.5 rounded-2xl border border-[#E1E1E1] dark:border-stone-800 text-stone-600 dark:text-stone-400 text-xs sm:text-sm">
                 <span className="font-bold text-stone-800 dark:text-stone-200">وضعیت نگارخانه:</span> در حال حاضر بین دو دوره نمایشگاه قرار دارد. برای اطلاع از تاریخ رویداد بعدی با تلفن گالری تماس حاصل فرمایید.
               </div>
             )}
@@ -334,7 +334,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsPosterEnlarged(true)}
-                  className="absolute bottom-4 left-4 bg-black/60 hover:bg-black/80 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl flex items-center gap-1.5 backdrop-blur-md shadow-md transition-all active:scale-95"
+                  className="absolute bottom-4 left-4 bg-black/60 hover:bg-black/80 text-white text-xs sm:text-sm font-bold px-3.5 py-1.5 rounded-xl flex items-center gap-1.5 backdrop-blur-md shadow-md transition-all active:scale-95"
                 >
                   <Maximize2 className="w-3.5 h-3.5" />
                   <span>نمایش بزرگ پوستر</span>
@@ -343,13 +343,13 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
             )}
 
             {/* Visiting Schedule & Contact Details */}
-            <div className="clay-card p-3.5 rounded-2xl bg-white dark:bg-[#151922] border border-[#E1E1E1] dark:border-stone-800 space-y-2.5">
+            <div className="clay-card p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-[#151922] border border-[#E1E1E1] dark:border-stone-800 space-y-2.5">
               {/* Visiting Days & Hours */}
               <div className="flex items-start gap-2.5">
                 <Clock className="w-4 h-4 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0 mt-0.5" />
                 <div>
-                  <span className="font-bold text-stone-800 dark:text-stone-200 block">برنامه و ساعات بازدید:</span>
-                  <div className="text-stone-600 dark:text-stone-400 text-[11px] leading-relaxed mt-0.5 space-y-0.5">
+                  <span className="font-bold text-stone-800 dark:text-stone-200 block text-xs sm:text-sm">برنامه و ساعات بازدید:</span>
+                  <div className="text-stone-600 dark:text-stone-400 text-xs sm:text-sm leading-relaxed mt-0.5 space-y-0.5">
                     <div>• افتتاحیه: جمعه‌ها ساعت ۱۶:۰۰ الی ۲۰:۰۰</div>
                     <div>• روزهای عادی: یکشنبه تا پنجشنبه {toPersianDigits(gallery.hoursFa || gallery.hours || '۱۶ الی ۲۰')} (شنبه تعطیل)</div>
                   </div>
@@ -360,8 +360,8 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
               <div className="flex items-start gap-2.5 pt-2 border-t border-stone-100 dark:border-stone-800">
                 <MapPin className="w-4 h-4 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0 mt-0.5" />
                 <div>
-                  <span className="font-bold text-stone-800 dark:text-stone-200 block">نشانی:</span>
-                  <span className="text-stone-600 dark:text-stone-400 text-[11px] leading-relaxed block mt-0.5">
+                  <span className="font-bold text-stone-800 dark:text-stone-200 block text-xs sm:text-sm">نشانی:</span>
+                  <span className="text-stone-600 dark:text-stone-400 text-xs sm:text-sm leading-relaxed block mt-0.5">
                     {formatGalleryAddress(gallery.addressFa || gallery.address)}
                   </span>
                 </div>
@@ -369,7 +369,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
 
               {/* Phone */}
               {gallery.phone && (
-                <div className="flex items-center gap-2.5 pt-2 border-t border-stone-100 dark:border-stone-800">
+                <div className="flex items-center gap-2.5 pt-2 border-t border-stone-100 dark:border-stone-800 text-xs sm:text-sm">
                   <Phone className="w-4 h-4 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
                   <span className="font-bold text-stone-800 dark:text-stone-200">تلفن:</span>
                   <a
@@ -390,9 +390,9 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                     href={gallery.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="clay-button clay-base px-3 py-1.5 font-bold flex items-center gap-1.5 text-[#3D5B99] dark:text-[#A3C2E4] text-xs hover:scale-105 transition-all shadow-xs"
+                    className="clay-button clay-base px-3.5 py-2 font-bold flex items-center gap-1.5 text-[#3D5B99] dark:text-[#A3C2E4] text-xs sm:text-sm hover:scale-105 transition-all shadow-xs"
                   >
-                    <Globe className="w-3.5 h-3.5" />
+                    <Globe className="w-4 h-4" />
                     <span>وبسایت نگارخانه</span>
                   </a>
                 )}
@@ -402,9 +402,9 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                     href={gallery.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="clay-button clay-orange-subtle px-3 py-1.5 font-bold flex items-center gap-1.5 text-[#F76B1C] text-xs hover:scale-105 transition-all shadow-xs"
+                    className="clay-button clay-orange-subtle px-3.5 py-2 font-bold flex items-center gap-1.5 text-[#F76B1C] text-xs sm:text-sm hover:scale-105 transition-all shadow-xs"
                   >
-                    <Instagram className="w-3.5 h-3.5" />
+                    <Instagram className="w-4 h-4" />
                     <span>صفحه اینستاگرام</span>
                   </a>
                 )}
@@ -413,7 +413,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
 
             {/* 3. Compact Navigation: 1 sleek row taking minimal space! */}
             <div className="pt-2 border-t border-stone-100 dark:border-stone-800">
-              <span className="text-[11px] font-bold text-stone-500 dark:text-stone-400 block mb-2">
+              <span className="text-xs sm:text-sm font-bold text-stone-500 dark:text-stone-400 block mb-2">
                 مسیریابی مستقیم با اپلیکیشن‌ها:
               </span>
               <div className="grid grid-cols-4 gap-2 text-xs">
@@ -421,40 +421,40 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   href={buildNeshanUrl(currentSpace)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="clay-button clay-base py-2 px-1 flex flex-col items-center justify-center gap-1 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
+                  className="clay-button clay-base py-2.5 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
                   <NeshanIcon className="w-5 h-5 shrink-0" />
-                  <span className="text-[11px] font-bold">نشان</span>
+                  <span className="text-xs sm:text-[13px] font-bold">نشان</span>
                 </a>
 
                 <a
                   href={buildBaladUrl(currentSpace)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="clay-button clay-base py-2 px-1 flex flex-col items-center justify-center gap-1 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
+                  className="clay-button clay-base py-2.5 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
                   <BaladIcon className="w-5 h-5 shrink-0" />
-                  <span className="text-[11px] font-bold">بلد</span>
+                  <span className="text-xs sm:text-[13px] font-bold">بلد</span>
                 </a>
 
                 <a
                   href={buildGoogleMapsUrl([currentSpace])}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="clay-button clay-base py-2 px-1 flex flex-col items-center justify-center gap-1 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
+                  className="clay-button clay-base py-2.5 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
                   <GoogleMapsIcon className="w-5 h-5 shrink-0" />
-                  <span className="text-[11px] font-bold">Google</span>
+                  <span className="text-xs sm:text-[13px] font-bold">Google</span>
                 </a>
 
                 <a
                   href={buildWazeUrl(currentSpace)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="clay-button clay-base py-2 px-1 flex flex-col items-center justify-center gap-1 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
+                  className="clay-button clay-base py-2.5 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
                   <WazeIcon className="w-5 h-5 shrink-0" />
-                  <span className="text-[11px] font-bold">Waze</span>
+                  <span className="text-xs sm:text-[13px] font-bold">Waze</span>
                 </a>
               </div>
             </div>
@@ -466,7 +466,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
             {isVenueSelected && (
               <div>
                 {isVenueStart ? (
-                  <div className="text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 py-1.5 px-3 rounded-xl border border-emerald-300 dark:border-emerald-700/60 flex items-center justify-center gap-1.5 shadow-xs">
+                  <div className="text-xs sm:text-sm font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 py-1.5 px-3 rounded-xl border border-emerald-300 dark:border-emerald-700/60 flex items-center justify-center gap-1.5 shadow-xs">
                     <span>🟢</span>
                     <span>مبدأ گشت (نقطه شروع مسیر)</span>
                   </div>
@@ -474,9 +474,9 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   <button
                     type="button"
                     onClick={() => onSetStart(currentSpace.id)}
-                    className="w-full clay-button clay-base text-xs font-bold py-2 px-3 text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] flex items-center justify-center gap-1.5 transition-all shadow-xs rounded-xl"
+                    className="w-full clay-button clay-base text-xs sm:text-sm font-bold py-2.5 px-3 text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] flex items-center justify-center gap-1.5 transition-all shadow-xs rounded-xl"
                   >
-                    <MapPin className="w-3.5 h-3.5 text-[#F76B1C]" />
+                    <MapPin className="w-4 h-4 text-[#F76B1C]" />
                     <span>شروع گشت از این گالری (تغییر مبدأ)</span>
                   </button>
                 ) : null}
@@ -487,7 +487,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
             <button
               type="button"
               onClick={() => onToggle(currentSpace)}
-              className={`w-full clay-button py-2.5 px-4 text-xs font-bold flex items-center justify-center gap-2 transition-all active:scale-95 rounded-xl ${
+              className={`w-full clay-button py-3 px-4 text-sm sm:text-base font-bold flex items-center justify-center gap-2 transition-all active:scale-95 rounded-xl ${
                 isVenueSelected
                   ? 'clay-base text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900 shadow-xs'
                   : 'clay-orange text-white shadow-md hover:brightness-105'
