@@ -1,4 +1,4 @@
-const CACHE_NAME = 'artgasht-pwa-v1.080';
+const CACHE_NAME = 'artgasht-pwa-v1.081';
 
 const STATIC_ASSETS = [
   './',
@@ -13,7 +13,7 @@ const STATIC_ASSETS = [
   './fonts/shabnam/Shabnam-Medium-FD.woff2'
 ];
 
-// Install: Cache essential assets immediately
+// Install: Cache essential assets immediately and force immediate takeover
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
@@ -25,7 +25,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate: Remove stale caches & claim clients
+// Activate: Remove stale caches & claim clients immediately
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -40,7 +40,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch: Stale-while-revalidate for local assets, network-first for navigation
+// Fetch: Network-First for navigation & HTML, Cache-First for static fonts/images
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   const url = new URL(request.url);
@@ -48,12 +48,20 @@ self.addEventListener('fetch', (event) => {
   // Only handle GET requests
   if (request.method !== 'GET') return;
 
-  // For navigation requests (HTML page)
-  if (request.mode === 'navigate') {
+  // Always Network-First for HTML navigation so updates are instant
+  if (request.mode === 'navigate' || url.pathname.endsWith('index.html') || url.pathname.endsWith('/')) {
     event.respondWith(
-      fetch(request).catch(() => {
-        return caches.match('./index.html') || caches.match('./');
-      })
+      fetch(request, { cache: 'no-cache' })
+        .then((response) => {
+          if (response && response.status === 200) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return response;
+        })
+        .catch(() => {
+          return caches.match('./index.html') || caches.match('./');
+        })
     );
     return;
   }
