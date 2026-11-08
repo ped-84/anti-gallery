@@ -154,10 +154,10 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
               </div>
 
               <div className="truncate">
-                <h2 className="font-bold text-base text-[#1d2d4c] dark:text-white truncate leading-tight">
+                <h2 className="font-bold text-lg sm:text-xl text-[#1d2d4c] dark:text-white truncate leading-tight">
                   {galleryDisplayName}
                 </h2>
-                <div className="text-xs sm:text-[13px] text-[#3D5B99] dark:text-[#A3C2E4] truncate mt-0.5 font-medium flex items-center gap-1.5">
+                <div className="text-sm sm:text-base text-[#3D5B99] dark:text-[#A3C2E4] truncate mt-0.5 font-medium flex items-center gap-1.5">
                   <span>{currentSpace.neighborhoodFa || gallery.neighborhoodFa || 'تهران'}</span>
                   <span className="text-stone-300 dark:text-stone-600">·</span>
                   <span className="truncate text-stone-500 dark:text-stone-400">
@@ -169,8 +169,8 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
 
             <div className="flex items-center gap-2 shrink-0">
               {(currentSpace.isInTrafficZone || gallery.isInTrafficZone) && (
-                <span className="bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 text-xs font-bold px-2.5 py-0.5 rounded-full hidden sm:inline-flex items-center gap-1">
-                  <AlertTriangle className="w-3 h-3" />
+                <span className="bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 text-xs sm:text-sm font-bold px-2.5 py-0.5 rounded-full hidden sm:inline-flex items-center gap-1">
+                  <AlertTriangle className="w-3.5 h-3.5" />
                   <span>طرح ترافیک</span>
                 </span>
               )}
@@ -187,8 +187,8 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
 
           {/* Space / Hall Switcher Tabs for venues with multiple spaces/floors */}
           {allSpaces.length > 1 && (
-            <div className="px-4 py-2 bg-[#edf3fb] dark:bg-[#10141e] border-b border-[#E1E1E1] dark:border-stone-800 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0">
-              <span className="text-xs sm:text-[13px] font-bold text-stone-600 dark:text-stone-300 shrink-0">
+            <div className="px-4 py-2.5 bg-[#edf3fb] dark:bg-[#10141e] border-b border-[#E1E1E1] dark:border-stone-800 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0">
+              <span className="text-sm sm:text-base font-bold text-stone-600 dark:text-stone-300 shrink-0">
                 سالن‌ها و فضاها ({toPersianDigits(allSpaces.length)}):
               </span>
               <div className="flex items-center gap-1.5 flex-nowrap">
@@ -214,21 +214,21 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                         setSelectedSpaceIndex(idx);
                         setPosterLoadError(false);
                       }}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
+                      className={`px-3.5 py-2 rounded-xl text-sm font-bold flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
                         isSelectedTab
                           ? 'bg-[#3D5B99] text-white shadow-xs'
                           : 'bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-[#E1E1E1] dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-700'
                       }`}
                     >
                       <span
-                        className={`w-2 h-2 rounded-full ${
+                        className={`w-2.5 h-2.5 rounded-full ${
                           isSpaceActive ? 'bg-[#F76B1C]' : 'bg-stone-300 dark:bg-stone-600'
                         }`}
                       />
                       <span className="truncate max-w-[150px]">{tabLabel}</span>
                       {isSpaceActive ? (
                         <span
-                          className={`text-[9px] px-1.5 py-0.2 rounded-md ${
+                          className={`text-xs px-2 py-0.5 rounded-md ${
                             isSelectedTab
                               ? 'bg-white/20 text-white'
                               : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
@@ -238,7 +238,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                         </span>
                       ) : (
                         <span
-                          className={`text-[9px] px-1.5 py-0.2 rounded-md ${
+                          className={`text-xs px-2 py-0.5 rounded-md ${
                             isSelectedTab
                               ? 'bg-white/20 text-white'
                               : 'bg-stone-200 text-stone-600 dark:bg-stone-700 dark:text-stone-400'
@@ -255,7 +255,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
           )}
 
           {/* 2. Scrollable Body: Content is FRONT AND CENTER! */}
-          <div className="p-4 sm:p-5 overflow-y-auto space-y-4 text-xs text-stone-700 dark:text-stone-300 flex-1">
+          <div className="p-4 sm:p-5 overflow-y-auto space-y-4 text-sm sm:text-base text-stone-700 dark:text-stone-300 flex-1">
             {/* Traffic Zone notice for mobile */}
             {gallery.isInTrafficZone && (
               <div className="sm:hidden bg-[#F76B1C]/10 text-[#F76B1C] border border-[#F76B1C]/25 text-xs sm:text-sm font-bold px-3 py-1.5 rounded-xl flex items-center gap-1.5">
@@ -268,54 +268,54 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
             {activeExhibition ? (
               <div className="clay-card clay-orange-subtle p-4 rounded-2xl shadow-xs border border-[#F76B1C]/30 space-y-2.5">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
-                  <div className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#F76B1C]">
-                    <Calendar className="w-4 h-4 shrink-0" />
+                  <div className="flex items-center gap-2 text-sm sm:text-base font-bold text-[#F76B1C]">
+                    <Calendar className="w-5 h-5 shrink-0" />
                     <span>
                       {activeExhibition.openingDate
                         ? `افتتاحیه: ${toPersianDigits(activeExhibition.openingDate)}`
                         : 'افتتاحیه: جمعه‌ها ۱۶:۰۰ الی ۲۰:۰۰'}
                     </span>
                   </div>
-                  <span className="text-xs font-bold bg-[#F76B1C] text-white px-2.5 py-1 rounded-lg shadow-xs">
+                  <span className="text-sm font-bold bg-[#F76B1C] text-white px-3 py-1 rounded-xl shadow-xs">
                     ساعت ۱۶ تا ۲۰
                   </span>
                 </div>
 
                 <div>
-                  <h3 className="text-base sm:text-lg font-bold text-[#10335e] dark:text-[#dbeafe] leading-snug">
+                  <h3 className="text-lg sm:text-xl font-black text-[#10335e] dark:text-[#dbeafe] leading-snug">
                     {activeExhibition.title}
                   </h3>
                 </div>
 
                 {/* Artist Name */}
                 {activeExhibition.artist && (
-                  <div className="flex items-center gap-1.5 text-xs sm:text-sm text-[#1d2d4c] dark:text-stone-200 font-bold pt-1.5 border-t border-[#F76B1C]/20">
-                    <User className="w-4 h-4 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
-                    <span className="text-stone-500 dark:text-stone-400 font-normal">هنرمند:</span>
+                  <div className="flex items-center gap-2 text-sm sm:text-base text-[#1d2d4c] dark:text-stone-200 font-bold pt-2 border-t border-[#F76B1C]/20">
+                    <User className="w-4.5 h-4.5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
+                    <span className="text-stone-500 dark:text-stone-400 font-medium">هنرمند:</span>
                     <span>{activeExhibition.artist.trim() === 'نمایشگاه گروهی' ? 'گروهی از هنرمندان' : activeExhibition.artist}</span>
                   </div>
                 )}
 
                 {/* Subject / Medium Tag */}
-                <div className="flex items-center justify-between gap-1.5 text-xs sm:text-sm pt-1.5 border-t border-[#F76B1C]/15">
-                  <div className="flex items-center gap-1.5 text-stone-500 dark:text-stone-400 font-medium text-xs sm:text-sm">
-                    <Palette className="w-4 h-4 text-[#F76B1C] shrink-0" />
+                <div className="flex items-center justify-between gap-2 text-sm sm:text-base pt-2 border-t border-[#F76B1C]/15">
+                  <div className="flex items-center gap-2 text-stone-500 dark:text-stone-400 font-medium text-sm sm:text-base">
+                    <Palette className="w-4.5 h-4.5 text-[#F76B1C] shrink-0" />
                     <span>موضوع و مدیوم آثار:</span>
                   </div>
-                  <span className="px-3 py-1 rounded-lg text-xs sm:text-[13px] font-bold bg-[#edf3ff] dark:bg-blue-950/50 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/60 dark:border-blue-800/50 shadow-2xs">
+                  <span className="px-3.5 py-1 rounded-xl text-sm font-bold bg-[#edf3ff] dark:bg-blue-950/50 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/60 dark:border-blue-800/50 shadow-2xs">
                     {getExhibitionMedium(activeExhibition.title, activeExhibition.artist, activeExhibition.type)}
                   </span>
                 </div>
 
                 {activeExhibition.fullDateRange && (
-                  <div className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 flex items-center gap-1.5 pt-0.5">
-                    <Clock className="w-3.5 h-3.5 text-[#F76B1C]" />
+                  <div className="text-sm sm:text-base text-stone-500 dark:text-stone-400 flex items-center gap-2 pt-1 font-medium">
+                    <Clock className="w-4 h-4 text-[#F76B1C]" />
                     <span>دوره برگزاری: {toPersianDigits(activeExhibition.fullDateRange)}</span>
                   </div>
                 )}
               </div>
             ) : (
-              <div className="clay-card clay-gray-subtle p-3.5 rounded-2xl border border-[#E1E1E1] dark:border-stone-800 text-stone-600 dark:text-stone-400 text-xs sm:text-sm">
+              <div className="clay-card clay-gray-subtle p-4 rounded-2xl border border-[#E1E1E1] dark:border-stone-800 text-stone-600 dark:text-stone-400 text-sm sm:text-base leading-relaxed">
                 <span className="font-bold text-stone-800 dark:text-stone-200">وضعیت نگارخانه:</span> در حال حاضر بین دو دوره نمایشگاه قرار دارد. برای اطلاع از تاریخ رویداد بعدی با تلفن گالری تماس حاصل فرمایید.
               </div>
             )}
@@ -343,13 +343,13 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
             )}
 
             {/* Visiting Schedule & Contact Details */}
-            <div className="clay-card p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-[#151922] border border-[#E1E1E1] dark:border-stone-800 space-y-2.5">
+            <div className="clay-card p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#151922] border border-[#E1E1E1] dark:border-stone-800 space-y-3">
               {/* Visiting Days & Hours */}
-              <div className="flex items-start gap-2.5">
-                <Clock className="w-4 h-4 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0 mt-0.5" />
+              <div className="flex items-start gap-3">
+                <Clock className="w-5 h-5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0 mt-0.5" />
                 <div>
-                  <span className="font-bold text-stone-800 dark:text-stone-200 block text-xs sm:text-sm">برنامه و ساعات بازدید:</span>
-                  <div className="text-stone-600 dark:text-stone-400 text-xs sm:text-sm leading-relaxed mt-0.5 space-y-0.5">
+                  <span className="font-bold text-stone-800 dark:text-stone-200 block text-sm sm:text-base">برنامه و ساعات بازدید:</span>
+                  <div className="text-stone-600 dark:text-stone-300 text-sm sm:text-base leading-relaxed mt-1 space-y-1 font-medium">
                     <div>• افتتاحیه: جمعه‌ها ساعت ۱۶:۰۰ الی ۲۰:۰۰</div>
                     <div>• روزهای عادی: یکشنبه تا پنجشنبه {toPersianDigits(gallery.hoursFa || gallery.hours || '۱۶ الی ۲۰')} (شنبه تعطیل)</div>
                   </div>
@@ -357,11 +357,11 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
               </div>
 
               {/* Address */}
-              <div className="flex items-start gap-2.5 pt-2 border-t border-stone-100 dark:border-stone-800">
-                <MapPin className="w-4 h-4 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0 mt-0.5" />
+              <div className="flex items-start gap-3 pt-3 border-t border-stone-100 dark:border-stone-800">
+                <MapPin className="w-5 h-5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0 mt-0.5" />
                 <div>
-                  <span className="font-bold text-stone-800 dark:text-stone-200 block text-xs sm:text-sm">نشانی:</span>
-                  <span className="text-stone-600 dark:text-stone-400 text-xs sm:text-sm leading-relaxed block mt-0.5">
+                  <span className="font-bold text-stone-800 dark:text-stone-200 block text-sm sm:text-base">نشانی:</span>
+                  <span className="text-stone-600 dark:text-stone-300 text-sm sm:text-base leading-relaxed block mt-1 font-medium">
                     {formatGalleryAddress(gallery.addressFa || gallery.address)}
                   </span>
                 </div>
@@ -369,12 +369,12 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
 
               {/* Phone */}
               {gallery.phone && (
-                <div className="flex items-center gap-2.5 pt-2 border-t border-stone-100 dark:border-stone-800 text-xs sm:text-sm">
-                  <Phone className="w-4 h-4 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
+                <div className="flex items-center gap-3 pt-3 border-t border-stone-100 dark:border-stone-800 text-sm sm:text-base">
+                  <Phone className="w-5 h-5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
                   <span className="font-bold text-stone-800 dark:text-stone-200">تلفن:</span>
                   <a
                     href={`tel:${gallery.phone}`}
-                    className="text-[#F76B1C] font-bold hover:underline font-mono"
+                    className="text-[#F76B1C] font-bold hover:underline font-mono text-base"
                   >
                     {toPersianDigits(gallery.phone)}
                   </a>
@@ -384,15 +384,15 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
 
             {/* Social Links & Web */}
             {(gallery.website || gallery.instagram) && (
-              <div className="flex items-center gap-2.5 flex-wrap">
+              <div className="flex items-center gap-3 flex-wrap">
                 {gallery.website && (
                   <a
                     href={gallery.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="clay-button clay-base px-3.5 py-2 font-bold flex items-center gap-1.5 text-[#3D5B99] dark:text-[#A3C2E4] text-xs sm:text-sm hover:scale-105 transition-all shadow-xs"
+                    className="clay-button clay-base px-4 py-2.5 font-bold flex items-center gap-2 text-[#3D5B99] dark:text-[#A3C2E4] text-sm sm:text-base hover:scale-105 transition-all shadow-xs rounded-xl"
                   >
-                    <Globe className="w-4 h-4" />
+                    <Globe className="w-5 h-5" />
                     <span>وبسایت نگارخانه</span>
                   </a>
                 )}
@@ -402,9 +402,9 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                     href={gallery.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="clay-button clay-orange-subtle px-3.5 py-2 font-bold flex items-center gap-1.5 text-[#F76B1C] text-xs sm:text-sm hover:scale-105 transition-all shadow-xs"
+                    className="clay-button clay-orange-subtle px-4 py-2.5 font-bold flex items-center gap-2 text-[#F76B1C] text-sm sm:text-base hover:scale-105 transition-all shadow-xs rounded-xl"
                   >
-                    <Instagram className="w-4 h-4" />
+                    <Instagram className="w-5 h-5" />
                     <span>صفحه اینستاگرام</span>
                   </a>
                 )}
@@ -413,48 +413,48 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
 
             {/* 3. Compact Navigation: 1 sleek row taking minimal space! */}
             <div className="pt-2 border-t border-stone-100 dark:border-stone-800">
-              <span className="text-xs sm:text-sm font-bold text-stone-500 dark:text-stone-400 block mb-2">
+              <span className="text-sm sm:text-base font-bold text-stone-600 dark:text-stone-300 block mb-2.5">
                 مسیریابی مستقیم با اپلیکیشن‌ها:
               </span>
-              <div className="grid grid-cols-4 gap-2 text-xs">
+              <div className="grid grid-cols-4 gap-2 text-sm">
                 <a
                   href={buildNeshanUrl(currentSpace)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="clay-button clay-base py-2.5 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
+                  className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-2xl"
                 >
-                  <NeshanIcon className="w-5 h-5 shrink-0" />
-                  <span className="text-xs sm:text-[13px] font-bold">نشان</span>
+                  <NeshanIcon className="w-6 h-6 shrink-0" />
+                  <span className="text-sm sm:text-base font-bold">نشان</span>
                 </a>
 
                 <a
                   href={buildBaladUrl(currentSpace)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="clay-button clay-base py-2.5 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
+                  className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-2xl"
                 >
-                  <BaladIcon className="w-5 h-5 shrink-0" />
-                  <span className="text-xs sm:text-[13px] font-bold">بلد</span>
+                  <BaladIcon className="w-6 h-6 shrink-0" />
+                  <span className="text-sm sm:text-base font-bold">بلد</span>
                 </a>
 
                 <a
                   href={buildGoogleMapsUrl([currentSpace])}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="clay-button clay-base py-2.5 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
+                  className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-2xl"
                 >
-                  <GoogleMapsIcon className="w-5 h-5 shrink-0" />
-                  <span className="text-xs sm:text-[13px] font-bold">Google</span>
+                  <GoogleMapsIcon className="w-6 h-6 shrink-0" />
+                  <span className="text-sm sm:text-base font-bold">Google</span>
                 </a>
 
                 <a
                   href={buildWazeUrl(currentSpace)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="clay-button clay-base py-2.5 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
+                  className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-2xl"
                 >
-                  <WazeIcon className="w-5 h-5 shrink-0" />
-                  <span className="text-xs sm:text-[13px] font-bold">Waze</span>
+                  <WazeIcon className="w-6 h-6 shrink-0" />
+                  <span className="text-sm sm:text-base font-bold">Waze</span>
                 </a>
               </div>
             </div>
@@ -466,7 +466,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
             {isVenueSelected && (
               <div>
                 {isVenueStart ? (
-                  <div className="text-xs sm:text-sm font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 py-1.5 px-3 rounded-xl border border-emerald-300 dark:border-emerald-700/60 flex items-center justify-center gap-1.5 shadow-xs">
+                  <div className="text-sm sm:text-base font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 py-2 px-3 rounded-xl border border-emerald-300 dark:border-emerald-700/60 flex items-center justify-center gap-2 shadow-xs">
                     <span>🟢</span>
                     <span>مبدأ گشت (نقطه شروع مسیر)</span>
                   </div>
@@ -474,7 +474,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   <button
                     type="button"
                     onClick={() => onSetStart(currentSpace.id)}
-                    className="w-full clay-button clay-base text-xs sm:text-sm font-bold py-2.5 px-3 text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] flex items-center justify-center gap-1.5 transition-all shadow-xs rounded-xl"
+                    className="w-full clay-button clay-base text-sm sm:text-base font-bold py-2.5 px-3 text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] flex items-center justify-center gap-2 transition-all shadow-xs rounded-xl"
                   >
                     <MapPin className="w-4 h-4 text-[#F76B1C]" />
                     <span>شروع گشت از این گالری (تغییر مبدأ)</span>
@@ -487,7 +487,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
             <button
               type="button"
               onClick={() => onToggle(currentSpace)}
-              className={`w-full clay-button py-3 px-4 text-sm sm:text-base font-bold flex items-center justify-center gap-2 transition-all active:scale-95 rounded-xl ${
+              className={`w-full clay-button py-3.5 px-4 text-base sm:text-lg font-bold flex items-center justify-center gap-2 transition-all active:scale-95 rounded-xl ${
                 isVenueSelected
                   ? 'clay-base text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900 shadow-xs'
                   : 'clay-orange text-white shadow-md hover:brightness-105'
@@ -495,12 +495,12 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
             >
               {isVenueSelected ? (
                 <>
-                  <Check className="w-4 h-4 text-rose-600 dark:text-rose-400" />
+                  <Check className="w-5 h-5 text-rose-600 dark:text-rose-400" />
                   <span>در برنامه گشت شما قرار دارد (کلیک برای حذف)</span>
                 </>
               ) : (
                 <>
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-5 h-5" />
                   <span>+ افزودن این گالری به برنامه گشت</span>
                 </>
               )}

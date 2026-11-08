@@ -14,7 +14,7 @@ interface HeaderProps {
   isStandalone?: boolean;
 }
 
-export const APP_VERSION = 'بتا V 1.079';
+export const APP_VERSION = 'بتا V 1.080';
 
 export const Header: React.FC<HeaderProps> = ({
   selectedCount,

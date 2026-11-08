@@ -698,8 +698,8 @@ export default function App() {
       <div className="bg-[#e4ebf5] dark:bg-[#161a24] text-stone-700 dark:text-stone-300 py-2.5 sm:py-3 border-b border-[#E1E1E1] dark:border-stone-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 font-medium">
           <div className="flex items-center gap-2.5 shrink-0">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#F76B1C] inline-block shadow-sm shrink-0"></span>
-            <span className="text-xs sm:text-sm font-medium">
+            <span className="w-3 h-3 rounded-full bg-[#F76B1C] inline-block shadow-sm shrink-0"></span>
+            <span className="text-sm sm:text-base font-medium">
               <strong>{toPersianDigits(totalWithPosters)} نمایشگاه جاری</strong> از میان {toPersianDigits(galleries.length)} نگارخانه فعال در تهران
             </span>
           </div>
@@ -710,7 +710,7 @@ export default function App() {
       <div className="lg:hidden sticky top-18 z-30 bg-[#f3f5f8]/95 dark:bg-[#12151e]/95 backdrop-blur-md px-4 py-2 border-b border-[#E1E1E1] dark:border-stone-800 flex items-center gap-2">
         <button
           onClick={() => setMobileActiveTab('catalog')}
-          className={`flex-1 py-2 px-3 text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-all ${
+          className={`flex-1 py-2 px-3 text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-all ${
             mobileActiveTab === 'catalog'
               ? 'clay-darkblue text-white shadow-sm'
               : 'clay-base text-stone-600 dark:text-stone-300'
@@ -721,7 +721,7 @@ export default function App() {
         </button>
         <button
           onClick={() => setMobileActiveTab('map')}
-          className={`flex-1 py-2 px-3 text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-all ${
+          className={`flex-1 py-2 px-3 text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-all ${
             mobileActiveTab === 'map'
               ? 'clay-orange text-white shadow-sm'
               : 'clay-base text-stone-600 dark:text-stone-300'
@@ -736,7 +736,7 @@ export default function App() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6">
         {/* Editorial Claymorphic Banner */}
         <section className="clay-card p-4 sm:p-6 bg-white dark:bg-[#181d27] border border-[#E1E1E1] dark:border-stone-800">
-          <span className="text-xs sm:text-sm font-bold text-[#F76B1C] block mb-1">
+          <span className="text-sm sm:text-base font-bold text-[#F76B1C] block mb-1">
             برنامه‌ریزی تور گالری‌های هنری و نمایشگاه‌های جاری
           </span>
           <h1 className="text-xl sm:text-3xl font-bold text-[#1d2d4c] dark:text-white tracking-tight leading-snug">
@@ -875,18 +875,18 @@ export default function App() {
             <div className="clay-card p-3.5 sm:p-4.5 bg-white dark:bg-[#181d27] border border-[#E1E1E1] dark:border-stone-800 space-y-3">
               {/* Search input with clay inset */}
               <div className="relative">
-                <Search className="w-4 h-4 text-[#3D5B99] absolute right-4 top-1/2 -translate-y-1/2" />
+                <Search className="w-5 h-5 text-[#3D5B99] absolute right-4 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="جستجوی نام هنرمند (مثلاً داریوش حسینی)، عنوان نمایشگاه، نگارخانه..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="clay-input w-full pr-11 pl-4 py-2.5 bg-[#f6f8fb] dark:bg-[#141822] text-xs placeholder:text-stone-400 focus:outline-none text-[#1d2d4c] dark:text-white transition-all font-medium border border-[#E1E1E1]/50"
+                  className="clay-input w-full pr-12 pl-4 py-3 bg-[#f6f8fb] dark:bg-[#141822] text-sm sm:text-base placeholder:text-stone-400 focus:outline-none text-[#1d2d4c] dark:text-white transition-all font-medium border border-[#E1E1E1]/50 rounded-2xl"
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#F76B1C] hover:text-[#de5508] font-bold"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[#F76B1C] hover:text-[#de5508] font-bold"
                   >
                     پاک کردن
                   </button>
@@ -906,10 +906,10 @@ export default function App() {
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
                     }`}
                   >
-                    <Flame className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${galleryFilterTab === 'this-week' ? 'text-[#F76B1C]' : 'text-amber-500'}`} />
+                    <Flame className={`w-4 h-4 shrink-0 ${galleryFilterTab === 'this-week' ? 'text-[#F76B1C]' : 'text-amber-500'}`} />
                     <span className="hidden sm:inline">افتتاحیه‌های این هفته</span>
                     <span className="sm:hidden">این هفته</span>
-                    <span className="text-xs font-mono opacity-85">({toPersianDigits(totalThisWeek)})</span>
+                    <span className="text-xs sm:text-sm font-mono opacity-85">({toPersianDigits(totalThisWeek)})</span>
                   </button>
                   <button
                     type="button"
@@ -920,10 +920,10 @@ export default function App() {
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
                     }`}
                   >
-                    <Palette className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                    <Palette className="w-4 h-4 shrink-0" />
                     <span className="hidden sm:inline">نمایشگاه‌های جاری</span>
                     <span className="sm:hidden">جاری</span>
-                    <span className="text-xs font-mono opacity-85">({toPersianDigits(totalWithPosters)})</span>
+                    <span className="text-xs sm:text-sm font-mono opacity-85">({toPersianDigits(totalWithPosters)})</span>
                   </button>
                   <button
                     type="button"
@@ -934,10 +934,10 @@ export default function App() {
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
                     }`}
                   >
-                    <Grid className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                    <Grid className="w-4 h-4 shrink-0" />
                     <span className="hidden sm:inline">همه نگارخانه‌ها</span>
                     <span className="sm:hidden">همه</span>
-                    <span className="text-xs font-mono opacity-85">({toPersianDigits(galleries.length)})</span>
+                    <span className="text-xs sm:text-sm font-mono opacity-85">({toPersianDigits(galleries.length)})</span>
                   </button>
                 </div>
 
@@ -971,7 +971,7 @@ export default function App() {
             </div>
 
             {/* Catalog Header Info */}
-            <div className="flex items-center justify-between text-xs sm:text-sm text-[#3D5B99] dark:text-[#A3C2E4] px-1 font-bold">
+            <div className="flex items-center justify-between text-sm sm:text-base text-[#3D5B99] dark:text-[#A3C2E4] px-1 font-bold">
               <span>
                 نمایش <strong>{toPersianDigits(filteredGalleries.length)}</strong> نگارخانه
               </span>
