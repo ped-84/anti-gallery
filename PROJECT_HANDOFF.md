@@ -1,141 +1,139 @@
-# آرت‌گشت (Anti-Gallery) — Master Project Handoff & Architecture Brief
+# آرت‌گشت (Anti-Gallery) — مستند جامع و راهنمای انتقال پروژه به چت جدید (Project Handoff)
 
-> **MANDATORY INSTRUCTION FOR AGENTS READING THIS FILE:**
-> 1. **QUALITY IS PARAMOUNT:** Never ever sacrifice quality, correctness, visual smoothness, or robust error-free code for speed or quick answering. The user values a production-grade, bug-free, beautifully crafted app above everything else. Speed should come from eliminating redundant speculative roundtrips, NOT by cutting corners, skipping checks, or rushing incomplete work.
-> 2. **VERSION INCREMENT RULE:** Every single change request MUST increment `APP_VERSION` in `src/components/Header.tsx` by `0.001` (Current: `بتا V 1.090`, Next: `بتا V 1.091`).
-> 3. **TEHRAN-FIRST SCOPE:** Only display Tehran galleries to the user for now. Non-Tehran galleries (Shiraz, Isfahan, Karaj, Mashhad, etc.) are preserved in `src/data/galleries.json` but filtered out in `src/App.tsx`. Never delete them.
-
----
-
-## 1. Project Identity & Production URLs
-* **Brand Name:** آرت‌گشت (Anti-Gallery / Art Gasht)
-* **Target Audience:** Art enthusiasts, gallery-goers, curators, and tourists exploring art exhibitions in Tehran.
-* **Live GitHub Pages URL:** [https://ped-84.github.io/anti-gallery/](https://ped-84.github.io/anti-gallery/)
-* **Git Repository:** `https://github.com/ped-84/anti-gallery.git`
-  * Branch `main`: Source code repository.
-  * Branch `gh-pages`: Production static site build (serves `dist/`).
-* **Current Version:** `بتا V 1.090`
-* **Next Version:** `بتا V 1.091`
+> **دستورالعمل‌های حیاتی برای هوش مصنوعی (MANDATORY INSTRUCTIONS FOR AGENTS):**
+> 1. **کیفیت و دقت بی‌نقص در اولویت اول است:** هرگز کیفیت کد، هماهنگی بصری و روانی رابط کاربری را فدای پاسخ سریع یا عجله نکنید. کاربر یک محصول پروداکشن، بدون باگ، زیبا و فوق‌العاده تمیز می‌خواهد.
+> 2. **پاسخ‌های فارسی باید تماماً راست‌چین باشند:** در هر پاسخ به کاربر در محیط چت، کل متن پاسخ را داخل تگ `<div dir="rtl" style="text-align: right; direction: rtl;">` قرار دهید تا جهت نمایش و خوانایی فونت فارسی کاملاً راست‌به‌چپ باشد.
+> 3. **قانون افزایش نسخه (Version Increment):** به ازای هر درخواست تغییر از طرف کاربر، مقدار ثابت `APP_VERSION` در [`src/components/Header.tsx`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/src/components/Header.tsx) باید دقیقاً `0.001` واحد افزایش یابد (نسخه فعلی: `بتا V 1.090`، نسخه بعدی: `بتا V 1.091`). همچنین `CACHE_NAME` در [`public/sw.js`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/public/sw.js) باید با همین نسخه به‌روز شود.
+> 4. **دامنه تهران در اولویت (Tehran-First Scope):** در حال حاضر در رابط کاربری فقط و فقط گالری‌های تهران به کاربر نمایش داده می‌شوند. گالری‌های سایر شهرها (کرج، مشهد، اصفهان، شیراز و...) در دیتابیس `src/data/galleries.json` با مشخصه شهر خودشان محفوظ هستند و فقط در لایه نمایش (`src/App.tsx`) فیلتر می‌شوند. هرگز آنها را حذف نکنید.
+> 5. **یکپارچگی تایپوگرافی فارسی و انگلیسی:** تمام اعداد نمایشی فارسی باید از تابع `toPersianDigits()` عبور کنند. برای متون فارسی فونت **شبنم (Shabnam FD)** و برای کلیه حروف/متون انگلیسی (نام برندها، اپ‌ها مثل Waze و Google، نشان نسخه‌ها، لینک‌ها) فونت **Ubuntu** اعمال شده است.
+> 6. **دیپلوی روی GitHub Pages:** پس از پایان تغییرات و تایید تست بیلد (`npm.cmd run build`)، تغییرات باید با کامیت مناسب به برنچ `main` پوش شده و سپس با اسکریپت `node scripts/deploy-ghpages.cjs` روی برنچ `gh-pages` مستقر گردند.
 
 ---
 
-## 2. Core Philosophy & Design Guidelines
+## ۱. هویت پروژه، مخزن و لینک‌های پروداکشن
 
-### A. Non-Negotiable Quality Standards
-* **Zero Visual Glitches:** All cards, modals, dropdowns, and buttons must align perfectly with smooth padding, balanced spacing, and fluid transitions.
-* **Flawless RTL & Typography:** The entire UI is RTL (Right-to-Left) with Persian typography powered by the **Shabnam** font family (`fonts/shabnam/`). All numbers displayed in the interface MUST pass through `toPersianDigits()`.
-* **Clean Persian Text:** Addresses must never contain HTML entities (e.g. `&nbsp;`, `&amp;`, `&quot;`). Always sanitize addresses via `formatGalleryAddress()`.
-* **Graceful Fallbacks:** If an exhibition lacks a poster, a clean, styled placeholder with gallery logo is shown. If artist is `"نمایشگاه گروهی"`, display `"گروهی از هنرمندان"`. Redundant `"نمایشگاه انفرادی"` subtitles under exhibition titles must remain eliminated.
-
-### B. The Claymorphic / Stickdazzle Design System
-* **Surfaces:** Use `clay-card` (`bg-white/95 dark:bg-[#181d28]/95 backdrop-blur-md rounded-2xl border border-[#E1E1E1] dark:border-stone-800 shadow-xs`).
-* **Buttons:** Use `clay-button clay-base` or `clay-darkblue` with active states and subtle hover elevation.
-* **Dropdowns:** **NEVER USE RAW HTML `<select>`!** Use the custom component `ClayDropdown.tsx` (`size="sm" | "md"`, `align="left" | "right"`, animated chevrons, rounded popovers, and checkmark indicators).
+* **نام رسمی برند:** آرت‌گشت (Art Gasht / Anti-Gallery)
+* **توصیف محصول:** اپلیکیشن وب پیشرو (PWA) و مسیریاب هوشمند بازدید از گالری‌های هنری و نمایشگاه‌های جاری تهران.
+* **آدرس لایو (Live Production URL):** [https://ped-84.github.io/anti-gallery/](https://ped-84.github.io/anti-gallery/)
+* **مخزن گیت (Git Repository):** `https://github.com/ped-84/anti-gallery.git`
+  * **شاخه `main`:** سورس‌کد کامل پروژه
+  * **شاخه `gh-pages`:** نسخه کامپایل‌شده استاتیک پروداکشن (`dist/`)
+* **نسخه فعلی مستقر:** `بتا V 1.090` (نسخه بعدی در نوبت: `بتا V 1.091`)
+* **سیستم‌عامل توسعه کاربر:** Windows (با شل PowerShell). از اجرای دستورات متوالی با `&&` خودداری کنید؛ به جای آن از `;` در پاورشل استفاده کنید.
 
 ---
 
-## 3. Architecture & File Structure
+## ۲. پشته فنی و ساختار معماری (Tech Stack)
 
-```
-├── index.html                     # Entry HTML, Shabnam font declarations, title, favicon
-├── vite.config.ts                 # Vite config (base: '/anti-gallery/')
-├── tailwind.config.js             # Tailwind theme, custom colors, animations
+* **هسته فرانت‌اند:** React 19 + TypeScript + Vite 8
+* **استایل‌دهی:** Tailwind CSS v4 + تم‌های دست‌ساز Claymorphic (طراحی سه‌بعدی نرم و ارگانیک با شادوهای چندلایه)
+* **تایپوگرافی:** 
+  * فارسی: `Shabnam FD` (با فرمت‌های محلی woff2 در `public/fonts/shabnam/`)
+  * انگلیسی / لاتین: `Ubuntu` (با فرمت‌های محلی woff2 در `public/fonts/ubuntu/` + فال‌بک گوگل فونت + تکنیک `unicode-range` برای تشخیص خودکار کاراکترهای انگلیسی)
+* **نقشه و GIS:**
+  * نقشه تعاملی نشان (`mapboxgl` سازگار با سرورهای Neshan Web Map SDK)
+  * Leaflet برای رندرهای سبک
+  * الگوریتم مسیریابی فروشنده دوره‌گرد (TSP) با تخمین ترافیک واقعی تهران در ساعات اوج عصر و جمعه‌ها
+* **معماری PWA:**
+  * Service Worker مدرن (`public/sw.js`) با قابلیت کش آفلاین فونت‌ها، آیکون‌ها و دارایی‌های استاتیک
+  * فایل `public/manifest.json` با شناسه یکتای `artgasht-pwa` و نام «آرت‌گشت»
+  * ذخیره وضعیت در `sessionStorage` (`artgasht_active_modal_id` و `artgasht_mobile_active_tab`) برای جلوگیری از ریست شدن اپ در زمان جابجایی بین اپ‌ها در موبایل (App Switch).
+
+---
+
+## ۳. ساختار پوشه‌ها و فایل‌های کلیدی
+
+```text
+c:\Users\pemal\OneDrive\Desktop\Anti - Gallery\
+├── index.html                      # نقطه ورود وب، تعاریف فونت‌های شبنم و اوبونتو، پاکسازی لوگوی مپ‌باکس/نشان
+├── vite.config.ts                  # تنظیمات Vite با base: './' و نام مستعار @
+├── package.json                    # وابستگی‌ها و اسکریپت‌های npm
+├── PROJECT_HANDOFF.md              # این مستند جامع
+├── public/
+│   ├── manifest.json               # وب مانیفست PWA
+│   ├── sw.js                       # سرویس ورکر نسخه ۱.۰۹۰
+│   ├── favicon.png                 # آیکون بوکمارک و تب
+│   ├── icons/                      # آیکون‌های استاندارد PWA (192, 512, apple-touch-icon)
+│   ├── fonts/
+│   │   ├── shabnam/                # فونت‌های محلی Shabnam-FD (Bold, Medium, Light, Thin)
+│   │   └── ubuntu/                 # فونت‌های محلی Ubuntu (Regular, Medium, Bold woff2)
+│   └── assets/events/              # تصاویر و پوسترهای محلی دانلود شده
 ├── src/
-│   ├── main.tsx                   # React root mount
-│   ├── App.tsx                    # Core app logic, state, search & filter pipelines, catalog grid
+│   ├── main.tsx                    # مانت ری‌اکت و مدیریت ثبت بدون پرش Service Worker
+│   ├── App.tsx                     # کامپوننت اصلی، استیت گالری‌ها، فیلترها، سرچ و تب‌های موبایل
+│   ├── index.css                   # قوانین سراسری استایل، قوانین فونت‌ها و سیستم Claymorphic
 │   ├── types/
-│   │   └── gallery.ts             # TypeScript definitions (Gallery, Exhibition, Route, Tour)
+│   │   └── gallery.ts              # تایپ‌های Gallery, Exhibition, RouteResult, Space و غیره
 │   ├── components/
-│   │   ├── Header.tsx             # Navbar, APP_VERSION, dark mode toggle, curated tours trigger
-│   │   ├── GalleryCard.tsx        # Exhibition card, medium badge, opening status, action buttons
-│   │   ├── GalleryDetailModal.tsx # Full-screen deep modal with contact, hours, history, nav buttons
-│   │   ├── RouteSummaryPanel.tsx  # Tour itinerary planner, mode, pattern, traffic, visit duration, metrics
-│   │   ├── ClayDropdown.tsx       # Reusable Claymorphic dropdown menu component
-│   │   ├── CuratedToursModal.tsx  # Modal displaying pre-crafted art walks
-│   │   ├── Map.tsx                # Leaflet interactive Tehran map with markers and route polylines
-│   │   └── NavIcons.tsx           # SVGs for Waze, Neshan, Balad, Google Maps
-│   ├── utils/
-│   │   ├── persianUtils.ts        # toPersianDigits, getExhibitionMedium, formatGalleryAddress, date scorers
-│   │   └── routeOptimizer.ts      # TSP solver, distance matrices, navigation URL builders, GPX exporter
-│   └── data/
-│       ├── galleries.json         # Master dataset of 122 galleries (83 Tehran, 39 other cities)
-│       ├── exhibitions.json       # Live exhibition events dataset
-│       └── curatedTours.ts        # Hand-crafted Tehran walking tours
+│   │   ├── Header.tsx              # نوار ناوبری بالا، کلید دارک‌مود، مدال گشت‌های آماده، نسخه برنامه
+│   │   ├── GalleryCard.tsx         # کارت گالری و نمایشگاه (بج مدیوم، تاریخ افتتاحیه، تگ سالن)
+│   │   ├── GalleryDetailModal.tsx  # پنجره پاپ‌آپ کامل جزئیات گالری (ساعات، نشانی، اپ‌های مسیریابی)
+│   │   ├── RouteSummaryPanel.tsx   # پنل زمان‌بندی و توقف‌های تور بهینه، حالت سواره/پیاده، ترافیک
+│   │   ├── CuratedToursModal.tsx   # مدال گشت‌های پیشنهادی تهران (کریمخان، الهیه، انقلاب)
+│   │   ├── CuratedRouteRoadModal.tsx # مدال جاده‌ای و پیچ‌درپیچ مسیر گالری‌ها
+│   │   ├── ClayDropdown.tsx        # دراپ‌داون اختصاصی و انیمیشنی کلیمورفیک
+│   │   ├── InteractiveMap.tsx      # نقشه وکتور تعاملی با مارکرهای اختصاصی گالری‌ها
+│   │   └── NavIcons.tsx            # آیکون‌های وکتور اختصاصی Google Maps، Waze، نشان و بلد
+│   └── utils/
+│       ├── persianUtils.ts         # تبدیل ارقام فارسی، استانداردسازی آدرس، تشخیص مدیوم، امتیازدهی تاریخ
+│       ├── routeOptimizer.ts       # حل‌کننده TSP، ساخت لینک‌های دیپ‌لینک اپ‌های مسیریابی و خروجی GPX
+│       └── roadLayout.ts           # محاسبات ریاضی نقشه جاده‌ای و هندسه اتصالات
 └── scripts/
-    └── sync-galleryinfo.cjs       # Scraper engine connecting to galleryinfo.ir API
+    ├── deploy-ghpages.cjs          # اسکریپت خودکار استقرار روی gh-pages گیت‌هاب
+    ├── sync-galleryinfo.cjs        # اسکریپت همگام‌سازی و وب اسکرپر دیتای galleryinfo.ir
+    └── analyze-posters.cjs         # پایپ‌لاین ویژن چندحالته برای استخراج هوشمند موضوع و مدیوم از تصویر پوستر
 ```
 
 ---
 
-## 4. Complete Feature Specifications
+## ۴. جزییات دقیق کامپوننت‌ها و استانداردهای طراحی
 
-### 1. Catalog & Exhibition Feed (`src/App.tsx`, `GalleryCard.tsx`)
-* **3-Stage Filter Tabs:**
-  1. `افتتاحیه این هفته` (Default): Shows only exhibitions opening this current week/Friday based on `isThisWeekOpening()`.
-  2. `نمایشگاه‌های فعال با پوستر`: Exhibitions with verified active posters.
-  3. `همه نگارخانه‌ها`: All registered Tehran galleries.
-* **Search Engine:** Real-time multi-attribute search matching gallery name (Persian & English), artist names, exhibition titles, neighborhoods, and street addresses.
-* **Sorting (`ClayDropdown`):**
-  * `جدیدترین رویدادها (پیش‌فرض)`: Sorted by latest exhibition event ID / opening date score descending.
-  * `بر اساس نام نگارخانه`: Alphabetical in Persian.
-* **Neighborhood Filter (`ClayDropdown`):** Displays all 7 Tehran zones.
-* **Card Details:**
-  * Gallery logo + name + single location line (`محله · نشانی خیابان`).
-  * Poster preview with lazy loading and tap-to-view.
-  * Exhibition Title.
-  * Artist row with `User` icon (group exhibitions show `گروهی از هنرمندان`).
-  * **Medium / Subject Badge:** Powered by `getExhibitionMedium()` with `Palette` icon:
-    * `نقاشی` (Painting)
-    * `عکاسی` (Photography)
-    * `مجسمه‌سازی و حجم` (Sculpture & Volume)
-    * `خوشنویسی و خط` (Calligraphy)
-    * `طراحی` (Drawing/Sketch)
-    * `چاپ دستی` (Printmaking)
-    * `چیدمان (اینستالیشن)` (Installation Art)
-    * `چندرسانه‌ای` (New Media)
-    * `هنر الیاف و بافت` (Textile / Fiber Art)
-    * `گنجینه موزه` (Museum Collection)
-    * `هنرهای تجسمی` (Fine Arts fallback)
-  * Opening status badge (`افتتاحیه: جمعه ۱۵ آبان ۱۴۰۵` + `این هفته`).
-  * Action buttons: `اطلاعات نگارخانه` (modal) and `+ افزودن به گشت` (route selection).
+### الف. کارت گالری و نمایشگاه (`GalleryCard.tsx`)
+* **تصویر پوستر:** ابعاد Aspect-Square با انیمیشن ملایم هاور و قابلیت نمایش تمام‌صفحه.
+* **مدیوم و متریال اثر (Medium Badge):**
+  نشان رنگی همراه با آیکون پالت (`Palette`). دسته‌بندی‌ها دقیق و تفکیک‌شده هستند:
+  - `نقاشی`
+  - `عکاسی`
+  - `مجسمه‌سازی و حجم`
+  - `خوشنویسی و خط`
+  - `طراحی`
+  - `چاپ دستی`
+  - `چیدمان (اینستالیشن)`
+  - `چندرسانه‌ای`
+  - `هنر معاصر و چندرسانه‌ای`
+  - `هنر الیاف و بافت`
+  - `گنجینه موزه`
+  - `هنرهای تجسمی` (فقط به عنوان آخرین فال‌بک)
+* **بج افتتاحیه:** باکس نارنجی برجسته با تاریخ شمسی فارسی (مثلاً `افتتاحیه: جمعه ۱۵ آبان ۱۴۰۵`) به همراه نشانگر چشمک‌زن `این هفته` در صورت بازگشایی در جمعه جاری.
+* **تفکیک مجموعه‌های چندسالنه:** گالری‌هایی که چندین فضای مستقل دارند (مثل خانه هنرمندان یا گالری‌های بزرگ)، در کارت مشخص شده و در مدال جزئیات دارای تب‌های تفکیک‌شده برای هر سالن هستند.
 
-### 2. Route Planner & Optimizer (`RouteSummaryPanel.tsx`, `routeOptimizer.ts`)
-* **Mode Control:** Car (`با خودرو`) vs Walking (`پیاده‌روی`).
-* **Route Pattern:** One-way (`تک‌مسیره`) vs Loop (`رفت‌وبرگشت`).
-* **Tehran Traffic Scenarios (Driving mode):**
-  * `عادی (روان)`
-  * `اوج عصر (شلوغ)`: Adds realistic rush-hour delay.
-  * `جمعه و تعطیلات`: Optimized for opening day traffic.
-  * Traffic zone alert: Highlights if galleries fall inside Tehran's Restricted Traffic Zone (`طرح ترافیک`).
-* **Gallery Visit Duration Dropdown (`ClayDropdown`):**
-  * Allows user to select estimated time spent inside each gallery (5 min to 60 min in 5-min intervals, default: **15 min**).
-  * Automatically updates the overall tour ETA:
-    $$\text{Total Time} = \text{Transit Time} + (\text{Number of Galleries} \times \text{Visit Duration})$$
-* **Itinerary Controls:**
-  * Reorder stops up/down.
-  * Set stop as starting point or ending point.
-  * Remove stop from route or clear entire route.
-* **1-Click External Navigation:**
-  * Google Maps multi-waypoint URL.
-  * Neshan app direct routing.
-  * Balad app direct routing.
-  * Waze direct routing.
-  * Download `.gpx` file for GPS devices.
-  * Copy complete text summary with formatted Persian digits.
+### ب. پنجره جزئیات گالری (`GalleryDetailModal.tsx`)
+* **اندازه فونت‌ها (طبق آخرین تنظیم دقیق کاربر):**
+  - عنوان بخش «برنامه و ساعات بازدید:» ۱۶ پیکسل.
+  - متن جزئیات ساعات افتتاحیه و عادی: **۱۵ پیکسل** (`text-[15px]`) با رنگ متعادل.
+  - عنوان بخش «نشانی:» ۱۶ پیکسل.
+  - متن نشانی نگارخانه: **۱۵ پیکسل** (`text-[15px]`) با متد `formatGalleryAddress`.
+* **مسیریابی مستقیم با ۴ اپلیکیشن:**
+  چهار کلید با آیکون‌های رسمی و شفاف:
+  1. **نشان (Neshan):** هدایت با دیپ‌لینک اختصاصی نشان
+  2. **بلد (Balad):** هدایت با دیپ‌لینک بلد
+  3. **Google Maps:** هدایت به اپلیکیشن و وب مپس
+  4. **Waze:** هدایت مستقیم به ویز
+  نام‌های انگلیسی `Google` و `Waze` دقیقاً با فونت **Ubuntu** رندر می‌شوند.
+* **طرح ترافیک:** عبارت استاندارد خلاصه‌شده «در محدوده طرح ترافیک» به جای جملات طولانی.
 
-### 3. Curated Tours (`CuratedToursModal.tsx`, `curatedTours.ts`)
-* Pre-designed, highly engaging walking tours in Tehran art clusters:
-  1. **گذر هنر معاصر کریم‌خان** (Karimkhan Contemporary Corridor)
-  2. **گشت هنری الهیه و فرشته** (Elahiyeh & Fereshteh High-Art Walk)
-  3. **مسیر هنر و میراث مرکز و انقلاب** (Downtown & Enghelab Art Trail)
-* Clicking any tour immediately loads its gallery set into the Route Planner.
+### ج. پنل بهینه‌سازی مسیر (`RouteSummaryPanel.tsx`)
+* حل مسئله TSP (پیمایش کمترین مسافت ممکن بین گالری‌های انتخاب شده).
+* قابلیت تنظیم زمان اقامت در هر گالری (از ۵ دقیقه تا ۶۰ دقیقه با پیش‌فرض ۱۵ دقیقه) و محاسبه هوشمند زمان کل گشت.
+* تخمین ترافیک تهران بر مبنای سناریوی رانندگی در ساعات عصر و روز جمعه.
+* امکان جابجایی ترتیبی توقف‌ها، تعیین مبدا سفارشی و خروجی GPX برای ساعت‌های هوشمند یا اپ‌های GPS.
 
 ---
 
-## 5. Tehran Neighborhood Taxonomy (The 7 Official Zones)
-Any Tehran gallery must be classified strictly into one of these 7 zones:
+## ۵. دسته‌بندی محلات ۷ گانه تهران (Tehran Neighborhood Taxonomy)
 
-1. **نیاوران و شمال تهران:** نیاوران، فرمانیه، کامرانیه، اقدسیه، بلوار ارتش، نخل، دارآباد، تجریش، دزاشیب، اندرزگو، قیطریه، دروس، دیباجی، پاسداران، تهرانپارس. *(Includes گالری با [id 497] in بلوار ارتش غرب).*
+کلیه گالری‌های تهران بر اساس مختصات و محله دقیقاً به یکی از ۷ محدوده زیر نگاشت شده‌اند:
+1. **نیاوران و شمال تهران:** نیاوران، فرمانیه، کامرانیه، اقدسیه، بلوار ارتش، نخل، دارآباد، تجریش، دزاشیب، اندرزگو، قیطریه، دروس، دیباجی، پاسداران، تهرانپارس. (شامل گالری با در بلوار ارتش).
 2. **الهیه و فرشته:** خیابان فرشته (فیاضی)، الهیه، سام سنتر، خیابان بیدار، چناران، آقابزرگی، زعفرانیه، محمودیه، ولنجک، پسیان، پارک‌وی.
 3. **ونک، میرداماد و ظفر:** ونک، ملاصدرا، شیخ بهایی، خیابان سئول، میرداماد، ظفر (دستگردی)، جردن (آفریقا / نلسون ماندلا)، گاندی، بزرگراه کردستان.
 4. **بهشتی و مطهری:** خیابان مطهری، خیابان بهشتی (عباس‌آباد)، میرعماد، سهروردی، لارستان، قائم‌مقام فراهانی، میرزای شیرازی شمالی، وزرا، پاکستان.
@@ -145,36 +143,44 @@ Any Tehran gallery must be classified strictly into one of these 7 zones:
 
 ---
 
-## 6. Critical Bugs & Gotchas (NEVER Reintroduce)
-1. **Never use raw `<select>` elements:** Always use `<ClayDropdown>`. Native selects break the Claymorphic aesthetic and produce jarring OS-level dropdowns.
-2. **Never expose `&nbsp;` in addresses:** The upstream scraper occasionally captures `&nbsp;`. All addresses in components must use `formatGalleryAddress()`.
-3. **Never hardcode non-Tehran default to Karimkhan:** If `sync-galleryinfo.cjs` discovers a gallery outside Tehran, record its actual city (`Karaj`, `Mashhad`, `Shiraz`, etc.).
-4. **Never delete non-Tehran data:** Non-Tehran galleries are kept in `galleries.json` and `exhibitions.json` and filtered only at the view layer (`App.tsx`).
-5. **Never commit `.github/workflows/`:** The GitHub Personal Access Token lacks the `workflow` scope. Syncing is done locally via `node scripts/sync-galleryinfo.cjs`.
+## ۶. نقشه راه آینده و برنامه‌های آتی (Roadmap & Server Plan)
+
+* **سرور اختصاصی:** کاربر اخیراً یک سرور (VPS) لینوکس خریداری کرده است که پس از تحویل، برای استقرار سرویس‌های بک‌اند استفاده خواهد شد:
+  1. سرویس کران‌جاب (Cron Job) همگام‌سازی ۲۴ ساعته با وب‌سایت‌های مرجع گالری‌ها
+  2. پایپ‌لاین هوش مصنوعی بینایی ماشین (Vision) برای پردازش خودکار پوسترها و تفکیک متریال، هنرمندان و کیوریتورها
+  3. **چت هوشمند مبتنی بر هوش مصنوعی (AI Smart Chatbot):** دستیار هوشمندی داخل برنامه که به سوالات کاربران درباره گالری‌ها، آدرس‌ها، بیوگرافی آرتیست‌ها، ساعات کاری و مسیرهای بهینه پاسخ دهد.
+* **دقت تشخیصی بالاتر:** افزودن مدل‌های OCR و تحلیل پوستر برای کاهش خطاهای اسکرپر بالادستی.
 
 ---
 
-## 7. Verification & Deployment Commands
+## ۷. فرآیند تست، ساخت و دیپلوی (Build & Deploy)
 
-Always verify the build before deploying:
+قبل از پایان هر تسک، دستورات زیر به ترتیب در مسیر پروژه اجرا می‌شوند:
+
 ```powershell
-# 1. Build test
+# ۱. اعتبارسنجی تایپ‌اسکریپت بدون خطا
+npm.cmd exec tsc -- --noEmit
+
+# ۲. تست بیلد ویت
 npm.cmd run build
 
-# 2. Deploy script (Main + GitHub Pages)
-node -e "
-const { execSync } = require('child_process');
-const path = require('path');
-function run(cmd, cwd) { execSync(cmd, { cwd: cwd || process.cwd(), stdio: 'inherit' }); }
+# ۳. کامیت و پوش روی برنچ اصلی
+git add .
+git commit -m "feat(ui): <توضیح کوتاه تغییرات> (v1.09X)"
+git push origin main
 
-run('git add .');
-run('git commit -m \"feat: <DESCRIPTION> (v1.05X)\"');
-run('git push origin main');
-
-const distDir = path.join(process.cwd(), 'dist');
-run('git init', distDir);
-run('git add -A', distDir);
-run('git commit -m \"deploy: v1.05X\"', distDir);
-run('git push -f https://github.com/ped-84/anti-gallery.git master:gh-pages', distDir);
-"
+# ۴. استقرار روی برنچ gh-pages (سایت لایو)
+node scripts/deploy-ghpages.cjs
 ```
+> [!NOTE]
+> اسکریپت `scripts/deploy-ghpages.cjs` پوشه `dist/` را به همراه فایل `.nojekyll` بر روی شاخه `gh-pages` ریپازیتوری گیت‌هاب فورس‌پوش می‌کند.
+
+---
+
+## ۸. خطاهای مهمی که هرگز نباید تکرار شوند (Gotchas)
+
+1. **هرگز از تگ بومی `<select>` استفاده نکنید:** همواره از کامپوننت [`ClayDropdown.tsx`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/src/components/ClayDropdown.tsx) استفاده شود تا استایل کلیمورفیک حفظ شود.
+2. **هرگز باگ ریست شدن اپ در موبایل را برنگردانید:** نباید رویداد `controllerchange` سرویس ورکر باعث رفرش ناخواسته کل پنجره یا ریست شدن استیت‌ها شود.
+3. **عدم بازگشت آدرس‌های خام با کاراکترهای خراب:** متون آدرس باید همیشه از فیلتر `formatGalleryAddress()` عبور کنند تا انتیتی‌های HTML مثل `&nbsp;` حذف شوند.
+4. **عدم حذف گالری‌های غیرتهرانی:** شهرهای دیگر باید در فایل `galleries.json` باقی بمانند و صرفاً در `App.tsx` فیلتر شوند.
+5. **تنظیم فونت انگلیسی:** هرگز فونت انگلیسی را به حال خود رها نکنید؛ در فایل‌های CSS تعریف `UbuntuLatinOnly` و کلاس `.font-ubuntu` وجود دارد تا ظاهر انگلیسی برنامه همیشه فونت رسمی Ubuntu باشد.
