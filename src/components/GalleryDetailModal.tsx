@@ -268,51 +268,51 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
             {activeExhibition ? (
               <div className="clay-card clay-orange-subtle p-3.5 sm:p-4 rounded-2xl shadow-xs border border-[#F76B1C]/30 space-y-2.5">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
-                  {/* افتتاحیه: ۱۶ پیکسل (۲ پیکسل بزرگتر) */}
-                  <div className="flex items-center gap-2 text-base font-bold text-[#F76B1C]">
-                    <Calendar className="w-4.5 h-4.5 shrink-0" />
+                  {/* افتتاحیه: ۴ پیکسل بزرگتر (۲۰ پیکسل) */}
+                  <div className="flex items-center gap-2 text-[20px] font-black text-[#F76B1C]">
+                    <Calendar className="w-5 h-5 shrink-0" />
                     <span>
                       {activeExhibition.openingDate
                         ? `افتتاحیه: ${toPersianDigits(activeExhibition.openingDate)}`
                         : 'افتتاحیه: جمعه‌ها ۱۶:۰۰ الی ۲۰:۰۰'}
                     </span>
                   </div>
-                  {/* بج ساعت: ۱۴ پیکسل (۲ پیکسل بزرگتر) */}
+                  {/* بج ساعت: ۱۴ پیکسل */}
                   <span className="text-sm font-bold bg-[#F76B1C] text-white px-3 py-1 rounded-xl shadow-xs">
                     ساعت ۱۶ تا ۲۰
                   </span>
                 </div>
 
-                {/* عنوان نمایشگاه: ۱۸ پیکسل */}
+                {/* عنوان نمایشگاه: ۴ پیکسل بزرگتر (۲۲ پیکسل) */}
                 <div>
-                  <h3 className="text-lg sm:text-[18px] font-black text-[#10335e] dark:text-[#dbeafe] leading-snug">
+                  <h3 className="text-[22px] font-black text-[#10335e] dark:text-[#dbeafe] leading-tight">
                     {activeExhibition.title}
                   </h3>
                 </div>
 
-                {/* نام هنرمند و کلمه هنرمند: ۱۶ پیکسل (۲ پیکسل بزرگتر) */}
+                {/* نام هنرمند و کلمه هنرمند: ۱ پیکسل کوچکتر (۱۵ پیکسل) */}
                 {activeExhibition.artist && (
-                  <div className="flex items-center gap-2 text-base text-[#1d2d4c] dark:text-stone-200 font-bold pt-2 border-t border-[#F76B1C]/20">
-                    <User className="w-4.5 h-4.5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
-                    <span className="text-stone-500 dark:text-stone-400 font-medium text-base">هنرمند:</span>
-                    <span className="text-base font-bold">{formatArtistName(activeExhibition.artist)}</span>
+                  <div className="flex items-center gap-2 text-[15px] text-[#1d2d4c] dark:text-stone-200 font-bold pt-2 border-t border-[#F76B1C]/20">
+                    <User className="w-4 h-4 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
+                    <span className="text-stone-500 dark:text-stone-400 font-medium text-[15px]">هنرمند:</span>
+                    <span className="text-[15px] font-bold">{formatArtistName(activeExhibition.artist)}</span>
                   </div>
                 )}
 
-                {/* موضوع و مدیوم آثار: ۱۶ پیکسل، نشان/بج: ۱۶ پیکسل (۲ پیکسل بزرگتر) */}
-                <div className="flex items-center justify-between gap-2 text-base pt-2 border-t border-[#F76B1C]/15">
-                  <div className="flex items-center gap-2 text-stone-700 dark:text-stone-300 font-bold text-base">
+                {/* موضوع و مدیوم آثار: ۱ پیکسل کوچکتر (۱۵ پیکسل)، نشان/بج: ۱ پیکسل کوچکتر (۱۵ پیکسل) */}
+                <div className="flex items-center justify-between gap-2 text-[15px] pt-2 border-t border-[#F76B1C]/15">
+                  <div className="flex items-center gap-2 text-stone-700 dark:text-stone-300 font-bold text-[15px]">
                     <Palette className="w-4.5 h-4.5 text-[#F76B1C] shrink-0" />
                     <span>موضوع و مدیوم آثار:</span>
                   </div>
-                  <span className="px-3.5 py-1 rounded-xl text-base font-bold bg-[#edf3ff] dark:bg-blue-950/60 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/80 dark:border-blue-800 shadow-2xs">
+                  <span className="px-3.5 py-1 rounded-xl text-[15px] font-bold bg-[#edf3ff] dark:bg-blue-950/60 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/80 dark:border-blue-800 shadow-2xs">
                     {getExhibitionMedium(activeExhibition.title, activeExhibition.artist, activeExhibition.type)}
                   </span>
                 </div>
 
-                {/* دوره برگزاری: ۱۴ پیکسل (۲ پیکسل بزرگتر) */}
+                {/* دوره برگزاری: ۱ پیکسل بزرگتر (۱۵ پیکسل) */}
                 {activeExhibition.fullDateRange && (
-                  <div className="text-sm text-stone-500 dark:text-stone-400 flex items-center gap-2 pt-1 font-medium">
+                  <div className="text-[15px] text-stone-500 dark:text-stone-400 flex items-center gap-2 pt-1 font-medium">
                     <Clock className="w-4 h-4 text-[#F76B1C]" />
                     <span>دوره برگزاری: {toPersianDigits(activeExhibition.fullDateRange)}</span>
                   </div>
@@ -428,7 +428,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
                   <NeshanIcon className="w-7 h-7 shrink-0" />
-                  <span className="text-base font-bold text-stone-800 dark:text-white">نشان</span>
+                  <span className="text-[15px] font-bold text-stone-800 dark:text-white">نشان</span>
                 </a>
 
                 <a
@@ -438,7 +438,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
                   <BaladIcon className="w-7 h-7 shrink-0" />
-                  <span className="text-base font-bold text-stone-800 dark:text-white">بلد</span>
+                  <span className="text-[15px] font-bold text-stone-800 dark:text-white">بلد</span>
                 </a>
 
                 <a
@@ -448,7 +448,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
                   <GoogleMapsIcon className="w-7 h-7 shrink-0" />
-                  <span className="text-base font-bold text-stone-800 dark:text-white">Google</span>
+                  <span className="text-[15px] font-bold text-stone-800 dark:text-white">Google</span>
                 </a>
 
                 <a
@@ -458,7 +458,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
                   <WazeIcon className="w-7 h-7 shrink-0" />
-                  <span className="text-base font-bold text-stone-800 dark:text-white">Waze</span>
+                  <span className="text-[15px] font-bold text-stone-800 dark:text-white">Waze</span>
                 </a>
               </div>
             </div>
