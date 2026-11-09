@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Gallery, RouteOptimizationResult, CustomOrigin } from './types/gallery';
 import rawGalleriesData from './data/galleries.json';
 import {
@@ -48,7 +48,9 @@ const STORAGE_KEYS = {
   END_ID: 'gallerygardi_end_id',
   ORDERED_IDS: 'gallerygardi_ordered_ids',
   DARK_MODE: 'gallerygardi_dark_mode',
-  ORIGIN_LOCATION: 'gallerygardi_origin_location'
+  ORIGIN_LOCATION: 'gallerygardi_origin_location',
+  ACTIVE_MODAL_ID: 'artgasht_active_modal_id',
+  MOBILE_TAB: 'artgasht_mobile_active_tab'
 };
 
 const LEGACY_DEFAULT_IDS = [1023, 485, 25, 182];
@@ -122,8 +124,23 @@ export default function App() {
     return false;
   });
 
-  // Responsive mobile view tab ('catalog' vs 'map')
-  const [mobileActiveTab, setMobileActiveTab] = useState<'catalog' | 'map'>('catalog');
+  // Responsive mobile view tab ('catalog' vs 'map') - Persisted across app switches
+  const [mobileActiveTabState, setMobileActiveTabState] = useState<'catalog' | 'map'>(() => {
+    try {
+      const saved = sessionStorage.getItem(STORAGE_KEYS.MOBILE_TAB);
+      if (saved === 'catalog' || saved === 'map') return saved;
+    } catch {}
+    return 'catalog';
+  });
+
+  const setMobileActiveTab = useCallback((tab: 'catalog' | 'map') => {
+    setMobileActiveTabState(tab);
+    try {
+      sessionStorage.setItem(STORAGE_KEYS.MOBILE_TAB, tab);
+    } catch {}
+  }, []);
+
+  const mobileActiveTab = mobileActiveTabState;
 
   // Filters & Search
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -131,8 +148,31 @@ export default function App() {
   const [galleryFilterTab, setGalleryFilterTab] = useState<'this-week' | 'all-active' | 'all'>('this-week');
   const [sortBy, setSortBy] = useState<'latest' | 'name'>('latest');
 
-  // Modals
-  const [activeModalGallery, setActiveModalGallery] = useState<Gallery | null>(null);
+  // Modals (Persist active gallery ID so app switching on mobile never loses modal state)
+  const [activeModalGalleryState, setActiveModalGalleryState] = useState<Gallery | null>(() => {
+    try {
+      const savedId = sessionStorage.getItem(STORAGE_KEYS.ACTIVE_MODAL_ID);
+      if (savedId) {
+        const idNum = parseInt(savedId, 10);
+        const found = galleries.find((g) => g.id === idNum);
+        if (found) return found;
+      }
+    } catch {}
+    return null;
+  });
+
+  const setActiveModalGallery = useCallback((gallery: Gallery | null) => {
+    setActiveModalGalleryState(gallery);
+    try {
+      if (gallery) {
+        sessionStorage.setItem(STORAGE_KEYS.ACTIVE_MODAL_ID, String(gallery.id));
+      } else {
+        sessionStorage.removeItem(STORAGE_KEYS.ACTIVE_MODAL_ID);
+      }
+    } catch {}
+  }, []);
+
+  const activeModalGallery = activeModalGalleryState;
   const [isCuratedModalOpen, setIsCuratedModalOpen] = useState<boolean>(false);
   const [highlightedGalleryId, setHighlightedGalleryId] = useState<number | null>(null);
   const [activeCuratedRouteId, setActiveCuratedRouteId] = useState<string | null>(null);

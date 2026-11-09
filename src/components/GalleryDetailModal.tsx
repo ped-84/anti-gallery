@@ -260,14 +260,14 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
             {gallery.isInTrafficZone && (
               <div className="sm:hidden bg-[#F76B1C]/10 text-[#F76B1C] border border-[#F76B1C]/25 text-xs font-bold px-3 py-1.5 rounded-xl flex items-center gap-1.5">
                 <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
-                <span>این نگارخانه در محدوده طرح ترافیک تهران واقع شده است</span>
+                <span>در محدوده طرح ترافیک</span>
               </div>
             )}
 
-            {/* Exhibition Details Box (Prominent & Clear) */}
+            {/* Exhibition Details Box (Prominent & Clear - Matched to Catalog Card style) */}
             {activeExhibition ? (
-              <div className="clay-card clay-orange-subtle p-3.5 sm:p-4 rounded-2xl shadow-xs border border-[#F76B1C]/30 space-y-2">
-                <div className="flex items-center justify-between gap-1.5 flex-nowrap">
+              <div className="p-3.5 sm:p-4 rounded-2xl bg-[#f0f4fa] dark:bg-[#1b2230] shadow-sm space-y-2.5 border border-[#A3C2E4]/40 dark:border-stone-700/60">
+                <div className="flex items-center justify-between gap-1.5 flex-nowrap bg-white/95 dark:bg-stone-900/95 text-[#F76B1C] px-3 py-2 rounded-xl font-bold shadow-xs border border-[#F76B1C]/20">
                   {/* افتتاحیه: اندازه مناسب و فشرده برای قرارگیری هم‌خط و زیبا با بج ساعت */}
                   <div className="flex items-center gap-1.5 text-[15px] sm:text-base font-bold text-[#F76B1C] min-w-0">
                     <Calendar className="w-4.5 h-4.5 shrink-0" />
@@ -283,29 +283,29 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   </span>
                 </div>
 
-                {/* عنوان نمایشگاه: فاصله با بالا ضرب در ۰.۷۵ شده (کاهش فاصله با افتتاحیه) */}
-                <div className="-mt-0.5">
+                {/* عنوان نمایشگاه: ۴ پیکسل فاصله با سطر افتتاحیه اضافه شد */}
+                <div className="pt-1 mt-0.5">
                   <h3 className="text-[22px] font-black text-[#10335e] dark:text-[#dbeafe] leading-tight">
                     {activeExhibition.title}
                   </h3>
                 </div>
 
-                {/* نام هنرمند و کلمه هنرمند: ۱ پیکسل کوچکتر (۱۵ پیکسل) */}
+                {/* نام هنرمند و کلمه هنرمند: ۱۵ پیکسل */}
                 {activeExhibition.artist && (
-                  <div className="flex items-center gap-2 text-[15px] text-[#1d2d4c] dark:text-stone-200 font-bold pt-2 border-t border-[#F76B1C]/20">
+                  <div className="flex items-center gap-2 text-[15px] text-[#1d2d4c] dark:text-stone-200 font-bold pt-2 border-t border-[#A3C2E4]/30 dark:border-stone-700/60">
                     <User className="w-4 h-4 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
                     <span className="text-stone-500 dark:text-stone-400 font-medium text-[15px]">هنرمند:</span>
                     <span className="text-[15px] font-bold">{formatArtistName(activeExhibition.artist)}</span>
                   </div>
                 )}
 
-                {/* موضوع و مدیوم آثار: ۱ پیکسل کوچکتر (۱۴ پیکسل) */}
-                <div className="flex items-center justify-between gap-2 text-[15px] pt-2 border-t border-[#F76B1C]/15">
+                {/* موضوع و مدیوم آثار: ۱ پیکسل کوچکتر (۱۳ پیکسل) */}
+                <div className="flex items-center justify-between gap-2 text-[15px] pt-2 border-t border-[#A3C2E4]/30 dark:border-stone-700/60">
                   <div className="flex items-center gap-2 text-stone-700 dark:text-stone-300 font-bold text-[15px]">
                     <Palette className="w-4.5 h-4.5 text-[#F76B1C] shrink-0" />
                     <span>موضوع و مدیوم آثار:</span>
                   </div>
-                  <span className="px-3.5 py-1 rounded-xl text-[14px] font-bold bg-[#edf3ff] dark:bg-blue-950/60 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/80 dark:border-blue-800 shadow-2xs">
+                  <span className="px-3.5 py-1 rounded-xl text-[13px] font-bold bg-[#edf3ff] dark:bg-blue-950/60 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/80 dark:border-blue-800 shadow-2xs">
                     {getExhibitionMedium(
                       activeExhibition.title,
                       activeExhibition.artist,
@@ -316,9 +316,9 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   </span>
                 </div>
 
-                {/* دوره برگزاری: ۱ پیکسل بزرگتر (۱۵ پیکسل) */}
+                {/* دوره برگزاری: ۱ پیکسل کوچکتر (۱۴ پیکسل) */}
                 {activeExhibition.fullDateRange && (
-                  <div className="text-[15px] text-stone-500 dark:text-stone-400 flex items-center gap-2 pt-1 font-medium">
+                  <div className="text-[14px] text-stone-500 dark:text-stone-400 flex items-center gap-2 pt-1 font-medium">
                     <Clock className="w-4 h-4 text-[#F76B1C]" />
                     <span>دوره برگزاری: {toPersianDigits(activeExhibition.fullDateRange)}</span>
                   </div>
