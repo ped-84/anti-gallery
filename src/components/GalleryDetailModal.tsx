@@ -266,25 +266,25 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
 
             {/* Exhibition Details Box (Prominent & Clear) */}
             {activeExhibition ? (
-              <div className="clay-card clay-orange-subtle p-3.5 sm:p-4 rounded-2xl shadow-xs border border-[#F76B1C]/30 space-y-2.5">
-                <div className="flex items-center justify-between gap-2 flex-wrap">
-                  {/* افتتاحیه: ۴ پیکسل بزرگتر (۲۰ پیکسل) */}
-                  <div className="flex items-center gap-2 text-[20px] font-black text-[#F76B1C]">
-                    <Calendar className="w-5 h-5 shrink-0" />
-                    <span>
+              <div className="clay-card clay-orange-subtle p-3.5 sm:p-4 rounded-2xl shadow-xs border border-[#F76B1C]/30 space-y-2">
+                <div className="flex items-center justify-between gap-1.5 flex-nowrap">
+                  {/* افتتاحیه: اندازه مناسب و فشرده برای قرارگیری هم‌خط و زیبا با بج ساعت */}
+                  <div className="flex items-center gap-1.5 text-[15px] sm:text-base font-bold text-[#F76B1C] min-w-0">
+                    <Calendar className="w-4.5 h-4.5 shrink-0" />
+                    <span className="truncate">
                       {activeExhibition.openingDate
                         ? `افتتاحیه: ${toPersianDigits(activeExhibition.openingDate)}`
                         : 'افتتاحیه: جمعه‌ها ۱۶:۰۰ الی ۲۰:۰۰'}
                     </span>
                   </div>
-                  {/* بج ساعت: ۱۴ پیکسل */}
-                  <span className="text-sm font-bold bg-[#F76B1C] text-white px-3 py-1 rounded-xl shadow-xs">
+                  {/* بج ساعت: حفظ در یک خط روبه‌روی تاریخ افتتاحیه */}
+                  <span className="text-xs sm:text-[13px] font-bold bg-[#F76B1C] text-white px-2.5 py-1 rounded-xl shadow-xs shrink-0 whitespace-nowrap">
                     ساعت ۱۶ تا ۲۰
                   </span>
                 </div>
 
-                {/* عنوان نمایشگاه: ۴ پیکسل بزرگتر (۲۲ پیکسل) */}
-                <div>
+                {/* عنوان نمایشگاه: فاصله با بالا ضرب در ۰.۷۵ شده (کاهش فاصله با افتتاحیه) */}
+                <div className="-mt-0.5">
                   <h3 className="text-[22px] font-black text-[#10335e] dark:text-[#dbeafe] leading-tight">
                     {activeExhibition.title}
                   </h3>
