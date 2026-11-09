@@ -238,7 +238,13 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
                   <span>موضوع:</span>
                 </div>
                 <span className="px-3.5 py-1 rounded-xl text-sm font-black bg-[#edf3ff] dark:bg-blue-950/50 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/60 dark:border-blue-800/50 shadow-2xs">
-                  {getExhibitionMedium(activeExhibition.title, activeExhibition.artist, activeExhibition.type)}
+                  {getExhibitionMedium(
+                    activeExhibition.title,
+                    activeExhibition.artist,
+                    activeExhibition.type,
+                    activeExhibition.eventId,
+                    activeExhibition.medium
+                  )}
                 </span>
               </div>
             </div>
@@ -285,7 +291,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
           ) : (
             <>
               <Plus className="w-4 h-4 text-[#3D5B99] dark:text-[#A3C2E4]" />
-              <span>+ افزودن به گشت</span>
+              <span>افزودن به گشت</span>
             </>
           )}
         </button>

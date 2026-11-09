@@ -5,6 +5,7 @@ export interface Exhibition {
   title: string;
   artist?: string;
   type?: string;
+  medium?: string;
   openingDate?: string;
   closingDate?: string;
   fullDateRange?: string;

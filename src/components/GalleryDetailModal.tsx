@@ -299,14 +299,20 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   </div>
                 )}
 
-                {/* موضوع و مدیوم آثار: ۱ پیکسل کوچکتر (۱۵ پیکسل)، نشان/بج: ۱ پیکسل کوچکتر (۱۵ پیکسل) */}
+                {/* موضوع و مدیوم آثار: ۱ پیکسل کوچکتر (۱۴ پیکسل) */}
                 <div className="flex items-center justify-between gap-2 text-[15px] pt-2 border-t border-[#F76B1C]/15">
                   <div className="flex items-center gap-2 text-stone-700 dark:text-stone-300 font-bold text-[15px]">
                     <Palette className="w-4.5 h-4.5 text-[#F76B1C] shrink-0" />
                     <span>موضوع و مدیوم آثار:</span>
                   </div>
-                  <span className="px-3.5 py-1 rounded-xl text-[15px] font-bold bg-[#edf3ff] dark:bg-blue-950/60 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/80 dark:border-blue-800 shadow-2xs">
-                    {getExhibitionMedium(activeExhibition.title, activeExhibition.artist, activeExhibition.type)}
+                  <span className="px-3.5 py-1 rounded-xl text-[14px] font-bold bg-[#edf3ff] dark:bg-blue-950/60 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/80 dark:border-blue-800 shadow-2xs">
+                    {getExhibitionMedium(
+                      activeExhibition.title,
+                      activeExhibition.artist,
+                      activeExhibition.type,
+                      activeExhibition.eventId,
+                      activeExhibition.medium
+                    )}
                   </span>
                 </div>
 
@@ -505,7 +511,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
               ) : (
                 <>
                   <Plus className="w-4 h-4 stroke-[2.5]" />
-                  <span>+ افزودن این گالری به برنامه گشت</span>
+                  <span>افزودن این گالری به برنامه گشت</span>
                 </>
               )}
             </button>

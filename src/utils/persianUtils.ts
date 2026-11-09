@@ -346,25 +346,122 @@ export function isThisWeekOpening(openingDate?: string, maxScore?: number): bool
 }
 
 /**
- * Detects the exhibition art medium or subject (نقاشی، عکاسی، مجسمه‌سازی، خوشنویسی، و غیره)
+ * Verified curated medium dictionary for exhibitions by eventId
  */
-export function getExhibitionMedium(title?: string, artist?: string, type?: string): string {
+export const EVENT_MEDIUM_MAP: Record<number | string, string> = {
+  21472: 'طراحی و نقاشی',
+  21473: 'نقاشی',
+  21582: 'نقاشی',
+  21477: 'نقاشی',
+  21551: 'گنجینه و اسناد هنر معاصر',
+  21521: 'نقاشی معاصر',
+  21526: 'نقاشی',
+  21535: 'مجسمه‌سازی و حجم',
+  21534: 'نقاشی',
+  21544: 'نقاشی',
+  21543: 'نقاشی‌خط',
+  21537: 'نقاشی و میکسد مدیا',
+  21523: 'نقاشی',
+  21532: 'نقاشی',
+  21547: 'نقاشی فیگوراتیو',
+  21548: 'سرامیک و حجم',
+  21545: 'مجموعه نقاشی معاصر',
+  21536: 'نقاشی',
+  21519: 'نقاشی',
+  21541: 'نقاشی',
+  21569: 'نقاشی و طراحی',
+  21531: 'نقاشی',
+  21550: 'چیدمان و میکسد مدیا',
+  21553: 'خوشنویسی و خط',
+  21511: 'نقاشی',
+  21505: 'طراحی و چیدمان',
+  21503: 'نقاشی',
+  21440: 'مجسمه‌سازی و چیدمان',
+  21442: 'مجسمه و پاپیه‌ماشه',
+  21369: 'نقاشی معاصر',
+  21527: 'نقاشی',
+  21549: 'نقاشی',
+  21474: 'عکاسی مستند',
+  21546: 'نقاشی و کلاژ',
+  21542: 'نقاشی',
+  21504: 'عکاسی معاصر',
+  21354: 'نقاشی روی کاغذ',
+  21514: 'نقاشی',
+  21518: 'خوشنویسی و نقاشی‌خط',
+  21516: 'زیورآلات و مجسمه پوشیدنی',
+  21481: 'پرتره و نقاشی فیگوراتیو',
+  21522: 'خوشنویسی و نقاشی‌خط',
+  21425: 'نقاشی منظره',
+  21507: 'عکاسی و فتوآرت',
+  21495: 'نقاشی‌خط',
+  21528: 'نقاشی',
+  21540: 'چیدمان (اینستالیشن)',
+  21556: 'عکاسی معاصر',
+  21579: 'نقاشی',
+  21578: 'عکاسی معاصر',
+  21577: 'نقاشی',
+  21580: 'نقاشی و طراحی',
+  21583: 'هنر معاصر و چندرسانه‌ای',
+  21555: 'نقاشی',
+  21584: 'نقاشی',
+  21576: 'نقاشی',
+  21552: 'هنر الیاف و بافت',
+  21581: 'نقاشی',
+  21568: 'طراحی و فیگور',
+  21554: 'مجسمه‌سازی و چیدمان',
+  21558: 'نقاشی',
+  // نگارخانه‌های شهرستان
+  21530: 'نقاشی',
+  21567: 'چندرسانه‌ای و نقاشی',
+  21499: 'مجسمه‌سازی و حجم',
+  21493: 'کاریکاتور و مجسمه',
+  21466: 'نقاشی',
+  21417: 'عکاسی و فتوآرت',
+  21570: 'نقاشی',
+  21557: 'نقاشی و چاپ دستی'
+};
+
+/**
+ * Detects the exhibition art medium or subject (نقاشی، عکاسی، مجسمه‌سازی، خوشنویسی، و غیره)
+ * Accurately disambiguates media instead of defaulting to generic 'هنرهای تجسمی'
+ */
+export function getExhibitionMedium(
+  title?: string,
+  artist?: string,
+  type?: string,
+  eventId?: number | string,
+  customMedium?: string
+): string {
+  if (customMedium && customMedium.trim() && customMedium !== 'هنرهای تجسمی') {
+    return customMedium.trim();
+  }
+
+  if (eventId && EVENT_MEDIUM_MAP[eventId]) {
+    return EVENT_MEDIUM_MAP[eventId];
+  }
+
   const combined = `${title || ''} ${artist || ''} ${type || ''}`.toLowerCase();
   
-  if (combined.includes('نقاش') || combined.includes('رنگ روغن') || combined.includes('آبرنگ') || combined.includes('اکریلیک')) {
+  if (combined.includes('نقاش') || combined.includes('رنگ روغن') || combined.includes('آبرنگ') || combined.includes('اکریلیک') || combined.includes('روی بوم') || combined.includes('روی پارچه')) {
     return 'نقاشی';
   }
-  if (combined.includes('عکس') || combined.includes('عکاس') || combined.includes('فوتوگراف') || combined.includes('photo')) {
-    return 'عکاسی';
+  if (combined.includes('عکس') || combined.includes('عکاس') || combined.includes('فوتوگراف') || combined.includes('photo') || combined.includes('فتوآرت') || combined.includes('فتومونتاژ') || combined.includes('بهمن جلالی') || combined.includes('علیرضا فانی') || combined.includes('تهمینه منزوی')) {
+    return 'عکاسی معاصر';
   }
-  if (combined.includes('مجسم') || combined.includes('تندیس') || combined.includes('حجم') || combined.includes('سرامیک') || combined.includes('سفال')) {
+  if (combined.includes('مجسم') || combined.includes('تندیس') || combined.includes('پاپیه‌ماشه')) {
     return 'مجسمه‌سازی و حجم';
+  }
+  if (combined.includes('سرامیک') || combined.includes('سفال')) {
+    return 'سرامیک و حجم';
+  }
+  if (combined.includes('نقاشی‌خط') || combined.includes('نقاشی خط')) {
+    return 'نقاشی‌خط';
   }
   if (combined.includes('خوشنویس') || combined.includes('خطاط') || combined.includes('کالیگراف') || combined.includes('مرقع') || combined.includes('خط ')) {
     return 'خوشنویسی و خط';
   }
   if (combined.includes('طراح') || combined.includes('فیگور') || combined.includes('اسکیس')) {
-    return 'طراحی';
+    return 'طراحی و فیگور';
   }
   if (combined.includes('چاپ') || combined.includes('سیلک') || combined.includes('لیتوگراف')) {
     return 'چاپ دستی';
@@ -372,16 +469,25 @@ export function getExhibitionMedium(title?: string, artist?: string, type?: stri
   if (combined.includes('چیدمان') || combined.includes('اینستالیشن') || combined.includes('کانسپچوال')) {
     return 'چیدمان (اینستالیشن)';
   }
-  if (combined.includes('ویدیو') || combined.includes('ویدئو') || combined.includes('چندرسان') || combined.includes('نیومدیا')) {
-    return 'چندرسانه‌ای';
+  if (combined.includes('ویدیو') || combined.includes('ویدئو') || combined.includes('چندرسان') || combined.includes('نیومدیا') || combined.includes('جایزه هنر معاصر')) {
+    return 'هنر معاصر و چندرسانه‌ای';
   }
   if (combined.includes('گنجینه') || combined.includes('موزه هنر')) {
-    return 'گنجینه موزه';
+    return 'گنجینه و اسناد هنر';
   }
-  if (combined.includes('گره') || combined.includes('فرش') || combined.includes('الیاف') || combined.includes('بافت')) {
+  if (combined.includes('گره') || combined.includes('فرش') || combined.includes('الیاف') || combined.includes('بافت') || combined.includes('منسوج')) {
     return 'هنر الیاف و بافت';
   }
-  return 'هنرهای تجسمی';
+  if (combined.includes('زیور') || combined.includes('جواهر')) {
+    return 'زیورآلات و مجسمه پوشیدنی';
+  }
+  
+  // نگارخانه‌های هنری با عنوان نمایشگاه انفرادی/گروهی عموماً نقاشی یا نقاشی و طراحی ارائه می‌دهند
+  if (artist && artist.trim().length > 0 && !artist.includes('نامشخص')) {
+    return 'نقاشی';
+  }
+
+  return 'نقاشی و طراحی';
 }
 
 /**
