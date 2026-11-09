@@ -154,10 +154,10 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
               </div>
 
               <div className="truncate">
-                <h2 className="font-bold text-base sm:text-lg text-[#1d2d4c] dark:text-white truncate leading-tight">
+                <h2 className="font-bold text-[18px] sm:text-xl text-[#1d2d4c] dark:text-white truncate leading-tight">
                   {galleryDisplayName}
                 </h2>
-                <div className="text-xs text-[#3D5B99] dark:text-[#A3C2E4] truncate mt-0.5 font-medium flex items-center gap-1.5">
+                <div className="text-xs sm:text-sm text-[#3D5B99] dark:text-[#A3C2E4] truncate mt-0.5 font-medium flex items-center gap-1.5">
                   <span>{currentSpace.neighborhoodFa || gallery.neighborhoodFa || 'تهران'}</span>
                   <span className="text-stone-300 dark:text-stone-600">·</span>
                   <span className="truncate text-stone-500 dark:text-stone-400">
@@ -268,17 +268,17 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
             {activeExhibition ? (
               <div className="clay-card clay-orange-subtle p-3.5 sm:p-4 rounded-2xl shadow-xs border border-[#F76B1C]/30 space-y-2.5">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
-                  {/* افتتاحیه: ۱۴ پیکسل */}
-                  <div className="flex items-center gap-1.5 text-sm font-bold text-[#F76B1C]">
-                    <Calendar className="w-4 h-4 shrink-0" />
+                  {/* افتتاحیه: ۱۶ پیکسل (۲ پیکسل بزرگتر) */}
+                  <div className="flex items-center gap-2 text-base font-bold text-[#F76B1C]">
+                    <Calendar className="w-4.5 h-4.5 shrink-0" />
                     <span>
                       {activeExhibition.openingDate
                         ? `افتتاحیه: ${toPersianDigits(activeExhibition.openingDate)}`
                         : 'افتتاحیه: جمعه‌ها ۱۶:۰۰ الی ۲۰:۰۰'}
                     </span>
                   </div>
-                  {/* بج ساعت: ۱۲ پیکسل */}
-                  <span className="text-xs font-bold bg-[#F76B1C] text-white px-2.5 py-0.5 rounded-lg shadow-xs">
+                  {/* بج ساعت: ۱۴ پیکسل (۲ پیکسل بزرگتر) */}
+                  <span className="text-sm font-bold bg-[#F76B1C] text-white px-3 py-1 rounded-xl shadow-xs">
                     ساعت ۱۶ تا ۲۰
                   </span>
                 </div>
@@ -290,36 +290,36 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   </h3>
                 </div>
 
-                {/* نام هنرمند: ۱۴ پیکسل */}
+                {/* نام هنرمند و کلمه هنرمند: ۱۶ پیکسل (۲ پیکسل بزرگتر) */}
                 {activeExhibition.artist && (
-                  <div className="flex items-center gap-2 text-sm text-[#1d2d4c] dark:text-stone-200 font-bold pt-2 border-t border-[#F76B1C]/20">
-                    <User className="w-4 h-4 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
-                    <span className="text-stone-500 dark:text-stone-400 font-medium text-sm">هنرمند:</span>
-                    <span className="text-sm font-bold">{formatArtistName(activeExhibition.artist)}</span>
+                  <div className="flex items-center gap-2 text-base text-[#1d2d4c] dark:text-stone-200 font-bold pt-2 border-t border-[#F76B1C]/20">
+                    <User className="w-4.5 h-4.5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
+                    <span className="text-stone-500 dark:text-stone-400 font-medium text-base">هنرمند:</span>
+                    <span className="text-base font-bold">{formatArtistName(activeExhibition.artist)}</span>
                   </div>
                 )}
 
-                {/* موضوع و مدیوم آثار: عنوان ۱۴ پیکسل، نشان/بج ۱۴ پیکسل */}
-                <div className="flex items-center justify-between gap-2 text-sm pt-2 border-t border-[#F76B1C]/15">
-                  <div className="flex items-center gap-1.5 text-stone-700 dark:text-stone-300 font-bold text-sm">
-                    <Palette className="w-4 h-4 text-[#F76B1C] shrink-0" />
+                {/* موضوع و مدیوم آثار: ۱۶ پیکسل، نشان/بج: ۱۶ پیکسل (۲ پیکسل بزرگتر) */}
+                <div className="flex items-center justify-between gap-2 text-base pt-2 border-t border-[#F76B1C]/15">
+                  <div className="flex items-center gap-2 text-stone-700 dark:text-stone-300 font-bold text-base">
+                    <Palette className="w-4.5 h-4.5 text-[#F76B1C] shrink-0" />
                     <span>موضوع و مدیوم آثار:</span>
                   </div>
-                  <span className="px-3 py-1 rounded-xl text-sm font-bold bg-[#edf3ff] dark:bg-blue-950/60 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/80 dark:border-blue-800 shadow-2xs">
+                  <span className="px-3.5 py-1 rounded-xl text-base font-bold bg-[#edf3ff] dark:bg-blue-950/60 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/80 dark:border-blue-800 shadow-2xs">
                     {getExhibitionMedium(activeExhibition.title, activeExhibition.artist, activeExhibition.type)}
                   </span>
                 </div>
 
-                {/* دوره برگزاری: ۱۲ پیکسل */}
+                {/* دوره برگزاری: ۱۴ پیکسل (۲ پیکسل بزرگتر) */}
                 {activeExhibition.fullDateRange && (
-                  <div className="text-xs text-stone-500 dark:text-stone-400 flex items-center gap-2 pt-1 font-medium">
-                    <Clock className="w-3.5 h-3.5 text-[#F76B1C]" />
+                  <div className="text-sm text-stone-500 dark:text-stone-400 flex items-center gap-2 pt-1 font-medium">
+                    <Clock className="w-4 h-4 text-[#F76B1C]" />
                     <span>دوره برگزاری: {toPersianDigits(activeExhibition.fullDateRange)}</span>
                   </div>
                 )}
               </div>
             ) : (
-              <div className="clay-card clay-gray-subtle p-3.5 rounded-2xl border border-[#E1E1E1] dark:border-stone-800 text-stone-600 dark:text-stone-400 text-xs sm:text-sm leading-relaxed">
+              <div className="clay-card clay-gray-subtle p-3.5 rounded-2xl border border-[#E1E1E1] dark:border-stone-800 text-stone-600 dark:text-stone-400 text-sm leading-relaxed">
                 <span className="font-bold text-stone-800 dark:text-stone-200">وضعیت نگارخانه:</span> در حال حاضر بین دو دوره نمایشگاه قرار دارد. برای اطلاع از تاریخ رویداد بعدی با تلفن گالری تماس حاصل فرمایید.
               </div>
             )}
@@ -348,37 +348,37 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
 
             {/* Visiting Schedule & Contact Details */}
             <div className="clay-card p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-[#151922] border border-[#E1E1E1] dark:border-stone-800 space-y-3">
-              {/* Visiting Days & Hours: عنوان ۱۴ پیکسل، متن ۱۲ پیکسل */}
-              <div className="flex items-start gap-2.5">
-                <Clock className="w-4.5 h-4.5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0 mt-0.5" />
+              {/* Visiting Days & Hours: عنوان ۱۶ پیکسل، متن ۱۴ پیکسل، آیکون ۲۴ پیکسل (+۴ پیکسل) */}
+              <div className="flex items-start gap-3">
+                <Clock className="w-6 h-6 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0 mt-0.5" />
                 <div>
-                  <span className="font-bold text-stone-800 dark:text-stone-200 block text-sm">برنامه و ساعات بازدید:</span>
-                  <div className="text-stone-600 dark:text-stone-300 text-xs leading-relaxed mt-1 space-y-0.5 font-medium">
+                  <span className="font-bold text-stone-800 dark:text-stone-200 block text-base">برنامه و ساعات بازدید:</span>
+                  <div className="text-stone-600 dark:text-stone-300 text-sm leading-relaxed mt-1 space-y-0.5 font-medium">
                     <div>• افتتاحیه: جمعه‌ها ساعت ۱۶:۰۰ الی ۲۰:۰۰</div>
                     <div>• روزهای عادی: یکشنبه تا پنجشنبه {toPersianDigits(gallery.hoursFa || gallery.hours || '۱۶ الی ۲۰')} (شنبه تعطیل)</div>
                   </div>
                 </div>
               </div>
 
-              {/* Address: عنوان ۱۴ پیکسل، متن نشانی ۱۲ پیکسل */}
-              <div className="flex items-start gap-2.5 pt-2.5 border-t border-stone-200/70 dark:border-stone-800">
-                <MapPin className="w-4.5 h-4.5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0 mt-0.5" />
+              {/* Address: عنوان ۱۶ پیکسل، متن نشانی ۱۴ پیکسل، آیکون ۲۴ پیکسل (+۴ پیکسل) */}
+              <div className="flex items-start gap-3 pt-2.5 border-t border-stone-200/70 dark:border-stone-800">
+                <MapPin className="w-6 h-6 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0 mt-0.5" />
                 <div>
-                  <span className="font-bold text-stone-800 dark:text-stone-200 block text-sm">نشانی:</span>
-                  <span className="text-stone-600 dark:text-stone-300 text-xs leading-relaxed block mt-1 font-medium">
+                  <span className="font-bold text-stone-800 dark:text-stone-200 block text-base">نشانی:</span>
+                  <span className="text-stone-600 dark:text-stone-300 text-sm leading-relaxed block mt-1 font-medium">
                     {formatGalleryAddress(gallery.addressFa || gallery.address)}
                   </span>
                 </div>
               </div>
 
-              {/* Phone: عنوان ۱۴ پیکسل، متن شماره ۱۲ پیکسل */}
+              {/* Phone: عنوان ۱۶ پیکسل، متن شماره ۱۴ پیکسل */}
               {gallery.phone && (
-                <div className="flex items-center gap-2.5 pt-2.5 border-t border-stone-200/70 dark:border-stone-800 text-sm">
-                  <Phone className="w-4.5 h-4.5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
-                  <span className="font-bold text-stone-800 dark:text-stone-200 text-sm">تلفن:</span>
+                <div className="flex items-center gap-3 pt-2.5 border-t border-stone-200/70 dark:border-stone-800 text-base">
+                  <Phone className="w-5 h-5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
+                  <span className="font-bold text-stone-800 dark:text-stone-200 text-base">تلفن:</span>
                   <a
                     href={`tel:${gallery.phone}`}
-                    className="text-[#F76B1C] font-bold hover:underline font-mono text-xs sm:text-sm"
+                    className="text-[#F76B1C] font-bold hover:underline font-mono text-sm sm:text-base"
                   >
                     {toPersianDigits(gallery.phone)}
                   </a>
@@ -415,9 +415,9 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
               </div>
             )}
 
-            {/* 3. Direct Navigation Apps Row: دکمه‌های مسیریابی ۱۴ پیکسل */}
+            {/* 3. Direct Navigation Apps Row: عنوان ۱۶ پیکسل، کلمات ۱۶ پیکسل، آیکون ۲۸ پیکسل */}
             <div className="pt-2.5 border-t border-stone-200/70 dark:border-stone-800">
-              <span className="text-sm font-bold text-stone-700 dark:text-stone-200 block mb-2">
+              <span className="text-base font-bold text-stone-700 dark:text-stone-200 block mb-2.5">
                 مسیریابی مستقیم با اپلیکیشن‌ها:
               </span>
               <div className="grid grid-cols-4 gap-2">
@@ -425,40 +425,40 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   href={buildNeshanUrl(currentSpace)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="clay-button clay-base py-2.5 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
+                  className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
-                  <NeshanIcon className="w-6 h-6 shrink-0" />
-                  <span className="text-sm font-bold text-stone-800 dark:text-white">نشان</span>
+                  <NeshanIcon className="w-7 h-7 shrink-0" />
+                  <span className="text-base font-bold text-stone-800 dark:text-white">نشان</span>
                 </a>
 
                 <a
                   href={buildBaladUrl(currentSpace)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="clay-button clay-base py-2.5 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
+                  className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
-                  <BaladIcon className="w-6 h-6 shrink-0" />
-                  <span className="text-sm font-bold text-stone-800 dark:text-white">بلد</span>
+                  <BaladIcon className="w-7 h-7 shrink-0" />
+                  <span className="text-base font-bold text-stone-800 dark:text-white">بلد</span>
                 </a>
 
                 <a
                   href={buildGoogleMapsUrl([currentSpace])}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="clay-button clay-base py-2.5 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
+                  className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
-                  <GoogleMapsIcon className="w-6 h-6 shrink-0" />
-                  <span className="text-sm font-bold text-stone-800 dark:text-white">Google</span>
+                  <GoogleMapsIcon className="w-7 h-7 shrink-0" />
+                  <span className="text-base font-bold text-stone-800 dark:text-white">Google</span>
                 </a>
 
                 <a
                   href={buildWazeUrl(currentSpace)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="clay-button clay-base py-2.5 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
+                  className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
-                  <WazeIcon className="w-6 h-6 shrink-0" />
-                  <span className="text-sm font-bold text-stone-800 dark:text-white">Waze</span>
+                  <WazeIcon className="w-7 h-7 shrink-0" />
+                  <span className="text-base font-bold text-stone-800 dark:text-white">Waze</span>
                 </a>
               </div>
             </div>
