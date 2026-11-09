@@ -1,4 +1,4 @@
-const CACHE_NAME = 'artgasht-pwa-v1.089';
+const CACHE_NAME = 'artgasht-pwa-v1.090';
 
 const STATIC_ASSETS = [
   './',
@@ -10,7 +10,10 @@ const STATIC_ASSETS = [
   './icons/apple-touch-icon.png',
   './fonts/shabnam/Shabnam-FD.woff2',
   './fonts/shabnam/Shabnam-Bold-FD.woff2',
-  './fonts/shabnam/Shabnam-Medium-FD.woff2'
+  './fonts/shabnam/Shabnam-Medium-FD.woff2',
+  './fonts/ubuntu/Ubuntu-Regular.woff2',
+  './fonts/ubuntu/Ubuntu-Medium.woff2',
+  './fonts/ubuntu/Ubuntu-Bold.woff2'
 ];
 
 // Install: Cache essential assets immediately and force immediate takeover
