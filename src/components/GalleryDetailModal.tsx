@@ -354,24 +354,24 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
 
             {/* Visiting Schedule & Contact Details */}
             <div className="clay-card p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-[#151922] border border-[#E1E1E1] dark:border-stone-800 space-y-3">
-              {/* Visiting Days & Hours: عنوان ۱۶ پیکسل، متن ۱۴ پیکسل، آیکون ۲۴ پیکسل (+۴ پیکسل) */}
+              {/* Visiting Days & Hours: عنوان ۱۶ پیکسل، متن ۱۵ پیکسل، آیکون ۲۴ پیکسل */}
               <div className="flex items-start gap-3">
                 <Clock className="w-6 h-6 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0 mt-0.5" />
                 <div>
                   <span className="font-bold text-stone-800 dark:text-stone-200 block text-base">برنامه و ساعات بازدید:</span>
-                  <div className="text-stone-600 dark:text-stone-300 text-sm leading-relaxed mt-1 space-y-0.5 font-medium">
+                  <div className="text-stone-600 dark:text-stone-300 text-[15px] leading-relaxed mt-1 space-y-0.5 font-medium">
                     <div>• افتتاحیه: جمعه‌ها ساعت ۱۶:۰۰ الی ۲۰:۰۰</div>
                     <div>• روزهای عادی: یکشنبه تا پنجشنبه {toPersianDigits(gallery.hoursFa || gallery.hours || '۱۶ الی ۲۰')} (شنبه تعطیل)</div>
                   </div>
                 </div>
               </div>
 
-              {/* Address: عنوان ۱۶ پیکسل، متن نشانی ۱۴ پیکسل، آیکون ۲۴ پیکسل (+۴ پیکسل) */}
+              {/* Address: عنوان ۱۶ پیکسل، متن نشانی ۱۵ پیکسل، آیکون ۲۴ پیکسل */}
               <div className="flex items-start gap-3 pt-2.5 border-t border-stone-200/70 dark:border-stone-800">
                 <MapPin className="w-6 h-6 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0 mt-0.5" />
                 <div>
                   <span className="font-bold text-stone-800 dark:text-stone-200 block text-base">نشانی:</span>
-                  <span className="text-stone-600 dark:text-stone-300 text-sm leading-relaxed block mt-1 font-medium">
+                  <span className="text-stone-600 dark:text-stone-300 text-[15px] leading-relaxed block mt-1 font-medium">
                     {formatGalleryAddress(gallery.addressFa || gallery.address)}
                   </span>
                 </div>
@@ -454,7 +454,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
                   <GoogleMapsIcon className="w-7 h-7 shrink-0" />
-                  <span className="text-[15px] font-bold text-stone-800 dark:text-white">Google</span>
+                  <span className="text-[15px] font-bold text-stone-800 dark:text-white font-ubuntu">Google</span>
                 </a>
 
                 <a
@@ -464,7 +464,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
                   <WazeIcon className="w-7 h-7 shrink-0" />
-                  <span className="text-[15px] font-bold text-stone-800 dark:text-white">Waze</span>
+                  <span className="text-[15px] font-bold text-stone-800 dark:text-white font-ubuntu">Waze</span>
                 </a>
               </div>
             </div>

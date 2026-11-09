@@ -2,8 +2,65 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: 'Shabnam FD', 'Shabnam', sans-serif;
-  --font-serif: 'Shabnam FD', 'Shabnam', serif;
+  --font-sans: 'UbuntuLatinOnly', 'Shabnam FD', 'Shabnam', 'Ubuntu', sans-serif;
+  --font-serif: 'UbuntuLatinOnly', 'Shabnam FD', 'Shabnam', 'Ubuntu', serif;
+  --font-ubuntu: 'Ubuntu', sans-serif;
+}
+
+/* ========================================================
+   Ubuntu (Latin / English Fonts)
+   ======================================================== */
+@font-face {
+  font-family: 'UbuntuLatinOnly';
+  src: local('Ubuntu'),
+       url('/fonts/ubuntu/Ubuntu-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0041-005A, U+0061-007A, U+00C0-00FF, U+0100-017F;
+}
+@font-face {
+  font-family: 'UbuntuLatinOnly';
+  src: local('Ubuntu Medium'),
+       url('/fonts/ubuntu/Ubuntu-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0041-005A, U+0061-007A, U+00C0-00FF, U+0100-017F;
+}
+@font-face {
+  font-family: 'UbuntuLatinOnly';
+  src: local('Ubuntu Bold'),
+       url('/fonts/ubuntu/Ubuntu-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0041-005A, U+0061-007A, U+00C0-00FF, U+0100-017F;
+}
+
+@font-face {
+  font-family: 'Ubuntu';
+  src: local('Ubuntu'),
+       url('/fonts/ubuntu/Ubuntu-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ubuntu';
+  src: local('Ubuntu Medium'),
+       url('/fonts/ubuntu/Ubuntu-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ubuntu';
+  src: local('Ubuntu Bold'),
+       url('/fonts/ubuntu/Ubuntu-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
 
 /* ========================================================
@@ -70,9 +127,9 @@
   font-display: swap;
 }
 
-/* Global Font Rule: Apply Shabnam FD everywhere */
+/* Global Font Rule: Apply Ubuntu for Latin and Shabnam FD for Persian everywhere */
 html, body, *, input, button, select, textarea {
-  font-family: 'Shabnam FD', 'Shabnam', system-ui, -apple-system, sans-serif !important;
+  font-family: 'UbuntuLatinOnly', 'Shabnam FD', 'Shabnam', 'Ubuntu', system-ui, -apple-system, sans-serif !important;
 }
 
 body {
@@ -80,8 +137,12 @@ body {
   text-align: right;
 }
 
+.font-ubuntu, .font-en {
+  font-family: 'Ubuntu', sans-serif !important;
+}
+
 .font-mono {
-  font-family: 'JetBrains Mono', 'Shabnam FD', monospace !important;
+  font-family: 'Ubuntu', 'JetBrains Mono', monospace !important;
 }
 
 /* Custom RTL select styling to guarantee dropdown arrow position */

@@ -14,7 +14,7 @@ interface HeaderProps {
   isStandalone?: boolean;
 }
 
-export const APP_VERSION = 'بتا V 1.089';
+export const APP_VERSION = 'بتا V 1.090';
 
 export const Header: React.FC<HeaderProps> = ({
   selectedCount,
@@ -43,7 +43,7 @@ export const Header: React.FC<HeaderProps> = ({
                 آرت‌گشت
               </span>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug shrink-0 font-mono">
+                <span className="px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug shrink-0 font-ubuntu">
                   {APP_VERSION}
                 </span>
                 <p className="text-[11px] sm:text-xs font-medium text-[#3D5B99] dark:text-[#A3C2E4] hidden md:block">

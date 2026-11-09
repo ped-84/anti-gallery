@@ -18,7 +18,7 @@
   --clay-pill: inset 0 1px 2px #fff, inset 0 -2px 4px rgba(61,91,153,.08);
 
   --radius-card: 24px;
-  --font: 'Shabnam FD', 'Shabnam', sans-serif;
+  --font: 'UbuntuLatinOnly', 'Shabnam FD', 'Shabnam', 'Ubuntu', sans-serif;
 
   direction: rtl;
   font-family: var(--font);

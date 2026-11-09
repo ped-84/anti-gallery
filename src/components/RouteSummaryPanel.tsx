@@ -836,7 +836,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
               className="clay-button clay-base border border-[#E1E1E1] dark:border-stone-700 py-3.5 px-3 text-center font-bold flex items-center justify-center gap-2.5 text-stone-800 dark:text-stone-100 hover:scale-[1.02] active:scale-95 transition-all shadow-md group"
             >
               <GoogleMapsIcon className="w-8 h-8 shrink-0 drop-shadow-sm group-hover:scale-110 transition-transform" />
-              <span className="font-sans font-bold text-sm tracking-wide">Google Maps</span>
+              <span className="font-ubuntu font-bold text-sm tracking-wide">Google Maps</span>
             </a>
 
             {/* 2. Waze */}
@@ -847,7 +847,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
               className="clay-button clay-base border border-[#E1E1E1] dark:border-stone-700 py-3.5 px-3 text-center font-bold flex items-center justify-center gap-2.5 text-stone-800 dark:text-stone-100 hover:scale-[1.02] active:scale-95 transition-all shadow-md group"
             >
               <WazeIcon className="w-8 h-8 shrink-0 drop-shadow-sm group-hover:scale-110 transition-transform" />
-              <span className="font-sans font-bold text-sm tracking-wide">Waze</span>
+              <span className="font-ubuntu font-bold text-sm tracking-wide">Waze</span>
             </a>
 
             {/* 3. نشان */}
