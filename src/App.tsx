@@ -65,6 +65,16 @@ export default function App() {
   // All galleries in database (seeded from bundled rawGalleriesData, synced dynamically with server)
   const [allGalleries, setAllGalleries] = useState<Gallery[]>(() => rawGalleriesData as Gallery[]);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [serverConfig, setServerConfig] = useState<{
+    serverRole?: string;
+    adminEnabled?: boolean;
+    isStandalone?: boolean;
+    neshanKey?: string;
+  }>({
+    serverRole: 'primary',
+    adminEnabled: true,
+    isStandalone: false
+  });
 
   // Sync dynamic galleries and config from backend server
   useEffect(() => {
@@ -72,8 +82,11 @@ export default function App() {
     fetch('/api/config')
       .then((res) => res.json())
       .then((cfg) => {
-        if (typeof window !== 'undefined' && cfg?.neshanKey) {
-          (window as any).__ARTGASHT_CONFIG__ = cfg;
+        if (cfg) {
+          setServerConfig(cfg);
+          if (typeof window !== 'undefined') {
+            (window as any).__ARTGASHT_CONFIG__ = cfg;
+          }
         }
       })
       .catch(() => {});
@@ -1208,6 +1221,9 @@ export default function App() {
         galleries={allGalleries}
         onGalleriesUpdated={setAllGalleries}
         isDarkMode={isDarkMode}
+        adminEnabled={serverConfig.adminEnabled}
+        serverRole={serverConfig.serverRole}
+        isStandalone={serverConfig.isStandalone}
       />
 
       {/* PWA Installation Prompt (Android / iOS / Desktop) */}

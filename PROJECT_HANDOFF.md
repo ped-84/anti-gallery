@@ -3,7 +3,7 @@
 > **دستورالعمل‌های حیاتی برای هوش مصنوعی (MANDATORY INSTRUCTIONS FOR AGENTS):**
 > 1. **کیفیت و دقت بی‌نقص در اولویت اول است:** هرگز کیفیت کد، هماهنگی بصری و روانی رابط کاربری را فدای پاسخ سریع نکنید. کاربر یک محصول پروداکشن، بدون باگ، زیبا و فوق‌العاده تمیز می‌خواهد.
 > 2. **پاسخ‌های فارسی باید تماماً راست‌چین باشند:** در هر پاسخ به کاربر در محیط چت، کل متن پاسخ را داخل تگ `<div dir="rtl" style="text-align: right; direction: rtl;">` قرار دهید تا جهت نمایش و خوانایی فونت فارسی کاملاً راست‌به‌چپ باشد.
-> 3. **قانون افزایش نسخه (Version Increment):** به ازای هر درخواست تغییر از طرف کاربر، مقدار ثابت `APP_VERSION` در [`src/components/Header.tsx`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/src/components/Header.tsx) باید دقیقاً `0.001` واحد افزایش یابد (نسخه فعلی: `بتا V 1.093`، نسخه بعدی: `بتا V 1.094`). همچنین `CACHE_NAME` در [`public/sw.js`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/public/sw.js) و مقدار `version` در [`server.ts`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/server.ts) با همین نسخه به‌روز شود.
+> 3. **قانون افزایش نسخه (Version Increment):** به ازای هر درخواست تغییر از طرف کاربر، مقدار ثابت `APP_VERSION` در [`src/components/Header.tsx`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/src/components/Header.tsx) باید دقیقاً `0.001` واحد افزایش یابد (نسخه فعلی: `بتا V 1.094`، نسخه بعدی: `بتا V 1.095`). همچنین `CACHE_NAME` در [`public/sw.js`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/public/sw.js) و مقدار `version` در [`server.ts`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/server.ts) با همین نسخه به‌روز شود.
 > 4. **دامنه تهران در اولویت (Tehran-First Scope):** در حال حاضر در رابط کاربری فقط و فقط گالری‌های تهران به کاربر نمایش داده می‌شوند. گالری‌های سایر شهرها در پایگاه داده `data/galleries.json` و `src/data/galleries.json` با مشخصه شهر خودشان محفوظ هستند و فقط در لایه نمایش فرانت‌اند فیلتر می‌شوند. هرگز آنها را حذف نکنید.
 > 5. **یکپارچگی تایپوگرافی فارسی و انگلیسی:** تمام اعداد نمایشی فارسی باید از تابع `toPersianDigits()` عبور کنند. برای متون فارسی فونت **شبنم (Shabnam FD)** و برای کلیه حروف/متون انگلیسی فونت **Ubuntu** اعمال شده است. تمام فونت‌ها به صورت ۱۰۰٪ محلی در `public/fonts/` میزبانی می‌شوند.
 > 6. **ممنوعیت تگ `<select>` بومی:** هرگز از تگ پیش‌فرض HTML برای دراپ‌داون‌ها استفاده نکنید؛ همیشه از کامپوننت اختصاصی [`ClayDropdown.tsx`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/src/components/ClayDropdown.tsx) استفاده شود.
@@ -17,12 +17,12 @@
 * **توصیف محصول:** اپلیکیشن وب پیشرو (PWA) و مسیریاب هوشمند بازدید از گالری‌های هنری و نمایشگاه‌های جاری تهران بر پایه React 19، Tailwind CSS v4، استایل کلیمورفیک (Claymorphic) و نقشه تعاملی نشان.
 * **آدرس لایو گیت‌هاب پیجز:** [https://ped-84.github.io/anti-gallery/](https://ped-84.github.io/anti-gallery/)
 * **دامنه‌های اختصاصی پروداکشن:**
-  * **سرور اصلی (ایران):** `https://artgasht.ir` (مقاوم در برابر قطعی اینترنت بین‌الملل، شبکه ملی)
-  * **سرور آینه (آلمان):** `https://artgasht.com` (دسترسی بین‌المللی)
+  * **سرور اصلی (آلمان - PRIMARY):** `https://artgasht.com` (منبع اصلی داده‌ها / پنل مدیریت فعال)
+  * **سرور آینه (ایران - MIRROR):** `https://artgasht.ir` (مقاوم در برابر قطعی اینترنت بین‌الملل / نسخه فقط-خواندنی با امکان فعال‌سازی حالت اضطراری STANDALONE)
 * **مخزن گیت (Git Repository):** `https://github.com/ped-84/anti-gallery.git`
   * **شاخه `main`:** سورس‌کد کامل پروژه و بک‌اند
   * **شاخه `gh-pages`:** نسخه کامپایل‌شده استاتیک پروداکشن (`dist/`)
-* **نسخه فعلی مستقر:** `بتا V 1.093` (نسخه بعدی در نوبت: `بتا V 1.094`)
+* **نسخه فعلی مستقر:** `بتا V 1.094` (نسخه بعدی در نوبت: `بتا V 1.095`)
 * **سیستم‌عامل توسعه کاربر:** Windows (با شل PowerShell).
 
 ---

@@ -1,14 +1,14 @@
 # ========================================================
 # Caddyfile Configuration for Anti-Gallery (آرت‌گشت)
-# Optimized for artgasht.ir (Iran VPS) and artgasht.com (Germany VPS)
+# Dynamically configured per server via DOMAIN environment variable:
+#   - Primary (Germany): DOMAIN=artgasht.com
+#   - Mirror  (Iran):    DOMAIN=artgasht.ir
 # ========================================================
 
-# --- Primary VPS (Iran - artgasht.ir) ---
-artgasht.ir, www.artgasht.ir {
-    # Automatic TLS using Let's Encrypt / ZeroSSL
-    # NOTE: During internet shutdowns, Caddy reuses its local cached certificates.
-    # If bootstrapping during a shutdown, supply manual certs:
-    # tls /etc/caddy/certs/artgasht.ir.crt /etc/caddy/certs/artgasht.ir.key
+{$DOMAIN:artgasht.com} {
+    # Manual TLS certificate support for Iran server (when Let's Encrypt is unreachable)
+    # If TLS_CERT and TLS_KEY are defined, uncomment or configure them below:
+    # tls {$TLS_CERT} {$TLS_KEY}
 
     encode zstd gzip
 
@@ -48,7 +48,7 @@ artgasht.ir, www.artgasht.ir {
         Expires "0"
     }
 
-    # Reverse proxy all requests to container internal port
+    # Reverse proxy to backend Express container
     reverse_proxy 127.0.0.1:3000 {
         header_up Host {host}
         header_up X-Real-IP {remote_host}
@@ -63,58 +63,7 @@ artgasht.ir, www.artgasht.ir {
 
     # Access logging
     log {
-        output file /var/log/caddy/artgasht_ir_access.log {
-            roll_size 10mb
-            roll_keep 5
-        }
-    }
-}
-
-# --- Mirror VPS (Germany - artgasht.com) ---
-artgasht.com, www.artgasht.com {
-    encode zstd gzip
-
-    header {
-        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-        X-Content-Type-Options "nosniff"
-        X-Frame-Options "SAMEORIGIN"
-        Referrer-Policy "strict-origin-when-cross-origin"
-        Permissions-Policy "geolocation=(self)"
-        -Server
-    }
-
-    @static {
-        path /assets/* /fonts/* /icons/* /favicon.png
-    }
-    header @static {
-        Cache-Control "public, max-age=31536000, immutable"
-    }
-
-    @uploads {
-        path /uploads/*
-    }
-    header @uploads {
-        Cache-Control "public, max-age=604800, stale-while-revalidate=86400"
-    }
-
-    @html_sw {
-        path / /index.html /sw.js /manifest.json
-    }
-    header @html_sw {
-        Cache-Control "no-cache, no-store, must-revalidate"
-        Pragma "no-cache"
-        Expires "0"
-    }
-
-    reverse_proxy 127.0.0.1:3000 {
-        header_up Host {host}
-        header_up X-Real-IP {remote_host}
-        header_up X-Forwarded-For {remote_host}
-        header_up X-Forwarded-Proto {scheme}
-    }
-
-    log {
-        output file /var/log/caddy/artgasht_com_access.log {
+        output file /var/log/caddy/artgasht_access.log {
             roll_size 10mb
             roll_keep 5
         }

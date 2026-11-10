@@ -14,11 +14,13 @@ const PORT = Number(process.env.PORT) || 3000;
 // High body size limit for base64 image uploads in admin
 app.use(express.json({ limit: '20mb' }));
 
-// Persistent Data & Uploads directories (can be mounted via Docker volume)
+// Persistent Data & Uploads directories (mounted via Docker volume)
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
 const UPLOADS_DIR = path.join(DATA_DIR, 'uploads');
 const GALLERIES_FILE = path.join(DATA_DIR, 'galleries.json');
 const EXHIBITIONS_FILE = path.join(DATA_DIR, 'exhibitions_fa.json');
+const STANDALONE_FILE = path.join(DATA_DIR, 'STANDALONE');
+const LAST_SYNC_FILE = path.join(DATA_DIR, 'last-sync.txt');
 
 // Source seed baseline files
 const SEED_GALLERIES_FILE = path.join(__dirname, 'src', 'data', 'galleries.json');
@@ -42,7 +44,40 @@ if (!fs.existsSync(EXHIBITIONS_FILE) && fs.existsSync(SEED_EXHIBITIONS_FILE)) {
   console.log('[Data] Seeded exhibitions_fa.json to persistent volume');
 }
 
-// Data Helper Functions
+// ========================================================
+// 1. Role & Standalone Mode Configuration
+// ========================================================
+// PRIMARY = Germany VPS (artgasht.com) - Source of truth with admin panel enabled
+// MIRROR  = Iran VPS (artgasht.ir)    - Normally read-only replica synced from primary
+const SERVER_ROLE = (process.env.SERVER_ROLE || 'primary').toLowerCase(); // 'primary' | 'mirror'
+
+function isStandaloneMode(): boolean {
+  return fs.existsSync(STANDALONE_FILE);
+}
+
+function isAdminAllowed(): boolean {
+  // If explicitly disabled via env
+  if (process.env.ADMIN_ENABLED === 'false') {
+    return isStandaloneMode();
+  }
+  // On primary: admin is enabled by default unless ADMIN_ENABLED=false
+  if (SERVER_ROLE === 'primary') {
+    return process.env.ADMIN_ENABLED !== 'false';
+  }
+  // On mirror: admin is strictly DISABLED unless the local STANDALONE flag file exists!
+  return isStandaloneMode();
+}
+
+function getLastSyncTime(): string | null {
+  try {
+    if (fs.existsSync(LAST_SYNC_FILE)) {
+      return fs.readFileSync(LAST_SYNC_FILE, 'utf-8').trim();
+    }
+  } catch {}
+  return null;
+}
+
+// Data Helper Functions (with automatic updatedAt timestamp preservation)
 function getGalleries(): any[] {
   try {
     if (fs.existsSync(GALLERIES_FILE)) {
@@ -61,15 +96,63 @@ function saveGalleries(galleries: any[]) {
   fs.writeFileSync(GALLERIES_FILE, JSON.stringify(galleries, null, 2), 'utf-8');
 }
 
-// Admin Authentication Configuration
+// ========================================================
+// 2. Admin Authentication & Rate Limiting
+// ========================================================
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'artgasht2026';
 const ADMIN_SECRET = process.env.ADMIN_SECRET || 'artgasht-secret-token-key-2026';
+
+// Rate Limiter for Login: max 5 failed attempts per IP within 15 minutes
+interface LoginAttemptRecord {
+  failedCount: number;
+  lockedUntil: number;
+}
+const loginRateLimitMap = new Map<string, LoginAttemptRecord>();
+
+function checkRateLimit(ip: string): { allowed: boolean; remainingSeconds?: number } {
+  const now = Date.now();
+  const record = loginRateLimitMap.get(ip);
+  if (!record) return { allowed: true };
+
+  if (record.lockedUntil > now) {
+    const remainingSeconds = Math.ceil((record.lockedUntil - now) / 1000);
+    return { allowed: false, remainingSeconds };
+  }
+
+  if (record.lockedUntil <= now && record.failedCount >= 5) {
+    loginRateLimitMap.delete(ip);
+    return { allowed: true };
+  }
+
+  return { allowed: true };
+}
+
+function recordFailedLogin(ip: string) {
+  const now = Date.now();
+  const record = loginRateLimitMap.get(ip) || { failedCount: 0, lockedUntil: 0 };
+  record.failedCount += 1;
+  if (record.failedCount >= 5) {
+    record.lockedUntil = now + 15 * 60 * 1000; // 15 minute lock
+    console.warn(`[Security] IP ${ip} locked out for 15 minutes due to 5 failed login attempts`);
+  }
+  loginRateLimitMap.set(ip, record);
+}
+
+function recordSuccessfulLogin(ip: string) {
+  loginRateLimitMap.delete(ip);
+}
 
 function generateAdminToken(): string {
   return crypto.createHmac('sha256', ADMIN_SECRET).update(`admin:${ADMIN_PASSWORD}`).digest('hex');
 }
 
 function verifyAdminAuth(req: express.Request, res: express.Response, next: express.NextFunction) {
+  if (!isAdminAllowed()) {
+    return res.status(403).json({
+      error: 'پنل مدیریت در سرور آینه (Mirror) غیرفعال است. ویرایش تنها در سرور اصلی (Primary) یا با فعال‌سازی حالت STANDALONE مجاز است.'
+    });
+  }
+
   const authHeader = req.headers.authorization || '';
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : (req.headers['x-admin-token'] as string);
   const expected = generateAdminToken();
@@ -92,16 +175,22 @@ function getNeshanKey(host: string = ''): string {
   return process.env.NESHAN_WEB_KEY || 'web.cd0b84e26a35496f87485087bce939da';
 }
 
-// In-memory sync state for upstream galleryinfo.ir
+// ========================================================
+// 3. Optional Upstream Scraper (Switchable via SCRAPER_ENABLED)
+// ========================================================
+// Default: Scraper is disabled unless SCRAPER_ENABLED=true
+const SCRAPER_ENABLED = process.env.SCRAPER_ENABLED === 'true';
+
 let syncState = {
   lastSyncTime: new Date().toISOString(),
-  lastSyncStatus: 'موفق (داده‌های فعال بارگذاری شدند)',
+  lastSyncStatus: SCRAPER_ENABLED ? 'موفق (داده‌های فعال بارگذاری شدند)' : 'غیرفعال (طبق پیکربندی سرور)',
   isSyncing: false,
   activeExhibitionsCount: 33,
-  scheduleDescription: 'چهارشنبه و پنجشنبه هر ۲ ساعت · جمعه‌ها هر ۳۰ دقیقه تا نیمه‌شب'
+  scheduleDescription: SCRAPER_ENABLED
+    ? 'چهارشنبه و پنجشنبه هر ۲ ساعت · جمعه‌ها هر ۳۰ دقیقه تا نیمه‌شب'
+    : 'کران‌جاب اسکرپر در این سرور غیرفعال است'
 };
 
-// Helper: Determine required sync interval based on Tehran Timezone
 function getTehranSyncIntervalMs(): number {
   const now = new Date();
   const tehranParts = new Intl.DateTimeFormat('en-US', {
@@ -112,17 +201,15 @@ function getTehranSyncIntervalMs(): number {
   }).formatToParts(now);
 
   const weekday = tehranParts.find((p) => p.type === 'weekday')?.value || '';
-  if (weekday === 'Fri') {
-    return 30 * 60 * 1000;
-  }
-  if (weekday === 'Wed' || weekday === 'Thu') {
-    return 2 * 60 * 60 * 1000;
-  }
+  if (weekday === 'Fri') return 30 * 60 * 1000;
+  if (weekday === 'Wed' || weekday === 'Thu') return 2 * 60 * 60 * 1000;
   return 24 * 60 * 60 * 1000;
 }
 
-// Scrape / Synchronize latest exhibitions from central gallery data
 async function syncExhibitions(): Promise<{ success: boolean; count: number; error?: string }> {
+  if (!SCRAPER_ENABLED) {
+    return { success: false, count: syncState.activeExhibitionsCount, error: 'اسکرپر روی این سرور غیرفعال است' };
+  }
   if (syncState.isSyncing) {
     return { success: false, count: syncState.activeExhibitionsCount, error: 'همگام‌سازی در حال انجام است' };
   }
@@ -184,28 +271,37 @@ async function syncExhibitions(): Promise<{ success: boolean; count: number; err
   }
 }
 
-// Background Cron Scheduler
-let lastSyncTimestamp = Date.now();
-setInterval(async () => {
-  const requiredInterval = getTehranSyncIntervalMs();
-  const elapsed = Date.now() - lastSyncTimestamp;
+// Background Cron Scheduler (only active if SCRAPER_ENABLED=true)
+if (SCRAPER_ENABLED) {
+  let lastSyncTimestamp = Date.now();
+  setInterval(async () => {
+    const requiredInterval = getTehranSyncIntervalMs();
+    const elapsed = Date.now() - lastSyncTimestamp;
 
-  if (elapsed >= requiredInterval) {
-    console.log(`[Scheduler] Interval elapsed. Running sync...`);
-    lastSyncTimestamp = Date.now();
-    await syncExhibitions();
-  }
-}, 60 * 1000);
+    if (elapsed >= requiredInterval) {
+      console.log(`[Scheduler] Interval elapsed. Running sync...`);
+      lastSyncTimestamp = Date.now();
+      await syncExhibitions();
+    }
+  }, 60 * 1000);
+}
 
 // ========================================================
-// 1. Health Endpoint (Crucial for Docker & Uptime Monitoring)
+// 4. Endpoints & API Routes
 // ========================================================
+
+// Health check endpoint (exposing role, admin state, sync status)
 app.get('/health', (req, res) => {
   const galleries = getGalleries();
   res.json({
     status: 'ok',
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.093',
+    version: 'بتا V 1.094',
+    serverRole: SERVER_ROLE, // 'primary' | 'mirror'
+    adminEnabled: isAdminAllowed(),
+    isStandalone: isStandaloneMode(),
+    scraperEnabled: SCRAPER_ENABLED,
+    lastSyncFromPrimary: getLastSyncTime(),
     uptimeSeconds: Math.floor(process.uptime()),
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development',
@@ -214,31 +310,50 @@ app.get('/health', (req, res) => {
   });
 });
 
-// ========================================================
-// 2. Client Config Endpoint (Dynamic Neshan Map Key per Domain)
-// ========================================================
+// Client runtime configuration
 app.get('/api/config', (req, res) => {
   res.json({
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.093',
+    version: 'بتا V 1.094',
+    serverRole: SERVER_ROLE,
+    adminEnabled: isAdminAllowed(),
+    isStandalone: isStandaloneMode(),
     neshanKey: getNeshanKey(req.headers.host || '')
   });
 });
 
-// ========================================================
-// 3. Galleries API Endpoints (Dynamic Server Data)
-// ========================================================
+// Serve galleries list
 app.get('/api/galleries', (req, res) => {
   const galleries = getGalleries();
   res.json(galleries);
 });
 
-// Admin Login
+// Admin Login (with rate-limiting)
 app.post('/api/admin/login', (req, res) => {
+  const clientIp = req.ip || req.socket.remoteAddress || 'unknown';
+  const rateCheck = checkRateLimit(clientIp);
+
+  if (!rateCheck.allowed) {
+    return res.status(429).json({
+      success: false,
+      error: `تعداد تلاش‌های ناموفق بیش از حد مجاز است. لطفاً ${rateCheck.remainingSeconds} ثانیه دیگر مجدداً تلاش کنید.`
+    });
+  }
+
+  if (!isAdminAllowed()) {
+    return res.status(403).json({
+      success: false,
+      error: 'پنل مدیریت روی سرور آینه (Mirror) غیرفعال است. ویرایش تنها روی سرور اصلی آلمان یا در حالت STANDALONE مجاز است.'
+    });
+  }
+
   const { password } = req.body || {};
   if (!password || password !== ADMIN_PASSWORD) {
+    recordFailedLogin(clientIp);
     return res.status(401).json({ success: false, error: 'رمز عبور مدیریت نادرست است' });
   }
+
+  recordSuccessfulLogin(clientIp);
   res.json({ success: true, token: generateAdminToken() });
 });
 
@@ -250,15 +365,19 @@ app.post('/api/admin/galleries', verifyAdminAuth, (req, res) => {
   }
   const galleries = getGalleries();
   const maxId = galleries.reduce((max, g) => (typeof g.id === 'number' && g.id > max ? g.id : max), 1000);
+  const nowIso = new Date().toISOString();
+
   const created = {
     ...newGallery,
     id: newGallery.id || maxId + 1,
     city: newGallery.city || 'tehran',
-    cityFa: newGallery.cityFa || 'تهران'
+    cityFa: newGallery.cityFa || 'تهران',
+    updatedAt: nowIso
   };
+
   galleries.unshift(created);
   saveGalleries(galleries);
-  console.log(`[Admin] Added new gallery: "${created.name}" (ID: ${created.id})`);
+  console.log(`[Admin] Added new gallery: "${created.name}" (ID: ${created.id}) on ${SERVER_ROLE}`);
   res.status(201).json(created);
 });
 
@@ -273,9 +392,16 @@ app.put('/api/admin/galleries/:id', verifyAdminAuth, (req, res) => {
     return res.status(404).json({ error: 'نگارخانه مورد نظر یافت نشد' });
   }
 
-  galleries[index] = { ...galleries[index], ...updates, id };
+  const nowIso = new Date().toISOString();
+  galleries[index] = {
+    ...galleries[index],
+    ...updates,
+    id,
+    updatedAt: nowIso
+  };
+
   saveGalleries(galleries);
-  console.log(`[Admin] Updated gallery ID ${id}: "${galleries[index].name}"`);
+  console.log(`[Admin] Updated gallery ID ${id}: "${galleries[index].name}" on ${SERVER_ROLE}`);
   res.json(galleries[index]);
 });
 
@@ -290,7 +416,7 @@ app.delete('/api/admin/galleries/:id', verifyAdminAuth, (req, res) => {
   }
 
   saveGalleries(filtered);
-  console.log(`[Admin] Deleted gallery ID ${id}`);
+  console.log(`[Admin] Deleted gallery ID ${id} on ${SERVER_ROLE}`);
   res.json({ success: true, message: 'نگارخانه با موفقیت حذف گردید' });
 });
 
@@ -311,7 +437,7 @@ app.post('/api/admin/upload', verifyAdminAuth, (req, res) => {
     const filePath = path.join(UPLOADS_DIR, safeName);
 
     fs.writeFileSync(filePath, Buffer.from(cleanBase64, 'base64'));
-    console.log(`[Upload] Image saved: ${safeName}`);
+    console.log(`[Upload] Image saved: ${safeName} on ${SERVER_ROLE}`);
     res.json({ success: true, url: `/uploads/${safeName}` });
   } catch (err: any) {
     console.error('[Upload] Error saving image:', err.message);
@@ -324,14 +450,10 @@ app.use('/uploads', express.static(UPLOADS_DIR));
 
 // Upstream sync status & manual trigger
 app.get('/api/sync-status', (req, res) => {
-  const intervalMs = getTehranSyncIntervalMs();
-  const nextSyncTime = new Date(lastSyncTimestamp + intervalMs).toISOString();
-
   res.json({
+    scraperEnabled: SCRAPER_ENABLED,
     lastSyncTime: syncState.lastSyncTime,
     lastSyncStatus: syncState.lastSyncStatus,
-    nextScheduledSync: nextSyncTime,
-    intervalMinutes: Math.round(intervalMs / 60000),
     activeExhibitionsCount: syncState.activeExhibitionsCount,
     isSyncing: syncState.isSyncing,
     scheduleDescription: syncState.scheduleDescription
@@ -339,8 +461,9 @@ app.get('/api/sync-status', (req, res) => {
 });
 
 app.post('/api/sync-now', async (req, res) => {
-  console.log('[API] Manual sync triggered from client');
-  lastSyncTimestamp = Date.now();
+  if (!SCRAPER_ENABLED) {
+    return res.status(400).json({ error: 'اسکرپر روی این سرور غیرفعال است' });
+  }
   const result = await syncExhibitions();
   res.json(result);
 });
@@ -366,8 +489,8 @@ async function startServer() {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`[Server] Running on http://0.0.0.0:${PORT}`);
-    console.log(`[Server] Health check available at: http://0.0.0.0:${PORT}/health`);
+    console.log(`[Server] Running on http://0.0.0.0:${PORT} [Role: ${SERVER_ROLE.toUpperCase()}]`);
+    console.log(`[Server] Admin Allowed: ${isAdminAllowed()} (Standalone: ${isStandaloneMode()})`);
     console.log(`[Server] Persistent data directory: ${DATA_DIR}`);
   });
 }

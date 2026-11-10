@@ -1,0 +1,12 @@
+[Unit]
+Description=Runs Anti-Gallery Mirror Data Sync Every 5 Minutes
+RefuseManualStart=no
+RefuseManualStop=no
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=5min
+Unit=artgasht-sync.service
+
+[Install]
+WantedBy=timers.target

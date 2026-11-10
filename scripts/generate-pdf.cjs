@@ -248,35 +248,35 @@ const htmlContent = `<!DOCTYPE html>
     <h1>آرت‌گشت (Anti-Gallery) — مستند معماری و استقرار دو-سروره</h1>
     <div class="subtitle">راهنمای جامع آماده‌سازی پروداکشن، مقاوم‌سازی در برابر قطعی کامل اینترنت بین‌الملل و پنل مدیریت داده‌ها</div>
     <div class="header-meta">
-      <span class="badge badge-primary">نسخه: بتا V 1.093</span>
-      <span class="badge badge-success">دامنه اصلی: artgasht.ir (ایران)</span>
-      <span class="badge badge-warning">دامنه آینه: artgasht.com (آلمان)</span>
+      <span class="badge badge-primary">نسخه: بتا V 1.094</span>
+      <span class="badge badge-success">دامنه اصلی (مرجع): artgasht.com (آلمان)</span>
+      <span class="badge badge-warning">دامنه آینه (تاب‌آور): artgasht.ir (ایران)</span>
       <span class="badge badge-neutral">تاریخ انتشار: ۲۰ آبان ۱۴۰۵</span>
     </div>
   </div>
 
   <h2>۱. معماری کلان سیستم (Architecture Overview)</h2>
   <p>
-    پلتفرم <strong>«آرت‌گشت»</strong> برای راه‌اندازی بر روی دو سرور مجازی مجزا و پایدار پیکربندی شده است. هدف بنیادین این معماری، تداوم ۱۰۰٪ سرویس‌دهی به کاربران داخل کشور در سناریوی قطعی سراسری ارتباطات اینترنت بین‌الملل (شبکه ملی اطلاعات) و همچنین حفظ دسترس‌پذیری جهانی برای مخاطبان خارج از کشور است.
+    پلتفرم <strong>«آرت‌گشت»</strong> برای راه‌اندازی بر روی دو سرور مجازی مجزا و پایدار پیکربندی شده است:
   </p>
 
   <div class="grid-2">
     <div class="card">
-      <h3 style="margin-top:0; color:#0369a1;">سرور اصلی ایران (Primary VPS)</h3>
+      <h3 style="margin-top:0; color:#0369a1;">سرور اصلی آلمان (PRIMARY VPS)</h3>
       <ul>
-        <li><strong>دامنه:</strong> <span class="font-en">artgasht.ir</span></li>
-        <li><strong>بستر شبکه:</strong> دیتاسنتر داخلی / متصل به شبکه ملی اطلاعات</li>
-        <li><strong>سطح تاب‌آوری:</strong> عدم وابستگی به هیچ وب‌سایت، رجیستری یا سرور خارجی در زمان اجرا</li>
-        <li><strong>ذخیره‌سازی داده:</strong> پایگاه داده محلی (<span class="font-en">data/galleries.json</span>) و تصاویر (<span class="font-en">data/uploads/</span>)</li>
+        <li><strong>دامنه:</strong> <span class="font-en">artgasht.com</span></li>
+        <li><strong>نقش:</strong> منبع اصلی داده‌ها (Source of Truth) و پنل مدیریت فعال</li>
+        <li><strong>ویرایش داده‌ها:</strong> افزودن و ویرایش گالری‌ها و آپلود مستقیم پوسترها</li>
+        <li><strong>پایگاه داده مرجع:</strong> <span class="font-en">data/galleries.json</span> و <span class="font-en">data/uploads/</span></li>
       </ul>
     </div>
     <div class="card">
-      <h3 style="margin-top:0; color:#b45309;">سرور آینه آلمان (Mirror VPS)</h3>
+      <h3 style="margin-top:0; color:#b45309;">سرور آینه ایران (MIRROR VPS)</h3>
       <ul>
-        <li><strong>دامنه:</strong> <span class="font-en">artgasht.com</span></li>
-        <li><strong>بستر شبکه:</strong> شبکه بین‌الملل</li>
-        <li><strong>وظیفه:</strong> میزبانی آینه برای دسترسی کاربران بین‌المللی و توریست‌های خارجی</li>
-        <li><strong>همگام‌سازی:</strong> انتقال داده‌ها با اسکریپت‌های اختصاصی <span class="font-en">sync-data</span></li>
+        <li><strong>دامنه:</strong> <span class="font-en">artgasht.ir</span></li>
+        <li><strong>نقش:</strong> نسخه آینه فقط-خواندنی (همگام‌سازی ۵ دقیقه‌ای از آلمان)</li>
+        <li><strong>بستر شبکه:</strong> شبکه ملی اطلاعات / کاملاً مستقل از اینترنت بین‌الملل</li>
+        <li><strong>حالت اضطراری:</strong> امکان فعال‌سازی حالت <span class="font-en">STANDALONE</span> در قطعی‌ها و ادغام مجدد با <span class="font-en">merge-back</span></li>
       </ul>
     </div>
   </div>
@@ -521,7 +521,7 @@ ssh user@iran_vps "cd /opt/artgasht && docker compose up -d --force-recreate"
 
   <div class="footer">
     <span>تهیه شده برای تیم فنی پروژه آرت‌گشت (Anti-Gallery)</span>
-    <span>نسخه بتا V 1.093 — آبان ۱۴۰۵</span>
+    <span>نسخه بتا V 1.094 — آبان ۱۴۰۵</span>
   </div>
 
 </body>

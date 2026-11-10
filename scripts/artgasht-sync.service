@@ -1,0 +1,12 @@
+[Unit]
+Description=Anti-Gallery Mirror Data Sync Service (Pulls from Primary)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/opt/artgasht
+ExecStart=/opt/artgasht/scripts/sync-pull.sh
+StandardOutput=journal
+StandardError=journal

@@ -1,0 +1,12 @@
+[Unit]
+Description=Runs Anti-Gallery Backup Nightly at 03:00 AM
+RefuseManualStart=no
+RefuseManualStop=no
+
+[Timer]
+OnCalendar=*-*-* 03:00:00
+Persistent=true
+Unit=artgasht-backup.service
+
+[Install]
+WantedBy=timers.target

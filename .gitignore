@@ -6,6 +6,11 @@ coverage/
 *.log
 .env*
 !.env.example
+deploy.config
+!deploy.config.example
+data/
+STANDALONE
+*.tar.gz
 cloudflared.exe
 scratch/
 
