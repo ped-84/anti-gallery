@@ -1,6 +1,7 @@
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
+import 'leaflet/dist/leaflet.css';
 import './index.css';
 
 // Register PWA Service Worker for offline capabilities & Android install prompts

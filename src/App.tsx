@@ -22,6 +22,7 @@ import { InteractiveMap } from './components/InteractiveMap';
 import { RouteSummaryPanel } from './components/RouteSummaryPanel';
 import { GalleryDetailModal } from './components/GalleryDetailModal';
 import { CuratedRouteRoadModal } from './components/CuratedRouteRoadModal';
+import { AdminModal } from './components/AdminModal';
 import { PwaInstallPrompt } from './components/PwaInstallPrompt';
 import { getTourColorTheme } from './utils/roadLayout';
 import { ClayDropdown } from './components/ClayDropdown';
@@ -61,9 +62,53 @@ function isLegacyDefaultList(ids: any): boolean {
 }
 
 export default function App() {
+  // All galleries in database (seeded from bundled rawGalleriesData, synced dynamically with server)
+  const [allGalleries, setAllGalleries] = useState<Gallery[]>(() => rawGalleriesData as Gallery[]);
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
+
+  // Sync dynamic galleries and config from backend server
+  useEffect(() => {
+    // 1. Fetch domain-specific Neshan Web Key & app metadata
+    fetch('/api/config')
+      .then((res) => res.json())
+      .then((cfg) => {
+        if (typeof window !== 'undefined' && cfg?.neshanKey) {
+          (window as any).__ARTGASHT_CONFIG__ = cfg;
+        }
+      })
+      .catch(() => {});
+
+    // 2. Fetch fresh galleries from server database (if server is running)
+    fetch('/api/galleries')
+      .then((res) => {
+        if (!res.ok) throw new Error('Server API unavailable');
+        return res.json();
+      })
+      .then((freshList: Gallery[]) => {
+        if (Array.isArray(freshList) && freshList.length > 0) {
+          setAllGalleries(freshList);
+        }
+      })
+      .catch(() => {
+        // Graceful offline fallback: already seeded with bundled rawGalleriesData
+      });
+  }, []);
+
+  // Listen for #admin or ?admin=1 in URL for instant admin panel access
+  useEffect(() => {
+    const checkAdminTrigger = () => {
+      if (window.location.hash === '#admin' || window.location.search.includes('admin=1')) {
+        setIsAdminOpen(true);
+      }
+    };
+    checkAdminTrigger();
+    window.addEventListener('hashchange', checkAdminTrigger);
+    return () => window.removeEventListener('hashchange', checkAdminTrigger);
+  }, []);
+
   // Filter for Tehran-only display per user instructions (non-Tehran preserved in DB for future expansion)
   const galleries = useMemo<Gallery[]>(() => {
-    const tehranList = (rawGalleriesData as Gallery[]).filter((g) => {
+    const tehranList = allGalleries.filter((g) => {
       const city = (g.city || '').toLowerCase();
       const cityFa = g.cityFa || '';
       return city === 'tehran' || cityFa === 'تهران';
@@ -87,7 +132,7 @@ export default function App() {
         siblingSpaces: siblings.length > 0 ? siblings : undefined
       };
     });
-  }, []);
+  }, [allGalleries]);
 
   // Restore user selected galleries or default to an empty itinerary
   const [selectedGalleryIds, setSelectedGalleryIds] = useState<number[]>(() => {
@@ -732,6 +777,7 @@ export default function App() {
         onToggleDarkMode={toggleDarkMode}
         onTriggerInstall={() => setPwaInstallTrigger((prev) => prev + 1)}
         isStandalone={isStandalone}
+        onOpenAdmin={() => setIsAdminOpen(true)}
       />
 
       {/* Operational Ribbon */}
@@ -1153,6 +1199,15 @@ export default function App() {
         onClose={() => setActiveModalGallery(null)}
         onToggle={handleToggleGallery}
         onSetStart={handleSetStartGallery}
+      />
+
+      {/* Admin Panel Modal (Password Protected, Zero-rebuild DB edits) */}
+      <AdminModal
+        isOpen={isAdminOpen}
+        onClose={() => setIsAdminOpen(false)}
+        galleries={allGalleries}
+        onGalleriesUpdated={setAllGalleries}
+        isDarkMode={isDarkMode}
       />
 
       {/* PWA Installation Prompt (Android / iOS / Desktop) */}

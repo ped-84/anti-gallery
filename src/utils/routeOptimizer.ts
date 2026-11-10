@@ -244,8 +244,13 @@ export async function optimizeGalleryRoute(
   const hasFixedStart = Boolean(options.customStart || options.startGalleryId);
   const hasFixedEnd = Boolean(options.endGalleryId && !isRoundTrip);
 
-  // Try OSRM Trip API first
+  // Try OSRM Trip API first (with fast 1.5s timeout for resilience during international internet cuts)
   try {
+    const isOffline = typeof navigator !== 'undefined' && !navigator.onLine;
+    if (isOffline) {
+      throw new Error('Offline mode: skipping foreign OSRM routing');
+    }
+
     const coordsStr = allPoints.map((p) => `${p.lng},${p.lat}`).join(';');
     const osrmMode = mode === 'walking' ? 'walking' : 'driving';
     const sourceParam = hasFixedStart ? 'first' : 'any';
@@ -253,7 +258,7 @@ export async function optimizeGalleryRoute(
     const tripUrl = `https://router.project-osrm.org/trip/v1/${osrmMode}/${coordsStr}?overview=full&geometries=geojson&steps=true&roundtrip=${isRoundTrip}&source=${sourceParam}&destination=${destParam}`;
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000);
+    const timeoutId = setTimeout(() => controller.abort(), 1500);
 
     const res = await fetch(tripUrl, { signal: controller.signal });
     clearTimeout(timeoutId);
@@ -452,6 +457,11 @@ export async function calculateFixedRoute(
 
   // Try OSRM Route API for exact road routing along the user's fixed sequence
   try {
+    const isOffline = typeof navigator !== 'undefined' && !navigator.onLine;
+    if (isOffline) {
+      throw new Error('Offline mode: skipping foreign OSRM routing');
+    }
+
     const coords = allPoints.map((p) => `${p.lng},${p.lat}`);
     if (isRoundTrip && allPoints.length > 1) {
       coords.push(`${allPoints[0].lng},${allPoints[0].lat}`);
@@ -461,7 +471,7 @@ export async function calculateFixedRoute(
     const routeUrl = `https://router.project-osrm.org/route/v1/${osrmMode}/${coordsStr}?overview=full&geometries=geojson&steps=true`;
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000);
+    const timeoutId = setTimeout(() => controller.abort(), 1500);
     const res = await fetch(routeUrl, { signal: controller.signal });
     clearTimeout(timeoutId);
 

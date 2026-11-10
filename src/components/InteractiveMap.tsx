@@ -14,7 +14,21 @@ interface InteractiveMapProps {
   isDarkMode?: boolean;
 }
 
-const NESHAN_WEB_KEY = 'web.cd0b84e26a35496f87485087bce939da';
+const DEFAULT_NESHAN_WEB_KEY = 'web.cd0b84e26a35496f87485087bce939da';
+
+export function getNeshanWebKey(): string {
+  // 1. Runtime config injected via /api/config or window.__ARTGASHT_CONFIG__
+  if (typeof window !== 'undefined' && (window as any).__ARTGASHT_CONFIG__?.neshanKey) {
+    return (window as any).__ARTGASHT_CONFIG__.neshanKey;
+  }
+  // 2. Vite build-time environment variable (e.g. VITE_NESHAN_WEB_KEY)
+  const envKey = (import.meta as any).env?.VITE_NESHAN_WEB_KEY;
+  if (envKey && typeof envKey === 'string' && envKey.trim()) {
+    return envKey.trim();
+  }
+  // 3. Fallback default
+  return DEFAULT_NESHAN_WEB_KEY;
+}
 
 // Tehran Central Traffic Zone Polygon Coordinates (محدوده رسمی طرح ترافیک تهران)
 const TEHRAN_TRAFFIC_ZONE_GEOJSON: any = {
@@ -154,7 +168,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           minZoom: 10,
           maxZoom: 19,
           trackResize: true,
-          mapKey: NESHAN_WEB_KEY,
+          mapKey: getNeshanWebKey(),
           poi: true,
           traffic: true,
           attributionControl: false
