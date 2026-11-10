@@ -205,7 +205,7 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.091',
+    version: 'بتا V 1.093',
     uptimeSeconds: Math.floor(process.uptime()),
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development',
@@ -220,7 +220,7 @@ app.get('/health', (req, res) => {
 app.get('/api/config', (req, res) => {
   res.json({
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.091',
+    version: 'بتا V 1.093',
     neshanKey: getNeshanKey(req.headers.host || '')
   });
 });
