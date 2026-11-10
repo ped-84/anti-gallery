@@ -1,4 +1,4 @@
-const CACHE_NAME = 'artgasht-pwa-v1.090';
+const CACHE_NAME = 'artgasht-pwa-v1.091';
 
 const STATIC_ASSETS = [
   './',
@@ -51,6 +51,9 @@ self.addEventListener('fetch', (event) => {
   // Only handle GET requests
   if (request.method !== 'GET') return;
 
+  // Never cache dynamic API, health check, or upload endpoints
+  if (url.pathname.startsWith('/api') || url.pathname === '/health') return;
+
   // Always Network-First for HTML navigation so updates are instant
   if (request.mode === 'navigate' || url.pathname.endsWith('index.html') || url.pathname.endsWith('/')) {
     event.respondWith(
@@ -71,8 +74,8 @@ self.addEventListener('fetch', (event) => {
 
   // Bypass cross-origin telemetry/analytics/APIs (Neshan tiles, Google maps, etc.)
   if (url.origin !== self.location.origin) {
-    // If it's an external font or image, we can try to cache it opportunistically
-    if (url.hostname.includes('unpkg.com') || url.hostname.includes('static.neshan.org')) {
+    // Cache Iranian Neshan SDK if requested
+    if (url.hostname.includes('static.neshan.org')) {
       event.respondWith(
         caches.match(request).then((cached) => {
           if (cached) return cached;
