@@ -248,7 +248,7 @@ const htmlContent = `<!DOCTYPE html>
     <h1>آرت‌گشت (Anti-Gallery) — مستند معماری و استقرار دو-سروره</h1>
     <div class="subtitle">راهنمای جامع آماده‌سازی پروداکشن، مقاوم‌سازی در برابر قطعی کامل اینترنت بین‌الملل و پنل مدیریت داده‌ها</div>
     <div class="header-meta">
-      <span class="badge badge-primary">نسخه: بتا V 1.094</span>
+      <span class="badge badge-primary">نسخه: بتا V 1.095</span>
       <span class="badge badge-success">دامنه اصلی (مرجع): artgasht.com (آلمان)</span>
       <span class="badge badge-warning">دامنه آینه (تاب‌آور): artgasht.ir (ایران)</span>
       <span class="badge badge-neutral">تاریخ انتشار: ۲۰ آبان ۱۴۰۵</span>
@@ -521,7 +521,7 @@ ssh user@iran_vps "cd /opt/artgasht && docker compose up -d --force-recreate"
 
   <div class="footer">
     <span>تهیه شده برای تیم فنی پروژه آرت‌گشت (Anti-Gallery)</span>
-    <span>نسخه بتا V 1.094 — آبان ۱۴۰۵</span>
+    <span>نسخه بتا V 1.095 — آبان ۱۴۰۵</span>
   </div>
 
 </body>

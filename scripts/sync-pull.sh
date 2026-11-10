@@ -2,7 +2,8 @@
 # ========================================================
 # Anti-Gallery (آرت‌گشت) Sync Pull Script
 # Runs on MIRROR (Iran VPS - artgasht.ir) via systemd timer every 5 minutes.
-# Syncs galleries.json and uploaded posters from PRIMARY (Germany VPS - artgasht.com).
+# Pulls galleries.json and uploaded posters from PRIMARY (Germany VPS - artgasht.com).
+# Uses intelligent ID/updatedAt merge so local scraped data is NEVER lost!
 # ========================================================
 
 set -uo pipefail
@@ -18,10 +19,10 @@ if [ -f "$ENV_FILE" ]; then
     source "$ENV_FILE" 2>/dev/null || true
 fi
 
-PRIMARY_HOST="${PRIMARY_HOST:-artgasht.com}"
-PRIMARY_USER="${PRIMARY_USER:-root}"
+PRIMARY_HOST="${PRIMARY_HOST:-86.54.42.206}"
+PRIMARY_USER="${PRIMARY_USER:-deploy}"
 PRIMARY_PORT="${PRIMARY_PORT:-22}"
-PRIMARY_KEY="${PRIMARY_KEY:-/root/.ssh/id_rsa}"
+PRIMARY_KEY="${PRIMARY_KEY:-/home/deploy/.ssh/id_rsa}"
 PRIMARY_DATA_DIR="${PRIMARY_DATA_DIR:-/opt/artgasht/data}"
 
 mkdir -p "$DATA_DIR/uploads"
@@ -40,18 +41,29 @@ fi
 # 2. Sync from Primary via rsync over SSH (fail silently/log-only on network drop)
 SSH_CMD="ssh -p ${PRIMARY_PORT} -i ${PRIMARY_KEY} -o ConnectTimeout=10 -o StrictHostKeyChecking=no"
 
-# Pull galleries.json to temporary file first
+# Pull primary galleries.json to temporary file first
 if rsync -avz --timeout=15 -e "$SSH_CMD" "${PRIMARY_USER}@${PRIMARY_HOST}:${PRIMARY_DATA_DIR}/galleries.json" "${DATA_DIR}/galleries.json.tmp" >/dev/null 2>&1; then
-    # Validate JSON integrity before overwriting
+    # Validate JSON integrity
     if node -e "JSON.parse(require('fs').readFileSync('${DATA_DIR}/galleries.json.tmp'))" >/dev/null 2>&1; then
-        mv "${DATA_DIR}/galleries.json.tmp" "${DATA_DIR}/galleries.json"
+        # If local galleries.json exists, perform an intelligent merge to protect any locally scraped exhibitions
+        if [ -f "${DATA_DIR}/galleries.json" ] && [ -f "${APP_DIR}/scripts/merge-galleries.cjs" ]; then
+            node "${APP_DIR}/scripts/merge-galleries.cjs" "${DATA_DIR}/galleries.json.tmp" "${DATA_DIR}/galleries.json" "${DATA_DIR}/galleries.json.merged" >/dev/null 2>&1 || true
+            if [ -f "${DATA_DIR}/galleries.json.merged" ]; then
+                mv "${DATA_DIR}/galleries.json.merged" "${DATA_DIR}/galleries.json"
+                rm -f "${DATA_DIR}/galleries.json.tmp"
+            else
+                mv "${DATA_DIR}/galleries.json.tmp" "${DATA_DIR}/galleries.json"
+            fi
+        else
+            mv "${DATA_DIR}/galleries.json.tmp" "${DATA_DIR}/galleries.json"
+        fi
     else
-        log "Warning: Downloaded galleries.json is corrupted. Discarding."
+        log "Warning: Downloaded galleries.json is invalid JSON. Discarding."
         rm -f "${DATA_DIR}/galleries.json.tmp"
         exit 0
     fi
 
-    # Sync uploaded poster images
+    # Sync uploaded poster images from primary to local mirror
     rsync -avz --timeout=30 -e "$SSH_CMD" "${PRIMARY_USER}@${PRIMARY_HOST}:${PRIMARY_DATA_DIR}/uploads/" "${DATA_DIR}/uploads/" >/dev/null 2>&1 || true
 
     # Record timestamp of last successful sync

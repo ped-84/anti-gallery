@@ -1,15 +1,11 @@
 # ========================================================
-# Caddyfile Configuration for Anti-Gallery (آرت‌گشت)
-# Dynamically configured per server via DOMAIN environment variable:
-#   - Primary (Germany): DOMAIN=artgasht.com
-#   - Mirror  (Iran):    DOMAIN=artgasht.ir
+# Caddyfile for Primary Server (Frankfurt VPS - artgasht.com)
+# Automatic HTTPS for artgasht.com & www.artgasht.com
+# Reverse proxy to Docker container at 127.0.0.1:3000
 # ========================================================
 
-{$DOMAIN:artgasht.com} {
-    # Manual TLS certificate support for Iran server (when Let's Encrypt is unreachable)
-    # If TLS_CERT and TLS_KEY are defined, uncomment or configure them below:
-    # tls {$TLS_CERT} {$TLS_KEY}
-
+artgasht.com, www.artgasht.com {
+    # Automatic TLS management (Let's Encrypt & ZeroSSL)
     encode zstd gzip
 
     # Production Security Headers
@@ -22,7 +18,7 @@
         -Server
     }
 
-    # Static assets caching (Long TTL for immutable hashed assets)
+    # Static assets caching (immutable cache for hashed assets)
     @static {
         path /assets/* /fonts/* /icons/* /favicon.png
     }
@@ -38,7 +34,7 @@
         Cache-Control "public, max-age=604800, stale-while-revalidate=86400"
     }
 
-    # Service Worker & HTML (Never cache HTML or SW stale)
+    # Service Worker & HTML (Never cache HTML or Service Worker)
     @html_sw {
         path / /index.html /sw.js /manifest.json
     }
@@ -55,7 +51,7 @@
         header_up X-Forwarded-For {remote_host}
         header_up X-Forwarded-Proto {scheme}
 
-        # Health check upstream monitoring
+        # Upstream Health Check
         health_uri /health
         health_interval 15s
         health_timeout 3s
@@ -63,7 +59,7 @@
 
     # Access logging
     log {
-        output file /var/log/caddy/artgasht_access.log {
+        output file /var/log/caddy/artgasht_com_access.log {
             roll_size 10mb
             roll_keep 5
         }

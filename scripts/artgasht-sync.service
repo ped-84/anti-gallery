@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-User=root
+User=deploy
 WorkingDirectory=/opt/artgasht
 ExecStart=/opt/artgasht/scripts/sync-pull.sh
 StandardOutput=journal

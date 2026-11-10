@@ -1,12 +1,14 @@
 # ========================================================
 # Docker Compose for Anti-Gallery (آرت‌گشت)
-# Deployable on both Iran VPS (artgasht.ir) and Germany VPS (artgasht.com)
+# Primary Server: Frankfurt VPS (artgasht.com)
+# Runs as non-root user (1000:1000) matching host 'deploy' user
 # ========================================================
 
 services:
   app:
     image: artgasht:latest
     container_name: artgasht-app
+    user: "1000:1000"
     restart: unless-stopped
     env_file:
       - .env
@@ -15,10 +17,10 @@ services:
       - PORT=3000
       - DATA_DIR=/app/data
     ports:
-      # Binds to localhost only; public traffic is handled by Caddy reverse proxy
-      - "127.0.0.1:${PORT:-3000}:3000"
+      # Binds to localhost only; public traffic handled by Caddy reverse proxy
+      - "127.0.0.1:3000:3000"
     volumes:
-      # Persistent storage for galleries database and uploaded poster images
+      # Bind-mount host data directory (owned by deploy:deploy 1000:1000)
       - ./data:/app/data
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3000/health"]

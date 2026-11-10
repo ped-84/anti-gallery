@@ -11,6 +11,8 @@ deploy.config
 data/
 STANDALONE
 *.tar.gz
+*.tar
+.github/
 cloudflared.exe
 scratch/
 

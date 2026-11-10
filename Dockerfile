@@ -1,8 +1,6 @@
 # ========================================================
 # Dockerfile for Anti-Gallery (آرت‌گشت)
-# Optimized for offline operation during international internet cuts.
-# MUST BE BUILT ON LAPTOP WITH INTERNET, THEN EXPORTED VIA:
-#   docker save artgasht:latest | gzip > artgasht.tar.gz
+# Runs as non-root user (1000:1000 matching VPS deploy user)
 # ========================================================
 
 # Stage 1: Build Frontend Assets
@@ -26,7 +24,7 @@ ENV NODE_ENV=production
 ENV PORT=3000
 ENV DATA_DIR=/app/data
 
-# Install production dependencies only (includes express & tsx)
+# Install production dependencies only (express, tsx, etc.)
 COPY package*.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 
@@ -39,8 +37,11 @@ COPY --from=builder /app/src/data ./src/data
 # Copy backend server script
 COPY --from=builder /app/server.ts ./server.ts
 
-# Create persistent data and uploads directory
-RUN mkdir -p /app/data/uploads
+# Create persistent data and uploads directory and grant ownership to non-root user (1000:1000)
+RUN mkdir -p /app/data/uploads && chown -R 1000:1000 /app
+
+# Switch to non-root deploy user (UID/GID 1000:1000)
+USER 1000:1000
 
 # Expose internal HTTP port
 EXPOSE 3000

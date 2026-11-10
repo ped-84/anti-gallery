@@ -1,8 +1,8 @@
 {
   "primary": {
     "name": "Germany VPS (artgasht.com - Source of Truth)",
-    "host": "YOUR_GERMANY_IP_OR_DOMAIN",
-    "user": "root",
+    "host": "86.54.42.206",
+    "user": "deploy",
     "port": 22,
     "key": "~/.ssh/id_rsa",
     "remoteDir": "/opt/artgasht",
@@ -12,7 +12,7 @@
   "mirror": {
     "name": "Iran VPS (artgasht.ir - Read-Only Replica)",
     "host": "YOUR_IRAN_IP_OR_DOMAIN",
-    "user": "root",
+    "user": "deploy",
     "port": 22,
     "key": "~/.ssh/id_rsa",
     "remoteDir": "/opt/artgasht",
