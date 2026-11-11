@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   X,
   Lock,
@@ -101,7 +101,28 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const [statusMessage, setStatusMessage] = useState<{ text: string; isError?: boolean } | null>(null);
 
-  if (!isOpen) return null;
+  // Filter galleries for admin search (declared unconditionally at top level per React Hook rules)
+  const filteredGalleries = useMemo(() => {
+    if (!searchQuery.trim()) return galleries.slice(0, 50);
+    const q = searchQuery.toLowerCase();
+    return galleries.filter((g) => {
+      const name = (g.name || '').toLowerCase();
+      const artist = (g.activeExhibition?.artist || '').toLowerCase();
+      const title = (g.activeExhibition?.title || '').toLowerCase();
+      return name.includes(q) || artist.includes(q) || title.includes(q);
+    });
+  }, [galleries, searchQuery]);
+
+  // Handle ESC key to close modal (declared unconditionally at top level)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   // Login handler
   const handleLogin = async (e: React.FormEvent) => {
@@ -332,17 +353,8 @@ export const AdminModal: React.FC<AdminModalProps> = ({
     }
   };
 
-  // Filter galleries for admin search
-  const filteredGalleries = useMemo(() => {
-    if (!searchQuery.trim()) return galleries.slice(0, 50);
-    const q = searchQuery.toLowerCase();
-    return galleries.filter((g) => {
-      const name = (g.name || '').toLowerCase();
-      const artist = (g.activeExhibition?.artist || '').toLowerCase();
-      const title = (g.activeExhibition?.title || '').toLowerCase();
-      return name.includes(q) || artist.includes(q) || title.includes(q);
-    });
-  }, [galleries, searchQuery]);
+  // Early return if modal is not open (STRICTLY placed after all React hooks)
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-sm overflow-y-auto">

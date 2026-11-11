@@ -15,7 +15,7 @@ interface HeaderProps {
   onOpenAdmin?: () => void;
 }
 
-export const APP_VERSION = 'بتا V 1.095';
+export const APP_VERSION = 'بتا V 1.096';
 
 export const Header: React.FC<HeaderProps> = ({
   selectedCount,

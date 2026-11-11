@@ -10,7 +10,7 @@ WORKDIR /app
 
 # Cache dependencies
 COPY package*.json ./
-RUN npm ci
+RUN npm ci --legacy-peer-deps --ignore-scripts
 
 # Copy source code and build Vite static files
 COPY . .
@@ -26,7 +26,7 @@ ENV DATA_DIR=/app/data
 
 # Install production dependencies only (express, tsx, etc.)
 COPY package*.json ./
-RUN npm ci --omit=dev && npm cache clean --force
+RUN npm ci --omit=dev --legacy-peer-deps --ignore-scripts && npm cache clean --force
 
 # Copy built frontend assets from builder stage
 COPY --from=builder /app/dist ./dist
