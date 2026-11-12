@@ -179,8 +179,8 @@ function getNeshanKey(host: string = ''): string {
 // ========================================================
 // 3. Optional Upstream Scraper (Switchable via SCRAPER_ENABLED)
 // ========================================================
-// Default: Scraper is disabled unless SCRAPER_ENABLED=true
-const SCRAPER_ENABLED = process.env.SCRAPER_ENABLED === 'true';
+// Default: Scraper is enabled by default on Primary, disabled only if SCRAPER_ENABLED=false
+const SCRAPER_ENABLED = process.env.SCRAPER_ENABLED !== 'false' && SERVER_ROLE !== 'mirror';
 
 let syncState = {
   lastSyncTime: new Date().toISOString(),
@@ -290,6 +290,13 @@ async function syncExhibitions(): Promise<{ success: boolean; count: number; err
 // Background Cron Scheduler (only active if SCRAPER_ENABLED=true)
 if (SCRAPER_ENABLED) {
   let lastSyncTimestamp = Date.now();
+
+  // Run initial sync shortly after startup
+  setTimeout(() => {
+    console.log('[Scheduler] Running initial post-startup sync...');
+    syncExhibitions().catch((err) => console.error('[Scheduler] Initial sync error:', err));
+  }, 5000);
+
   setInterval(async () => {
     const requiredInterval = getTehranSyncIntervalMs();
     const elapsed = Date.now() - lastSyncTimestamp;
@@ -312,7 +319,7 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.105',
+    version: 'بتا V 1.106',
     serverRole: SERVER_ROLE, // 'primary' | 'mirror'
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
@@ -330,7 +337,7 @@ app.get('/health', (req, res) => {
 app.get('/api/config', (req, res) => {
   res.json({
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.105',
+    version: 'بتا V 1.106',
     serverRole: SERVER_ROLE,
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),

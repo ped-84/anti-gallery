@@ -12,7 +12,8 @@ data/
 STANDALONE
 *.tar.gz
 *.tar
-.github/
+.github/*
+!.github/workflows/
 cloudflared.exe
 scratch/
 

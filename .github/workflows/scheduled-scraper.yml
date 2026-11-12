@@ -1,0 +1,59 @@
+name: Scheduled GalleryInfo Auto-Sync
+
+on:
+  schedule:
+    # Thursday night peak (18:00 to midnight Tehran = 14:30 to 20:30 UTC): every 30 minutes
+    - cron: '*/30 14-20 * * 4'
+    # Friday morning peak (00:00 to 18:00 Tehran = 20:30 Thu to 14:30 Fri UTC): every 30 minutes
+    - cron: '*/30 0-14 * * 5'
+    # Mid-week periodic sync: every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: scheduled-sync
+  cancel-in-progress: false
+
+jobs:
+  sync-and-deploy:
+    name: Sync Exhibitions and Auto-Deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run GalleryInfo Scraper
+        run: node scripts/sync-galleryinfo.cjs
+
+      - name: Commit and push updated data to main if changed
+        run: |
+          git config --local user.email "auto-sync@artgasht.com"
+          git config --local user.name "Artgasht Auto-Sync Bot"
+          git add src/data/ data/
+          if ! git diff --quiet || ! git diff --staged --quiet; then
+            git commit -m "chore(data): auto-sync live exhibitions from galleryinfo [skip ci]"
+            git push origin main
+          else
+            echo "No new exhibition data detected."
+          fi
+
+      - name: Build static frontend
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        run: node scripts/deploy-ghpages.cjs
