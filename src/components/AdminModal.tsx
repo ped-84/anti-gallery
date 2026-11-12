@@ -353,8 +353,8 @@ export const AdminModal: React.FC<AdminModalProps> = ({
     }
   };
 
-  // Early return if modal is not open (STRICTLY placed after all React hooks)
-  if (!isOpen) return null;
+  // Early return if modal is not open or admin is disabled (STRICTLY placed after all React hooks)
+  if (!isOpen || !adminEnabled) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-sm overflow-y-auto">
@@ -411,37 +411,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
         {/* Body Content */}
         <div className="p-5 overflow-y-auto flex-1 text-sm text-stone-800 dark:text-stone-200">
-          {!adminEnabled ? (
-            /* Mirror Read-Only Notice */
-            <div className="max-w-md mx-auto py-8 text-center space-y-4">
-              <div className="w-16 h-16 mx-auto rounded-3xl clay-card clay-base flex items-center justify-center text-amber-500">
-                <Lock className="w-8 h-8 stroke-[2.2]" />
-              </div>
-              <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">
-                پنل مدیریت روی سرور آینه (Mirror) غیرفعال است
-              </h3>
-              <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed text-justify">
-                این سرور (<span className="font-ubuntu font-bold">artgasht.ir</span>) به عنوان <strong>سرور آینه (Mirror)</strong> پیکربندی شده و داده‌های آن به صورت خودکار هر ۵ دقیقه از سرور اصلی آلمان همگام‌سازی می‌شوند. به منظور جلوگیری از تداخل داده‌ها، ویرایش تنها بر روی سرور اصلی آلمان مجاز است.
-              </p>
-              <div className="clay-card clay-base p-3.5 rounded-2xl text-right text-xs space-y-1.5 border border-amber-200 dark:border-amber-900/40 bg-amber-50/50 dark:bg-amber-950/20">
-                <div className="font-bold text-amber-800 dark:text-amber-200 flex items-center gap-1.5">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
-                  <span>دسترسی اضطراری در شرایط قطعی اینترنت (STANDALONE):</span>
-                </div>
-                <p className="text-[11px] text-stone-600 dark:text-stone-400">
-                  اگر به دلیل قطعی اینترنت بین‌الملل ارتباط با سرور آلمان قطع است، در ترمینال سرور ایران دستور زیر را اجرا کنید تا پنل مدیریت بلافاصله فعال شود:
-                </p>
-                <pre className="text-[11px] bg-stone-900 text-stone-100 p-2 rounded-lg">sudo /opt/artgasht/scripts/mirror-mode.sh standalone</pre>
-              </div>
-              <button
-                type="button"
-                onClick={onClose}
-                className="clay-button clay-base px-6 py-2 rounded-xl text-xs font-bold text-stone-700 dark:text-stone-300 cursor-pointer"
-              >
-                بستن پنجره
-              </button>
-            </div>
-          ) : !authToken ? (
+          {!authToken ? (
             /* Login Screen */
             <div className="max-w-md mx-auto py-10">
               <div className="text-center mb-6">

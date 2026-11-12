@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, Sparkles, Navigation, Sun, Moon, Download, Lock } from 'lucide-react';
+import { Compass, Sparkles, Navigation, Sun, Moon, Download } from 'lucide-react';
 import { toPersianDigits } from '../utils/persianUtils';
 
 interface HeaderProps {
@@ -12,10 +12,9 @@ interface HeaderProps {
   hasCustomOrigin?: boolean;
   onTriggerInstall?: () => void;
   isStandalone?: boolean;
-  onOpenAdmin?: () => void;
 }
 
-export const APP_VERSION = 'بتا V 1.096';
+export const APP_VERSION = 'بتا V 1.097';
 
 export const Header: React.FC<HeaderProps> = ({
   selectedCount,
@@ -26,8 +25,7 @@ export const Header: React.FC<HeaderProps> = ({
   onToggleDarkMode,
   hasCustomOrigin = false,
   onTriggerInstall,
-  isStandalone = false,
-  onOpenAdmin
+  isStandalone = false
 }) => {
   const canOptimize = hasCustomOrigin ? selectedCount >= 1 : selectedCount >= 2;
   const minRequired = hasCustomOrigin ? 1 : 2;
@@ -89,18 +87,6 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Download className="w-4 h-4 sm:w-3.5 sm:h-3.5 stroke-[2.2]" />
               <span className="hidden sm:inline">نصب اپ</span>
-            </button>
-          )}
-
-          {/* Admin Panel Button */}
-          {onOpenAdmin && (
-            <button
-              onClick={onOpenAdmin}
-              title="سامانه مدیریت نمایشگاه‌ها"
-              aria-label="مدیریت نمایشگاه‌ها"
-              className="clay-button clay-base w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-stone-600 dark:text-stone-300 hover:scale-105 active:scale-95 transition-all shrink-0 cursor-pointer rounded-xl"
-            >
-              <Lock className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.2]" />
             </button>
           )}
 

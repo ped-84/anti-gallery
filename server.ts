@@ -296,7 +296,7 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.096',
+    version: 'بتا V 1.097',
     serverRole: SERVER_ROLE, // 'primary' | 'mirror'
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
@@ -314,12 +314,27 @@ app.get('/health', (req, res) => {
 app.get('/api/config', (req, res) => {
   res.json({
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.096',
+    version: 'بتا V 1.097',
     serverRole: SERVER_ROLE,
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
     neshanKey: getNeshanKey(req.headers.host || '')
   });
+});
+
+// Hidden Admin Route: Direct access handler (returns 404 if ADMIN_ENABLED=false, redirects to /#/admin if allowed)
+app.get(['/admin', '/admin/'], (req, res) => {
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+  if (!isAdminAllowed()) {
+    return res.status(404).send('Not Found');
+  }
+  res.redirect('/#/admin');
+});
+
+// Security & SEO: Ensure all admin API endpoints send noindex robots headers
+app.use('/api/admin', (req, res, next) => {
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+  next();
 });
 
 // Serve galleries list

@@ -107,17 +107,60 @@ export default function App() {
       });
   }, []);
 
-  // Listen for #admin or ?admin=1 in URL for instant admin panel access
+  // Listen for hidden admin route (#/admin, #admin, /admin, ?admin=1)
   useEffect(() => {
     const checkAdminTrigger = () => {
-      if (window.location.hash === '#admin' || window.location.search.includes('admin=1')) {
+      const hash = window.location.hash;
+      const pathname = window.location.pathname;
+      const search = window.location.search;
+      const isAdminRoute =
+        hash === '#/admin' ||
+        hash === '#admin' ||
+        pathname === '/admin' ||
+        pathname.endsWith('/admin') ||
+        search.includes('admin=1');
+
+      if (isAdminRoute) {
+        // Respect ADMIN_ENABLED: when false (e.g. Iran mirror), show nothing special (home page)
+        if (serverConfig.adminEnabled === false) {
+          setIsAdminOpen(false);
+          return;
+        }
         setIsAdminOpen(true);
       }
     };
     checkAdminTrigger();
     window.addEventListener('hashchange', checkAdminTrigger);
-    return () => window.removeEventListener('hashchange', checkAdminTrigger);
-  }, []);
+    window.addEventListener('popstate', checkAdminTrigger);
+    return () => {
+      window.removeEventListener('hashchange', checkAdminTrigger);
+      window.removeEventListener('popstate', checkAdminTrigger);
+    };
+  }, [serverConfig.adminEnabled]);
+
+  // Protect admin route from search engine indexing
+  useEffect(() => {
+    let metaRobots = document.querySelector('meta[name="robots"]');
+    const hash = window.location.hash;
+    const pathname = window.location.pathname;
+    const isAdminRoute =
+      hash === '#/admin' ||
+      hash === '#admin' ||
+      pathname === '/admin' ||
+      pathname.endsWith('/admin') ||
+      isAdminOpen;
+
+    if (isAdminRoute) {
+      if (!metaRobots) {
+        metaRobots = document.createElement('meta');
+        metaRobots.setAttribute('name', 'robots');
+        document.head.appendChild(metaRobots);
+      }
+      metaRobots.setAttribute('content', 'noindex, nofollow, noarchive');
+    } else if (metaRobots) {
+      metaRobots.setAttribute('content', 'index, follow');
+    }
+  }, [isAdminOpen]);
 
   // Filter for Tehran-only display per user instructions (non-Tehran preserved in DB for future expansion)
   const galleries = useMemo<Gallery[]>(() => {
@@ -790,7 +833,6 @@ export default function App() {
         onToggleDarkMode={toggleDarkMode}
         onTriggerInstall={() => setPwaInstallTrigger((prev) => prev + 1)}
         isStandalone={isStandalone}
-        onOpenAdmin={() => setIsAdminOpen(true)}
       />
 
       {/* Operational Ribbon */}
@@ -1214,10 +1256,15 @@ export default function App() {
         onSetStart={handleSetStartGallery}
       />
 
-      {/* Admin Panel Modal (Password Protected, Zero-rebuild DB edits) */}
+      {/* Admin Panel Modal (Hidden Route, Password Protected, Zero-rebuild DB edits) */}
       <AdminModal
-        isOpen={isAdminOpen}
-        onClose={() => setIsAdminOpen(false)}
+        isOpen={isAdminOpen && serverConfig.adminEnabled !== false}
+        onClose={() => {
+          setIsAdminOpen(false);
+          if (window.location.hash === '#/admin' || window.location.hash === '#admin') {
+            window.history.replaceState(null, '', window.location.pathname + window.location.search);
+          }
+        }}
         galleries={allGalleries}
         onGalleriesUpdated={setAllGalleries}
         isDarkMode={isDarkMode}
