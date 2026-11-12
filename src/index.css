@@ -159,7 +159,7 @@ body {
    Claymorphic Day / Night Theme Toggle Switch
    ======================================================== */
 .clay-theme-toggle {
-  --width: 56px;
+  --width: 66px;
   --duration: 220ms;
   --theme-ease: cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
@@ -185,7 +185,7 @@ body {
 
 @media (min-width: 640px) {
   .clay-theme-toggle {
-    --width: 64px;
+    --width: 76px;
   }
 }
 
@@ -331,14 +331,14 @@ body {
   line-height: 1;
   text-shadow: 0 0 3px rgba(163, 194, 228, 0.5);
 }
-.clay-theme-toggle .star:nth-child(1) { left: 13%; top: 28%; font-size: 7px; }
-.clay-theme-toggle .star:nth-child(2) { left: 30%; top: 42%; font-size: 5px; }
-.clay-theme-toggle .star:nth-child(3) { left: 43%; top: 23%; font-size: 6px; }
-.clay-theme-toggle .star:nth-child(4) { left: 20%; top: 70%; font-size: 6px; }
-.clay-theme-toggle .star:nth-child(5) { left: 46%; top: 72%; font-size: 7px; }
-.clay-theme-toggle .star:nth-child(6) { left: 10%; top: 53%; font-size: 4px; }
-.clay-theme-toggle .star:nth-child(7) { left: 36%; top: 62%; font-size: 4px; }
-.clay-theme-toggle .star:nth-child(8) { left: 27%; top: 19%; font-size: 4px; }
+.clay-theme-toggle .star:nth-child(1) { left: 13%; top: 28%; font-size: 8.5px; }
+.clay-theme-toggle .star:nth-child(2) { left: 30%; top: 42%; font-size: 6.5px; }
+.clay-theme-toggle .star:nth-child(3) { left: 43%; top: 23%; font-size: 7.5px; }
+.clay-theme-toggle .star:nth-child(4) { left: 20%; top: 70%; font-size: 7.5px; }
+.clay-theme-toggle .star:nth-child(5) { left: 46%; top: 72%; font-size: 8.5px; }
+.clay-theme-toggle .star:nth-child(6) { left: 10%; top: 53%; font-size: 5px; }
+.clay-theme-toggle .star:nth-child(7) { left: 36%; top: 62%; font-size: 5.5px; }
+.clay-theme-toggle .star:nth-child(8) { left: 27%; top: 19%; font-size: 5px; }
 
 /* ========================================================
    Claymorphic 3D Soft Shadow System

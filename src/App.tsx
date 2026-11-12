@@ -849,20 +849,20 @@ export default function App() {
         {/* Dedicated Curated Tours Claymorphic Spotlight Card */}
         <section className="clay-card p-4 sm:p-5.5 bg-gradient-to-r from-white via-[#fcfdff] to-[#f4f7fb] dark:from-[#181d27] dark:via-[#1c2331] dark:to-[#141924] border border-[#E1E1E1] dark:border-stone-800 shadow-md">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-start sm:items-center gap-3.5">
-              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl clay-button clay-orange flex items-center justify-center shrink-0 shadow-md">
+            <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0 pr-0.5 sm:pr-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl clay-button clay-orange flex items-center justify-center shrink-0 shadow-md">
                 <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white stroke-[2.2]" />
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-base sm:text-lg font-black text-[#1c2944] dark:text-white tracking-tight">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap sm:flex-nowrap">
+                  <h2 className="text-sm sm:text-lg font-black text-[#1c2944] dark:text-white tracking-tight shrink-0 whitespace-nowrap">
                     گشت‌های آماده آرت‌گشت
                   </h2>
-                  <span className="px-2 py-0.5 text-[10px] sm:text-[11px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug">
+                  <span className="whitespace-nowrap px-3 sm:px-3.5 py-0.5 sm:py-1 text-[10px] sm:text-[11px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug inline-flex items-center shrink-0 shadow-xs">
                     مسیرهای پیشنهادی تهران
                   </span>
                 </div>
-                <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 mt-1 leading-relaxed">
+                <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 mt-1 sm:mt-1.5 leading-relaxed">
                   مسیرهای منتخب و پیوسته برای گالری‌گردی بهینه با کمترین زمان و فاصله در محله‌های هنری تهران همراه با کروکی و راهنمای گام‌به‌گام
                 </p>
               </div>
