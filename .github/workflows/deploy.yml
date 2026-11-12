@@ -1,0 +1,116 @@
+name: Deploy to production (Frankfurt)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+env:
+  DEPLOY_HOST: 86.54.42.206
+  DEPLOY_USER: deploy
+  REMOTE_DIR: /opt/artgasht
+
+jobs:
+  deploy:
+    name: Check, build and deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Build Docker image
+        run: |
+          docker build -t artgasht:latest .
+          docker save artgasht:latest | gzip > artgasht.tar.gz
+          ls -lh artgasht.tar.gz
+
+      - name: Configure SSH
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+          cat > ~/.ssh/config <<EOF
+          Host production
+            HostName $DEPLOY_HOST
+            User $DEPLOY_USER
+            IdentityFile ~/.ssh/id_deploy
+            IdentitiesOnly yes
+            StrictHostKeyChecking yes
+            ServerAliveInterval 15
+            ServerAliveCountMax 8
+          EOF
+          ssh production "echo SSH connection OK"
+
+      - name: Upload image and files
+        run: |
+          ssh production "mkdir -p $REMOTE_DIR/data/uploads $REMOTE_DIR/scripts"
+          scp artgasht.tar.gz production:$REMOTE_DIR/artgasht_new.tar.gz
+          scp docker-compose.yml Caddyfile production:$REMOTE_DIR/
+          scp scripts/*.sh scripts/*.cjs production:$REMOTE_DIR/scripts/
+          ssh production "chmod +x $REMOTE_DIR/scripts/*.sh $REMOTE_DIR/scripts/*.cjs 2>/dev/null || true"
+
+      - name: Switch to new version with health check and rollback
+        run: |
+          ssh production "bash -s" <<'REMOTE'
+          set -euo pipefail
+          cd /opt/artgasht
+
+          if docker image inspect artgasht:latest >/dev/null 2>&1; then
+            docker tag artgasht:latest artgasht:previous
+          fi
+
+          gunzip -c artgasht_new.tar.gz | docker load
+          rm -f artgasht_new.tar.gz
+          docker compose up -d --force-recreate
+
+          ok=0
+          for i in $(seq 1 24); do
+            if curl -fsS -m 5 http://127.0.0.1:3000/health >/dev/null 2>&1; then
+              ok=1
+              break
+            fi
+            sleep 5
+          done
+
+          if [ "$ok" = "1" ]; then
+            echo "Health check passed:"
+            curl -sS -m 5 http://127.0.0.1:3000/health
+            echo
+            docker image prune -f >/dev/null 2>&1 || true
+            exit 0
+          fi
+
+          echo "Health check FAILED. Last container logs:"
+          docker logs --tail 40 artgasht-app || true
+          if docker image inspect artgasht:previous >/dev/null 2>&1; then
+            echo "Rolling back to the previous version..."
+            docker tag artgasht:previous artgasht:latest
+            docker compose up -d --force-recreate
+          fi
+          exit 1
+          REMOTE
