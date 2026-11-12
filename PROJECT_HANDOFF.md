@@ -3,7 +3,7 @@
 > **دستورالعمل‌های حیاتی برای هوش مصنوعی (MANDATORY INSTRUCTIONS FOR AGENTS):**
 > 1. **کیفیت و دقت بی‌نقص در اولویت اول است:** هرگز کیفیت کد، هماهنگی بصری و روانی رابط کاربری را فدای پاسخ سریع نکنید. کاربر یک محصول پروداکشن، بدون باگ، زیبا و فوق‌العاده تمیز می‌خواهد.
 > 2. **پاسخ‌های فارسی باید تماماً راست‌چین باشند:** در هر پاسخ به کاربر در محیط چت، کل متن پاسخ را داخل تگ `<div dir="rtl" style="text-align: right; direction: rtl;">` قرار دهید تا جهت نمایش و خوانایی فونت فارسی کاملاً راست‌به‌چپ باشد.
-> 3. **قانون افزایش نسخه (Version Increment):** به ازای هر درخواست تغییر از طرف کاربر، مقدار ثابت `APP_VERSION` در [`src/components/Header.tsx`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/src/components/Header.tsx) باید دقیقاً `0.001` واحد افزایش یابد (نسخه فعلی: `بتا V 1.095`، نسخه بعدی: `بتا V 1.096`). همچنین `CACHE_NAME` در [`public/sw.js`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/public/sw.js) و مقدار `version` در [`server.ts`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/server.ts) با همین نسخه به‌روز شود.
+> 3. **قانون افزایش نسخه (Version Increment):** به ازای هر درخواست تغییر از طرف کاربر، مقدار ثابت `APP_VERSION` در [`src/components/Header.tsx`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/src/components/Header.tsx) باید دقیقاً `0.001` واحد افزایش یابد (نسخه فعلی: `بتا V 1.096`، نسخه بعدی: `بتا V 1.097`). همچنین `CACHE_NAME` در [`public/sw.js`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/public/sw.js) و مقدار `version` در [`server.ts`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/server.ts) با همین نسخه به‌روز شود.
 > 4. **دامنه تهران در اولویت (Tehran-First Scope):** در حال حاضر در رابط کاربری فقط و فقط گالری‌های تهران به کاربر نمایش داده می‌شوند. گالری‌های سایر شهرها در پایگاه داده `data/galleries.json` و `src/data/galleries.json` با مشخصه شهر خودشان محفوظ هستند و فقط در لایه نمایش فرانت‌اند فیلتر می‌شوند. هرگز آنها را حذف نکنید.
 > 5. **یکپارچگی تایپوگرافی فارسی و انگلیسی:** تمام اعداد نمایشی فارسی باید از تابع `toPersianDigits()` عبور کنند. برای متون فارسی فونت **شبنم (Shabnam FD)** و برای کلیه حروف/متون انگلیسی فونت **Ubuntu** اعمال شده است. تمام فونت‌ها به صورت ۱۰۰٪ محلی در `public/fonts/` میزبانی می‌شوند.
 > 6. **ممنوعیت تگ `<select>` بومی:** هرگز از تگ پیش‌فرض HTML برای دراپ‌داون‌ها استفاده نکنید؛ همیشه از کامپوننت اختصاصی [`ClayDropdown.tsx`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/src/components/ClayDropdown.tsx) استفاده شود.
@@ -22,7 +22,7 @@
 * **مخزن گیت (Git Repository):** `https://github.com/ped-84/anti-gallery.git`
   * **شاخه `main`:** سورس‌کد کامل پروژه و بک‌اند
   * **شاخه `gh-pages`:** نسخه کامپایل‌شده استاتیک پروداکشن (`dist/`)
-* **نسخه فعلی مستقر:** `بتا V 1.095` (نسخه بعدی در نوبت: `بتا V 1.096`)
+* **نسخه فعلی مستقر:** `بتا V 1.096` (نسخه بعدی در نوبت: `بتا V 1.097`)
 * **سیستم‌عامل توسعه کاربر:** Windows (با شل PowerShell).
 
 ---
@@ -124,13 +124,16 @@ c:\Users\pemal\OneDrive\Desktop\Anti - Gallery\
 │       ├── persianUtils.ts         # تبدیل ارقام فارسی، تشخیص مدیوم و تاریخ
 │       └── routeOptimizer.ts       # حل‌کننده مسیر با سوئیچ سریع به ماتریس آفلاین
 └── scripts/
-    ├── deploy-server.ps1           # اسکریپت استقرار روی سرور پروداکشن (پاورشل ویندوز)
-    ├── deploy-server.sh            # اسکریپت استقرار پروداکشن (بش لینوکس)
-    ├── sync-data.ps1               # همگام‌سازی دیتابیس و تصاویر بین سرورها (پاورشل)
-    ├── sync-data.sh                # همگام‌سازی دیتابیس و تصاویر (بش)
-    ├── generate-pdf.cjs            # اسکریپت تولید خودکار مستند PDF با موتور Edge Headless
-    ├── deploy-ghpages.cjs          # اسکریپت استقرار خودکار روی gh-pages گیت‌هاب
-    └── sync-galleryinfo.cjs        # اسکریپت وب‌اسکرپر اطلاعات گالری‌ها
+    ├── setup-server.sh             # راه‌اندازی صفر-تا-صد اوبونتو ۲۴.۰۴ (داکر، کدی، کاربر deploy)
+    ├── deploy.ps1                  # استقرار داکر ایمیج روی سرورها (target: primary|mirror|all)
+    ├── deploy.sh                   # نسخه بش لینوکسی اسکریپت استقرار
+    ├── sync-pull.sh                # همگام‌سازی دوره‌ای ۵ دقیقه‌ای rsync در سرور ایران
+    ├── mirror-mode.sh              # سوئیچ حالت‌های standalone, mirror, merge-back
+    ├── backup.sh                   # بکاپ‌گیری شبانه ماندگار با چرخش ۷ روزه
+    ├── test-reachability.sh        # تست شبکه و در دسترس بودن سرویس‌های خارجی و داخلی
+    ├── deploy-ghpages.cjs          # استقرار خودکار بر روی شاخه gh-pages در گیت‌هاب
+    ├── merge-galleries.cjs         # ادغام هوشمند رکوردهای دیتابیس بر اساس updatedAt
+    └── sync-galleryinfo.cjs        # اسکرپر دوره‌ای رویدادهای هنری تهران
 ```
 
 ---
@@ -188,3 +191,4 @@ node scripts/deploy-ghpages.cjs
 2. **هرگز وابستگی خارجی در ران‌تایم اضافه نکنید:** تمام فونت‌ها، اسکریپت‌ها و استایل‌ها باید به صورت خودمیزبان باشند تا سایت در قطعی اینترنت بین‌الملل بدون نقص کار کند.
 3. **عدم حذف گالری‌های سایر شهرها:** شهرهای دیگر (اصفهان، شیراز، مشهد و...) در فایل‌های دیتابیس محفوظ‌اند و صرفاً در `App.tsx` فیلتر می‌شوند.
 4. **حفظ پایداری در موبایل:** رویدادهای `controllerchange` سرویس‌ورکر نباید باعث رفرش ناخواسته اپلیکیشن در موبایل شوند.
+5. **رعایت بدون استثنای قوانین هوک‌های ریکت:** هیچ هوکی (`useMemo`, `useState`, `useEffect`) نباید پس از یک `return` شرطی (مانند `if (!isOpen) return null;`) تعریف شود. در `AdminModal.tsx` این خطا حل شده و تمامی هوک‌ها بدون قید و شرط در بالاترین سطح کامپوننت قرار دارند تا از خطای Minified React #310 جلوگیری شود.
