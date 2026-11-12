@@ -159,7 +159,7 @@ body {
    Claymorphic Day / Night Theme Toggle Switch
    ======================================================== */
 .clay-theme-toggle {
-  --width: 66px;
+  --width: 70px;
   --duration: 220ms;
   --theme-ease: cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
@@ -185,7 +185,7 @@ body {
 
 @media (min-width: 640px) {
   .clay-theme-toggle {
-    --width: 76px;
+    --width: 80px;
   }
 }
 

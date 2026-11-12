@@ -998,7 +998,7 @@ export default function App() {
         </section>
 
         {/* Mobile Web App View Switcher (Visible on screens < lg, sticky) */}
-        <div className="lg:hidden sticky top-16 sm:top-18 md:top-20 z-30 bg-[#f3f5f8]/95 dark:bg-[#12151e]/95 backdrop-blur-md px-3 py-2 border-y border-[#E1E1E1] dark:border-stone-800 flex items-center gap-2 rounded-2xl shadow-xs">
+        <div className="lg:hidden sticky top-20 sm:top-22 md:top-24 z-30 bg-[#f3f5f8]/95 dark:bg-[#12151e]/95 backdrop-blur-md px-3 py-2 border-y border-[#E1E1E1] dark:border-stone-800 flex items-center gap-2 rounded-2xl shadow-xs">
           <button
             onClick={() => setMobileActiveTab('catalog')}
             className={`flex-1 py-2 px-3 text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-all ${
