@@ -823,7 +823,6 @@ export default function App() {
       <Header
         selectedCount={selectedGalleries.length}
         hasCustomOrigin={Boolean(originLocation && originLocation.lat !== 0)}
-        onOpenCuratedTours={() => setIsCuratedModalOpen(true)}
         onOptimizeRoute={() => {
           runRouteOptimization();
           setMobileActiveTab('map');
@@ -875,6 +874,40 @@ export default function App() {
 
       {/* Main Content Layout */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6">
+        {/* Dedicated Curated Tours Claymorphic Spotlight Card */}
+        <section className="clay-card p-4 sm:p-5.5 bg-gradient-to-r from-white via-[#fcfdff] to-[#f4f7fb] dark:from-[#181d27] dark:via-[#1c2331] dark:to-[#141924] border border-[#E1E1E1] dark:border-stone-800 shadow-md">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-start sm:items-center gap-3.5">
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl clay-button clay-orange flex items-center justify-center shrink-0 shadow-md">
+                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white stroke-[2.2]" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-base sm:text-lg font-black text-[#1c2944] dark:text-white tracking-tight">
+                    گشت‌های آماده آرت‌گشت
+                  </h2>
+                  <span className="px-2 py-0.5 text-[10px] sm:text-[11px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug">
+                    مسیرهای پیشنهادی تهران
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 mt-1 leading-relaxed">
+                  مسیرهای منتخب و پیوسته برای گالری‌گردی بهینه با کمترین زمان و فاصله در محله‌های هنری تهران همراه با کروکی و راهنمای گام‌به‌گام
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setIsCuratedModalOpen(true)}
+              className="clay-button clay-orange text-white px-5 sm:px-6 py-2.5 sm:py-3 text-sm font-bold flex items-center justify-center gap-2 rounded-2xl shadow-md hover:brightness-105 hover:scale-105 active:scale-95 transition-all shrink-0 cursor-pointer w-full sm:w-auto"
+              title="مشاهده نقشه و مسیرهای پیشنهادی گشت‌های آماده"
+            >
+              <Sparkles className="w-4 h-4 text-white stroke-[2.2] shrink-0" />
+              <span>گشت‌های آماده</span>
+            </button>
+          </div>
+        </section>
+
         {/* Editorial Claymorphic Banner */}
         <section className="clay-card p-4 sm:p-6 bg-white dark:bg-[#181d27] border border-[#E1E1E1] dark:border-stone-800">
           <span className="text-sm sm:text-base font-bold text-[#F76B1C] block mb-1">

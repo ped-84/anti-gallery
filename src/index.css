@@ -156,6 +156,191 @@ body {
 }
 
 /* ========================================================
+   Claymorphic Day / Night Theme Toggle Switch
+   ======================================================== */
+.clay-theme-toggle {
+  --width: 56px;
+  --duration: 680ms;
+  --theme-ease: cubic-bezier(0.65, 0, 0.25, 1);
+  position: relative;
+  width: var(--width);
+  aspect-ratio: 2.08;
+  border-radius: 999px;
+  cursor: pointer;
+  direction: ltr !important;
+  padding: 0;
+  border: 1px solid #e2e8f0;
+  background: linear-gradient(145deg, #ffffff, #e2e9f4);
+  box-shadow: 
+    3px 4px 10px rgba(61, 91, 153, 0.18),
+    inset 1px 2px 3px #ffffff,
+    inset -1px -2px 4px rgba(61, 91, 153, 0.15);
+  isolation: isolate;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--duration) var(--theme-ease),
+              box-shadow var(--duration) var(--theme-ease),
+              border-color var(--duration) var(--theme-ease);
+  flex-shrink: 0;
+}
+
+@media (min-width: 640px) {
+  .clay-theme-toggle {
+    --width: 64px;
+  }
+}
+
+.clay-theme-toggle:focus-visible {
+  outline: 2px solid #3d5b99;
+  outline-offset: 3px;
+}
+
+.clay-theme-toggle[aria-checked="true"] {
+  background: linear-gradient(145deg, #252d3d, #161c28);
+  border-color: #334155;
+  box-shadow: 
+    3px 4px 10px rgba(0, 0, 0, 0.4),
+    inset 1px 2px 3px rgba(114, 130, 160, 0.2),
+    inset -1px -2px 4px rgba(5, 11, 24, 0.5);
+}
+
+.clay-theme-toggle .scene {
+  position: absolute;
+  inset: 2.5px;
+  overflow: hidden;
+  border-radius: inherit;
+  background: linear-gradient(145deg, #3d5b99, #769bc6);
+  box-shadow: inset 2px 3px 6px rgba(32, 54, 86, 0.4), inset -1px -2px 4px rgba(255, 255, 255, 0.4);
+  transition: background var(--duration) var(--theme-ease), box-shadow var(--duration) var(--theme-ease);
+}
+
+.clay-theme-toggle[aria-checked="true"] .scene {
+  background: linear-gradient(145deg, #131c2e, #24355a);
+  box-shadow: inset 2px 3px 6px rgba(0, 0, 0, 0.6), inset -1px -2px 4px rgba(163, 194, 228, 0.15);
+}
+
+.clay-theme-toggle .scene::after {
+  content: "";
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 1px 2px 3px rgba(24, 42, 76, 0.25), inset -1px -1px 2px rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+}
+
+.clay-theme-toggle .halo {
+  position: absolute;
+  left: 22%;
+  top: 50%;
+  width: 116%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.05), 0 0 0 20px rgba(255, 255, 255, 0.04);
+  transition: left var(--duration) var(--theme-ease);
+}
+
+.clay-theme-toggle[aria-checked="true"] .halo {
+  left: 78%;
+}
+
+.clay-theme-toggle .orb {
+  position: absolute;
+  z-index: 2;
+  left: 4%;
+  top: 9%;
+  height: 82%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 23%, #ffba76 0%, #ff9850 33%, #f76b1c 74%, #db5516 100%);
+  box-shadow: inset 1.5px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -3px 5px rgba(185, 69, 36, 0.3), 2px 3px 5px rgba(30, 51, 90, 0.35);
+  overflow: hidden;
+  transition: left var(--duration) var(--theme-ease), transform var(--duration) var(--theme-ease);
+}
+
+.clay-theme-toggle[aria-checked="true"] .orb {
+  left: 56.6%;
+  transform: rotate(10deg);
+}
+
+.clay-theme-toggle .moon {
+  position: absolute;
+  inset: 0;
+  transform: translateX(110%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse 24% 18% at 34% 39%, rgba(164, 179, 200, 0.25) 0%, transparent 100%),
+              radial-gradient(circle at 30% 22%, #f4f7ff, #d9e5f6 54%, #a3c2e4);
+  box-shadow: inset 1.5px 2px 4px rgba(255, 255, 255, 0.8), inset -2px -3px 5px rgba(61, 91, 153, 0.3);
+  transition: transform var(--duration) var(--theme-ease);
+}
+
+.clay-theme-toggle[aria-checked="true"] .moon {
+  transform: translateX(0);
+}
+
+.clay-theme-toggle .crater {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 65% 72%, #cfdbeb, #bacbdf 70%, #adbed3);
+  box-shadow: inset 1px 1px 2px rgba(97, 123, 155, 0.3), 0 0.5px 1px rgba(255, 255, 255, 0.5);
+  opacity: 0.75;
+}
+.clay-theme-toggle .crater:nth-child(1) { width: 8%; height: 8%; top: 19%; left: 46%; }
+.clay-theme-toggle .crater:nth-child(2) { width: 12%; height: 11%; top: 57%; left: 23%; border-radius: 47% 53% 50% 46%; }
+.clay-theme-toggle .crater:nth-child(3) { width: 9%; height: 9%; top: 65%; left: 65%; }
+.clay-theme-toggle .crater:nth-child(4) { width: 5%; height: 5%; top: 32%; left: 21%; }
+.clay-theme-toggle .crater:nth-child(5) { width: 6%; height: 6%; top: 42%; left: 72%; }
+.clay-theme-toggle .crater:nth-child(6) { width: 4%; height: 4%; top: 77%; left: 45%; }
+.clay-theme-toggle .crater:nth-child(7) { width: 3%; height: 3%; top: 48%; left: 43%; }
+.clay-theme-toggle .crater:nth-child(8) { width: 4%; height: 4%; top: 25%; left: 64%; }
+.clay-theme-toggle .crater:nth-child(9) { width: 3%; height: 3%; top: 72%; left: 21%; }
+
+.clay-theme-toggle .clouds {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+  filter: drop-shadow(0 -1px 1px rgba(255, 255, 255, 0.4)) drop-shadow(0 2px 2px rgba(61, 91, 153, 0.15));
+  transition: transform var(--duration) var(--theme-ease);
+}
+
+.clay-theme-toggle[aria-checked="true"] .clouds {
+  transform: translateY(110%);
+}
+
+.clay-theme-toggle .stars {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform var(--duration) var(--theme-ease);
+}
+
+.clay-theme-toggle[aria-checked="true"] .stars {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.clay-theme-toggle .star {
+  position: absolute;
+  color: #e9f1ff;
+  line-height: 1;
+  text-shadow: 0 0 3px rgba(163, 194, 228, 0.5);
+}
+.clay-theme-toggle .star:nth-child(1) { left: 13%; top: 28%; font-size: 7px; }
+.clay-theme-toggle .star:nth-child(2) { left: 30%; top: 42%; font-size: 5px; }
+.clay-theme-toggle .star:nth-child(3) { left: 43%; top: 23%; font-size: 6px; }
+.clay-theme-toggle .star:nth-child(4) { left: 20%; top: 70%; font-size: 6px; }
+.clay-theme-toggle .star:nth-child(5) { left: 46%; top: 72%; font-size: 7px; }
+.clay-theme-toggle .star:nth-child(6) { left: 10%; top: 53%; font-size: 4px; }
+.clay-theme-toggle .star:nth-child(7) { left: 36%; top: 62%; font-size: 4px; }
+.clay-theme-toggle .star:nth-child(8) { left: 27%; top: 19%; font-size: 4px; }
+
+/* ========================================================
    Claymorphic 3D Soft Shadow System
    ======================================================== */
 .clay-card {

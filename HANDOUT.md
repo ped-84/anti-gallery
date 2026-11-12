@@ -1,7 +1,7 @@
 # آرت‌گشت (Anti-Gallery) — دستنامه و راهنمای جامع انتقال به چت جدید (Complete Project Handout)
 
 > **تاریخ آخرین به‌روزرسانی:** نوامبر ۲۰۲۶ (۲۱ آبان ۱۴۰۵)  
-> **نسخه فعلی مستقر:** `بتا V 1.098` (نسخه بعدی در نوبت: `بتا V 1.099`)  
+> **نسخه فعلی مستقر:** `بتا V 1.099` (نسخه بعدی در نوبت: `بتا V 1.100`)  
 > **مخزن گیت‌هاب:** `https://github.com/ped-84/anti-gallery.git`  
 > **آدرس لایو گیت‌هاب پیجز:** [https://ped-84.github.io/anti-gallery/](https://ped-84.github.io/anti-gallery/)  
 > **دامنه سرور اصلی (آلمان):** `https://artgasht.com`  
@@ -18,7 +18,7 @@
 
 قوانین و ضوابط الزامی و تغییرناپذیر پروژه:
 ۱. پاسخ‌های فارسی در چت: تمامی پاسخ‌هایت در چت باید کاملاً راست‌چین و درون <div dir="rtl" style="text-align: right; direction: rtl;"> قرار گیرند.
-۲. قانون افزایش نسخه (Version Increment): به ازای هر درخواست تغییر، نسخه برنامه APP_VERSION در فایل src/components/Header.tsx باید ۰.۰۰۱ واحد افزایش یابد (نسخه فعلی: بتا V 1.098 و نسخه بعدی: بتا V 1.099). همچنین CACHE_NAME در public/sw.js و مقدار version در server.ts با همان نسخه به‌روز می‌شود.
+۲. قانون افزایش نسخه (Version Increment): به ازای هر درخواست تغییر، نسخه برنامه APP_VERSION در فایل src/components/Header.tsx باید ۰.۰۰۱ واحد افزایش یابد (نسخه فعلی: بتا V 1.099 و نسخه بعدی: بتا V 1.100). همچنین CACHE_NAME در public/sw.js و مقدار version در server.ts با همان نسخه به‌روز می‌شود.
 ۳. دامنه نمایش: در حال حاضر فقط گالری‌های تهران در فرانت‌اند نمایش داده می‌شوند (شهرهای دیگر در دیتابیس محفوظ‌اند و نباید حذف شوند).
 ۴. تایپوگرافی و ارقام: تمام ارقام فارسی باید از toPersianDigits() عبور کنند. فونت متون فارسی شبنم (Shabnam FD) و متون انگلیسی و آدرس‌ها Ubuntu است که به صورت محلی در public/fonts/ میزبانی شده‌اند. هیچ فونت خارجی نباید در ران‌تایم لود شود.
 ۵. کامپوننت‌های فرم: هرگز از تگ پیش‌فرض <select> استفاده نکن و همواره از کامپوننت اختصاصی ClayDropdown.tsx استفاده کن.
@@ -187,8 +187,8 @@ c:\Users\pemal\OneDrive\Desktop\Anti - Gallery\
 
 ### قانون ۲: قانون افزایش نسخه (Version Increment)
 به ازای هر درخواست تغییر از کاربر، نسخه باید **۰.۰۰۱** واحد افزایش یابد:
-* [`src/components/Header.tsx`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/src/components/Header.tsx): `export const APP_VERSION = 'بتا V 1.098';`
-* [`public/sw.js`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/public/sw.js): `const CACHE_NAME = 'artgasht-pwa-v1.098';`
+* [`src/components/Header.tsx`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/src/components/Header.tsx): `export const APP_VERSION = 'بتا V 1.099';`
+* [`public/sw.js`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/public/sw.js): `const CACHE_NAME = 'artgasht-pwa-v1.099';`
 * [`server.ts`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/server.ts): فیلد `version` در اندپوینت‌های `/health` و `/api/config`
 
 ### قانون ۳: رعایت اکید قوانین هوک‌های ریکت (Rules of Hooks)
@@ -277,7 +277,7 @@ SCRAPER_ENABLED=false
 
 ## ۹. وضعیت فعلی و کارهای در اولویت (Current Status & Next Steps)
 
-1. **وضعیت مخزن:** کاملاً تمیز، نسخه `بتا V 1.098`. هویت بصری و لوگوی جدید، بهینه‌سازی خوانایی فونت ارقام، رفع ابهام دکمه مسیریابی و ارتقای پایپ‌لاین اسکرپر زنده اعمال گردید.
+1. **وضعیت مخزن:** کاملاً تمیز، نسخه `بتا V 1.099`. برطرف‌سازی سرریز هدر موبایل، انتقال گشت‌های آماده به کارت کلیمورفیک اختصاصی، جایگزینی کلید تعویض تم روز/شب کلیمورفیک سه‌بعدی و انیمیشنی، و پایداری کامل استقرار.
 2. **خطای حل‌شده اخیر:** رفع قطعی خطای Minified React #310 در باز کردن پنل ادمین از طریق مرتب‌سازی بدون شرط هوک‌ها در [`AdminModal.tsx`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/src/components/AdminModal.tsx).
 3. **اقدام بعدی مورد نیاز کاربر:** 
    - اجرای `setup-server.sh` روی سرور ابری فرانکفورت (`86.54.42.206`) با کاربر `deploy`.
