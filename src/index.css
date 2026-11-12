@@ -160,8 +160,8 @@ body {
    ======================================================== */
 .clay-theme-toggle {
   --width: 56px;
-  --duration: 680ms;
-  --theme-ease: cubic-bezier(0.65, 0, 0.25, 1);
+  --duration: 220ms;
+  --theme-ease: cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   width: var(--width);
   aspect-ratio: 2.08;
@@ -317,7 +317,7 @@ body {
   opacity: 0;
   transform: translateY(-50%);
   pointer-events: none;
-  transition: opacity 0.5s ease, transform var(--duration) var(--theme-ease);
+  transition: opacity 0.18s ease, transform var(--duration) var(--theme-ease);
 }
 
 .clay-theme-toggle[aria-checked="true"] .stars {

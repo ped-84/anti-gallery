@@ -14,7 +14,7 @@ interface HeaderProps {
   isStandalone?: boolean;
 }
 
-export const APP_VERSION = 'بتا V 1.099';
+export const APP_VERSION = 'بتا V 1.100';
 
 export const Header: React.FC<HeaderProps> = ({
   selectedCount,
@@ -30,12 +30,12 @@ export const Header: React.FC<HeaderProps> = ({
   const minRequired = hasCustomOrigin ? 1 : 2;
   return (
     <header className="sticky top-0 z-40 bg-[#f4f6fa]/95 dark:bg-[#131722]/95 backdrop-blur-md border-b border-[#E1E1E1] dark:border-stone-800 transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-20 sm:h-[88px] flex items-center justify-between gap-2 sm:gap-4">
         {/* Zone 1: Brand Logo & Wordmark (Corporate identity) */}
         <div className="flex items-center gap-2 sm:gap-3.5 shrink-0">
           <a href="/" className="flex items-center gap-2.5 sm:gap-3.5 text-inherit no-underline group">
             {/* Corporate Brand Icon (Claymorphic) */}
-            <div className="w-10 h-10 sm:w-11 sm:h-11 clay-card flex items-center justify-center group-hover:scale-105 transition-transform shrink-0 p-1.5 sm:p-2 bg-white dark:bg-[#181d27] border border-stone-200 dark:border-stone-800 shadow-sm rounded-2xl">
+            <div className="w-11 h-11 sm:w-12 sm:h-12 clay-card flex items-center justify-center group-hover:scale-105 transition-transform shrink-0 p-1.5 sm:p-2 bg-white dark:bg-[#181d27] border border-stone-200 dark:border-stone-800 shadow-sm rounded-2xl">
               <img
                 src="./icons/brand-logo-icon.png"
                 alt="لوگوی آرت‌گشت"
@@ -48,22 +48,21 @@ export const Header: React.FC<HeaderProps> = ({
               />
             </div>
             <div className="flex flex-col justify-center">
-              <div className="flex items-center gap-2">
-                <span className="text-base sm:text-xl font-black tracking-tight text-[#1c2944] dark:text-white block leading-tight">
-                  آرت‌گشت
-                </span>
+              {/* Prominent English Brand Wordmark */}
+              <div className="flex items-center">
                 <img
                   src="./icons/brand-wordmark-light.png"
                   alt="art gasht"
-                  className="h-3 sm:h-3.5 w-auto object-contain hidden sm:block dark:hidden opacity-85"
+                  className="h-6 sm:h-7 md:h-8 w-auto object-contain block dark:hidden"
                 />
                 <img
                   src="./icons/brand-wordmark-dark.png"
                   alt="art gasht"
-                  className="h-3 sm:h-3.5 w-auto object-contain hidden sm:dark:block opacity-85"
+                  className="h-6 sm:h-7 md:h-8 w-auto object-contain hidden dark:block"
                 />
               </div>
-              <div className="flex items-center gap-1.5 mt-0.5">
+              {/* Version Badge & Slogan with enhanced vertical breathing room */}
+              <div className="flex items-center gap-1.5 mt-1 sm:mt-1.5">
                 <span className="px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug shrink-0 font-ubuntu">
                   {APP_VERSION}
                 </span>
