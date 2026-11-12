@@ -14,7 +14,7 @@ interface HeaderProps {
   isStandalone?: boolean;
 }
 
-export const APP_VERSION = 'بتا V 1.100';
+export const APP_VERSION = 'بتا V 1.101';
 
 export const Header: React.FC<HeaderProps> = ({
   selectedCount,
@@ -32,10 +32,10 @@ export const Header: React.FC<HeaderProps> = ({
     <header className="sticky top-0 z-40 bg-[#f4f6fa]/95 dark:bg-[#131722]/95 backdrop-blur-md border-b border-[#E1E1E1] dark:border-stone-800 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-20 sm:h-[88px] flex items-center justify-between gap-2 sm:gap-4">
         {/* Zone 1: Brand Logo & Wordmark (Corporate identity) */}
-        <div className="flex items-center gap-2 sm:gap-3.5 shrink-0">
-          <a href="/" className="flex items-center gap-2.5 sm:gap-3.5 text-inherit no-underline group">
-            {/* Corporate Brand Icon (Claymorphic) */}
-            <div className="w-11 h-11 sm:w-12 sm:h-12 clay-card flex items-center justify-center group-hover:scale-105 transition-transform shrink-0 p-1.5 sm:p-2 bg-white dark:bg-[#181d27] border border-stone-200 dark:border-stone-800 shadow-sm rounded-2xl">
+        <div className="flex items-center gap-2.5 sm:gap-4 shrink-0">
+          <a href="/" className="flex items-center gap-2.5 sm:gap-4 text-inherit no-underline group">
+            {/* Corporate Brand Icon (Claymorphic, Enlarged) */}
+            <div className="w-13 h-13 sm:w-15 sm:h-15 clay-card flex items-center justify-center group-hover:scale-105 transition-transform shrink-0 p-1 sm:p-1.5 bg-white dark:bg-[#181d27] border border-stone-200 dark:border-stone-800 shadow-sm rounded-2xl">
               <img
                 src="./icons/brand-logo-icon.png"
                 alt="لوگوی آرت‌گشت"
@@ -48,17 +48,17 @@ export const Header: React.FC<HeaderProps> = ({
               />
             </div>
             <div className="flex flex-col justify-center">
-              {/* Prominent English Brand Wordmark */}
+              {/* Prominent English Brand Wordmark (Enlarged) */}
               <div className="flex items-center">
                 <img
                   src="./icons/brand-wordmark-light.png"
                   alt="art gasht"
-                  className="h-6 sm:h-7 md:h-8 w-auto object-contain block dark:hidden"
+                  className="h-8 sm:h-9.5 md:h-11 w-auto object-contain block dark:hidden"
                 />
                 <img
                   src="./icons/brand-wordmark-dark.png"
                   alt="art gasht"
-                  className="h-6 sm:h-7 md:h-8 w-auto object-contain hidden dark:block"
+                  className="h-8 sm:h-9.5 md:h-11 w-auto object-contain hidden dark:block"
                 />
               </div>
               {/* Version Badge & Slogan with enhanced vertical breathing room */}

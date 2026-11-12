@@ -911,13 +911,13 @@ export default function App() {
         {/* Editorial Claymorphic Banner */}
         <section className="clay-card p-4 sm:p-6 bg-white dark:bg-[#181d27] border border-[#E1E1E1] dark:border-stone-800">
           <span className="text-sm sm:text-base font-bold text-[#F76B1C] block mb-1">
-            برنامه‌ریزی تور گالری‌های هنری و نمایشگاه‌های جاری
+            برنامه‌ریزی بازدید از گالری‌های هنری و نمایشگاه‌های جاری
           </span>
           <h1 className="text-xl sm:text-3xl font-bold text-[#1d2d4c] dark:text-white tracking-tight leading-snug">
             بهترین مسیر آرت‌گشت در تهران
           </h1>
           <p className="text-sm sm:text-base text-stone-600 dark:text-stone-300 mt-2 leading-relaxed">
-            پوسترهای مربعی نمایشگاه‌ها، تاریخ افتتاحیه و نام هنرمندان را بررسی کرده و مقصدهای بازدید خود را انتخاب کنید تا کوتاه‌ترین مسیر با احتساب ترافیک تهران محاسبه شود.
+            گالری‌های مورد نظر خود را انتخاب کنید تا بهترین مسیر با احتساب ترافیک تهران به شما پیشنهاد شود.
           </p>
 
           {/* Quick Tour Presets */}
