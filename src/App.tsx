@@ -16,7 +16,7 @@ import {
   parsePersianDateToScore,
   isThisWeekOpening
 } from './utils/persianUtils';
-import { Header } from './components/Header';
+import { Header, APP_VERSION } from './components/Header';
 import { GalleryCard } from './components/GalleryCard';
 import { InteractiveMap } from './components/InteractiveMap';
 import { RouteSummaryPanel } from './components/RouteSummaryPanel';
@@ -38,7 +38,8 @@ import {
   Map as MapIcon,
   Compass,
   Flame,
-  Building2
+  Building2,
+  Navigation
 } from 'lucide-react';
 
 const STICKDAZZLE_THEMES = ['darkblue', 'orange', 'softblue', 'gray'] as const;
@@ -817,17 +818,14 @@ export default function App() {
     return map;
   }, [routeResult]);
 
+  const hasCustomOrigin = Boolean(originLocation && originLocation.lat !== 0);
+  const minRequired = hasCustomOrigin ? 1 : 2;
+  const canOptimize = selectedGalleries.length >= minRequired;
+
   return (
     <div className="min-h-screen bg-[#f3f5f8] dark:bg-[#12151e] text-stone-800 dark:text-stone-100 flex flex-col font-sans transition-colors duration-200 overflow-x-hidden">
       {/* Top Bar (Claymorphic with Stickdazzle Palette, Fully Responsive) */}
       <Header
-        selectedCount={selectedGalleries.length}
-        hasCustomOrigin={Boolean(originLocation && originLocation.lat !== 0)}
-        onOptimizeRoute={() => {
-          runRouteOptimization();
-          setMobileActiveTab('map');
-        }}
-        isOptimizing={isOptimizing}
         isDarkMode={isDarkMode}
         onToggleDarkMode={toggleDarkMode}
         onTriggerInstall={() => setPwaInstallTrigger((prev) => prev + 1)}
@@ -844,32 +842,6 @@ export default function App() {
             </span>
           </div>
         </div>
-      </div>
-
-      {/* Mobile Web App View Switcher (Visible on screens < lg) */}
-      <div className="lg:hidden sticky top-20 z-30 bg-[#f3f5f8]/95 dark:bg-[#12151e]/95 backdrop-blur-md px-4 py-2 border-b border-[#E1E1E1] dark:border-stone-800 flex items-center gap-2">
-        <button
-          onClick={() => setMobileActiveTab('catalog')}
-          className={`flex-1 py-2 px-3 text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-all ${
-            mobileActiveTab === 'catalog'
-              ? 'clay-darkblue text-white shadow-sm'
-              : 'clay-base text-stone-600 dark:text-stone-300'
-          }`}
-        >
-          <Palette className="w-4 h-4" />
-          <span>فهرست نمایشگاه‌ها <bdi>({toPersianDigits(filteredGalleries.length)})</bdi></span>
-        </button>
-        <button
-          onClick={() => setMobileActiveTab('map')}
-          className={`flex-1 py-2 px-3 text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-all ${
-            mobileActiveTab === 'map'
-              ? 'clay-orange text-white shadow-sm'
-              : 'clay-base text-stone-600 dark:text-stone-300'
-          }`}
-        >
-          <MapIcon className="w-4 h-4" />
-          <span>نقشه و مسیر <bdi>({toPersianDigits(selectedGalleries.length)})</bdi></span>
-        </button>
       </div>
 
       {/* Main Content Layout */}
@@ -1024,6 +996,32 @@ export default function App() {
             })}
           </div>
         </section>
+
+        {/* Mobile Web App View Switcher (Visible on screens < lg, sticky) */}
+        <div className="lg:hidden sticky top-16 sm:top-18 md:top-20 z-30 bg-[#f3f5f8]/95 dark:bg-[#12151e]/95 backdrop-blur-md px-3 py-2 border-y border-[#E1E1E1] dark:border-stone-800 flex items-center gap-2 rounded-2xl shadow-xs">
+          <button
+            onClick={() => setMobileActiveTab('catalog')}
+            className={`flex-1 py-2 px-3 text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-all ${
+              mobileActiveTab === 'catalog'
+                ? 'clay-darkblue text-white shadow-sm'
+                : 'clay-base text-stone-600 dark:text-stone-300'
+            }`}
+          >
+            <Palette className="w-4 h-4" />
+            <span>فهرست نمایشگاه‌ها <bdi>({toPersianDigits(filteredGalleries.length)})</bdi></span>
+          </button>
+          <button
+            onClick={() => setMobileActiveTab('map')}
+            className={`flex-1 py-2 px-3 text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-all ${
+              mobileActiveTab === 'map'
+                ? 'clay-orange text-white shadow-sm'
+                : 'clay-base text-stone-600 dark:text-stone-300'
+            }`}
+          >
+            <MapIcon className="w-4 h-4" />
+            <span>نقشه و مسیر <bdi>({toPersianDigits(selectedGalleries.length)})</bdi></span>
+          </button>
+        </div>
 
         {/* FULL-WIDTH IMMERSIVE MAP (Desktop, Tablet & Mobile) */}
         <section className={`w-full ${mobileActiveTab === 'catalog' ? 'hidden lg:block' : 'block'}`}>
@@ -1234,18 +1232,82 @@ export default function App() {
             </div>
           </section>
         </div>
+
+        {/* Floating Route Optimization Bar (Bottom-center, thumb-friendly, replaces header button) */}
+        <aside aria-label="نوار مسیریابی سریع" className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-lg w-[calc(100%-2rem)] sm:w-auto transition-all duration-300">
+          <div className="clay-card bg-white/95 dark:bg-[#181d27]/95 backdrop-blur-md border border-[#E1E1E1] dark:border-stone-800 p-2 sm:p-2.5 rounded-2xl shadow-2xl flex items-center justify-between gap-2.5 sm:gap-4">
+            <div className="flex items-center gap-2 px-1 sm:px-2 min-w-0">
+              <span
+                className={`w-2.5 h-2.5 rounded-full shrink-0 transition-colors ${
+                  canOptimize ? 'bg-[#F76B1C] animate-pulse' : 'bg-stone-300 dark:bg-stone-600'
+                }`}
+              />
+              <span className="text-xs sm:text-sm font-bold text-[#1c2944] dark:text-stone-200 truncate">
+                {selectedGalleries.length === 0
+                  ? `انتخاب حداقل ${toPersianDigits(minRequired)} گالری`
+                  : `${toPersianDigits(selectedGalleries.length)} گالری در مسیر`}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5 shrink-0">
+              {selectedGalleries.length > 0 && (
+                <button
+                  type="button"
+                  onClick={handleClearAll}
+                  title="پاک کردن انتخاب‌ها"
+                  className="clay-button clay-base p-2 text-stone-500 hover:text-rose-500 rounded-xl transition-all active:scale-95 cursor-pointer shrink-0"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={() => {
+                  runRouteOptimization();
+                  setMobileActiveTab('map');
+                }}
+                disabled={!canOptimize || isOptimizing}
+                className={`clay-button px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold flex items-center gap-1.5 sm:gap-2 rounded-xl transition-all cursor-pointer ${
+                  canOptimize
+                    ? 'clay-orange text-white shadow-md hover:brightness-105 active:scale-95'
+                    : 'clay-base text-stone-400 dark:text-stone-600 cursor-not-allowed opacity-75'
+                }`}
+              >
+                <Navigation
+                  className={`w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2] ${
+                    isOptimizing ? 'animate-spin' : ''
+                  }`}
+                />
+                <span>
+                  {isOptimizing
+                    ? 'محاسبه مسیر...'
+                    : canOptimize
+                    ? `مسیریابی بهینه (${toPersianDigits(selectedGalleries.length)})`
+                    : `حداقل ${toPersianDigits(minRequired)} گالری`}
+                </span>
+              </button>
+            </div>
+          </div>
+        </aside>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-[#e4ebf5] dark:bg-[#10141c] text-stone-600 dark:text-stone-400 border-t border-[#E1E1E1] dark:border-stone-800 py-6 sm:py-8 px-4 sm:px-6 lg:px-8 mt-12 text-xs font-medium">
+      {/* Footer (with version badge migrated from header) */}
+      <footer className="bg-[#e4ebf5] dark:bg-[#10141c] text-stone-600 dark:text-stone-400 border-t border-[#E1E1E1] dark:border-stone-800 py-6 sm:py-8 px-4 sm:px-6 lg:px-8 mt-12 pb-24 sm:pb-8 text-xs font-medium">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-right">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
             <Compass className="w-4 h-4 text-[#F76B1C]" />
             <span className="font-bold text-[#1d2d4c] dark:text-white text-sm">
               سامانه آرت‌گشت
             </span>
             <span className="text-stone-400">·</span>
             <span>مسیریاب هوشمند نگارخانه‌ها و رویدادهای هنرهای تجسمی تهران</span>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="px-2.5 py-1 text-[11px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug font-ubuntu shadow-xs">
+              {APP_VERSION}
+            </span>
           </div>
         </div>
       </footer>
