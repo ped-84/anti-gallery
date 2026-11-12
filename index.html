@@ -21,6 +21,18 @@
     <meta property="og:description" content="برنامه‌ریزی و بهینه‌سازی بهترین مسیر بازدید از گالری‌های هنری با نقشه دقیق و تخمین ترافیک تهران" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
+    <script>
+      (function() {
+        try {
+          var dark = localStorage.getItem('gallerygardi_dark_mode');
+          if (dark === 'true' || (!dark && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            var meta = document.getElementById('theme-color-meta');
+            if (meta) meta.setAttribute('content', '#131722');
+          }
+        } catch (e) {}
+      })();
+    </script>
     <link rel="preload" href="./fonts/shabnam/Shabnam-FD.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="./fonts/shabnam/Shabnam-Bold-FD.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="./fonts/shabnam/Shabnam-Medium-FD.woff2" as="font" type="font/woff2" crossorigin />
@@ -167,7 +179,66 @@
     </style>
   </head>
   <body class="bg-[#f0f2f6] dark:bg-[#13161c] text-stone-800 dark:text-stone-100 antialiased font-sans transition-colors duration-300">
-    <div id="root"></div>
+    <div id="root">
+      <div id="splash-loader" style="position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; z-index: 99999; font-family: 'Shabnam FD', system-ui, sans-serif; direction: rtl; text-align: center;">
+        <style>
+          #splash-loader {
+            background-color: #f4f6fa;
+            color: #1c2944;
+          }
+          .dark #splash-loader {
+            background-color: #131722;
+            color: #ffffff;
+          }
+          @keyframes splash-pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.88; }
+          }
+          .splash-icon-box {
+            animation: splash-pulse 2s ease-in-out infinite;
+            width: 88px;
+            height: 88px;
+            border-radius: 26px;
+            padding: 16px;
+            background: #ffffff;
+            box-shadow: 0 12px 28px -6px rgba(61, 91, 153, 0.22);
+            border: 1px solid rgba(225, 225, 225, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .dark .splash-icon-box {
+            background: #181d27;
+            box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+          }
+          .splash-logo-light { display: block; width: 100%; height: 100%; object-fit: contain; }
+          .splash-logo-dark { display: none; width: 100%; height: 100%; object-fit: contain; }
+          .dark .splash-logo-light { display: none; }
+          .dark .splash-logo-dark { display: block; }
+          .splash-spinner {
+            width: 24px;
+            height: 24px;
+            border: 2.5px solid rgba(247, 107, 28, 0.2);
+            border-top-color: #F76B1C;
+            border-radius: 50%;
+            animation: splash-spin 0.8s linear infinite;
+          }
+          @keyframes splash-spin {
+            to { transform: rotate(360deg); }
+          }
+        </style>
+        <div class="splash-icon-box">
+          <img src="./icons/brand-logo-icon.png" alt="آرت‌گشت" class="splash-logo-light" />
+          <img src="./icons/brand-logo-icon-dark.png" alt="آرت‌گشت" class="splash-logo-dark" />
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+          <h1 style="font-size: 22px; font-weight: 900; letter-spacing: -0.5px; margin: 0; line-height: 1.2;">آرت‌گشت</h1>
+          <p style="font-size: 12px; font-weight: bold; color: #F76B1C; margin: 0;">مسیریاب هوشمند گالری‌های هنری تهران</p>
+        </div>
+        <div class="splash-spinner" style="margin-top: 8px;"></div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

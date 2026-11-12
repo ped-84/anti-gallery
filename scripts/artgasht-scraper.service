@@ -1,0 +1,13 @@
+[Unit]
+Description=Anti-Gallery Live Exhibition Scraper Service (GalleryInfo Sync)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=deploy
+WorkingDirectory=/opt/artgasht
+Environment=DATA_DIR=/opt/artgasht/data
+ExecStart=/usr/bin/node /opt/artgasht/scripts/sync-galleryinfo.cjs
+StandardOutput=journal
+StandardError=journal

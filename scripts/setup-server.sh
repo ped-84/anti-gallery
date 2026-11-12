@@ -137,10 +137,19 @@ if [ "$SERVER_ROLE" = "mirror" ]; then
         echo -e "\033[1;32m  -> تایمر همگام‌سازی آینه (artgasht-sync.timer) فعال شد.\033[0m"
     fi
 else
-    # Primary: Ensure sync timer is disabled
+    # Primary: Ensure sync timer is disabled, enable scraper timer
     systemctl stop artgasht-sync.timer 2>/dev/null || true
     systemctl disable artgasht-sync.timer 2>/dev/null || true
-    echo -e "\033[1;34m  -> سرور با نقش PRIMARY پیکربندی شد (تایمر همگام‌سازی غیرفعال ماند).\033[0m"
+    
+    # Enable automatic GalleryInfo scraper timer on primary
+    if [ -f "${SCRIPTS_DIR}/artgasht-scraper.service" ] && [ -f "${SCRIPTS_DIR}/artgasht-scraper.timer" ]; then
+        cp "${SCRIPTS_DIR}/artgasht-scraper.service" /etc/systemd/system/
+        cp "${SCRIPTS_DIR}/artgasht-scraper.timer" /etc/systemd/system/
+        systemctl daemon-reload
+        systemctl enable --now artgasht-scraper.timer
+        echo -e "\033[1;32m  -> تایمر اسکرپر زنده رویدادهای هنری (artgasht-scraper.timer) در سرور آلمان فعال شد.\033[0m"
+    fi
+    echo -e "\033[1;34m  -> سرور با نقش PRIMARY پیکربندی شد.\033[0m"
 fi
 
 # Ensure UFW allows essential ports

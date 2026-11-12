@@ -1,0 +1,22 @@
+[Unit]
+Description=Scheduled GalleryInfo Exhibition Sync (Thursday Night & Friday Morning Peak)
+RefuseManualStart=no
+RefuseManualStop=no
+
+[Timer]
+# Thursday night: every 30 minutes from 18:00 to 23:30
+OnCalendar=Thu *-*-* 18..23:00/30:00
+# Friday morning: every 15 minutes from 00:00 to 14:00
+OnCalendar=Fri *-*-* 00..14:00/15:00
+# Friday afternoon: every 30 minutes from 14:00 to 23:30
+OnCalendar=Fri *-*-* 14..23:00/30:00
+# Wednesday: every 2 hours
+OnCalendar=Wed *-*-* 08..22:00/120:00
+# Daily fallback: 06:00 and 18:00
+OnCalendar=*-*-* 06:00:00
+OnCalendar=*-*-* 18:00:00
+Persistent=true
+Unit=artgasht-scraper.service
+
+[Install]
+WantedBy=timers.target

@@ -85,6 +85,9 @@ deploy_to_server() {
     ssh -p "$cfg_port" $key_arg "$dest" "chmod +x ${cfg_dir}/scripts/*.sh ${cfg_dir}/scripts/*.cjs 2>/dev/null || true"
     ssh -p "$cfg_port" $key_arg "$dest" "if [ ! -f ${cfg_dir}/.env ]; then cp ${cfg_dir}/.env.example ${cfg_dir}/.env; fi"
     ssh -p "$cfg_port" $key_arg "$dest" "sudo cp ${cfg_dir}/Caddyfile /etc/caddy/Caddyfile && sudo systemctl reload caddy 2>/dev/null || true"
+    if [ "$target_key" = "primary" ]; then
+        ssh -p "$cfg_port" $key_arg "$dest" "sudo cp ${cfg_dir}/scripts/artgasht-scraper.* /etc/systemd/system/ 2>/dev/null && sudo systemctl daemon-reload && sudo systemctl enable --now artgasht-scraper.timer 2>/dev/null || true"
+    fi
 
     echo "  -> راه‌اندازی کانتینر در سرور..."
     ssh -p "$cfg_port" $key_arg "$dest" "cd ${cfg_dir} && docker compose up -d --force-recreate"

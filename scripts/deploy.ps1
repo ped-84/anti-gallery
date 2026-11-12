@@ -123,6 +123,11 @@ try {
         # Reload Caddy if Caddyfile changed
         ssh -p $port $keyArg $dest "sudo cp $remoteDir/Caddyfile /etc/caddy/Caddyfile && sudo systemctl reload caddy 2>/dev/null || true"
 
+        # On primary server, ensure live scraper timer is active
+        if ($server.role -eq 'primary') {
+            ssh -p $port $keyArg $dest "sudo cp $remoteDir/scripts/artgasht-scraper.* /etc/systemd/system/ 2>/dev/null && sudo systemctl daemon-reload && sudo systemctl enable --now artgasht-scraper.timer 2>/dev/null || true"
+        }
+
         # Restart Container (Runs as deploy user 1000:1000)
         Write-Host "  -> راه‌اندازی کانتینر پروداکشن (docker compose up)..." -ForegroundColor DarkGray
         ssh -p $port $keyArg $dest "cd $remoteDir && docker compose up -d --force-recreate"

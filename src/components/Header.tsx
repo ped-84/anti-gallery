@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, Sparkles, Navigation, Sun, Moon, Download } from 'lucide-react';
+import { Sparkles, Navigation, Sun, Moon, Download } from 'lucide-react';
 import { toPersianDigits } from '../utils/persianUtils';
 
 interface HeaderProps {
@@ -14,7 +14,7 @@ interface HeaderProps {
   isStandalone?: boolean;
 }
 
-export const APP_VERSION = 'بتا V 1.097';
+export const APP_VERSION = 'بتا V 1.098';
 
 export const Header: React.FC<HeaderProps> = ({
   selectedCount,
@@ -32,16 +32,38 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="sticky top-0 z-40 bg-[#f4f6fa]/95 dark:bg-[#131722]/95 backdrop-blur-md border-b border-[#E1E1E1] dark:border-stone-800 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
-        {/* Zone 1: Brand Wordmark (Compact on mobile, full on desktop) */}
+        {/* Zone 1: Brand Logo & Wordmark (New corporate identity) */}
         <div className="flex items-center gap-2 sm:gap-3.5 shrink-0">
-          <a href="/" className="flex items-center gap-2 sm:gap-3.5 text-inherit no-underline group">
-            <div className="w-9 h-9 sm:w-11 sm:h-11 clay-card clay-darkblue flex items-center justify-center text-white group-hover:scale-105 transition-transform shrink-0">
-              <Compass className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.2]" />
+          <a href="/" className="flex items-center gap-2.5 sm:gap-3.5 text-inherit no-underline group">
+            {/* Corporate Brand Icon (Claymorphic) */}
+            <div className="w-10 h-10 sm:w-11 sm:h-11 clay-card flex items-center justify-center group-hover:scale-105 transition-transform shrink-0 p-1.5 sm:p-2 bg-white dark:bg-[#181d27] border border-stone-200 dark:border-stone-800 shadow-sm rounded-2xl">
+              <img
+                src="./icons/brand-logo-icon.png"
+                alt="لوگوی آرت‌گشت"
+                className="w-full h-full object-contain block dark:hidden"
+              />
+              <img
+                src="./icons/brand-logo-icon-dark.png"
+                alt="لوگوی آرت‌گشت"
+                className="w-full h-full object-contain hidden dark:block"
+              />
             </div>
             <div className="flex flex-col justify-center">
-              <span className="text-base sm:text-xl font-black tracking-tight text-[#1c2944] dark:text-white block leading-tight">
-                آرت‌گشت
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-base sm:text-xl font-black tracking-tight text-[#1c2944] dark:text-white block leading-tight">
+                  آرت‌گشت
+                </span>
+                <img
+                  src="./icons/brand-wordmark-light.png"
+                  alt="art gasht"
+                  className="h-3 sm:h-3.5 w-auto object-contain hidden sm:block dark:hidden opacity-85"
+                />
+                <img
+                  src="./icons/brand-wordmark-dark.png"
+                  alt="art gasht"
+                  className="h-3 sm:h-3.5 w-auto object-contain hidden sm:dark:block opacity-85"
+                />
+              </div>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug shrink-0 font-ubuntu">
                   {APP_VERSION}
@@ -120,7 +142,9 @@ export const Header: React.FC<HeaderProps> = ({
                 ? 'در حال محاسبه...'
                 : canOptimize
                 ? `مسیریابی بهینه (${toPersianDigits(selectedCount)} گالری)`
-                : `انتخاب گالری (${toPersianDigits(selectedCount)}/${toPersianDigits(minRequired)}+)`}
+                : selectedCount === 0
+                ? `انتخاب حداقل ${toPersianDigits(minRequired)} گالری`
+                : `انتخاب گالری (${toPersianDigits(selectedCount)} از ${toPersianDigits(minRequired)})`}
             </span>
             {/* Mobile label */}
             <span className="inline sm:hidden">
@@ -128,7 +152,9 @@ export const Header: React.FC<HeaderProps> = ({
                 ? 'محاسبه...'
                 : canOptimize
                 ? `مسیریابی (${toPersianDigits(selectedCount)})`
-                : `${toPersianDigits(selectedCount)}/${toPersianDigits(minRequired)}+`}
+                : selectedCount === 0
+                ? `حداقل ${toPersianDigits(minRequired)} گالری`
+                : `${toPersianDigits(selectedCount)} از ${toPersianDigits(minRequired)}`}
             </span>
           </button>
         </div>

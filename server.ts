@@ -4,6 +4,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import https from 'https';
 import crypto from 'crypto';
+import { fork } from 'child_process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -187,7 +188,7 @@ let syncState = {
   isSyncing: false,
   activeExhibitionsCount: 33,
   scheduleDescription: SCRAPER_ENABLED
-    ? 'چهارشنبه و پنجشنبه هر ۲ ساعت · جمعه‌ها هر ۳۰ دقیقه تا نیمه‌شب'
+    ? 'پنجشنبه شب هر ۳۰ دقیقه · جمعه صبح تا ظهر هر ۱۵ دقیقه · چهارشنبه و پنجشنبه روز هر ۱ ساعت'
     : 'کران‌جاب اسکرپر در این سرور غیرفعال است'
 };
 
@@ -201,9 +202,31 @@ function getTehranSyncIntervalMs(): number {
   }).formatToParts(now);
 
   const weekday = tehranParts.find((p) => p.type === 'weekday')?.value || '';
-  if (weekday === 'Fri') return 30 * 60 * 1000;
-  if (weekday === 'Wed' || weekday === 'Thu') return 2 * 60 * 60 * 1000;
-  return 24 * 60 * 60 * 1000;
+  const hour = parseInt(tehranParts.find((p) => p.type === 'hour')?.value || '12', 10);
+
+  // Friday (جمعه): Peak exhibition opening day!
+  // From midnight to 14:00 (جمعه صبح تا ظهر): run every 15 minutes!
+  // After 14:00 on Friday: run every 30 minutes
+  if (weekday === 'Fri') {
+    if (hour <= 14) return 15 * 60 * 1000;
+    return 30 * 60 * 1000;
+  }
+
+  // Thursday (پنجشنبه): Heavy gallery upload night!
+  // From 18:00 to midnight (پنجشنبه شب): run every 30 minutes!
+  // Daytime Thursday: run every 1 hour
+  if (weekday === 'Thu') {
+    if (hour >= 18) return 30 * 60 * 1000;
+    return 60 * 60 * 1000;
+  }
+
+  // Wednesday (چهارشنبه): First wave of upcoming exhibitions
+  if (weekday === 'Wed') {
+    return 2 * 60 * 60 * 1000;
+  }
+
+  // Other days (Sat, Sun, Mon, Tue): 4 times a day
+  return 6 * 60 * 60 * 1000;
 }
 
 async function syncExhibitions(): Promise<{ success: boolean; count: number; error?: string }> {
@@ -215,58 +238,51 @@ async function syncExhibitions(): Promise<{ success: boolean; count: number; err
   }
 
   syncState.isSyncing = true;
-  console.log(`[Auto-Sync] Starting scheduled exhibition sync at ${new Date().toISOString()}...`);
+  console.log(`[Auto-Sync] Running full GalleryInfo sync at ${new Date().toISOString()}...`);
 
   try {
-    let currentExhibitions: any[] = [];
-    if (fs.existsSync(EXHIBITIONS_FILE)) {
-      currentExhibitions = JSON.parse(fs.readFileSync(EXHIBITIONS_FILE, 'utf-8'));
+    const syncScriptPath = path.join(__dirname, 'scripts', 'sync-galleryinfo.cjs');
+    if (!fs.existsSync(syncScriptPath)) {
+      throw new Error(`Sync script not found at ${syncScriptPath}`);
     }
 
-    const catalogUrl = 'https://galleryinfo.ir/Event/fa';
-    const html = await new Promise<string>((resolve, reject) => {
-      const req = https.get(
-        catalogUrl,
-        {
-          headers: {
-            'User-Agent':
-              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-          },
-          timeout: 10000
+    const syncResult = await new Promise<{ code: number | null }>((resolve) => {
+      const child = fork(syncScriptPath, [], {
+        env: {
+          ...process.env,
+          DATA_DIR
         },
-        (res) => {
-          let data = '';
-          res.on('data', (chunk) => (data += chunk));
-          res.on('end', () => resolve(data));
-        }
-      );
-      req.on('error', reject);
-      req.on('timeout', () => {
-        req.destroy();
-        reject(new Error('Request timeout'));
+        stdio: 'inherit'
+      });
+      child.on('exit', (code) => resolve({ code }));
+      child.on('error', (err) => {
+        console.error('[Auto-Sync] Fork error:', err.message);
+        resolve({ code: 1 });
       });
     });
 
-    const eventIds = [...new Set(Array.from(html.matchAll(/\/Event\/fa\/(\d+)/g), (m) => parseInt(m[1], 10)))];
-
-    if (eventIds.length > 0) {
-      console.log(`[Auto-Sync] Detected ${eventIds.length} event links in upstream catalog`);
+    if (syncResult.code === 0) {
+      const freshGalleries = getGalleries();
+      let activeCount = 0;
+      if (fs.existsSync(EXHIBITIONS_FILE)) {
+        try {
+          const exList = JSON.parse(fs.readFileSync(EXHIBITIONS_FILE, 'utf-8'));
+          if (Array.isArray(exList)) activeCount = exList.length;
+        } catch {}
+      }
       syncState.lastSyncTime = new Date().toISOString();
-      syncState.lastSyncStatus = `موفق (${eventIds.length} نمایشگاه جاری تایید شدند)`;
-      syncState.activeExhibitionsCount = Math.max(eventIds.length, currentExhibitions.length);
+      syncState.lastSyncStatus = `موفق (${freshGalleries.length} نگارخانه و ${activeCount} نمایشگاه به‌روز شدند)`;
+      syncState.activeExhibitionsCount = activeCount || freshGalleries.length;
+      syncState.isSyncing = false;
+      console.log(`[Auto-Sync] Completed successfully! Fresh count: ${freshGalleries.length} galleries.`);
+      return { success: true, count: syncState.activeExhibitionsCount };
     } else {
-      console.log('[Auto-Sync] Catalog returned existing baseline');
-      syncState.lastSyncTime = new Date().toISOString();
-      syncState.lastSyncStatus = 'موفق (همگام با پایگاه مرکزی)';
+      throw new Error(`Sync script exited with code ${syncResult.code}`);
     }
-
-    syncState.isSyncing = false;
-    return { success: true, count: syncState.activeExhibitionsCount };
   } catch (err: any) {
-    console.warn('[Auto-Sync] Sync warning (using existing verified cache):', err.message);
+    console.warn('[Auto-Sync] Sync warning (using existing verified database):', err.message);
     syncState.isSyncing = false;
-    syncState.lastSyncStatus = `استفاده از کش معتبر (${err.message})`;
+    syncState.lastSyncStatus = `استفاده از پایگاه معتبر (${err.message})`;
     return { success: false, count: syncState.activeExhibitionsCount, error: err.message };
   }
 }
@@ -296,7 +312,7 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.097',
+    version: 'بتا V 1.098',
     serverRole: SERVER_ROLE, // 'primary' | 'mirror'
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
@@ -314,7 +330,7 @@ app.get('/health', (req, res) => {
 app.get('/api/config', (req, res) => {
   res.json({
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.097',
+    version: 'بتا V 1.098',
     serverRole: SERVER_ROLE,
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),

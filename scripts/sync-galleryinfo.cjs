@@ -4,8 +4,11 @@ const https = require('https');
 
 // Paths
 const ROOT_DIR = path.resolve(__dirname, '..');
-const GALLERIES_FILE = path.join(ROOT_DIR, 'src', 'data', 'galleries.json');
-const EXHIBITIONS_FA_FILE = path.join(ROOT_DIR, 'src', 'data', 'exhibitions_fa.json');
+const DATA_DIR = process.env.DATA_DIR || path.join(ROOT_DIR, 'data');
+const PERSISTENT_GALLERIES = path.join(DATA_DIR, 'galleries.json');
+const PERSISTENT_EXHIBITIONS = path.join(DATA_DIR, 'exhibitions_fa.json');
+const SRC_GALLERIES = path.join(ROOT_DIR, 'src', 'data', 'galleries.json');
+const SRC_EXHIBITIONS = path.join(ROOT_DIR, 'src', 'data', 'exhibitions_fa.json');
 
 // Helper to make POST requests to GalleryInfo ASP.NET endpoint
 function fetchEventsPage(skip, count = 100) {
@@ -202,10 +205,12 @@ async function main() {
 
   console.log(`Total live events fetched from upstream: ${allEvents.length}`);
 
-  // 2. Read local databases
+  // 2. Read local databases (prioritize persistent volume if available)
   let galleries = [];
-  if (fs.existsSync(GALLERIES_FILE)) {
-    galleries = JSON.parse(fs.readFileSync(GALLERIES_FILE, 'utf-8'));
+  if (fs.existsSync(PERSISTENT_GALLERIES)) {
+    galleries = JSON.parse(fs.readFileSync(PERSISTENT_GALLERIES, 'utf-8'));
+  } else if (fs.existsSync(SRC_GALLERIES)) {
+    galleries = JSON.parse(fs.readFileSync(SRC_GALLERIES, 'utf-8'));
   }
 
   const galleryMap = new Map();
@@ -316,15 +321,13 @@ async function main() {
       galleryMap.set(e.GalleryId, gallery);
       galleries.push(gallery);
     } else {
-      // If gallery doesn't have activeExhibition yet or if this exhibition is newer, update it
-      const currentScore = gallery.activeExhibition ? 
-        ((gallery.activeExhibition.eventId === exObj.eventId) ? 1 : 0) : -1;
-      
-      // Update gallery active exhibition if this one is from current cycle
-      if (!gallery.activeExhibition || exObj.openingDate.includes('15 آبان') || currentScore === 1) {
+      // Update gallery active exhibition if this one is newer or from the latest event cycle
+      const currentEventId = gallery.activeExhibition?.eventId || 0;
+      if (!gallery.activeExhibition || exObj.eventId >= currentEventId) {
         gallery.activeExhibition = exObj;
         gallery.posterImage = posterUrl;
         gallery.posterSmall = posterSmallUrl;
+        gallery.updatedAt = new Date().toISOString();
       }
 
       if (!gallery.exhibitions) gallery.exhibitions = [];
@@ -337,15 +340,25 @@ async function main() {
     }
   }
 
-  // Save files
-  fs.writeFileSync(GALLERIES_FILE, JSON.stringify(galleries, null, 2), 'utf-8');
-  fs.writeFileSync(EXHIBITIONS_FA_FILE, JSON.stringify(allExhibitionsFa, null, 2), 'utf-8');
+  // Ensure persistent DATA_DIR exists
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+
+  // Save to persistent database
+  fs.writeFileSync(PERSISTENT_GALLERIES, JSON.stringify(galleries, null, 2), 'utf-8');
+  fs.writeFileSync(PERSISTENT_EXHIBITIONS, JSON.stringify(allExhibitionsFa, null, 2), 'utf-8');
+
+  // Also sync to src/data if it exists (for repo consistency)
+  const srcDataDir = path.join(ROOT_DIR, 'src', 'data');
+  if (fs.existsSync(srcDataDir)) {
+    fs.writeFileSync(SRC_GALLERIES, JSON.stringify(galleries, null, 2), 'utf-8');
+    fs.writeFileSync(SRC_EXHIBITIONS, JSON.stringify(allExhibitionsFa, null, 2), 'utf-8');
+  }
 
   console.log(`--- Sync Completed Successfully! ---`);
   console.log(`Total galleries in dataset: ${galleries.length}`);
   console.log(`Total active exhibitions: ${allExhibitionsFa.length}`);
-  const openings15Aban = allExhibitionsFa.filter(x => x.openingDate.includes('15 آبان'));
-  console.log(`Openings on 15 Aban: ${openings15Aban.length}`);
 }
 
 main().catch(err => {

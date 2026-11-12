@@ -858,7 +858,7 @@ export default function App() {
           }`}
         >
           <Palette className="w-4 h-4" />
-          <span>فهرست نمایشگاه‌ها ({toPersianDigits(filteredGalleries.length)})</span>
+          <span>فهرست نمایشگاه‌ها <bdi>({toPersianDigits(filteredGalleries.length)})</bdi></span>
         </button>
         <button
           onClick={() => setMobileActiveTab('map')}
@@ -869,7 +869,7 @@ export default function App() {
           }`}
         >
           <MapIcon className="w-4 h-4" />
-          <span>نقشه و مسیر ({toPersianDigits(selectedGalleries.length)})</span>
+          <span>نقشه و مسیر <bdi>({toPersianDigits(selectedGalleries.length)})</bdi></span>
         </button>
       </div>
 
@@ -981,10 +981,10 @@ export default function App() {
                       .replace('مثلث ', '')}
                   </span>
                   <span
-                    className="text-xs font-mono"
+                    className="text-xs font-bold font-sans"
                     style={{ opacity: isSelected ? 0.9 : 0.7 }}
                   >
-                    ({toPersianDigits(tour.galleryIds.length)})
+                    <bdi>({toPersianDigits(tour.galleryIds.length)})</bdi>
                   </span>
                 </button>
               );
@@ -1050,7 +1050,7 @@ export default function App() {
                     <Flame className={`w-4 h-4 shrink-0 ${galleryFilterTab === 'this-week' ? 'text-[#F76B1C]' : 'text-amber-500'}`} />
                     <span className="hidden sm:inline">افتتاحیه‌های این هفته</span>
                     <span className="sm:hidden">این هفته</span>
-                    <span className="text-xs sm:text-sm font-mono opacity-85">({toPersianDigits(totalThisWeek)})</span>
+                    <span className="text-xs sm:text-sm font-bold font-sans opacity-90"><bdi>({toPersianDigits(totalThisWeek)})</bdi></span>
                   </button>
                   <button
                     type="button"
@@ -1064,7 +1064,7 @@ export default function App() {
                     <Palette className="w-4 h-4 shrink-0" />
                     <span className="hidden sm:inline">نمایشگاه‌های جاری</span>
                     <span className="sm:hidden">جاری</span>
-                    <span className="text-xs sm:text-sm font-mono opacity-85">({toPersianDigits(totalWithPosters)})</span>
+                    <span className="text-xs sm:text-sm font-bold font-sans opacity-90"><bdi>({toPersianDigits(totalWithPosters)})</bdi></span>
                   </button>
                   <button
                     type="button"
@@ -1078,7 +1078,7 @@ export default function App() {
                     <Grid className="w-4 h-4 shrink-0" />
                     <span className="hidden sm:inline">همه نگارخانه‌ها</span>
                     <span className="sm:hidden">همه</span>
-                    <span className="text-xs sm:text-sm font-mono opacity-85">({toPersianDigits(galleries.length)})</span>
+                    <span className="text-xs sm:text-sm font-bold font-sans opacity-90"><bdi>({toPersianDigits(galleries.length)})</bdi></span>
                   </button>
                 </div>
 
