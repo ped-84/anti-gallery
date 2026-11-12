@@ -863,7 +863,7 @@ export default function App() {
                   </span>
                 </div>
                 <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 mt-1 sm:mt-1.5 leading-relaxed">
-                  مسیرهای منتخب و پیوسته برای گالری‌گردی بهینه با کمترین زمان و فاصله در محله‌های هنری تهران همراه با کروکی و راهنمای گام‌به‌گام
+                  مسیرهای منتخب و پیوسته برای گالری‌گردی بهینه با کمترین زمان و فاصله در محله‌های هنری تهران
                 </p>
               </div>
             </div>
@@ -1296,12 +1296,16 @@ export default function App() {
       <footer className="bg-[#e4ebf5] dark:bg-[#10141c] text-stone-600 dark:text-stone-400 border-t border-[#E1E1E1] dark:border-stone-800 py-6 sm:py-8 px-4 sm:px-6 lg:px-8 mt-12 pb-24 sm:pb-8 text-xs font-medium">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-right">
           <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
-            <Compass className="w-4 h-4 text-[#F76B1C]" />
+            <img
+              src="./icons/brand-logo-orange.png"
+              alt="آرت‌گشت"
+              className="w-4.5 h-4.5 object-contain shrink-0"
+            />
             <span className="font-bold text-[#1d2d4c] dark:text-white text-sm">
-              سامانه آرت‌گشت
+              آرت‌گشت
             </span>
             <span className="text-stone-400">·</span>
-            <span>مسیریاب هوشمند نگارخانه‌ها و رویدادهای هنرهای تجسمی تهران</span>
+            <span>مسیریاب هوشمند گالری‌های هنری</span>
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
