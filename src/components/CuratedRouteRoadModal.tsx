@@ -255,7 +255,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                 className={`ag-leg ag-leg--${lg.rightSide ? 'right' : 'left'}`}
                 style={{ top: `${lg.y}px`, left: `${lg.x}px` }}
               >
-                {/* SVG Pointer Tip with seamless height matching 28px */}
+                {/* SVG Pointer Tip with seamless height matching 28px (clean 45° arrow) */}
                 <svg
                   aria-hidden="true"
                   width={14}
@@ -264,11 +264,12 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                   className="ag-leg__tip"
                 >
                   <path
-                    d="M 0 0 L 2 0 C 4.5 0 6.8 1.4 8.5 3.3 L 12.8 11.2 C 14.1 12.8 14.1 15.2 12.8 16.8 L 8.5 24.7 C 6.8 26.6 4.5 28 2 28 L 0 28 Z"
+                    d="M 0 0 L 12 12 Q 14 14 12 16 L 0 28 Z"
                     fill="currentColor"
                   />
                 </svg>
 
+                <span className="ag-leg__text">{lg.text}</span>
                 {/* Car Icon */}
                 <svg
                   aria-hidden="true"
@@ -282,7 +283,6 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                   <circle cx={7.5} cy={16.5} r={1.5} />
                   <circle cx={16.5} cy={16.5} r={1.5} />
                 </svg>
-                <span className="ag-leg__text">{lg.text}</span>
               </div>
             ))}
 
@@ -368,7 +368,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                   <div className="ag-card__name" title={s.name}>
                     {s.name}
                   </div>
-                  <span className="ag-card__show">نمایشگاه: {s.show}</span>
+                  <span className="ag-card__show">{s.show}</span>
                   {s.showArtist && (
                     <div className="ag-card__artist">آثار: {s.artist}</div>
                   )}
