@@ -35,15 +35,46 @@ if (!fs.existsSync(UPLOADS_DIR)) {
   fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 }
 
-// Seed initial data files if not yet present in persistent volume
-if (!fs.existsSync(GALLERIES_FILE) && fs.existsSync(SEED_GALLERIES_FILE)) {
-  fs.copyFileSync(SEED_GALLERIES_FILE, GALLERIES_FILE);
-  console.log('[Data] Seeded galleries.json to persistent volume');
+// Synchronize persistent volume with bundled seed baseline when seed is newer or has equal/more data
+function syncVolumeFromSeed(volumePath: string, seedPath: string, name: string) {
+  if (!fs.existsSync(seedPath)) return;
+  if (!fs.existsSync(volumePath)) {
+    fs.copyFileSync(seedPath, volumePath);
+    console.log(`[Data] Seeded ${name} to persistent volume`);
+    return;
+  }
+  try {
+    const seedStat = fs.statSync(seedPath);
+    const volStat = fs.statSync(volumePath);
+    const seedData = JSON.parse(fs.readFileSync(seedPath, 'utf-8'));
+    const volData = JSON.parse(fs.readFileSync(volumePath, 'utf-8'));
+
+    let shouldUpdate = false;
+    if (Array.isArray(seedData) && Array.isArray(volData)) {
+      const seedActive = seedData.filter((x: any) => x.activeExhibition || x.openingDate).length;
+      const volActive = volData.filter((x: any) => x.activeExhibition || x.openingDate).length;
+      if (
+        seedActive > volActive ||
+        (seedActive >= volActive && seedStat.mtimeMs > volStat.mtimeMs) ||
+        seedData.length > volData.length
+      ) {
+        shouldUpdate = true;
+      }
+    } else if (seedStat.mtimeMs > volStat.mtimeMs) {
+      shouldUpdate = true;
+    }
+
+    if (shouldUpdate) {
+      fs.copyFileSync(seedPath, volumePath);
+      console.log(`[Data] Auto-updated persistent ${name} from newer bundled seed`);
+    }
+  } catch (e) {
+    console.warn(`[Data] Error checking seed vs volume for ${name}:`, e);
+  }
 }
-if (!fs.existsSync(EXHIBITIONS_FILE) && fs.existsSync(SEED_EXHIBITIONS_FILE)) {
-  fs.copyFileSync(SEED_EXHIBITIONS_FILE, EXHIBITIONS_FILE);
-  console.log('[Data] Seeded exhibitions_fa.json to persistent volume');
-}
+
+syncVolumeFromSeed(GALLERIES_FILE, SEED_GALLERIES_FILE, 'galleries.json');
+syncVolumeFromSeed(EXHIBITIONS_FILE, SEED_EXHIBITIONS_FILE, 'exhibitions_fa.json');
 
 // ========================================================
 // 1. Role & Standalone Mode Configuration
@@ -319,7 +350,7 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.108',
+    version: 'بتا V 1.109',
     serverRole: SERVER_ROLE, // 'primary' | 'mirror'
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
@@ -337,7 +368,7 @@ app.get('/health', (req, res) => {
 app.get('/api/config', (req, res) => {
   res.json({
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.108',
+    version: 'بتا V 1.109',
     serverRole: SERVER_ROLE,
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),

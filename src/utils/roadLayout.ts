@@ -287,9 +287,14 @@ export function computeRoadLayout(
     };
   });
 
-  // Distance Bubbles
+  // Distance Bubbles: elevated to ensure >= 18px clearance from the next gallery card
   const legs: RoadLeg[] = legData.map((lg, i) => {
-    const y = Math.round((pts[i].y + pts[i + 1].y) / 2);
+    const cardNextH = dense ? C.CARD_H.dense : C.CARD_H.roomy;
+    const cardNextTop = pts[i + 1].y - cardNextH / 2;
+    // Guaranteed at least 18px vertical clearance between bubble bottom and top of next card
+    const targetMaxY = cardNextTop - 18 - Math.round(C.BUBBLE_H / 2);
+    const midY = Math.round((pts[i].y + pts[i + 1].y) / 2) - 22;
+    const y = Math.round(Math.min(midY, targetMaxY));
     const rightSide = (i + 1) % 2 === 1;
     let edge = rightSide ? -1e9 : 1e9;
 

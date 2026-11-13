@@ -250,43 +250,34 @@
   box-shadow: inset 0 -2px 3px rgba(0,0,0,.10);
 }
 
-/* Distance Bubble */
+/* Distance Bubble: Sleek rounded clay pill badge */
 .ag-leg {
   position: absolute;
-  height: 32px;
-  display: flex;
+  height: 28px;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   background: var(--bubble);
   color: var(--navy-700);
-  font-size: 13.5px;
+  font-size: 12.5px;
   font-weight: 800;
   white-space: nowrap;
-  filter: drop-shadow(0 4px 6px rgba(61,91,153,.15));
+  border-radius: 9999px;
+  border: 1px solid rgba(61, 91, 153, 0.12);
+  box-shadow: 0 4px 10px rgba(61, 91, 153, 0.10), inset 0 1px 1px rgba(255, 255, 255, 0.9);
   pointer-events: none;
-  z-index: 5;
+  z-index: 12;
 }
 
 .ag-leg--right {
-  padding: 0 10px 0 2px;
-  border-radius: 0 16px 16px 0;
+  padding: 0 12px 0 10px;
   transform: translate(0, -50%);
 }
 
 .ag-leg--left {
-  padding: 0 2px 0 10px;
-  border-radius: 16px 0 0 16px;
+  padding: 0 10px 0 12px;
   transform: translate(-100%, -50%);
 }
-
-.ag-leg__tip {
-  position: absolute;
-  top: 0;
-  fill: var(--bubble);
-}
-
-.ag-leg--right .ag-leg__tip { left: -18.4px; }
-.ag-leg--left  .ag-leg__tip { right: -18.4px; transform: scaleX(-1); }
 
 .ag-leg__icon {
   position: relative;
@@ -300,6 +291,7 @@
 
 .ag-leg__text {
   position: relative;
+  line-height: 1;
 }
 
 /* Gallery Card: REAL interactive button with accessible focus state */

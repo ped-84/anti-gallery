@@ -248,7 +248,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
               <path d={layout.pathD} className="ag-road ag-road--dash" />
             </svg>
 
-            {/* 3. Distance Bubbles */}
+            {/* 3. Distance Bubbles: Smooth clay pill badges */}
             {layout.legs.map((lg, idx) => (
               <div
                 key={idx}
@@ -257,17 +257,8 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
               >
                 <svg
                   aria-hidden="true"
-                  width={19.4}
-                  height={26}
-                  viewBox="0 0 19.4 26"
-                  className="ag-leg__tip"
-                >
-                  <path d="M19.4 0 L18.38 0 A13 13 0 0 0 9.19 3.81 L2.83 10.17 A4 4 0 0 0 2.83 15.83 L9.19 22.19 A13 13 0 0 0 18.38 26 L19.4 26 Z" />
-                </svg>
-                <svg
-                  aria-hidden="true"
-                  width={16}
-                  height={16}
+                  width={15}
+                  height={15}
                   viewBox="0 0 24 24"
                   className="ag-leg__icon"
                 >
