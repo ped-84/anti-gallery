@@ -149,10 +149,10 @@ export const ROAD_CONSTANTS = {
   LANE_R: 315,
   ROAD_HALF: 27,
   PIN_GAP: 16,
-  CARD_W: 154,
-  CARD_H: { roomy: 138, dense: 114 },
-  PIN: { roomy: 40, dense: 34 },
-  BUBBLE_H: 26,
+  CARD_W: 162,
+  CARD_H: { roomy: 144, dense: 120 },
+  PIN: { roomy: 42, dense: 36 },
+  BUBBLE_H: 28,
   BUBBLE_GAP: 24,
   CAR_OVERRUN: 24
 };
@@ -271,7 +271,7 @@ export function computeRoadLayout(
         rot: left ? -135 : 45,
         unrot: left ? 135 : -45,
         numSize: Math.round(size * 0.55),
-        numFont: dense ? 11 : 12,
+        numFont: dense ? 13 : 15,
         shadow: {
           x: cx - Math.round(size * 0.4),
           y: p.y + Math.round(size / 2) + 2,
@@ -279,7 +279,7 @@ export function computeRoadLayout(
         }
       },
       card: {
-        x: left ? 12 : Math.round(C.LANE_R + off + size / 2 + 10),
+        x: left ? 8 : 390,
         y: p.y,
         w: C.CARD_W,
         h: dense ? C.CARD_H.dense : C.CARD_H.roomy

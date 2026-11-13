@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Gallery } from '../types/gallery';
 import { toPersianDigits } from '../utils/persianUtils';
 import {
@@ -56,9 +56,8 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
       }
     }
   }, [isOpen, initialRouteId, validRoutes]);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const [modalScale, setModalScale] = useState<number>(1);
-  const [contentHeight, setContentHeight] = useState<number>(0);
+
+  const [mapScale, setMapScale] = useState<number>(1);
 
   // Close with ESC key only if child modal (detail modal) isn't on top
   useEffect(() => {
@@ -74,42 +73,22 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Compute responsive scale for mobile screens (< 580px) so map NEVER cuts off
+  // Compute responsive scale for the map road canvas so it fits any screen without cutting off
   useEffect(() => {
     if (!isOpen) return;
 
     const updateScale = () => {
       const vw = window.innerWidth;
-      const pad = vw < 640 ? 16 : 32;
+      const pad = vw < 640 ? 20 : 32;
       const available = Math.min(vw - pad, 560);
-      const s = Math.min(1, Math.max(0.48, available / 560));
-      setModalScale(s);
+      const s = Math.min(1, Math.max(0.50, available / 560));
+      setMapScale(s);
     };
 
     updateScale();
     window.addEventListener('resize', updateScale);
     return () => window.removeEventListener('resize', updateScale);
   }, [isOpen]);
-
-  // Measure content height with ResizeObserver so scaled wrapper height is exact to the pixel
-  useEffect(() => {
-    if (!isOpen || !contentRef.current) return;
-
-    setContentHeight(contentRef.current.offsetHeight);
-
-    const ro = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.borderBoxSize?.[0]) {
-          setContentHeight(entry.borderBoxSize[0].blockSize);
-        } else {
-          setContentHeight(entry.contentRect.height);
-        }
-      }
-    });
-
-    ro.observe(contentRef.current);
-    return () => ro.disconnect();
-  }, [isOpen, activeRouteIdx]);
 
   // Compute dynamic road layout (road height, Bezier curves, pins, and distance bubbles)
   const layout = useMemo(() => {
@@ -127,120 +106,103 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
   const roofHi = mix(pin, '#ffffff', 0.45);
   const roofLo = mix(pin, '#ffffff', 0.18);
 
-  // Scaled dimensions on mobile
-  const isScaled = modalScale < 0.999;
-  const scaledW = isScaled ? Math.round(560 * modalScale) : 560;
-  const effectiveH = contentHeight || (280 + layout.mapH);
-  const scaledH = isScaled ? Math.round(effectiveH * modalScale) : undefined;
+  const scaledMapH = Math.round(layout.mapH * mapScale);
 
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-[1000] flex items-start sm:items-center justify-center p-2 sm:p-4 bg-stone-950/80 backdrop-blur-md animate-fade-in font-sans overflow-y-auto"
+      className="fixed inset-0 z-[1000] flex items-start sm:items-center justify-center p-2.5 sm:p-4 bg-stone-950/80 backdrop-blur-md animate-fade-in font-sans overflow-y-auto"
     >
-      {/* Responsive Scaler Wrapper (Guarantees zero cutoff and perfect fit on any phone screen) */}
       <div
-        className="relative my-auto shrink-0 transition-all duration-150"
-        style={{
-          width: `${scaledW}px`,
-          height: scaledH ? `${scaledH}px` : 'auto',
-          maxWidth: '100%'
-        }}
+        onClick={(e) => e.stopPropagation()}
+        className="ag-overlay-root relative w-full max-w-[560px] flex flex-col gap-3.5 my-auto items-center"
       >
-        <div
-          ref={contentRef}
-          onClick={(e) => e.stopPropagation()}
-          className="ag-overlay-root relative w-[560px] flex flex-col no-scrollbar rounded-3xl mx-auto"
-          style={
-            isScaled
-              ? {
-                  width: '560px',
-                  transform: `translateX(-50%) scale(${modalScale})`,
-                  transformOrigin: 'top center',
-                  position: 'absolute',
-                  top: 0,
-                  left: '50%'
-                }
-              : undefined
-          }
-        >
-          <div className="flex flex-col gap-3.5 w-full items-center">
-            {/* Header Card: Title, Stats, Route Tabs & Close */}
-            <div className="ag-head relative">
-            {/* Close Button */}
-            <button
-              type="button"
-              onClick={onClose}
-              className="absolute top-4 left-4 w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center transition-colors shadow-2xs z-20 cursor-pointer"
-              title="بستن پنجره (ESC)"
-            >
-              <X className="w-4 h-4" />
-            </button>
+        {/* Header Card: 100% Native Scale (Large, crystal-clear typography) */}
+        <div className="ag-head relative w-full">
+          {/* Close Button */}
+          <button
+            type="button"
+            onClick={onClose}
+            className="absolute top-4 left-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center transition-colors shadow-2xs z-20 cursor-pointer"
+            title="بستن پنجره (ESC)"
+          >
+            <X className="w-5 h-5" />
+          </button>
 
-            <div>
-              <span className="ag-eyebrow">مسیرهای پیشنهادی آرت‌گشت</span>
-              <div className="ag-title-row">
-                <span
-                  className="ag-title-dot"
-                  style={{ background: road }}
-                />
-                <h2 className="ag-title">{currentRoute.label}</h2>
-              </div>
-            </div>
-
-            {/* Stats Pills */}
-            <div className="ag-stats">
-              <span className="ag-pill">{layout.stats.stops}</span>
-              <span className="ag-pill">{layout.stats.km}</span>
-              <span className="ag-pill ag-pill--time">{layout.stats.time}</span>
-            </div>
-
-            <div className="ag-divider" />
-
-            {/* Curated Route Tabs (Only hubs with >= 2 galleries) */}
-            <div className="ag-tabs">
-              {validRoutes.map((r, idx) => {
-                const isSelected = idx === activeRouteIdx;
-                const fill = r.tab || safeFillForWhiteText(r.color);
-                const tabBg = isSelected ? fill : mix(r.color, '#ffffff', 0.88);
-                const tabInk = isSelected ? (r.tabInk || '#ffffff') : mix(r.color, '#000000', 0.45);
-                const tabGlow = mix(r.color, '#ffffff', 0.4) + '66';
-                const tabBorder = isSelected ? mix(fill, '#000000', 0.15) : mix(r.color, '#ffffff', 0.65);
-
-                const style: React.CSSProperties = {
-                  '--tab-bg': tabBg,
-                  '--tab-ink': tabInk,
-                  '--tab-dot': isSelected ? (r.tabInk || '#ffffff') : r.color,
-                  '--tab-fill': fill,
-                  '--tab-sel-ink': r.tabInk || '#ffffff',
-                  '--tab-border': tabBorder,
-                  '--tab-glow': tabGlow
-                } as React.CSSProperties;
-
-                return (
-                  <button
-                    key={r.id}
-                    type="button"
-                    style={style}
-                    className="ag-tab"
-                    aria-pressed={isSelected ? 'true' : 'false'}
-                    onClick={() => setSelectedRouteIdx(idx)}
-                  >
-                    <span className="ag-tab__dot" />
-                    <span>
-                      {r.label} ({toPersianDigits(r.galleryIds.length)})
-                    </span>
-                  </button>
-                );
-              })}
+          <div>
+            <span className="ag-eyebrow">مسیرهای پیشنهادی آرت‌گشت</span>
+            <div className="ag-title-row">
+              <span
+                className="ag-title-dot"
+                style={{ background: road }}
+              />
+              <h2 className="ag-title">{currentRoute.label}</h2>
             </div>
           </div>
 
-          {/* Map Card: Dynamic Height Winding Road, Pins, Cards & Moving Car */}
+          {/* Stats Pills */}
+          <div className="ag-stats">
+            <span className="ag-pill">{layout.stats.stops}</span>
+            <span className="ag-pill">{layout.stats.km}</span>
+            <span className="ag-pill ag-pill--time">{layout.stats.time}</span>
+          </div>
+
+          <div className="ag-divider" />
+
+          {/* Curated Route Tabs (Only hubs with >= 2 galleries) */}
+          <div className="ag-tabs">
+            {validRoutes.map((r, idx) => {
+              const isSelected = idx === activeRouteIdx;
+              const fill = r.tab || safeFillForWhiteText(r.color);
+              const tabBg = isSelected ? fill : mix(r.color, '#ffffff', 0.88);
+              const tabInk = isSelected ? (r.tabInk || '#ffffff') : mix(r.color, '#000000', 0.45);
+              const tabGlow = mix(r.color, '#ffffff', 0.4) + '66';
+              const tabBorder = isSelected ? mix(fill, '#000000', 0.15) : mix(r.color, '#ffffff', 0.65);
+
+              const style: React.CSSProperties = {
+                '--tab-bg': tabBg,
+                '--tab-ink': tabInk,
+                '--tab-dot': isSelected ? (r.tabInk || '#ffffff') : r.color,
+                '--tab-fill': fill,
+                '--tab-sel-ink': r.tabInk || '#ffffff',
+                '--tab-border': tabBorder,
+                '--tab-glow': tabGlow
+              } as React.CSSProperties;
+
+              return (
+                <button
+                  key={r.id}
+                  type="button"
+                  style={style}
+                  className="ag-tab"
+                  aria-pressed={isSelected ? 'true' : 'false'}
+                  onClick={() => setSelectedRouteIdx(idx)}
+                >
+                  <span className="ag-tab__dot" />
+                  <span>
+                    {r.label} ({toPersianDigits(r.galleryIds.length)})
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Map Card: Responsive Winding Road, Pins, Cards & Moving Car */}
+        <div
+          className="relative w-full max-w-[560px] overflow-hidden flex justify-center rounded-3xl"
+          style={{ height: `${scaledMapH}px` }}
+        >
           <div
             className="ag-map"
             style={
               {
+                position: 'absolute',
+                top: 0,
+                left: '50%',
+                width: '560px',
+                transform: `translateX(-50%) scale(${mapScale})`,
+                transformOrigin: 'top center',
                 height: `${layout.mapH}px`,
                 '--road': road,
                 '--road-curb': roadCurb,
@@ -304,8 +266,8 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                 </svg>
                 <svg
                   aria-hidden="true"
-                  width={14}
-                  height={14}
+                  width={16}
+                  height={16}
                   viewBox="0 0 24 24"
                   className="ag-leg__icon"
                 >
@@ -382,8 +344,8 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                     <span className="ag-tag ag-tag--end">
                       <svg
                         aria-hidden="true"
-                        width={11}
-                        height={11}
+                        width={12}
+                        height={12}
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="#8a5a00"
@@ -433,39 +395,38 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Bottom Docked CTA Bar: Start This Tour */}
-          <div className="ag-foot">
-            <div className="flex items-center gap-2 text-xs truncate">
-              <Compass className="w-4 h-4 text-[#3D5B99] shrink-0" />
-              <span className="font-bold text-[#1f2a44] truncate">
-                {currentRoute.label}
-              </span>
-              <span className="text-stone-400">·</span>
-              <span className="text-stone-500 font-medium shrink-0">
-                {toPersianDigits(layout.n)} توقف
-              </span>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                onSelectRoute(currentRoute.galleryIds);
-                onClose();
-              }}
-              style={{
-                backgroundColor: road,
-                color: '#ffffff'
-              }}
-              className="clay-button px-5 py-2.5 text-xs font-bold text-white flex items-center gap-2 rounded-xl shadow-md hover:brightness-105 active:scale-95 transition-all shrink-0 cursor-pointer"
-            >
-              <Navigation className="w-4 h-4 stroke-[2.2]" />
-              <span>شروع این گشت</span>
-            </button>
+        {/* Bottom Docked CTA Bar: 100% Native Scale */}
+        <div className="ag-foot w-full">
+          <div className="flex items-center gap-2 text-xs sm:text-sm truncate">
+            <Compass className="w-4 h-4 sm:w-5 sm:h-5 text-[#3D5B99] shrink-0" />
+            <span className="font-extrabold text-[#1f2a44] truncate">
+              {currentRoute.label}
+            </span>
+            <span className="text-stone-400">·</span>
+            <span className="text-stone-500 font-bold shrink-0">
+              {toPersianDigits(layout.n)} توقف
+            </span>
           </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              onSelectRoute(currentRoute.galleryIds);
+              onClose();
+            }}
+            style={{
+              backgroundColor: road,
+              color: '#ffffff'
+            }}
+            className="clay-button px-5 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-black text-white flex items-center gap-2 rounded-xl shadow-md hover:brightness-105 active:scale-95 transition-all shrink-0 cursor-pointer"
+          >
+            <Navigation className="w-4 h-4 stroke-[2.2]" />
+            <span>شروع این گشت</span>
+          </button>
         </div>
       </div>
     </div>
-  </div>
   );
 };
