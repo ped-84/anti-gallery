@@ -634,8 +634,8 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       {/* Map Container */}
       <div ref={mapContainerRef} className="w-full h-full overflow-hidden" />
 
-      {/* Floating Action Controls (z-10 so modal at z-[1000] cleanly covers them) */}
-      <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
+      {/* Floating Action Controls (placed at top-[68px] on mobile to never overlap top declutter tabs) */}
+      <div className="absolute top-[68px] sm:top-4 left-3.5 sm:left-4 z-10 flex flex-col gap-2">
         {/* Toggle Live Traffic */}
         <button
           onClick={handleToggleTraffic}

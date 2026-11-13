@@ -175,7 +175,13 @@ export default function App() {
     const tehranList = allGalleries.filter((g) => {
       const city = (g.city || '').toLowerCase();
       const cityFa = g.cityFa || '';
-      return city === 'tehran' || cityFa === 'تهران';
+      const isTehran = city === 'tehran' || cityFa === 'تهران';
+      if (!isTehran) return false;
+      const addr = (g.addressFa || g.address || '').toLowerCase();
+      if (addr.includes('انزلی') || addr.includes('رشت') || addr.includes('گیلان') || addr.includes('اصفهان') || addr.includes('شیراز') || addr.includes('کاشان') || addr.includes('مشهد') || addr.includes('بجنورد')) {
+        if (!addr.includes('تهران') && !addr.includes('بهار شیراز')) return false;
+      }
+      return true;
     });
 
     // Link sibling spaces / halls sharing the exact same physical building
@@ -898,32 +904,32 @@ export default function App() {
 
           {/* Quick Tour Presets */}
           <div className="mt-4 pt-3.5 border-t border-[#E1E1E1] dark:border-stone-800 flex items-center gap-2 flex-wrap">
-            {/* Mode Switcher Pill */}
-            <div className="flex items-center p-0.5 rounded-xl bg-stone-200/80 dark:bg-stone-800/80 text-xs sm:text-[13px] font-bold shrink-0 ml-1">
+            {/* Mode Switcher Pill (Authentic Claymorphic Segmented Control) */}
+            <div className="flex items-center p-1 rounded-full bg-[#eaedf4] dark:bg-[#121620] border border-[#d2d9e6] dark:border-[#262f40] shadow-inner text-xs sm:text-[13px] font-bold shrink-0 ml-1">
               <button
                 type="button"
                 onClick={() => setCuratedTourMode('openings-only')}
-                className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
                   curatedTourMode === 'openings-only'
-                    ? 'bg-white dark:bg-[#1f2636] text-[#F76B1C] shadow-xs'
-                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                    ? 'bg-white dark:bg-gradient-to-b dark:from-[#252e40] dark:to-[#1a2130] text-[#F76B1C] dark:text-white shadow-sm dark:shadow-md border border-black/5 dark:border-white/10'
+                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
                 }`}
                 title="فقط تورهای گالری‌هایی که این هفته افتتاحیه دارند"
               >
-                <Flame className="w-3.5 h-3.5 text-[#F76B1C]" />
+                <Flame className={`w-3.5 h-3.5 shrink-0 ${curatedTourMode === 'openings-only' ? 'text-[#F76B1C]' : 'text-stone-400 dark:text-stone-500'}`} />
                 <span>فقط افتتاحیه</span>
               </button>
               <button
                 type="button"
                 onClick={() => setCuratedTourMode('all-active')}
-                className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
                   curatedTourMode === 'all-active'
-                    ? 'bg-white dark:bg-[#1f2636] text-[#1856C7] dark:text-[#93c5fd] shadow-xs'
-                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                    ? 'bg-white dark:bg-gradient-to-b dark:from-[#252e40] dark:to-[#1a2130] text-[#1856C7] dark:text-[#93c5fd] shadow-sm dark:shadow-md border border-black/5 dark:border-white/10'
+                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
                 }`}
                 title="همه گالری‌های باز و فعالِ پیوسته در مسیر"
               >
-                <Sparkles className="w-3 h-3 text-[#1856C7] dark:text-[#93c5fd]" />
+                <Sparkles className={`w-3.5 h-3.5 shrink-0 ${curatedTourMode === 'all-active' ? 'text-[#1856C7] dark:text-[#93c5fd]' : 'text-stone-400 dark:text-stone-500'}`} />
                 <span>همه فعال و باز</span>
               </button>
             </div>

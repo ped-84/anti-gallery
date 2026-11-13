@@ -5448,7 +5448,7 @@
   {
     "id": 484,
     "name": "گالری شیدایی",
-    "city": "Shiraz",
+    "city": "Tehran",
     "lat": 35.7178879,
     "lng": 51.4321709,
     "address": "تهران، میدان هفتم تیر، میدان بهار شیراز، روبروی موزه عکسخانه شهر، پلاک ۱۴۹، واحد۱ 02188815539 روزهای تعطیل: شنبه ها ساعات کار: ۱۵ - ۲۰ https://sheydaeigallery.com/ Info@sheydaeigallery.com",
@@ -5474,10 +5474,10 @@
         "url": "https://galleryinfo.ir/Event/fa/21603"
       }
     ],
-    "neighborhood": "Shiraz",
+    "neighborhood": "Karimkhan",
     "nameFa": "گالری شیدایی",
-    "cityFa": "شیراز",
-    "neighborhoodFa": "شیراز",
+    "cityFa": "تهران",
+    "neighborhoodFa": "کریم‌خان",
     "isInTrafficZone": false,
     "activeExhibition": {
       "eventId": 21603,
@@ -5719,59 +5719,5 @@
     "addressFa": "تهران، میدان هفت تیر، خیابان مفتح جنوبی، کوچه جار، پلاک ۲۴ 02188301040 روزهای تعطیل: - ساعات کار: ۱۷ - ۱۹ http://www. مسیریابی",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
     "updatedAt": "2026-11-13T09:44:36.996Z"
-  },
-  {
-    "id": 478,
-    "name": "گالری چوم",
-    "city": "Tehran",
-    "lat": 35.715,
-    "lng": 51.415,
-    "address": "بندرانزلی خیابان مظلوم. پلاک ۶۴ 01344423553 روزهای تعطیل: شنبه‌ها ساعات کار: ۱۷ - ۲۱ www.choom.gallery",
-    "phone": "",
-    "hours": "۱۶:۰۰ تا ۲۰:۰۰",
-    "website": "https://galleryinfo.ir/Gallery/fa/478",
-    "instagram": "",
-    "image": "https://galleryinfo.ir/Images/Galleries/GallerySmall_478.jpg",
-    "sourceUrl": "https://galleryinfo.ir/Gallery/fa/478",
-    "exhibitions": [
-      {
-        "eventId": 21612,
-        "galleryId": 478,
-        "title": "چهار فصل یاد",
-        "artist": "احمد امین‌نظر",
-        "type": "نمایشگاه انفرادی",
-        "openingDate": "جمعه 22 آبان 1405",
-        "fullDateRange": "22 آبان 1405 تا 26 آبان 1405",
-        "closingDate": "26 آبان 1405",
-        "openingHours": "۱7:۰۰ الی 2۱:۰۰",
-        "poster": "https://galleryinfo.ir/Images/Events/Event_21612.jpg",
-        "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21612.jpg",
-        "url": "https://galleryinfo.ir/Event/fa/21612"
-      }
-    ],
-    "neighborhood": "Beheshti & Motahari",
-    "nameFa": "گالری چوم",
-    "cityFa": "تهران",
-    "neighborhoodFa": "بهشتی و مطهری",
-    "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21612,
-      "galleryId": 478,
-      "title": "چهار فصل یاد",
-      "artist": "احمد امین‌نظر",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 22 آبان 1405",
-      "fullDateRange": "22 آبان 1405 تا 26 آبان 1405",
-      "closingDate": "26 آبان 1405",
-      "openingHours": "۱7:۰۰ الی 2۱:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21612.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21612.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21612"
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21612.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21612.jpg",
-    "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_478.jpg",
-    "addressFa": "بندرانزلی خیابان مظلوم. پلاک ۶۴ 01344423553 روزهای تعطیل: شنبه‌ها ساعات کار: ۱۷ - ۲۱ www.choom.gallery",
-    "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
   }
 ]

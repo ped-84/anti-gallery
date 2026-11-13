@@ -94,6 +94,9 @@ function getCityAndNeighborhood(address, name, lat = 35.715) {
   if (t.includes('استانبول') || t.includes('ترکیه')) {
     return { city: 'Istanbul', cityFa: 'استانبول', neighborhood: 'Istanbul', neighborhoodFa: 'استانبول' };
   }
+  if (t.includes('انزلی') || t.includes('رشت') || t.includes('گیلان') || t.includes('لاهیجان')) {
+    return { city: 'Bandar Anzali', cityFa: 'بندرانزلی', neighborhood: 'Bandar Anzali', neighborhoodFa: 'بندرانزلی' };
+  }
   if (t.includes('تبریز')) {
     return { city: 'Tabriz', cityFa: 'تبریز', neighborhood: 'Tabriz', neighborhoodFa: 'تبریز' };
   }

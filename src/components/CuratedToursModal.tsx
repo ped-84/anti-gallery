@@ -91,15 +91,15 @@ export const CuratedToursModal: React.FC<CuratedToursModalProps> = ({
             </button>
           </div>
 
-          {/* Dual Mode Switcher Tabs */}
-          <div className="grid grid-cols-2 p-1.5 rounded-2xl bg-stone-200/70 dark:bg-stone-800/80 gap-1.5 text-xs sm:text-sm font-bold">
+          {/* Dual Mode Switcher Tabs (Authentic Claymorphic Segmented Control) */}
+          <div className="grid grid-cols-2 p-1.5 rounded-full bg-[#eaedf4] dark:bg-[#121620] border border-[#d2d9e6] dark:border-[#262f40] shadow-inner gap-1.5 text-xs sm:text-sm font-bold">
             <button
               type="button"
               onClick={() => handleTabChange('openings-only')}
-              className={`py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer ${
+              className={`py-2.5 sm:py-3 px-3 sm:px-4 rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer ${
                 activeTab === 'openings-only'
-                  ? 'bg-white dark:bg-[#1f2636] text-[#F76B1C] shadow-sm font-extrabold'
-                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
+                  ? 'bg-white dark:bg-gradient-to-b dark:from-[#252e40] dark:to-[#1a2130] text-[#F76B1C] dark:text-white shadow-sm dark:shadow-md border border-black/5 dark:border-white/10 font-extrabold'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
               }`}
             >
               <Flame className={`w-4 h-4 ${activeTab === 'openings-only' ? 'text-[#F76B1C]' : 'opacity-70'}`} />
@@ -109,10 +109,10 @@ export const CuratedToursModal: React.FC<CuratedToursModalProps> = ({
             <button
               type="button"
               onClick={() => handleTabChange('all-active')}
-              className={`py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer ${
+              className={`py-2.5 sm:py-3 px-3 sm:px-4 rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer ${
                 activeTab === 'all-active'
-                  ? 'bg-white dark:bg-[#1f2636] text-[#1856C7] dark:text-[#93c5fd] shadow-sm font-extrabold'
-                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
+                  ? 'bg-white dark:bg-gradient-to-b dark:from-[#252e40] dark:to-[#1a2130] text-[#1856C7] dark:text-[#93c5fd] shadow-sm dark:shadow-md border border-black/5 dark:border-white/10 font-extrabold'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
               }`}
             >
               <Sparkles className={`w-4 h-4 ${activeTab === 'all-active' ? 'text-[#1856C7] dark:text-[#93c5fd]' : 'opacity-70'}`} />

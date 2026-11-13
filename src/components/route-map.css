@@ -250,7 +250,7 @@
   box-shadow: inset 0 -2px 3px rgba(0,0,0,.10);
 }
 
-/* Distance Bubble: Sleek rounded clay pill badge */
+/* Distance Bubble: Arrow tag pointing towards the road */
 .ag-leg {
   position: absolute;
   height: 28px;
@@ -259,24 +259,44 @@
   gap: 5px;
   background: var(--bubble);
   color: var(--navy-700);
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 800;
   white-space: nowrap;
-  border-radius: 9999px;
-  border: 1px solid rgba(61, 91, 153, 0.12);
-  box-shadow: 0 4px 10px rgba(61, 91, 153, 0.10), inset 0 1px 1px rgba(255, 255, 255, 0.9);
   pointer-events: none;
   z-index: 12;
+  filter: drop-shadow(0 4px 8px rgba(61,91,153,.15));
 }
 
 .ag-leg--right {
-  padding: 0 12px 0 10px;
+  /* Stop on right of road: pointer tip is on left pointing left towards road */
+  padding: 0 12px 0 6px;
+  border-radius: 0 14px 14px 0;
   transform: translate(0, -50%);
+  flex-direction: row-reverse;
 }
 
 .ag-leg--left {
-  padding: 0 10px 0 12px;
+  /* Stop on left of road: pointer tip is on right pointing right towards road */
+  padding: 0 6px 0 12px;
+  border-radius: 14px 0 0 14px;
   transform: translate(-100%, -50%);
+  flex-direction: row;
+}
+
+.ag-leg__tip {
+  position: absolute;
+  top: 0;
+  color: var(--bubble);
+  fill: var(--bubble);
+}
+
+.ag-leg--left .ag-leg__tip {
+  right: -13.5px;
+}
+
+.ag-leg--right .ag-leg__tip {
+  left: -13.5px;
+  transform: scaleX(-1);
 }
 
 .ag-leg__icon {

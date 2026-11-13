@@ -149,9 +149,9 @@ export const ROAD_CONSTANTS = {
   LANE_R: 315,
   ROAD_HALF: 27,
   PIN_GAP: 16,
-  CARD_W: 138,
+  CARD_W: 168,
   CARD_H: { roomy: 136, dense: 114 },
-  PIN: { roomy: 42, dense: 36 },
+  PIN: { roomy: 40, dense: 36 },
   BUBBLE_H: 28,
   BUBBLE_GAP: 24,
   CAR_OVERRUN: 24
@@ -247,13 +247,29 @@ export function computeRoadLayout(
     d += ' L ' + pts[n - 1].x + ' ' + (mapH + C.CAR_OVERRUN);
   }
 
-  // Pins + Gallery Cards
+  // Pins + Gallery Cards (Pins elevated above cards at 45° angle, cards widened for fuller titles)
   const stops: RoadStop[] = resolvedGalleries.map((gallery, i) => {
     const p = pts[i];
     const left = i % 2 === 0;
-    const cx = left ? p.x - off : p.x + off;
+    const cardH = dense ? C.CARD_H.dense : C.CARD_H.roomy;
+    const cardW = C.CARD_W;
+    const cardX = left ? 6 : 386;
+    const cardY = p.y;
+    const cardTop = cardY - cardH / 2;
+
     const activeEx = gallery.activeExhibition;
-    const artist = activeEx?.artist?.trim() === 'نمایشگاه گروهی' ? 'گروهی از هنرمندان' : (activeEx?.artist || 'هنرمندان معاصر');
+    const artist =
+      activeEx?.artist?.trim() === 'نمایشگاه گروهی'
+        ? 'گروهی از هنرمندان'
+        : activeEx?.artist || 'هنرمندان معاصر';
+
+    // Pin placed above the top edge of the card, tilted 45° towards the road:
+    // Left card: sits above top-right corner, pointing 45° down-right towards road
+    // Right card: sits above top-left corner, pointing 45° down-left towards road
+    const pinX = left ? cardX + cardW - size - 4 : cardX + 4;
+    const pinY = Math.round(cardTop - size + 10);
+    const pinRot = left ? -90 : 0;
+    const pinUnrot = left ? 90 : 0;
 
     return {
       gallery,
@@ -266,34 +282,35 @@ export function computeRoadLayout(
       showArtist: !dense,
       pin: {
         size,
-        x: cx - size / 2,
-        y: p.y - size / 2,
-        rot: left ? -135 : 45,
-        unrot: left ? 135 : -45,
+        x: pinX,
+        y: pinY,
+        rot: pinRot,
+        unrot: pinUnrot,
         numSize: Math.round(size * 0.55),
         numFont: dense ? 13 : 15,
         shadow: {
-          x: cx - Math.round(size * 0.4),
-          y: p.y + Math.round(size / 2) + 2,
+          x: pinX,
+          y: cardTop + 2,
           w: Math.round(size * 0.8)
         }
       },
       card: {
-        x: left ? 8 : 414,
-        y: p.y,
-        w: C.CARD_W,
-        h: dense ? C.CARD_H.dense : C.CARD_H.roomy
+        x: cardX,
+        y: cardY,
+        w: cardW,
+        h: cardH
       }
     };
   });
 
-  // Distance Bubbles: elevated to ensure >= 18px clearance from the next gallery card
+  // Distance Bubbles: arrow tag pointing towards the road, positioned above card/pin
   const legs: RoadLeg[] = legData.map((lg, i) => {
     const cardNextH = dense ? C.CARD_H.dense : C.CARD_H.roomy;
     const cardNextTop = pts[i + 1].y - cardNextH / 2;
-    // Guaranteed at least 18px vertical clearance between bubble bottom and top of next card
-    const targetMaxY = cardNextTop - 18 - Math.round(C.BUBBLE_H / 2);
-    const midY = Math.round((pts[i].y + pts[i + 1].y) / 2) - 22;
+    const pinTop = cardNextTop - size + 10;
+    // Guaranteed clearance above the pin
+    const targetMaxY = pinTop - 14 - Math.round(C.BUBBLE_H / 2);
+    const midY = Math.round((pts[i].y + pts[i + 1].y) / 2) - 20;
     const y = Math.round(Math.min(midY, targetMaxY));
     const rightSide = (i + 1) % 2 === 1;
     let edge = rightSide ? -1e9 : 1e9;
