@@ -1,11 +1,11 @@
-const CACHE_NAME = 'artgasht-pwa-v1.106';
+const CACHE_NAME = 'artgasht-pwa-v1.107';
 
 const STATIC_ASSETS = [
   './',
   './index.html',
-  './manifest.json',
-  './favicon.ico',
-  './favicon.svg',
+  './manifest.json?v=1.107',
+  './favicon.ico?v=1.107',
+  './favicon.svg?v=1.107',
   './favicon.png',
   './favicon-32x32.png',
   './favicon-48x48.png',
@@ -17,9 +17,11 @@ const STATIC_ASSETS = [
   './icons/brand-logo-orange.png',
   './icons/brand-wordmark-light.png',
   './icons/brand-wordmark-dark.png',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/apple-touch-icon.png',
+  './icons/icon-192.png?v=1.107',
+  './icons/icon-512.png?v=1.107',
+  './icons/icon-maskable-192.png?v=1.107',
+  './icons/icon-maskable-512.png?v=1.107',
+  './icons/apple-touch-icon.png?v=1.107',
   './fonts/shabnam/Shabnam-FD.woff2',
   './fonts/shabnam/Shabnam-Bold-FD.woff2',
   './fonts/shabnam/Shabnam-Medium-FD.woff2',
@@ -28,14 +30,18 @@ const STATIC_ASSETS = [
   './fonts/ubuntu/Ubuntu-Bold.woff2'
 ];
 
-// Install: Cache essential assets immediately and force immediate takeover
+// Install: Cache essential assets safely with Promise.allSettled so no single asset aborts installation
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(STATIC_ASSETS).catch((err) => {
-        console.warn('PWA Pre-cache partial fail:', err);
-      });
+      return Promise.allSettled(
+        STATIC_ASSETS.map((url) =>
+          cache.add(url).catch((err) => {
+            console.warn(`PWA Pre-cache skipped for ${url}:`, err);
+          })
+        )
+      );
     })
   );
 });
