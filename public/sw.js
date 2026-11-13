@@ -1,11 +1,11 @@
-const CACHE_NAME = 'artgasht-pwa-v1.107';
+const CACHE_NAME = 'artgasht-pwa-v1.108';
 
 const STATIC_ASSETS = [
   './',
   './index.html',
-  './manifest.json?v=1.107',
-  './favicon.ico?v=1.107',
-  './favicon.svg?v=1.107',
+  './manifest.json?v=1.108',
+  './favicon.ico?v=1.108',
+  './favicon.svg?v=1.108',
   './favicon.png',
   './favicon-32x32.png',
   './favicon-48x48.png',
@@ -17,11 +17,11 @@ const STATIC_ASSETS = [
   './icons/brand-logo-orange.png',
   './icons/brand-wordmark-light.png',
   './icons/brand-wordmark-dark.png',
-  './icons/icon-192.png?v=1.107',
-  './icons/icon-512.png?v=1.107',
-  './icons/icon-maskable-192.png?v=1.107',
-  './icons/icon-maskable-512.png?v=1.107',
-  './icons/apple-touch-icon.png?v=1.107',
+  './icons/icon-192.png?v=1.108',
+  './icons/icon-512.png?v=1.108',
+  './icons/icon-maskable-192.png?v=1.108',
+  './icons/icon-maskable-512.png?v=1.108',
+  './icons/apple-touch-icon.png?v=1.108',
   './fonts/shabnam/Shabnam-FD.woff2',
   './fonts/shabnam/Shabnam-Bold-FD.woff2',
   './fonts/shabnam/Shabnam-Medium-FD.woff2',

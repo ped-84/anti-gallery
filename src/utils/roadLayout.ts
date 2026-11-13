@@ -149,8 +149,8 @@ export const ROAD_CONSTANTS = {
   LANE_R: 315,
   ROAD_HALF: 27,
   PIN_GAP: 16,
-  CARD_W: 162,
-  CARD_H: { roomy: 144, dense: 120 },
+  CARD_W: 138,
+  CARD_H: { roomy: 136, dense: 114 },
   PIN: { roomy: 42, dense: 36 },
   BUBBLE_H: 28,
   BUBBLE_GAP: 24,
@@ -279,7 +279,7 @@ export function computeRoadLayout(
         }
       },
       card: {
-        x: left ? 8 : 390,
+        x: left ? 8 : 414,
         y: p.y,
         w: C.CARD_W,
         h: dense ? C.CARD_H.dense : C.CARD_H.roomy

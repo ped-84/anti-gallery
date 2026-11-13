@@ -269,8 +269,7 @@ body {
   inset: 0;
   transform: translateX(110%);
   border-radius: 50%;
-  background: radial-gradient(ellipse 24% 18% at 34% 39%, rgba(164, 179, 200, 0.25) 0%, transparent 100%),
-              radial-gradient(circle at 30% 22%, #f4f7ff, #d9e5f6 54%, #a3c2e4);
+  background: radial-gradient(circle at 40% 30%, #f4f7ff 0%, #d8e5f6 58%, #b4cce8 100%);
   box-shadow: inset 1.5px 2px 4px rgba(255, 255, 255, 0.8), inset -2px -3px 5px rgba(61, 91, 153, 0.3);
   transition: transform var(--duration) var(--theme-ease);
 }
@@ -279,22 +278,36 @@ body {
   transform: translateX(0);
 }
 
+/* 3 distinct, large craters exactly matching the reference design */
 .clay-theme-toggle .crater {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(circle at 65% 72%, #cfdbeb, #bacbdf 70%, #adbed3);
-  box-shadow: inset 1px 1px 2px rgba(97, 123, 155, 0.3), 0 0.5px 1px rgba(255, 255, 255, 0.5);
-  opacity: 0.75;
+  background: radial-gradient(circle at 40% 35%, #9cb2cf 0%, #899ebd 65%, #768caa 100%);
+  box-shadow: inset 1.2px 1.5px 2.5px rgba(22, 35, 59, 0.45), 0 0.5px 1px rgba(255, 255, 255, 0.6);
+  opacity: 0.95;
 }
-.clay-theme-toggle .crater:nth-child(1) { width: 8%; height: 8%; top: 19%; left: 46%; }
-.clay-theme-toggle .crater:nth-child(2) { width: 12%; height: 11%; top: 57%; left: 23%; border-radius: 47% 53% 50% 46%; }
-.clay-theme-toggle .crater:nth-child(3) { width: 9%; height: 9%; top: 65%; left: 65%; }
-.clay-theme-toggle .crater:nth-child(4) { width: 5%; height: 5%; top: 32%; left: 21%; }
-.clay-theme-toggle .crater:nth-child(5) { width: 6%; height: 6%; top: 42%; left: 72%; }
-.clay-theme-toggle .crater:nth-child(6) { width: 4%; height: 4%; top: 77%; left: 45%; }
-.clay-theme-toggle .crater:nth-child(7) { width: 3%; height: 3%; top: 48%; left: 43%; }
-.clay-theme-toggle .crater:nth-child(8) { width: 4%; height: 4%; top: 25%; left: 64%; }
-.clay-theme-toggle .crater:nth-child(9) { width: 3%; height: 3%; top: 72%; left: 21%; }
+
+.clay-theme-toggle .crater--top {
+  width: 22%;
+  height: 22%;
+  top: 21%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.clay-theme-toggle .crater--left {
+  width: 35%;
+  height: 35%;
+  top: 52%;
+  left: 20%;
+}
+
+.clay-theme-toggle .crater--right {
+  width: 26%;
+  height: 26%;
+  top: 57%;
+  left: 60%;
+}
 
 .clay-theme-toggle .clouds {
   position: absolute;

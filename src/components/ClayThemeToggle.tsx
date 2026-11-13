@@ -35,15 +35,9 @@ export const ClayThemeToggle: React.FC<ClayThemeToggleProps> = ({
         </span>
         <span className="orb">
           <span className="moon">
-            <i className="crater" />
-            <i className="crater" />
-            <i className="crater" />
-            <i className="crater" />
-            <i className="crater" />
-            <i className="crater" />
-            <i className="crater" />
-            <i className="crater" />
-            <i className="crater" />
+            <i className="crater crater--top" />
+            <i className="crater crater--left" />
+            <i className="crater crater--right" />
           </span>
         </span>
         <svg className="clouds" viewBox="0 0 420 200" preserveAspectRatio="none">

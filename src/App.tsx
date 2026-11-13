@@ -882,9 +882,6 @@ export default function App() {
 
         {/* Editorial Claymorphic Banner */}
         <section className="clay-card p-4 sm:p-6 bg-white dark:bg-[#181d27] border border-[#E1E1E1] dark:border-stone-800">
-          <span className="text-sm sm:text-base font-bold text-[#F76B1C] block mb-1">
-            برنامه‌ریزی بازدید از گالری‌های هنری و نمایشگاه‌های جاری
-          </span>
           <h1 className="text-xl sm:text-3xl font-bold text-[#1d2d4c] dark:text-white tracking-tight leading-snug">
             بهترین مسیر آرت‌گشت در تهران
           </h1>

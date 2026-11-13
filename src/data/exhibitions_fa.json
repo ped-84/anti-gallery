@@ -128,7 +128,7 @@
   {
     "eventId": 21606,
     "galleryId": 325,
-    "title": "\" زمین خشن،دست های گرم \"",
+    "title": "\" زمین خشن ، دست‌های گرم \"",
     "artist": "یاسر میرزایی",
     "type": "نمایشگاه انفرادی",
     "openingDate": "جمعه 22 آبان 1405",
@@ -142,15 +142,15 @@
   {
     "eventId": 21599,
     "galleryId": 258,
-    "title": "[کالبد وهم ]",
+    "title": "کالبد وهم",
     "artist": "رضوانه منافی",
     "type": "نمایشگاه انفرادی",
     "openingDate": "جمعه 22 آبان 1405",
     "fullDateRange": "22 آبان 1405 تا 29 آبان 1405",
     "closingDate": "29 آبان 1405",
     "openingHours": "13:۰۰ الی 20:۰۰",
-    "poster": "https://galleryinfo.ir/Images/No.png",
-    "posterSmall": "https://galleryinfo.ir/Images/No.png",
+    "poster": "https://galleryinfo.ir/Images/Events/Event_21599.jpg#enr",
+    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21599.jpg#enr",
     "url": "https://galleryinfo.ir/Event/fa/21599"
   },
   {
@@ -222,6 +222,20 @@
     "poster": "https://galleryinfo.ir/Images/Events/Event_21592.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21592.jpg",
     "url": "https://galleryinfo.ir/Event/fa/21592"
+  },
+  {
+    "eventId": 21612,
+    "galleryId": 478,
+    "title": "چهار فصل یاد",
+    "artist": "احمد امین‌نظر",
+    "type": "نمایشگاه انفرادی",
+    "openingDate": "جمعه 22 آبان 1405",
+    "fullDateRange": "22 آبان 1405 تا 26 آبان 1405",
+    "closingDate": "26 آبان 1405",
+    "openingHours": "۱7:۰۰ الی 2۱:۰۰",
+    "poster": "https://galleryinfo.ir/Images/Events/Event_21612.jpg",
+    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21612.jpg",
+    "url": "https://galleryinfo.ir/Event/fa/21612"
   },
   {
     "eventId": 21600,
@@ -717,7 +731,7 @@
     "eventId": 21528,
     "galleryId": 1014,
     "title": "مهتابِ تاریک",
-    "artist": "نمایشگاه انفرا��ی",
+    "artist": "نمایشگاه انفرادی",
     "type": "نمایشگاه انفرادی",
     "openingDate": "جمعه 8 آبان 1405",
     "fullDateRange": "8 آبان 1405 تا 22 آبان 1405",
