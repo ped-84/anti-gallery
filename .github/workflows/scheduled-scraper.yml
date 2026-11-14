@@ -26,7 +26,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
+          persist-credentials: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -41,13 +42,15 @@ jobs:
         run: node scripts/sync-galleryinfo.cjs
 
       - name: Commit and push updated data to main if changed
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --local user.email "auto-sync@artgasht.com"
           git config --local user.name "Artgasht Auto-Sync Bot"
           git add src/data/ data/
-          if ! git diff --quiet || ! git diff --staged --quiet; then
+          if ! git diff --cached --quiet; then
             git commit -m "chore(data): auto-sync live exhibitions from galleryinfo [skip ci]"
-            git push origin main
+            git push origin main || echo "Git push skipped or failed non-fatally"
           else
             echo "No new exhibition data detected."
           fi
@@ -56,4 +59,6 @@ jobs:
         run: npm run build
 
       - name: Deploy to GitHub Pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/deploy-ghpages.cjs

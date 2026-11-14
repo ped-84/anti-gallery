@@ -224,6 +224,20 @@
     "url": "https://galleryinfo.ir/Event/fa/21592"
   },
   {
+    "eventId": 21612,
+    "galleryId": 478,
+    "title": "چهار فصل یاد",
+    "artist": "احمد امین‌نظر",
+    "type": "نمایشگاه انفرادی",
+    "openingDate": "جمعه 22 آبان 1405",
+    "fullDateRange": "22 آبان 1405 تا 26 آبان 1405",
+    "closingDate": "26 آبان 1405",
+    "openingHours": "۱7:۰۰ الی 2۱:۰۰",
+    "poster": "https://galleryinfo.ir/Images/Events/Event_21612.jpg",
+    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21612.jpg",
+    "url": "https://galleryinfo.ir/Event/fa/21612"
+  },
+  {
     "eventId": 21600,
     "galleryId": 1003,
     "title": "بی‌حرف",
@@ -644,20 +658,6 @@
     "url": "https://galleryinfo.ir/Event/fa/21530"
   },
   {
-    "eventId": 21535,
-    "galleryId": 193,
-    "title": "قرارِ‌سنگ",
-    "artist": "سمیه جعفری",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 8 آبان 1405",
-    "fullDateRange": "8 آبان 1405 تا 22 آبان 1405",
-    "closingDate": "22 آبان 1405",
-    "openingHours": "16:۰۰ الی 20:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21535.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21535.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21535"
-  },
-  {
     "eventId": 21541,
     "galleryId": 487,
     "title": "میان",
@@ -670,20 +670,6 @@
     "poster": "https://galleryinfo.ir/Images/Events/Event_21541.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21541.jpg",
     "url": "https://galleryinfo.ir/Event/fa/21541"
-  },
-  {
-    "eventId": 21546,
-    "galleryId": 834,
-    "title": "تکّه‌گی",
-    "artist": "فراز ناصرشریف",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 8 آبان 1405",
-    "fullDateRange": "8 آبان 1405 تا 22 آبان 1405",
-    "closingDate": "22 آبان 1405",
-    "openingHours": "16:۰۰ الی 20:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21546.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21546.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21546"
   },
   {
     "eventId": 21542,
@@ -700,34 +686,6 @@
     "url": "https://galleryinfo.ir/Event/fa/21542"
   },
   {
-    "eventId": 21536,
-    "galleryId": 470,
-    "title": "اندر نیستی هست است",
-    "artist": "تانیا اصل",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 8 آبان 1405",
-    "fullDateRange": "8 آبان 1405 تا 22 آبان 1405",
-    "closingDate": "22 آبان 1405",
-    "openingHours": "16:۰۰ الی 20:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21536.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21536.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21536"
-  },
-  {
-    "eventId": 21528,
-    "galleryId": 1014,
-    "title": "مهتابِ تاریک",
-    "artist": "نمایشگاه انفرادی",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 8 آبان 1405",
-    "fullDateRange": "8 آبان 1405 تا 22 آبان 1405",
-    "closingDate": "22 آبان 1405",
-    "openingHours": "16:۰۰ الی 20:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21528.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21528.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21528"
-  },
-  {
     "eventId": 21550,
     "galleryId": 1027,
     "title": "خاطرات اشیاء",
@@ -742,20 +700,6 @@
     "url": "https://galleryinfo.ir/Event/fa/21550"
   },
   {
-    "eventId": 21511,
-    "galleryId": 25,
-    "title": "دگردیسی",
-    "artist": "ثمیلا امیر‌ابراهیمی",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 1 آبان 1405",
-    "fullDateRange": "1 آبان 1405 تا 22 آبان 1405",
-    "closingDate": "22 آبان 1405",
-    "openingHours": "۱۵:۰۰ الی ۲۰:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21511.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21511.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21511"
-  },
-  {
     "eventId": 21499,
     "galleryId": 314,
     "title": "آن سوی فرم",
@@ -768,34 +712,6 @@
     "poster": "https://galleryinfo.ir/Images/Events/Event_21499.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21499.jpg",
     "url": "https://galleryinfo.ir/Event/fa/21499"
-  },
-  {
-    "eventId": 21516,
-    "galleryId": 390,
-    "title": "مجسمه های پوشیدنی",
-    "artist": "صبا کریمخانی",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 1 آبان 1405",
-    "fullDateRange": "1 آبان 1405 تا 22 آبان 1405",
-    "closingDate": "22 آبان 1405",
-    "openingHours": "11:۰۰ الی 18:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21516.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21516.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21516"
-  },
-  {
-    "eventId": 21481,
-    "galleryId": 1009,
-    "title": "ورای رخ",
-    "artist": "رسام ارژنگی، محسن الوردیلی، ناصر بخشی، جعفر پتگر، هوشنگ پزشک‌نیا، بابک حقی، امیر خجسته، مرتضی خسروی، حسینعلی ذابحی، امیرحسین زنجانی، محسن سهیلی، رضا شهابی، علی‌اکبر صادقی، علی‌اکبر صنعتی، ژازه تباتبایی، مجتبی طباطبایی، محمد فاسونکی، شادی قدیریان، عباس کاتوزیان، فرشید مثقالی، احمد مرشد‌لو، نصرت‌الله مسلمیان، معصومه مظفری، فرشید ملکی، میلاد موسوی، نیکزاد نجومی، مهدی ویشکایی، آیدین آغداشلو",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 24 مهر 1405",
-    "fullDateRange": "24 مهر 1405 تا 22 آبان 1405",
-    "closingDate": "22 آبان 1405",
-    "openingHours": "11:۰۰ الی 20:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21481.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21481.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21481"
   },
   {
     "eventId": 21442,

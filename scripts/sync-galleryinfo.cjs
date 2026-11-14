@@ -27,9 +27,11 @@ function fetchEventsPage(skip, count = 100) {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
         'Content-Length': Buffer.byteLength(postData),
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+        'Accept': 'application/json, text/javascript, */*; q=0.01',
+        'Referer': 'https://galleryinfo.ir/'
       },
-      timeout: 20000
+      timeout: 25000
     }, (res) => {
       let data = '';
       res.on('data', chunk => data += chunk);
@@ -38,7 +40,7 @@ function fetchEventsPage(skip, count = 100) {
           const parsed = JSON.parse(data);
           resolve(parsed.d || []);
         } catch (e) {
-          reject(e);
+          reject(new Error(`Invalid JSON response (HTTP ${res.statusCode}): ${data.slice(0, 120)}`));
         }
       });
     });
@@ -46,12 +48,24 @@ function fetchEventsPage(skip, count = 100) {
     req.on('error', reject);
     req.on('timeout', () => {
       req.destroy();
-      reject(new Error('Request timeout'));
+      reject(new Error('Request timeout after 25s'));
     });
 
     req.write(postData);
     req.end();
   });
+}
+
+async function fetchEventsWithRetry(skip, count = 100, maxRetries = 3) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await fetchEventsPage(skip, count);
+    } catch (err) {
+      console.warn(`[Sync] Attempt ${attempt}/${maxRetries} failed for skip=${skip}: ${err.message}`);
+      if (attempt === maxRetries) throw err;
+      await new Promise(r => setTimeout(r, attempt * 2000));
+    }
+  }
 }
 
 // Helper to fetch HTML of a gallery detail page
@@ -199,7 +213,7 @@ async function main() {
 
   while (true) {
     console.log(`Fetching events (skip=${skip})...`);
-    const batch = await fetchEventsPage(skip, count);
+    const batch = await fetchEventsWithRetry(skip, count);
     if (!batch || batch.length === 0) break;
     allEvents.push(...batch);
     if (batch.length < count) break;
@@ -207,6 +221,11 @@ async function main() {
   }
 
   console.log(`Total live events fetched from upstream: ${allEvents.length}`);
+
+  if (allEvents.length === 0) {
+    console.warn('[Sync] 0 events fetched from upstream. Preserving existing verified dataset.');
+    return;
+  }
 
   // 2. Read local databases (prioritize persistent volume if available)
   let galleries = [];
@@ -365,6 +384,11 @@ async function main() {
 }
 
 main().catch(err => {
-  console.error('Fatal sync error:', err);
-  process.exit(1);
+  console.error('[Sync] Sync warning:', err.message);
+  if (process.env.STRICT_SYNC === 'true') {
+    process.exit(1);
+  } else {
+    console.warn('[Sync] Non-fatal fallback: Continuing with existing verified database.');
+    process.exit(0);
+  }
 });

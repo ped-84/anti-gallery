@@ -37,6 +37,9 @@ COPY --from=builder /app/src/data ./src/data
 # Copy backend server script
 COPY --from=builder /app/server.ts ./server.ts
 
+# Copy helper scripts (scraper & sync tools)
+COPY --from=builder /app/scripts ./scripts
+
 # Create persistent data and uploads directory and grant ownership to non-root user (1000:1000)
 RUN mkdir -p /app/data/uploads && chown -R 1000:1000 /app
 

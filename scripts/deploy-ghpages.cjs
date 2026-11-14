@@ -17,8 +17,15 @@ if (!fs.existsSync(nojekyllPath)) {
 }
 
 run('git init', distDir);
+run('git config user.email "deploy@artgasht.com"', distDir);
+run('git config user.name "Artgasht Deploy Bot"', distDir);
 run('git add -A', distDir);
-run('git commit -m "deploy: v1.065 with multi-space venue aggregation and space tabs"', distDir);
-run('git push -f https://github.com/ped-84/anti-gallery.git master:gh-pages', distDir);
+run('git commit -m "deploy: update gh-pages build"', distDir);
+
+const repoUrl = process.env.GITHUB_TOKEN
+  ? `https://x-access-token:${process.env.GITHUB_TOKEN}@github.com/ped-84/anti-gallery.git`
+  : 'https://github.com/ped-84/anti-gallery.git';
+
+run(`git push -f ${repoUrl} master:gh-pages`, distDir);
 
 console.log('Deployed successfully to gh-pages!');
