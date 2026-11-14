@@ -274,13 +274,16 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                     viewBox={`0 0 ${badgeW} ${badgeH}`}
                     className="ag-leg-shape"
                     style={{
-                      transform: lg.rightSide ? 'scaleX(-1)' : 'none'
+                      transform: lg.rightSide ? 'scaleX(-1)' : 'none',
+                      overflow: 'visible'
                     }}
                     aria-hidden="true"
                   >
                     <path
-                      d={`M 17 0 L ${badgeW - 18} 0 Q ${badgeW - 11} 1 ${badgeW - 8} 5 L ${badgeW - 2} 14 Q ${badgeW} 17 ${badgeW - 2} 20 L ${badgeW - 8} 29 Q ${badgeW - 11} 33 ${badgeW - 18} 34 L 17 34 A 17 17 0 0 1 17 0 Z`}
+                      d={`M 17 0.5 L ${badgeW - 20} 0.5 Q ${badgeW - 12} 1.5 ${badgeW - 8} 5.5 L ${badgeW - 3} 13.5 Q ${badgeW} 17 ${badgeW - 3} 20.5 L ${badgeW - 8} 28.5 Q ${badgeW - 12} 32.5 ${badgeW - 20} 33.5 L 17 33.5 A 16.5 16.5 0 0 1 17 0.5 Z`}
                       fill="#ffffff"
+                      stroke="rgba(29, 45, 76, 0.18)"
+                      strokeWidth="1.2"
                     />
                   </svg>
 

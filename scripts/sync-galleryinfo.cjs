@@ -203,6 +203,48 @@ function getCityAndNeighborhood(address, name, lat = 35.715) {
   return { city, cityFa, neighborhood: 'Karimkhan & Center', neighborhoodFa: 'کریم‌خان و مرکز' };
 }
 
+const PERSIAN_MONTHS = {
+  'فروردین': 1, 'اردیبهشت': 2, 'خرداد': 3, 'تیر': 4, 'مرداد': 5, 'شهریور': 6,
+  'مهر': 7, 'آبان': 8, 'آذر': 9, 'دی': 10, 'بهمن': 11, 'اسفند': 12
+};
+
+function parsePersianEndDateToScore(fullRange, closingDate) {
+  const text = (closingDate || fullRange || '').trim();
+  if (!text || text.includes('ادامه نمایشگاه')) return 99999999;
+  const part = text.includes('تا') ? text.split('تا')[1].trim() : text;
+  const enStr = part.replace(/[۰-۹]/g, (d) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).trim();
+  const yearMatch = enStr.match(/\b(14\d{2})\b/);
+  const year = yearMatch ? parseInt(yearMatch[1], 10) : 1405;
+  let month = 0;
+  for (const [mName, mNum] of Object.entries(PERSIAN_MONTHS)) {
+    if (part.includes(mName)) { month = mNum; break; }
+  }
+  const numbers = enStr.match(/\b(\d{1,2})\b/g);
+  let day = 1;
+  if (numbers) {
+    for (const n of numbers) {
+      const val = parseInt(n, 10);
+      if (val >= 1 && val <= 31) { day = val; break; }
+    }
+  }
+  if (!month) return 99999999;
+  return year * 10000 + month * 100 + day;
+}
+
+function getTodayPersianScore() {
+  try {
+    const parts = new Intl.DateTimeFormat('en-US-u-ca-persian', {
+      year: 'numeric', month: 'numeric', day: 'numeric', timeZone: 'Asia/Tehran'
+    }).formatToParts(new Date());
+    const y = parseInt(parts.find(p => p.type === 'year')?.value || '1405', 10);
+    const m = parseInt(parts.find(p => p.type === 'month')?.value || '8', 10);
+    const d = parseInt(parts.find(p => p.type === 'day')?.value || '23', 10);
+    return y * 10000 + m * 100 + d;
+  } catch {
+    return 14050823;
+  }
+}
+
 async function main() {
   console.log('--- Starting Live Exhibition Sync ---');
   
@@ -239,6 +281,7 @@ async function main() {
   galleries.forEach(g => galleryMap.set(g.id, g));
 
   const allExhibitionsFa = [];
+  const todayScore = getTodayPersianScore();
 
   // Sort events by StartDate descending so latest exhibitions (e.g. 15 Aban) are processed first
   allEvents.sort((a, b) => {
@@ -259,6 +302,8 @@ async function main() {
     const dateRangeStr = endStr ? `${startStr} تا ${endStr}` : `${startStr} تا ادامه نمایشگاه`;
     const hours = (e.StartT && e.EndT) ? `${e.StartT}:۰۰ الی ${e.EndT}:۰۰` : '۱۶:۰۰ الی ۲۰:۰۰';
 
+    const isExpired = parsePersianEndDateToScore(dateRangeStr, endStr) < todayScore;
+
     const exObj = {
       eventId: e.Id,
       galleryId: e.GalleryId,
@@ -271,7 +316,8 @@ async function main() {
       openingHours: hours,
       poster: posterUrl,
       posterSmall: posterSmallUrl,
-      url: `https://galleryinfo.ir/Event/fa/${e.Id}`
+      url: `https://galleryinfo.ir/Event/fa/${e.Id}`,
+      isExpired
     };
 
     allExhibitionsFa.push(exObj);
@@ -332,9 +378,9 @@ async function main() {
         cityFa: locationInfo.cityFa,
         neighborhoodFa: locationInfo.neighborhoodFa,
         isInTrafficZone: cleanAddr.includes('مطهری') || cleanAddr.includes('کریم‌خان') || cleanAddr.includes('انقلاب'),
-        activeExhibition: exObj,
-        posterImage: posterUrl,
-        posterSmall: posterSmallUrl,
+        activeExhibition: isExpired ? null : exObj,
+        posterImage: isExpired ? '' : posterUrl,
+        posterSmall: isExpired ? '' : posterSmallUrl,
         logoImage: `https://galleryinfo.ir/Images/Galleries/GallerySmall_${e.GalleryId}.jpg`,
         addressFa: cleanAddr,
         hoursFa: cleanHours
@@ -343,13 +389,17 @@ async function main() {
       galleryMap.set(e.GalleryId, gallery);
       galleries.push(gallery);
     } else {
-      // Update gallery active exhibition if this one is newer or from the latest event cycle
+      // Update gallery active exhibition if this one is newer and not expired
       const currentEventId = gallery.activeExhibition?.eventId || 0;
-      if (!gallery.activeExhibition || exObj.eventId >= currentEventId) {
+      if (!isExpired && (!gallery.activeExhibition || exObj.eventId >= currentEventId)) {
         gallery.activeExhibition = exObj;
         gallery.posterImage = posterUrl;
         gallery.posterSmall = posterSmallUrl;
         gallery.updatedAt = new Date().toISOString();
+      } else if (isExpired && gallery.activeExhibition?.eventId === exObj.eventId) {
+        gallery.activeExhibition = null;
+        gallery.posterImage = '';
+        gallery.posterSmall = '';
       }
 
       if (!gallery.exhibitions) gallery.exhibitions = [];

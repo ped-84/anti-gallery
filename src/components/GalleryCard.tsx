@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Gallery } from '../types/gallery';
-import { toPersianDigits, getGalleryDisplayName, getExhibitionMedium, formatGalleryAddress, formatArtistName } from '../utils/persianUtils';
+import { toPersianDigits, getGalleryDisplayName, getExhibitionMedium, formatGalleryAddress, formatArtistName, getExhibitionStatus } from '../utils/persianUtils';
 import {
   Plus,
   Check,
@@ -181,22 +181,47 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
           <div className="p-3.5 rounded-2xl bg-[#f0f4fa] dark:bg-[#1b2230] shadow-sm space-y-2.5 border border-[#A3C2E4]/40 dark:border-stone-700/60">
             {/* Opening & Visiting Days: Friday Opening + Weekdays */}
             <div className="space-y-1.5">
-              <div className="flex items-center justify-between gap-2 bg-white/95 dark:bg-stone-900/95 text-[#F76B1C] px-3 py-2 rounded-xl text-sm sm:text-base font-bold shadow-xs border border-[#F76B1C]/20">
-                <div className="flex items-center gap-2 truncate">
-                  <Calendar className="w-4 h-4 shrink-0" />
-                  <span className="truncate">
-                    {activeExhibition.openingDate
-                      ? `افتتاحیه: ${toPersianDigits(activeExhibition.openingDate)}`
-                      : 'افتتاحیه: جمعه‌ها ۱۶:۰۰ الی ۲۰:۰۰'}
-                  </span>
-                </div>
-                {isOpeningThisWeek && (
-                  <span className="shrink-0 text-xs sm:text-sm bg-[#F76B1C] text-white px-2.5 py-1 rounded-lg font-extrabold shadow-xs flex items-center gap-1 animate-pulse">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>این هفته</span>
-                  </span>
-                )}
-              </div>
+              {(() => {
+                const status = getExhibitionStatus(activeExhibition);
+                const isOpening = status.badgeType === 'opening';
+                const isClosingToday = status.badgeType === 'closing-today';
+                const isClosingSoon = status.badgeType === 'closing-soon';
+
+                let badgeColors = 'bg-white/95 dark:bg-stone-900/95 text-[#10335e] dark:text-[#dbeafe] border-[#10335e]/15 dark:border-[#93c5fd]/20';
+                if (isOpening) {
+                  badgeColors = 'bg-white/95 dark:bg-stone-900/95 text-[#F76B1C] border-[#F76B1C]/25';
+                } else if (isClosingToday) {
+                  badgeColors = 'bg-rose-50/95 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-300 dark:border-rose-800';
+                } else if (isClosingSoon) {
+                  badgeColors = 'bg-amber-50/95 dark:bg-amber-950/40 text-amber-800 dark:text-amber-200 border-amber-300 dark:border-amber-800';
+                }
+
+                return (
+                  <div className={`flex items-center justify-between gap-2 px-3 py-2 rounded-xl text-sm sm:text-base font-bold shadow-xs border ${badgeColors}`}>
+                    <div className="flex items-center gap-2 truncate min-w-0">
+                      {isClosingToday ? (
+                        <Clock className="w-4 h-4 shrink-0 text-rose-600 dark:text-rose-400 animate-pulse" />
+                      ) : (
+                        <Calendar className="w-4 h-4 shrink-0" />
+                      )}
+                      <span className="truncate">{status.statusBadge}</span>
+                    </div>
+
+                    {isOpening && isOpeningThisWeek && (
+                      <span className="shrink-0 text-xs sm:text-sm bg-[#F76B1C] text-white px-2.5 py-1 rounded-lg font-extrabold shadow-xs flex items-center gap-1 animate-pulse">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        <span>این هفته</span>
+                      </span>
+                    )}
+
+                    {isClosingToday && (
+                      <span className="shrink-0 text-xs sm:text-sm bg-rose-600 text-white px-2.5 py-1 rounded-lg font-extrabold shadow-xs">
+                        امروز
+                      </span>
+                    )}
+                  </div>
+                );
+              })()}
               <div className="text-sm sm:text-base text-stone-600 dark:text-stone-300 px-1 font-medium flex items-center justify-between">
                 <span>بازدید عادی: یکشنبه تا پنجشنبه {toPersianDigits(gallery.hoursFa || gallery.hours || '۱۶ الی ۲۰')}</span>
                 <span className="text-stone-400 font-normal">شنبه تعطیل</span>

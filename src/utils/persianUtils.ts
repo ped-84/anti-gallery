@@ -335,6 +335,184 @@ export function parsePersianDateToScore(dateStr: string = ''): number {
 }
 
 /**
+ * Gets the current Jalali (Persian) date score (YYYYMMDD) for Tehran time zone.
+ */
+export function getTodayPersianScore(): number {
+  try {
+    const parts = new Intl.DateTimeFormat('en-US-u-ca-persian', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      timeZone: 'Asia/Tehran'
+    }).formatToParts(new Date());
+
+    const y = parseInt(parts.find((p) => p.type === 'year')?.value || '1405', 10);
+    const m = parseInt(parts.find((p) => p.type === 'month')?.value || '8', 10);
+    const d = parseInt(parts.find((p) => p.type === 'day')?.value || '23', 10);
+    return y * 10000 + m * 100 + d;
+  } catch {
+    return 14050823;
+  }
+}
+
+/**
+ * Parses exhibition closing date or fullDateRange into a numerical score (YYYYMMDD).
+ * Example: '26 آبان 1405' -> 14050826
+ */
+export function parsePersianEndDateToScore(fullRange?: string, closingDate?: string): number {
+  const text = (closingDate || fullRange || '').trim();
+  if (!text || text.includes('ادامه نمایشگاه')) return 99999999;
+
+  const part = text.includes('تا') ? text.split('تا')[1].trim() : text;
+  const enStr = part
+    .replace(/[۰-۹]/g, (d) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
+    .trim();
+
+  const yearMatch = enStr.match(/\b(14\d{2})\b/);
+  const year = yearMatch ? parseInt(yearMatch[1], 10) : 1405;
+
+  let month = 0;
+  for (const [mName, mNum] of Object.entries(PERSIAN_MONTHS)) {
+    if (part.includes(mName)) {
+      month = mNum;
+      break;
+    }
+  }
+
+  const numbers = enStr.match(/\b(\d{1,2})\b/g);
+  let day = 1;
+  if (numbers) {
+    for (const n of numbers) {
+      const val = parseInt(n, 10);
+      if (val >= 1 && val <= 31) {
+        day = val;
+        break;
+      }
+    }
+  }
+
+  if (!month) return 99999999;
+  return year * 10000 + month * 100 + day;
+}
+
+/**
+ * Checks if an exhibition's closing date has already passed.
+ */
+export function isExhibitionExpired(
+  exhibition?: { fullDateRange?: string; closingDate?: string } | null,
+  referenceScore?: number
+): boolean {
+  if (!exhibition) return false;
+  const today = referenceScore || getTodayPersianScore();
+  const endScore = parsePersianEndDateToScore(exhibition.fullDateRange, exhibition.closingDate);
+  return endScore < today;
+}
+
+export interface ExhibitionStatusInfo {
+  isThisWeek: boolean;
+  isExpired: boolean;
+  isClosingToday: boolean;
+  isClosingSoon: boolean;
+  statusBadge: string;
+  badgeType: 'opening' | 'closing-today' | 'closing-soon' | 'ongoing';
+  closingLabel?: string;
+}
+
+/**
+ * Intelligently resolves exhibition display status.
+ * Prevents showing stale "افتتاحیه: ۲ ماه پیش" for exhibitions that opened weeks ago.
+ */
+export function getExhibitionStatus(
+  exhibition?: { openingDate?: string; fullDateRange?: string; closingDate?: string } | null,
+  maxOpeningScore?: number
+): ExhibitionStatusInfo {
+  if (!exhibition) {
+    return {
+      isThisWeek: false,
+      isExpired: false,
+      isClosingToday: false,
+      isClosingSoon: false,
+      statusBadge: 'افتتاحیه: جمعه‌ها ۱۶:۰۰ الی ۲۰:۰۰',
+      badgeType: 'opening'
+    };
+  }
+
+  const todayScore = getTodayPersianScore();
+  const openScore = parsePersianDateToScore(exhibition.openingDate);
+  const endScore = parsePersianEndDateToScore(exhibition.fullDateRange, exhibition.closingDate);
+
+  const isExpired = endScore < todayScore;
+  const isClosingToday = endScore === todayScore;
+  const isClosingSoon = !isClosingToday && endScore > todayScore && endScore <= todayScore + 3;
+
+  const isThisWeek = maxOpeningScore && maxOpeningScore > 0
+    ? openScore >= maxOpeningScore - 2 && openScore <= maxOpeningScore
+    : openScore >= todayScore - 3 && openScore <= todayScore + 1;
+
+  // Format clean Persian closing date (e.g. "۲۶ آبان")
+  let cleanEnd = '';
+  if (exhibition.closingDate) {
+    cleanEnd = exhibition.closingDate.replace(/\b14\d{2}\b/, '').trim();
+  } else if (exhibition.fullDateRange && exhibition.fullDateRange.includes('تا')) {
+    cleanEnd = exhibition.fullDateRange.split('تا')[1].replace(/\b14\d{2}\b/, '').trim();
+  }
+
+  const closingFormatted = cleanEnd ? toPersianDigits(cleanEnd) : '';
+
+  if (isThisWeek) {
+    const rawOpen = exhibition.openingDate ? toPersianDigits(exhibition.openingDate) : 'جمعه این هفته';
+    return {
+      isThisWeek: true,
+      isExpired: false,
+      isClosingToday: false,
+      isClosingSoon: false,
+      statusBadge: `افتتاحیه: ${rawOpen}`,
+      badgeType: 'opening',
+      closingLabel: closingFormatted ? `تا ${closingFormatted}` : undefined
+    };
+  }
+
+  if (isClosingToday) {
+    return {
+      isThisWeek: false,
+      isExpired: false,
+      isClosingToday: true,
+      isClosingSoon: false,
+      statusBadge: 'امروز: آخرین روز نمایشگاه',
+      badgeType: 'closing-today',
+      closingLabel: 'پایان امروز'
+    };
+  }
+
+  if (isClosingSoon) {
+    return {
+      isThisWeek: false,
+      isExpired: false,
+      isClosingToday: false,
+      isClosingSoon: true,
+      statusBadge: closingFormatted ? `روزهای پایانی · تا ${closingFormatted}` : 'روزهای پایانی نمایشگاه',
+      badgeType: 'closing-soon',
+      closingLabel: closingFormatted ? `تا ${closingFormatted}` : undefined
+    };
+  }
+
+  // Ongoing exhibition from previous cycles
+  const badgeLabel = closingFormatted
+    ? `در حال برگزاری · تا ${closingFormatted}`
+    : (exhibition.openingDate ? `در حال برگزاری (${toPersianDigits(exhibition.openingDate)})` : 'نمایشگاه جاری');
+
+  return {
+    isThisWeek: false,
+    isExpired: isExpired,
+    isClosingToday: false,
+    isClosingSoon: false,
+    statusBadge: badgeLabel,
+    badgeType: 'ongoing',
+    closingLabel: closingFormatted ? `تا ${closingFormatted}` : undefined
+  };
+}
+
+/**
  * Determines whether an exhibition opened during the current week cycle (latest Friday/Thursday).
  */
 export function isThisWeekOpening(openingDate?: string, maxScore?: number): boolean {

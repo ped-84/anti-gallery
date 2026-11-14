@@ -14,7 +14,8 @@ import {
   getPersianNeighborhood,
   getGalleryDisplayName,
   parsePersianDateToScore,
-  isThisWeekOpening
+  isThisWeekOpening,
+  isExhibitionExpired
 } from './utils/persianUtils';
 import { Header, APP_VERSION } from './components/Header';
 import { GalleryCard } from './components/GalleryCard';
@@ -371,7 +372,12 @@ export default function App() {
   }, [galleries, selectedGalleryIds]);
 
   const totalWithPosters = useMemo(() => {
-    return galleries.filter((g) => Boolean(g.posterImage || g.activeExhibition?.poster)).length;
+    return galleries.filter((g) => {
+      const hasPoster = Boolean(g.posterImage || g.activeExhibition?.poster);
+      if (!hasPoster) return false;
+      if (g.activeExhibition && isExhibitionExpired(g.activeExhibition)) return false;
+      return true;
+    }).length;
   }, [galleries]);
 
   const maxOpeningScore = useMemo(() => {
@@ -411,6 +417,9 @@ export default function App() {
         }
       } else if (galleryFilterTab === 'all-active') {
         if (!hasPoster) {
+          return false;
+        }
+        if (gallery.activeExhibition && isExhibitionExpired(gallery.activeExhibition)) {
           return false;
         }
       }

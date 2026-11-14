@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Gallery } from '../types/gallery';
-import { toPersianDigits, getGalleryDisplayName, getExhibitionMedium, formatGalleryAddress, formatArtistName } from '../utils/persianUtils';
+import { toPersianDigits, getGalleryDisplayName, getExhibitionMedium, formatGalleryAddress, formatArtistName, getExhibitionStatus } from '../utils/persianUtils';
 import {
   X,
   MapPin,
@@ -267,21 +267,58 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
             {/* Exhibition Details Box (Prominent & Clear - Matched to Catalog Card style) */}
             {activeExhibition ? (
               <div className="p-3.5 sm:p-4 rounded-2xl bg-[#f0f4fa] dark:bg-[#1b2230] shadow-sm space-y-2.5 border border-[#A3C2E4]/40 dark:border-stone-700/60">
-                <div className="flex items-center justify-between gap-1.5 flex-nowrap bg-white/95 dark:bg-stone-900/95 text-[#F76B1C] px-3 py-2 rounded-xl font-bold shadow-xs border border-[#F76B1C]/20">
-                  {/* افتتاحیه: اندازه مناسب و فشرده برای قرارگیری هم‌خط و زیبا با بج ساعت */}
-                  <div className="flex items-center gap-1.5 text-[15px] sm:text-base font-bold text-[#F76B1C] min-w-0">
-                    <Calendar className="w-4.5 h-4.5 shrink-0" />
-                    <span className="truncate">
-                      {activeExhibition.openingDate
-                        ? `افتتاحیه: ${toPersianDigits(activeExhibition.openingDate)}`
-                        : 'افتتاحیه: جمعه‌ها ۱۶:۰۰ الی ۲۰:۰۰'}
+                {(() => {
+                  const status = getExhibitionStatus(activeExhibition);
+                  const isOpening = status.badgeType === 'opening';
+                  const isClosingToday = status.badgeType === 'closing-today';
+                  const isClosingSoon = status.badgeType === 'closing-soon';
+
+                  let badgeColors = 'bg-white/95 dark:bg-stone-900/95 text-[#10335e] dark:text-[#dbeafe] border-[#10335e]/15 dark:border-[#93c5fd]/20';
+                  let clockColor = 'text-[#3D5B99] dark:text-[#A3C2E4]';
+                  let timeBadge = (
+                    <span className="text-xs sm:text-[13px] font-bold bg-[#10335e] dark:bg-[#253555] text-white px-2.5 py-1 rounded-xl shadow-xs shrink-0 whitespace-nowrap">
+                      ساعت ۱۶ تا ۲۰
                     </span>
-                  </div>
-                  {/* بج ساعت: حفظ در یک خط روبه‌روی تاریخ افتتاحیه */}
-                  <span className="text-xs sm:text-[13px] font-bold bg-[#F76B1C] text-white px-2.5 py-1 rounded-xl shadow-xs shrink-0 whitespace-nowrap">
-                    ساعت ۱۶ تا ۲۰
-                  </span>
-                </div>
+                  );
+
+                  if (isOpening) {
+                    badgeColors = 'bg-white/95 dark:bg-stone-900/95 text-[#F76B1C] border-[#F76B1C]/25';
+                    clockColor = 'text-[#F76B1C]';
+                    timeBadge = (
+                      <span className="text-xs sm:text-[13px] font-bold bg-[#F76B1C] text-white px-2.5 py-1 rounded-xl shadow-xs shrink-0 whitespace-nowrap">
+                        افتتاحیه ۱۶ تا ۲۰
+                      </span>
+                    );
+                  } else if (isClosingToday) {
+                    badgeColors = 'bg-rose-50/95 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-300 dark:border-rose-800';
+                    timeBadge = (
+                      <span className="text-xs sm:text-[13px] font-bold bg-rose-600 text-white px-2.5 py-1 rounded-xl shadow-xs shrink-0 whitespace-nowrap animate-pulse">
+                        امروز پایان
+                      </span>
+                    );
+                  } else if (isClosingSoon) {
+                    badgeColors = 'bg-amber-50/95 dark:bg-amber-950/40 text-amber-800 dark:text-amber-200 border-amber-300 dark:border-amber-800';
+                    timeBadge = (
+                      <span className="text-xs sm:text-[13px] font-bold bg-amber-600 text-white px-2.5 py-1 rounded-xl shadow-xs shrink-0 whitespace-nowrap">
+                        روزهای پایانی
+                      </span>
+                    );
+                  }
+
+                  return (
+                    <div className={`flex items-center justify-between gap-1.5 flex-nowrap px-3 py-2 rounded-xl font-bold shadow-xs border ${badgeColors}`}>
+                      <div className="flex items-center gap-1.5 text-[15px] sm:text-base font-bold min-w-0">
+                        {isClosingToday ? (
+                          <Clock className="w-4.5 h-4.5 shrink-0 text-rose-600 dark:text-rose-400 animate-pulse" />
+                        ) : (
+                          <Calendar className={`w-4.5 h-4.5 shrink-0 ${clockColor}`} />
+                        )}
+                        <span className="truncate">{status.statusBadge}</span>
+                      </div>
+                      {timeBadge}
+                    </div>
+                  );
+                })()}
 
                 {/* عنوان نمایشگاه: ۴ پیکسل فاصله با سطر افتتاحیه اضافه شد */}
                 <div className="pt-1 mt-0.5">
@@ -360,7 +397,10 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                 <div>
                   <span className="font-bold text-stone-800 dark:text-stone-200 block text-base">برنامه و ساعات بازدید:</span>
                   <div className="text-stone-600 dark:text-stone-300 text-[15px] leading-relaxed mt-1 space-y-0.5 font-medium">
-                    <div>• افتتاحیه: جمعه‌ها ساعت ۱۶:۰۰ الی ۲۰:۰۰</div>
+                    {activeExhibition?.fullDateRange && (
+                      <div>• دوره برگزاری: {toPersianDigits(activeExhibition.fullDateRange)}</div>
+                    )}
+                    <div>• افتتاحیه: {activeExhibition?.openingDate ? toPersianDigits(activeExhibition.openingDate) : 'جمعه‌ها ساعت ۱۶:۰۰ الی ۲۰:۰۰'}</div>
                     <div>• روزهای عادی: یکشنبه تا پنجشنبه {toPersianDigits(gallery.hoursFa || gallery.hours || '۱۶ الی ۲۰')} (شنبه تعطیل)</div>
                   </div>
                 </div>
