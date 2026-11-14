@@ -270,10 +270,10 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                   />
                   {/* Perimeter border stroke on outer diagonal chevron */}
                   <path
-                    d="M 0 0.75 L 12 12 Q 14 14 12 16 L 0 27.25"
+                    d="M 0 0.5 L 12 12 Q 14 14 12 16 L 0 27.5"
                     fill="none"
-                    stroke="var(--bubble-border, #9abce4)"
-                    strokeWidth={1.5}
+                    stroke="var(--bubble-border, #dbe4f0)"
+                    strokeWidth={1}
                     strokeLinecap="round"
                   />
                 </svg>

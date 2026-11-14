@@ -10,8 +10,8 @@
   --page:     #f2f5fa;
   --surface:  #ffffff;
   --border:   #e6ebf5;
-  --bubble:   #eef3fc;
-  --bubble-border: #9abce4;
+  --bubble:   #ffffff;
+  --bubble-border: #dbe4f0;
   --accent-text: #c2410c;
   --accent-bg:   #fff1e8;
 
@@ -266,7 +266,8 @@
   pointer-events: none;
   z-index: 12;
   box-sizing: border-box;
-  filter: drop-shadow(0 4px 10px rgba(61,91,153,.18));
+  box-shadow: inset 0 1px 2px #fff;
+  filter: drop-shadow(0 4px 10px rgba(61,91,153,.10));
   direction: ltr;
 }
 
@@ -276,7 +277,7 @@
   border-radius: 0 14px 14px 0;
   transform: translate(0, -50%);
   flex-direction: row-reverse;
-  border: 1.5px solid var(--bubble-border, #9abce4);
+  border: 1px solid var(--bubble-border, #dbe4f0);
   border-left: none;
 }
 
@@ -286,13 +287,13 @@
   border-radius: 14px 0 0 14px;
   transform: translate(-100%, -50%);
   flex-direction: row;
-  border: 1.5px solid var(--bubble-border, #9abce4);
+  border: 1px solid var(--bubble-border, #dbe4f0);
   border-right: none;
 }
 
 .ag-leg__tip {
   position: absolute;
-  top: -1.5px;
+  top: -1px;
   height: 28px;
   color: var(--bubble);
   fill: var(--bubble);
@@ -415,7 +416,7 @@
 }
 
 .ag-card__artist {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--muted);
   white-space: nowrap;

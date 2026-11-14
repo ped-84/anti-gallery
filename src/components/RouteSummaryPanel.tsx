@@ -699,7 +699,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                           </div>
                           {gallery.activeExhibition.artist && (
                             <p
-                              className="text-stone-600 dark:text-stone-300 font-semibold leading-relaxed line-clamp-2 text-xs sm:text-[13px]"
+                              className="text-stone-700 dark:text-stone-200 font-bold leading-relaxed line-clamp-2 text-[14.5px] sm:text-[15.5px]"
                               style={{
                                 display: '-webkit-box',
                                 WebkitLineClamp: 2,
