@@ -47,10 +47,11 @@ jobs:
         run: |
           git config --local user.email "auto-sync@artgasht.com"
           git config --local user.name "Artgasht Auto-Sync Bot"
-          git add src/data/ data/
+          git add src/data/
           if ! git diff --cached --quiet; then
             git commit -m "chore(data): auto-sync live exhibitions from galleryinfo [skip ci]"
-            git push origin main || echo "Git push skipped or failed non-fatally"
+            git pull --rebase origin main || true
+            git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" HEAD:main || git push origin main || echo "Git push skipped or failed non-fatally"
           else
             echo "No new exhibition data detected."
           fi

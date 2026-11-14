@@ -26,6 +26,6 @@ const repoUrl = process.env.GITHUB_TOKEN
   ? `https://x-access-token:${process.env.GITHUB_TOKEN}@github.com/ped-84/anti-gallery.git`
   : 'https://github.com/ped-84/anti-gallery.git';
 
-run(`git push -f ${repoUrl} master:gh-pages`, distDir);
+run(`git push -f ${repoUrl} HEAD:gh-pages`, distDir);
 
 console.log('Deployed successfully to gh-pages!');
