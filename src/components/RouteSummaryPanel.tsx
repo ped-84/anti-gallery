@@ -693,13 +693,13 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                       {gallery.activeExhibition && (
                         <div className="mt-2.5 pt-2 border-t border-stone-100 dark:border-stone-800/80 space-y-1.5 text-xs">
                           <div className="flex items-center gap-1.5 flex-wrap">
-                            <span className="px-2.5 py-1 rounded-lg bg-[#F76B1C]/10 dark:bg-[#F76B1C]/20 text-[#F76B1C] dark:text-[#ff8a3d] font-black text-[13.5px] sm:text-sm border border-[#F76B1C]/20">
+                            <span className="px-2.5 py-1 rounded-lg bg-[#F76B1C]/10 dark:bg-[#F76B1C]/20 text-[#F76B1C] dark:text-[#ff8a3d] font-black text-[14.5px] sm:text-[15px] border border-[#F76B1C]/20">
                               {gallery.activeExhibition.title}
                             </span>
                           </div>
                           {gallery.activeExhibition.artist && (
                             <p
-                              className="text-stone-700 dark:text-stone-200 font-bold leading-relaxed line-clamp-2 text-[14.5px] sm:text-[15.5px]"
+                              className="text-stone-600 dark:text-stone-300 font-normal leading-relaxed line-clamp-2 text-[14.5px] sm:text-[15.5px]"
                               style={{
                                 display: '-webkit-box',
                                 WebkitLineClamp: 2,

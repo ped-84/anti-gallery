@@ -1008,28 +1008,30 @@ export default function App() {
         </section>
 
         {/* Mobile Web App View Switcher (Visible on screens < lg, sticky) */}
-        <div className="lg:hidden sticky top-20 sm:top-22 md:top-24 z-30 bg-[#f3f5f8]/95 dark:bg-[#12151e]/95 backdrop-blur-md px-3 py-2 border-y border-[#E1E1E1] dark:border-stone-800 flex items-center gap-2 rounded-2xl shadow-xs">
+        <div className="lg:hidden sticky top-20 sm:top-22 md:top-24 z-30 bg-[#f3f5f8]/95 dark:bg-[#12151e]/95 backdrop-blur-md px-2.5 sm:px-3 py-2 border-y border-[#E1E1E1] dark:border-stone-800 flex items-stretch gap-2 rounded-2xl shadow-xs">
           <button
+            type="button"
             onClick={() => setMobileActiveTab('catalog')}
-            className={`flex-1 py-2 px-3 text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-all ${
+            className={`flex-1 h-12 min-h-[48px] px-2 sm:px-3 text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all whitespace-nowrap shrink-0 ${
               mobileActiveTab === 'catalog'
                 ? 'clay-darkblue text-white shadow-sm'
                 : 'clay-base text-stone-600 dark:text-stone-300'
             }`}
           >
-            <Palette className="w-4 h-4" />
-            <span>فهرست نمایشگاه‌ها <bdi>({toPersianDigits(filteredGalleries.length)})</bdi></span>
+            <Palette className="w-4 h-4 shrink-0" />
+            <span className="whitespace-nowrap">فهرست نمایشگاه‌ها <bdi className="font-sans">({toPersianDigits(filteredGalleries.length)})</bdi></span>
           </button>
           <button
+            type="button"
             onClick={() => setMobileActiveTab('map')}
-            className={`flex-1 py-2 px-3 text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-all ${
+            className={`flex-1 h-12 min-h-[48px] px-2 sm:px-3 text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all whitespace-nowrap shrink-0 ${
               mobileActiveTab === 'map'
                 ? 'clay-orange text-white shadow-sm'
                 : 'clay-base text-stone-600 dark:text-stone-300'
             }`}
           >
-            <MapIcon className="w-4 h-4" />
-            <span>نقشه و مسیر <bdi>({toPersianDigits(selectedGalleries.length)})</bdi></span>
+            <MapIcon className="w-4 h-4 shrink-0" />
+            <span className="whitespace-nowrap">نقشه و مسیر <bdi className="font-sans">({toPersianDigits(selectedGalleries.length)})</bdi></span>
           </button>
         </div>
 

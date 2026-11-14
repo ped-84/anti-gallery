@@ -255,7 +255,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                 className={`ag-leg ag-leg--${lg.rightSide ? 'right' : 'left'}`}
                 style={{ top: `${lg.y}px`, left: `${lg.x}px` }}
               >
-                {/* SVG Pointer Tip with seamless height matching 28px (clean 45° arrow) */}
+                {/* SVG Pointer Tip with seamless height matching 28px (clean 45° arrow, pure white, no border) */}
                 <svg
                   aria-hidden="true"
                   width={14}
@@ -263,18 +263,9 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                   viewBox="0 0 14 28"
                   className="ag-leg__tip"
                 >
-                  {/* Background fill */}
                   <path
                     d="M 0 0 L 12 12 Q 14 14 12 16 L 0 28 Z"
-                    fill="currentColor"
-                  />
-                  {/* Perimeter border stroke on outer diagonal chevron */}
-                  <path
-                    d="M 0 0.5 L 12 12 Q 14 14 12 16 L 0 27.5"
-                    fill="none"
-                    stroke="var(--bubble-border, #dbe4f0)"
-                    strokeWidth={1}
-                    strokeLinecap="round"
+                    fill="#ffffff"
                   />
                 </svg>
 
