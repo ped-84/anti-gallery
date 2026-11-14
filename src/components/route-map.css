@@ -11,6 +11,7 @@
   --surface:  #ffffff;
   --border:   #e6ebf5;
   --bubble:   #eef3fc;
+  --bubble-border: #9abce4;
   --accent-text: #c2410c;
   --accent-bg:   #fff1e8;
 
@@ -264,7 +265,8 @@
   white-space: nowrap;
   pointer-events: none;
   z-index: 12;
-  filter: drop-shadow(0 4px 8px rgba(61,91,153,.15));
+  box-sizing: border-box;
+  filter: drop-shadow(0 4px 10px rgba(61,91,153,.18));
   direction: ltr;
 }
 
@@ -274,6 +276,8 @@
   border-radius: 0 14px 14px 0;
   transform: translate(0, -50%);
   flex-direction: row-reverse;
+  border: 1.5px solid var(--bubble-border, #9abce4);
+  border-left: none;
 }
 
 .ag-leg--left {
@@ -282,11 +286,14 @@
   border-radius: 14px 0 0 14px;
   transform: translate(-100%, -50%);
   flex-direction: row;
+  border: 1.5px solid var(--bubble-border, #9abce4);
+  border-right: none;
 }
 
 .ag-leg__tip {
   position: absolute;
-  top: 0;
+  top: -1.5px;
+  height: 28px;
   color: var(--bubble);
   fill: var(--bubble);
 }

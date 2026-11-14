@@ -263,9 +263,18 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                   viewBox="0 0 14 28"
                   className="ag-leg__tip"
                 >
+                  {/* Background fill */}
                   <path
                     d="M 0 0 L 12 12 Q 14 14 12 16 L 0 28 Z"
                     fill="currentColor"
+                  />
+                  {/* Perimeter border stroke on outer diagonal chevron */}
+                  <path
+                    d="M 0 0.75 L 12 12 Q 14 14 12 16 L 0 27.25"
+                    fill="none"
+                    stroke="var(--bubble-border, #9abce4)"
+                    strokeWidth={1.5}
+                    strokeLinecap="round"
                   />
                 </svg>
 

@@ -44,3 +44,10 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </ErrorBoundary>
 );
+
+if (typeof window !== 'undefined') {
+  (window as any).__artgasht_mounted = true;
+  try {
+    sessionStorage.removeItem('__artgasht_auto_reloaded');
+  } catch (e) {}
+}

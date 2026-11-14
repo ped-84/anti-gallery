@@ -868,14 +868,14 @@ export default function App() {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap sm:flex-nowrap">
-                  <h2 className="text-sm sm:text-lg font-black text-[#1c2944] dark:text-white tracking-tight shrink-0 whitespace-nowrap">
+                  <h2 className="text-[15px] sm:text-base font-black text-[#1c2944] dark:text-white tracking-tight shrink-0 whitespace-nowrap">
                     گشت‌های آماده آرت‌گشت
                   </h2>
-                  <span className="whitespace-nowrap px-3 sm:px-3.5 py-0.5 sm:py-1 text-[10px] sm:text-[11px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug inline-flex items-center shrink-0 shadow-xs">
+                  <span className="whitespace-nowrap px-3 sm:px-3.5 py-0.5 sm:py-1 text-xs sm:text-[13px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug inline-flex items-center shrink-0 shadow-xs">
                     مسیرهای پیشنهادی تهران
                   </span>
                 </div>
-                <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 mt-1 sm:mt-1.5 leading-relaxed">
+                <p className="text-sm sm:text-base text-stone-600 dark:text-stone-300 mt-1 sm:mt-1.5 leading-relaxed">
                   مسیرهای منتخب و پیوسته برای گالری‌گردی بهینه با کمترین زمان و فاصله در محله‌های هنری تهران
                 </p>
               </div>

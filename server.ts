@@ -350,7 +350,7 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.111',
+    version: 'بتا V 1.112',
     serverRole: SERVER_ROLE, // 'primary' | 'mirror'
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
@@ -368,7 +368,7 @@ app.get('/health', (req, res) => {
 app.get('/api/config', (req, res) => {
   res.json({
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.111',
+    version: 'بتا V 1.112',
     serverRole: SERVER_ROLE,
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
@@ -551,8 +551,37 @@ async function startServer() {
     console.log('[Server] Vite middleware mounted for development');
   } else {
     const distPath = path.join(__dirname, 'dist');
-    app.use(express.static(distPath));
+
+    // Serve static files with proper caching headers
+    app.use(express.static(distPath, {
+      setHeaders: (res, filePath) => {
+        const norm = filePath.replace(/\\/g, '/');
+        if (norm.endsWith('/index.html') || norm.endsWith('/sw.js') || norm.endsWith('/manifest.json')) {
+          res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+          res.setHeader('Pragma', 'no-cache');
+          res.setHeader('Expires', '0');
+        } else if (norm.includes('/assets/')) {
+          res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+        }
+      }
+    }));
+
+    // If an asset in /assets/ is missing, return 404 rather than index.html
+    // This prevents index.html from being evaluated as JS/CSS which causes syntax errors
+    app.use('/assets', (_req, res) => {
+      res.status(404).type('text/plain').send('Asset not found');
+    });
+
+    // SPA fallback: ONLY for navigation requests (HTML)
     app.get('*', (req, res) => {
+      const ext = path.extname(req.path);
+      if (ext && ext !== '.html') {
+        res.status(404).type('text/plain').send('Not found');
+        return;
+      }
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }

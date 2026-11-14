@@ -14,14 +14,14 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="آرت‌گشت" />
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg?v=1.111" />
-    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png?v=1.111" />
-    <link rel="icon" type="image/png" sizes="96x96" href="./favicon-96x96.png?v=1.111" />
-    <link rel="icon" type="image/png" sizes="48x48" href="./favicon-48x48.png?v=1.111" />
-    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=1.111" />
-    <link rel="shortcut icon" href="./favicon.ico?v=1.111" />
-    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png?v=1.111" />
-    <link rel="manifest" href="./manifest.json?v=1.111" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg?v=1.112" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png?v=1.112" />
+    <link rel="icon" type="image/png" sizes="96x96" href="./favicon-96x96.png?v=1.112" />
+    <link rel="icon" type="image/png" sizes="48x48" href="./favicon-48x48.png?v=1.112" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=1.112" />
+    <link rel="shortcut icon" href="./favicon.ico?v=1.112" />
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png?v=1.112" />
+    <link rel="manifest" href="./manifest.json?v=1.112" />
     <meta property="og:title" content="آرت‌گشت | مسیریاب هوشمند گالری‌های هنری" />
     <meta property="og:description" content="برنامه‌ریزی و بهینه‌سازی بهترین مسیر بازدید از گالری‌های هنری با نقشه دقیق و تخمین ترافیک تهران" />
     <meta property="og:type" content="website" />
@@ -242,8 +242,55 @@
           <p style="font-size: 12px; font-weight: bold; color: #F76B1C; margin: 0;">مسیریاب هوشمند گالری‌های هنری تهران</p>
         </div>
         <div class="splash-spinner" style="margin-top: 8px;"></div>
+        <div id="splash-recovery" style="display: none; flex-direction: column; align-items: center; gap: 8px; margin-top: 14px;">
+          <p style="font-size: 11.5px; color: #64748b; margin: 0;">بارگذاری بیش از حد طول کشید</p>
+          <button type="button" onclick="window.__artgasht_force_refresh && window.__artgasht_force_refresh()" style="background: #3D5B99; color: #ffffff; border: none; padding: 7px 16px; border-radius: 12px; font-size: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(61,91,153,0.25);">
+            بارگذاری مجدد و پاک‌سازی حافظه موقت
+          </button>
+        </div>
       </div>
     </div>
+    <script>
+      window.__artgasht_mounted = false;
+      window.__artgasht_force_refresh = function() {
+        try {
+          if ('caches' in window) {
+            caches.keys().then(function(keys) {
+              keys.forEach(function(k) { caches.delete(k); });
+            });
+          }
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(regs) {
+              regs.forEach(function(r) { r.unregister(); });
+            });
+          }
+        } catch (e) {}
+        setTimeout(function() {
+          var cleanUrl = window.location.origin + window.location.pathname + '?reload=' + Date.now();
+          window.location.replace(cleanUrl);
+        }, 150);
+      };
+
+      // Auto-catch Stale Chunk or Unexpected Token errors
+      window.addEventListener('error', function(e) {
+        var msg = (e && e.message) ? e.message.toLowerCase() : '';
+        if (msg.indexOf('unexpected token') !== -1 || msg.indexOf('loading chunk') !== -1 || msg.indexOf('failed to fetch') !== -1 || msg.indexOf('import') !== -1) {
+          console.warn('[Artgasht Recovery] Script mismatch detected:', msg);
+          if (!sessionStorage.getItem('__artgasht_auto_reloaded')) {
+            sessionStorage.setItem('__artgasht_auto_reloaded', '1');
+            window.__artgasht_force_refresh();
+          }
+        }
+      });
+
+      // Watchdog: If not mounted after 6.5s, reveal the recovery button
+      setTimeout(function() {
+        if (!window.__artgasht_mounted) {
+          var rec = document.getElementById('splash-recovery');
+          if (rec) rec.style.display = 'flex';
+        }
+      }, 6500);
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

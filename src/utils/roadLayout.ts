@@ -140,9 +140,9 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
 /* ---- Geometry Constants ---- */
 export const ROAD_CONSTANTS = {
   MAP_W: 560,
-  PAD_TOP: 72,
-  PAD_BOTTOM: 72,
-  MAX_H: 840,
+  PAD_TOP: 110,
+  PAD_BOTTOM: 85,
+  MAX_H: 900,
   MAX_SPACING: 170,
   DENSE_BELOW: 150,
   LANE_L: 245,
@@ -253,7 +253,7 @@ export function computeRoadLayout(
     const left = i % 2 === 0;
     const cardH = dense ? C.CARD_H.dense : C.CARD_H.roomy;
     const cardW = C.CARD_W;
-    const cardX = left ? 6 : 386;
+    const cardX = left ? 22 : 370;
     const cardY = p.y;
     const cardTop = cardY - cardH / 2;
 
@@ -267,7 +267,7 @@ export function computeRoadLayout(
     // Left card: sits above top-right corner, pointing 45° down-right towards road
     // Right card: sits above top-left corner, pointing 45° down-left towards road
     const pinX = left ? cardX + cardW - size - 4 : cardX + 4;
-    const pinY = Math.round(cardTop - size + 10);
+    const pinY = Math.max(14, Math.round(cardTop - size + 10));
     const pinRot = left ? -90 : 0;
     const pinUnrot = left ? 90 : 0;
 
