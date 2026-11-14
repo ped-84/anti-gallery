@@ -251,74 +251,34 @@
   box-shadow: inset 0 -2px 3px rgba(0,0,0,.10);
 }
 
-/* Distance Bubble: Arrow tag pointing towards the road */
-.ag-leg {
+/* Distance Bubble: Unified Single-Piece Vector Pointer (Zero seams, zero steps) */
+.ag-leg-container {
   position: absolute;
-  height: 28px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: #ffffff;
-  color: var(--navy-700);
-  font-size: 12px;
-  font-weight: 800;
-  white-space: nowrap;
   pointer-events: none;
   z-index: 12;
   box-sizing: border-box;
   filter: drop-shadow(0 4px 12px rgba(31, 42, 68, 0.12));
-  direction: ltr;
-  border: none;
 }
 
-.ag-leg--right {
-  /* Stop on right of road: pointer tip is on left pointing left towards road */
-  padding: 0 14px 0 6px;
-  border-radius: 0 14px 14px 0;
-  transform: translate(0, -50%);
-  flex-direction: row-reverse;
-  border: none;
-}
-
-.ag-leg--left {
-  /* Stop on left of road: pointer tip is on right pointing right towards road */
-  padding: 0 6px 0 14px;
-  border-radius: 14px 0 0 14px;
-  transform: translate(-100%, -50%);
-  flex-direction: row;
-  border: none;
-}
-
-.ag-leg__tip {
+.ag-leg-shape {
   position: absolute;
-  top: 0;
-  height: 28px;
-  color: #ffffff;
-  fill: #ffffff;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
-.ag-leg--left .ag-leg__tip {
-  right: -13.5px;
-}
-
-.ag-leg--right .ag-leg__tip {
-  left: -13.5px;
-  transform: scaleX(-1);
-}
-
-.ag-leg__icon {
+.ag-leg-content {
   position: relative;
-  flex-shrink: 0;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.2px;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.ag-leg__text {
-  position: relative;
-  line-height: 1;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #10335e;
+  direction: ltr;
 }
 
 /* Gallery Card: REAL interactive button with accessible focus state */

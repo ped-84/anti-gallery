@@ -248,43 +248,75 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
               <path d={layout.pathD} className="ag-road ag-road--dash" />
             </svg>
 
-            {/* 3. Distance Bubbles: Arrow tag pointing towards the road */}
-            {layout.legs.map((lg, idx) => (
-              <div
-                key={idx}
-                className={`ag-leg ag-leg--${lg.rightSide ? 'right' : 'left'}`}
-                style={{ top: `${lg.y}px`, left: `${lg.x}px` }}
-              >
-                {/* SVG Pointer Tip with seamless height matching 28px (clean 45° arrow, pure white, no border) */}
-                <svg
-                  aria-hidden="true"
-                  width={14}
-                  height={28}
-                  viewBox="0 0 14 28"
-                  className="ag-leg__tip"
-                >
-                  <path
-                    d="M 0 0 L 12 12 Q 14 14 12 16 L 0 28 Z"
-                    fill="#ffffff"
-                  />
-                </svg>
+            {/* 3. Distance Bubbles: Unified Single-Piece Vector Pointer */}
+            {layout.legs.map((lg, idx) => {
+              const kmVal = lg.km !== null && lg.km !== undefined ? lg.km : 0.25;
+              const distLabel = `${toPersianDigits(kmVal)} کیلومتر`;
+              const badgeW = 124;
+              const badgeH = 34;
 
-                <span className="ag-leg__text">{lg.text}</span>
-                {/* Car Icon */}
-                <svg
-                  aria-hidden="true"
-                  width={15}
-                  height={15}
-                  viewBox="0 0 24 24"
-                  className="ag-leg__icon"
+              return (
+                <div
+                  key={idx}
+                  className="ag-leg-container"
+                  style={{
+                    top: `${lg.y}px`,
+                    left: `${lg.x}px`,
+                    transform: lg.rightSide ? 'translate(0, -50%)' : 'translate(-100%, -50%)',
+                    width: `${badgeW}px`,
+                    height: `${badgeH}px`
+                  }}
                 >
-                  <path d="M5 16V11l2-5h10l2 5v5" />
-                  <path d="M3 16h18" />
-                  <circle cx={7.5} cy={16.5} r={1.5} />
-                  <circle cx={16.5} cy={16.5} r={1.5} />
-                </svg>
-              </div>
-            ))}
+                  {/* Single Seamless Vector Shape matching exact green checkmark mockup */}
+                  <svg
+                    width={badgeW}
+                    height={badgeH}
+                    viewBox={`0 0 ${badgeW} ${badgeH}`}
+                    className="ag-leg-shape"
+                    style={{
+                      transform: lg.rightSide ? 'scaleX(-1)' : 'none'
+                    }}
+                    aria-hidden="true"
+                  >
+                    <path
+                      d={`M 17 0 L ${badgeW - 18} 0 Q ${badgeW - 11} 1 ${badgeW - 8} 5 L ${badgeW - 2} 14 Q ${badgeW} 17 ${badgeW - 2} 20 L ${badgeW - 8} 29 Q ${badgeW - 11} 33 ${badgeW - 18} 34 L 17 34 A 17 17 0 0 1 17 0 Z`}
+                      fill="#ffffff"
+                    />
+                  </svg>
+
+                  {/* Content layer (Distance text + Car Icon) */}
+                  <div
+                    className="ag-leg-content"
+                    style={{
+                      paddingLeft: lg.rightSide ? '18px' : '14px',
+                      paddingRight: lg.rightSide ? '14px' : '18px',
+                      flexDirection: lg.rightSide ? 'row-reverse' : 'row'
+                    }}
+                  >
+                    <span className="font-sans tabular-nums text-xs font-black select-none">
+                      {distLabel}
+                    </span>
+                    <svg
+                      aria-hidden="true"
+                      width={16}
+                      height={16}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#10335e"
+                      strokeWidth={2.2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="shrink-0"
+                    >
+                      <path d="M5 16V11l2-5h10l2 5v5" />
+                      <path d="M3 16h18" />
+                      <circle cx={7.5} cy={16.5} r={1.5} />
+                      <circle cx={16.5} cy={16.5} r={1.5} />
+                    </svg>
+                  </div>
+                </div>
+              );
+            })}
 
             {/* 4. Pins & Gallery Cards */}
             {layout.stops.map((s) => (
