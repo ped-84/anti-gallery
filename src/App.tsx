@@ -40,7 +40,8 @@ import {
   Compass,
   Flame,
   Building2,
-  Navigation
+  Navigation,
+  ArrowLeft
 } from 'lucide-react';
 
 const STICKDAZZLE_THEMES = ['darkblue', 'orange', 'softblue', 'gray'] as const;
@@ -844,6 +845,22 @@ export default function App() {
   const minRequired = hasCustomOrigin ? 1 : 2;
   const canOptimize = selectedGalleries.length >= minRequired;
 
+  const handleGoToRouteSummary = useCallback(() => {
+    if (selectedGalleries.length === 0) return;
+
+    if (canOptimize && !routeResult) {
+      runRouteOptimization();
+    }
+    setMobileActiveTab('map');
+
+    setTimeout(() => {
+      const el = document.getElementById('route-summary-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 120);
+  }, [canOptimize, routeResult, selectedGalleries.length]);
+
   return (
     <div className="min-h-screen bg-[#f3f5f8] dark:bg-[#12151e] text-stone-800 dark:text-stone-100 flex flex-col font-sans transition-colors duration-200 overflow-x-hidden">
       {/* Top Bar (Claymorphic with Stickdazzle Palette, Fully Responsive) */}
@@ -1164,13 +1181,28 @@ export default function App() {
             </div>
 
             {/* Catalog Header Info */}
-            <div className="flex items-center justify-between text-sm sm:text-base text-[#3D5B99] dark:text-[#A3C2E4] px-1 font-bold">
+            <div className="flex items-center justify-between text-sm sm:text-base text-[#3D5B99] dark:text-[#A3C2E4] px-1 font-bold gap-2">
               <span>
                 نمایش <strong>{toPersianDigits(filteredGalleries.length)}</strong> نگارخانه
               </span>
-              <span>
-                <strong>{toPersianDigits(selectedGalleries.length)}</strong> گالری در برنامه بازدید شما
-              </span>
+              {selectedGalleries.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={handleGoToRouteSummary}
+                  className="clay-button clay-base text-xs sm:text-sm px-3 sm:px-3.5 py-1.5 font-bold text-[#1856C7] dark:text-[#60a5fa] hover:text-[#F76B1C] dark:hover:text-[#F76B1C] rounded-full border border-[#E1E1E1] dark:border-stone-700 flex items-center gap-1.5 sm:gap-2 transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-2xs group shrink-0"
+                  title="مشاهده فهرست و توالی توقف‌ها در مسیر بهینه"
+                >
+                  <span className="w-2 h-2 rounded-full bg-[#F76B1C] animate-pulse shrink-0" />
+                  <span>
+                    <strong>{toPersianDigits(selectedGalleries.length)}</strong> گالری در برنامه بازدید شما
+                  </span>
+                  <ArrowLeft className="w-3.5 h-3.5 text-[#F76B1C] shrink-0 transition-transform group-hover:-translate-x-1" />
+                </button>
+              ) : (
+                <span className="text-stone-400 dark:text-stone-500 text-xs sm:text-sm font-medium">
+                  <strong>{toPersianDigits(0)}</strong> گالری در برنامه بازدید شما
+                </span>
+              )}
             </div>
 
             {/* Gallery Cards Grid (with Square Posters and Compact Layouts) */}
@@ -1211,7 +1243,12 @@ export default function App() {
           </section>
 
           {/* LEFT COLUMN: Route Summary Panel (5 cols on lg in RTL, sticky on desktop) */}
-          <section className={`lg:col-span-5 flex flex-col space-y-4 sm:space-y-5 lg:sticky lg:top-24 ${mobileActiveTab === 'catalog' ? 'hidden lg:flex' : 'flex'}`}>
+          <section
+            id="route-summary-section"
+            className={`lg:col-span-5 flex flex-col space-y-4 sm:space-y-5 lg:sticky lg:top-24 scroll-mt-24 sm:scroll-mt-28 ${
+              mobileActiveTab === 'catalog' ? 'hidden lg:flex' : 'flex'
+            }`}
+          >
             {/* Route Summary Panel */}
             <div className="flex-1 flex flex-col min-h-[500px]">
               <RouteSummaryPanel
@@ -1257,7 +1294,15 @@ export default function App() {
         {/* Floating Route Optimization Bar (Bottom-center, thumb-friendly, replaces header button) */}
         <aside aria-label="نوار مسیریابی سریع" className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-lg w-[calc(100%-2rem)] sm:w-auto transition-all duration-300">
           <div className="clay-card bg-white/95 dark:bg-[#181d27]/95 backdrop-blur-md border border-[#E1E1E1] dark:border-stone-800 p-2 sm:p-2.5 rounded-2xl shadow-2xl flex items-center justify-between gap-2.5 sm:gap-4">
-            <div className="flex items-center gap-2 px-1 sm:px-2 min-w-0">
+            <button
+              type="button"
+              onClick={handleGoToRouteSummary}
+              disabled={selectedGalleries.length === 0}
+              className={`flex items-center gap-2 px-1 sm:px-2 min-w-0 text-right transition-all ${
+                selectedGalleries.length > 0 ? 'cursor-pointer hover:opacity-80 active:scale-95' : 'cursor-default'
+              }`}
+              title={selectedGalleries.length > 0 ? "مشاهده فهرست و توالی توقف‌ها" : undefined}
+            >
               <span
                 className={`w-2.5 h-2.5 rounded-full shrink-0 transition-colors ${
                   canOptimize ? 'bg-[#F76B1C] animate-pulse' : 'bg-stone-300 dark:bg-stone-600'
@@ -1268,7 +1313,7 @@ export default function App() {
                   ? `انتخاب حداقل ${toPersianDigits(minRequired)} گالری`
                   : `${toPersianDigits(selectedGalleries.length)} گالری در مسیر`}
               </span>
-            </div>
+            </button>
 
             <div className="flex items-center gap-1.5 shrink-0">
               {selectedGalleries.length > 0 && (
