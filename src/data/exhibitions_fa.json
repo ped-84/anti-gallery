@@ -285,21 +285,6 @@
     "isExpired": false
   },
   {
-    "eventId": 21608,
-    "galleryId": 304,
-    "title": "پرده سوم",
-    "artist": "همایون سلیمی، مصطفی دشتی، سارا ابری، هانی نجم، مریم طاهریانفر، فرزانه قریشی، دانیال ملانوروزی، لیلا میرزاخانی، فرشته ستایش، سالار احمدیان، روزبه دبیری، جمشید سماواتیان، هانی شرار، طاهر نیکخواه ابیانه",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 22 آبان 1405",
-    "fullDateRange": "22 آبان 1405 تا 6 آذر 1405",
-    "closingDate": "6 آذر 1405",
-    "openingHours": "۱۶:۰۰ الی ۲۰:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21608.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21608.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21608",
-    "isExpired": false
-  },
-  {
     "eventId": 21596,
     "galleryId": 1001,
     "title": "بزم در بزم 2",
@@ -312,6 +297,21 @@
     "poster": "https://galleryinfo.ir/Images/Events/Event_21596.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21596.jpg",
     "url": "https://galleryinfo.ir/Event/fa/21596",
+    "isExpired": false
+  },
+  {
+    "eventId": 21608,
+    "galleryId": 304,
+    "title": "پرده سوم",
+    "artist": "همایون سلیمی، مصطفی دشتی، سارا ابری، هانی نجم، مریم طاهریانفر، فرزانه قریشی، دانیال ملانوروزی، لیلا میرزاخانی، فرشته ستایش، سالار احمدیان، روزبه دبیری، جمشید سماواتیان، هانی شرار، طاهر نیکخواه ابیانه",
+    "type": "نمایشگاه انفرادی",
+    "openingDate": "جمعه 22 آبان 1405",
+    "fullDateRange": "22 آبان 1405 تا 6 آذر 1405",
+    "closingDate": "6 آذر 1405",
+    "openingHours": "۱۶:۰۰ الی ۲۰:۰۰",
+    "poster": "https://galleryinfo.ir/Images/Events/Event_21608.jpg",
+    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21608.jpg",
+    "url": "https://galleryinfo.ir/Event/fa/21608",
     "isExpired": false
   },
   {
