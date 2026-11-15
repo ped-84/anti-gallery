@@ -9,6 +9,12 @@ function run(cmd, cwd) {
 
 const distDir = path.join(process.cwd(), 'dist');
 
+// Ensure dist/.git is fresh to avoid dirty index or no-op commit errors
+const gitDir = path.join(distDir, '.git');
+if (fs.existsSync(gitDir)) {
+  fs.rmSync(gitDir, { recursive: true, force: true });
+}
+
 // Ensure .nojekyll exists
 const nojekyllPath = path.join(distDir, '.nojekyll');
 if (!fs.existsSync(nojekyllPath)) {

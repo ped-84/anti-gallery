@@ -48,10 +48,11 @@ jobs:
         run: |
           git config --local user.email "auto-sync@artgasht.com"
           git config --local user.name "Artgasht Auto-Sync Bot"
-          git add -f src/data/galleries.json src/data/exhibitions_fa.json
-          if ! git diff --cached --quiet; then
-            git commit -m "chore(data): auto-sync live exhibitions from galleryinfo [skip ci]"
-            git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" HEAD:main || git push origin main || echo "Git push skipped or failed non-fatally"
+          git add -f src/data/galleries.json src/data/exhibitions_fa.json || true
+          if [ -n "$(git status --porcelain src/data/)" ]; then
+            echo "Changes detected in exhibition data. Committing..."
+            git commit -m "chore(data): auto-sync live exhibitions from galleryinfo [skip ci]" || true
+            git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" HEAD:main || git push origin main || echo "Push to main non-fatal fallback"
           else
             echo "No new exhibition data detected."
           fi
