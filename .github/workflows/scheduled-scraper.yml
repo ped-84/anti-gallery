@@ -26,6 +26,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
           persist-credentials: true
 
@@ -47,10 +48,9 @@ jobs:
         run: |
           git config --local user.email "auto-sync@artgasht.com"
           git config --local user.name "Artgasht Auto-Sync Bot"
-          git add src/data/
+          git add -f src/data/galleries.json src/data/exhibitions_fa.json
           if ! git diff --cached --quiet; then
             git commit -m "chore(data): auto-sync live exhibitions from galleryinfo [skip ci]"
-            git pull --rebase origin main || true
             git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" HEAD:main || git push origin main || echo "Git push skipped or failed non-fatally"
           else
             echo "No new exhibition data detected."

@@ -8,7 +8,9 @@ coverage/
 !.env.example
 deploy.config
 !deploy.config.example
-data/
+/data/
+!/src/data/
+!/src/data/**
 STANDALONE
 *.tar.gz
 *.tar
