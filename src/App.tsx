@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, Suspense, lazy } from 'react';
 import { Gallery, RouteOptimizationResult, CustomOrigin } from './types/gallery';
 import rawGalleriesData from './data/galleries.json';
 import {
@@ -19,14 +19,16 @@ import {
 } from './utils/persianUtils';
 import { Header, APP_VERSION } from './components/Header';
 import { GalleryCard } from './components/GalleryCard';
-import { InteractiveMap } from './components/InteractiveMap';
 import { RouteSummaryPanel } from './components/RouteSummaryPanel';
-import { GalleryDetailModal } from './components/GalleryDetailModal';
-import { CuratedRouteRoadModal } from './components/CuratedRouteRoadModal';
-import { AdminModal } from './components/AdminModal';
 import { PwaInstallPrompt } from './components/PwaInstallPrompt';
 import { getTourColorTheme } from './utils/roadLayout';
 import { ClayDropdown } from './components/ClayDropdown';
+
+// Lazy-loaded heavy components for optimal initial mobile bundle & fast Core Web Vitals
+const InteractiveMap = lazy(() => import('./components/InteractiveMap').then(m => ({ default: m.InteractiveMap })));
+const GalleryDetailModal = lazy(() => import('./components/GalleryDetailModal').then(m => ({ default: m.GalleryDetailModal })));
+const CuratedRouteRoadModal = lazy(() => import('./components/CuratedRouteRoadModal').then(m => ({ default: m.CuratedRouteRoadModal })));
+const AdminModal = lazy(() => import('./components/AdminModal').then(m => ({ default: m.AdminModal })));
 import {
   Search,
   Sparkles,
@@ -501,29 +503,12 @@ export default function App() {
     return null;
   });
   const [isLocatingGps, setIsLocatingGps] = useState<boolean>(false);
+  const [isDesktop, setIsDesktop] = useState<boolean>(() => typeof window !== 'undefined' && window.innerWidth >= 1024);
 
-  // Gentle geolocation attempt on mount if user hasn't chosen an origin yet
   useEffect(() => {
-    if (!originLocation && typeof navigator !== 'undefined' && navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const newOrigin: CustomOrigin = {
-            type: 'gps',
-            name: 'موقعیت فعلی شما (GPS)',
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude
-          };
-          setOriginLocation(newOrigin);
-          try {
-            localStorage.setItem(STORAGE_KEYS.ORIGIN_LOCATION, JSON.stringify(newOrigin));
-          } catch {}
-        },
-        () => {
-          // Silent fallback if user ignores or denies permission prompt
-        },
-        { enableHighAccuracy: true, timeout: 6000, maximumAge: 300000 }
-      );
-    }
+    const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const handleRequestGps = () => {
@@ -894,9 +879,9 @@ export default function App() {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap sm:flex-nowrap">
-                  <h2 className="text-[15px] sm:text-base font-black text-[#1c2944] dark:text-white tracking-tight shrink-0 whitespace-nowrap">
+                  <span className="text-[15px] sm:text-base font-black text-[#1c2944] dark:text-white tracking-tight shrink-0 whitespace-nowrap">
                     گشت‌های آماده آرت‌گشت
-                  </h2>
+                  </span>
                   <span className="whitespace-nowrap px-3 sm:px-3.5 py-0.5 sm:py-1 text-xs sm:text-[13px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug inline-flex items-center shrink-0 shadow-xs">
                     مسیرهای پیشنهادی تهران
                   </span>
@@ -1064,16 +1049,31 @@ export default function App() {
         {/* FULL-WIDTH IMMERSIVE MAP (Desktop, Tablet & Mobile) */}
         <section className={`w-full ${mobileActiveTab === 'catalog' ? 'hidden lg:block' : 'block'}`}>
           <div className="h-[420px] sm:h-[480px] lg:h-[530px] w-full rounded-2xl overflow-hidden border border-[#E1E1E1] dark:border-stone-800 shadow-md">
-            <InteractiveMap
-              galleries={galleries}
-              selectedGalleries={selectedGalleries}
-              routeResult={routeResult}
-              onToggleGallery={handleToggleGallery}
-              onSelectForDetails={(g) => setActiveModalGallery(g)}
-              onSetStartGallery={handleSetStartGallery}
-              activeGalleryId={highlightedGalleryId}
-              isDarkMode={isDarkMode}
-            />
+            {isDesktop || mobileActiveTab === 'map' ? (
+              <Suspense
+                fallback={
+                  <div className="w-full h-full bg-[#f4f7fb] dark:bg-[#121620] animate-pulse flex flex-col items-center justify-center gap-2 text-stone-400">
+                    <MapIcon className="w-7 h-7 text-[#3D5B99] dark:text-[#F76B1C] animate-bounce" />
+                    <span className="text-xs font-bold text-[#1d2d4c] dark:text-stone-300">در حال بارگذاری نقشه تعاملی تهران...</span>
+                  </div>
+                }
+              >
+                <InteractiveMap
+                  galleries={galleries}
+                  selectedGalleries={selectedGalleries}
+                  routeResult={routeResult}
+                  onToggleGallery={handleToggleGallery}
+                  onSelectForDetails={(g) => setActiveModalGallery(g)}
+                  onSetStartGallery={handleSetStartGallery}
+                  activeGalleryId={highlightedGalleryId}
+                  isDarkMode={isDarkMode}
+                />
+              </Suspense>
+            ) : (
+              <div className="w-full h-full bg-[#f4f7fb] dark:bg-[#121620] flex items-center justify-center text-stone-400 text-xs font-bold">
+                نقشه در تب «نقشه و مسیر» فعال می‌شود
+              </div>
+            )}
           </div>
         </section>
 
@@ -1382,61 +1382,68 @@ export default function App() {
         </div>
       </footer>
 
-      {/* Modals */}
-      <CuratedRouteRoadModal
-        isOpen={isCuratedModalOpen}
-        onClose={() => setIsCuratedModalOpen(false)}
-        onSelectRoute={(ids) => {
-          setSelectedGalleryIds(ids);
-          setStartGalleryId(ids[0] || null);
-          setEndGalleryId(ids[ids.length - 1] || null);
-          setMobileActiveTab('map');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        onSelectGalleryDetails={(g) => setActiveModalGallery(g)}
-        allGalleries={galleries}
-        initialRouteId={activeCuratedRouteId}
-      />
+      {/* Modals (Lazy Loaded on Demand) */}
+      <Suspense fallback={null}>
+        {isCuratedModalOpen && (
+          <CuratedRouteRoadModal
+            isOpen={isCuratedModalOpen}
+            onClose={() => setIsCuratedModalOpen(false)}
+            onSelectRoute={(ids) => {
+              setSelectedGalleryIds(ids);
+              setStartGalleryId(ids[0] || null);
+              setEndGalleryId(ids[ids.length - 1] || null);
+              setMobileActiveTab('map');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onSelectGalleryDetails={(g) => setActiveModalGallery(g)}
+            allGalleries={galleries}
+            initialRouteId={activeCuratedRouteId}
+          />
+        )}
 
-      <GalleryDetailModal
-        gallery={activeModalGallery}
-        isSelected={
-          activeModalGallery
-            ? selectedGalleryIds.some(
-                (id) =>
-                  id === activeModalGallery.id ||
-                  (activeModalGallery.siblingSpaces?.some((s) => s.id === id) ?? false)
-              )
-            : false
-        }
-        selectedGalleryIds={selectedGalleryIds}
-        isStartGallery={
-          activeModalGallery
-            ? startGalleryId === activeModalGallery.id ||
-              (activeModalGallery.siblingSpaces?.some((s) => s.id === startGalleryId) ?? false)
-            : false
-        }
-        onClose={() => setActiveModalGallery(null)}
-        onToggle={handleToggleGallery}
-        onSetStart={handleSetStartGallery}
-      />
+        {activeModalGallery && (
+          <GalleryDetailModal
+            gallery={activeModalGallery}
+            isSelected={
+              activeModalGallery
+                ? selectedGalleryIds.some(
+                    (id) =>
+                      id === activeModalGallery.id ||
+                      (activeModalGallery.siblingSpaces?.some((s) => s.id === id) ?? false)
+                  )
+                : false
+            }
+            selectedGalleryIds={selectedGalleryIds}
+            isStartGallery={
+              activeModalGallery
+                ? startGalleryId === activeModalGallery.id ||
+                  (activeModalGallery.siblingSpaces?.some((s) => s.id === startGalleryId) ?? false)
+                : false
+            }
+            onClose={() => setActiveModalGallery(null)}
+            onToggle={handleToggleGallery}
+            onSetStart={handleSetStartGallery}
+          />
+        )}
 
-      {/* Admin Panel Modal (Hidden Route, Password Protected, Zero-rebuild DB edits) */}
-      <AdminModal
-        isOpen={isAdminOpen && serverConfig.adminEnabled !== false}
-        onClose={() => {
-          setIsAdminOpen(false);
-          if (window.location.hash === '#/admin' || window.location.hash === '#admin') {
-            window.history.replaceState(null, '', window.location.pathname + window.location.search);
-          }
-        }}
-        galleries={allGalleries}
-        onGalleriesUpdated={setAllGalleries}
-        isDarkMode={isDarkMode}
-        adminEnabled={serverConfig.adminEnabled}
-        serverRole={serverConfig.serverRole}
-        isStandalone={serverConfig.isStandalone}
-      />
+        {isAdminOpen && serverConfig.adminEnabled !== false && (
+          <AdminModal
+            isOpen={isAdminOpen}
+            onClose={() => {
+              setIsAdminOpen(false);
+              if (window.location.hash === '#/admin' || window.location.hash === '#admin') {
+                window.history.replaceState(null, '', window.location.pathname + window.location.search);
+              }
+            }}
+            galleries={allGalleries}
+            onGalleriesUpdated={setAllGalleries}
+            isDarkMode={isDarkMode}
+            adminEnabled={serverConfig.adminEnabled}
+            serverRole={serverConfig.serverRole}
+            isStandalone={serverConfig.isStandalone}
+          />
+        )}
+      </Suspense>
 
       {/* PWA Installation Prompt (Android / iOS / Desktop) */}
       <PwaInstallPrompt externalTrigger={pwaInstallTrigger} />

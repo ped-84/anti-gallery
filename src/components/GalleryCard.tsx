@@ -102,6 +102,10 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
               src={posterUrl!}
               alt={activeExhibition?.title || getGalleryDisplayName(gallery)}
               referrerPolicy="no-referrer"
+              loading="lazy"
+              decoding="async"
+              width="400"
+              height="400"
               onError={handlePosterError}
               className="max-w-full max-h-full object-contain rounded-xl group-hover:scale-[1.02] transition-transform duration-300 shadow-xs"
             />
@@ -138,6 +142,10 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
                 src={galleryLogoUrl}
                 alt={getGalleryDisplayName(gallery)}
                 referrerPolicy="no-referrer"
+                loading="lazy"
+                decoding="async"
+                width="56"
+                height="56"
                 onError={() => setLogoError(true)}
                 className="w-full h-full object-cover"
               />
