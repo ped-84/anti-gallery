@@ -1,4 +1,4 @@
-const CACHE_NAME = 'artgasht-pwa-v1.125';
+const CACHE_NAME = 'artgasht-pwa-v1.126';
 
 const STATIC_ASSETS = [
   './',

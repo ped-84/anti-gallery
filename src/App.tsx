@@ -19,12 +19,12 @@ import {
 } from './utils/persianUtils';
 import { Header, APP_VERSION } from './components/Header';
 import { GalleryCard } from './components/GalleryCard';
-import { RouteSummaryPanel } from './components/RouteSummaryPanel';
 import { PwaInstallPrompt } from './components/PwaInstallPrompt';
 import { getTourColorTheme } from './utils/roadLayout';
 import { ClayDropdown } from './components/ClayDropdown';
 
 // Lazy-loaded heavy components for optimal initial mobile bundle & fast Core Web Vitals
+const RouteSummaryPanel = lazy(() => import('./components/RouteSummaryPanel').then(m => ({ default: m.RouteSummaryPanel })));
 const InteractiveMap = lazy(() => import('./components/InteractiveMap').then(m => ({ default: m.InteractiveMap })));
 const GalleryDetailModal = lazy(() => import('./components/GalleryDetailModal').then(m => ({ default: m.GalleryDetailModal })));
 const CuratedRouteRoadModal = lazy(() => import('./components/CuratedRouteRoadModal').then(m => ({ default: m.CuratedRouteRoadModal })));
@@ -1251,42 +1251,44 @@ export default function App() {
           >
             {/* Route Summary Panel */}
             <div className="flex-1 flex flex-col min-h-[500px]">
-              <RouteSummaryPanel
-                routeResult={routeResult}
-                selectedGalleries={selectedGalleries}
-                isOptimizing={isOptimizing}
-                onRemoveGallery={(id) => {
-                  if (startGalleryId === id) setStartGalleryId(null);
-                  if (endGalleryId === id) setEndGalleryId(null);
-                  setSelectedGalleryIds((prev) => prev.filter((gid) => gid !== id));
-                }}
-                onClearAll={handleClearAll}
-                onRecalculate={(m, rt, tc, o) =>
-                  runRouteOptimization(
-                    m,
-                    rt,
-                    tc,
-                    startGalleryId,
-                    endGalleryId,
-                    o !== undefined ? o : originLocation
-                  )
-                }
-                onSelectGallery={(g) => {
-                  setHighlightedGalleryId(g.id);
-                  setActiveModalGallery(g);
-                }}
-                onSetStartGallery={handleSetStartGallery}
-                onSetEndGallery={handleSetEndGallery}
-                onMoveStop={handleMoveStop}
-                onReverseRoute={handleReverseRoute}
-                onResetAutoOrder={handleResetAutoOrder}
-                startGalleryId={startGalleryId}
-                endGalleryId={endGalleryId}
-                originLocation={originLocation}
-                onChangeOrigin={handleChangeOrigin}
-                onRequestGps={handleRequestGps}
-                isLocatingGps={isLocatingGps}
-              />
+              <Suspense fallback={<div className="p-8 text-center text-stone-400 font-medium">در حال بارگذاری برنامه بازدید...</div>}>
+                <RouteSummaryPanel
+                  routeResult={routeResult}
+                  selectedGalleries={selectedGalleries}
+                  isOptimizing={isOptimizing}
+                  onRemoveGallery={(id) => {
+                    if (startGalleryId === id) setStartGalleryId(null);
+                    if (endGalleryId === id) setEndGalleryId(null);
+                    setSelectedGalleryIds((prev) => prev.filter((gid) => gid !== id));
+                  }}
+                  onClearAll={handleClearAll}
+                  onRecalculate={(m, rt, tc, o) =>
+                    runRouteOptimization(
+                      m,
+                      rt,
+                      tc,
+                      startGalleryId,
+                      endGalleryId,
+                      o !== undefined ? o : originLocation
+                    )
+                  }
+                  onSelectGallery={(g) => {
+                    setHighlightedGalleryId(g.id);
+                    setActiveModalGallery(g);
+                  }}
+                  onSetStartGallery={handleSetStartGallery}
+                  onSetEndGallery={handleSetEndGallery}
+                  onMoveStop={handleMoveStop}
+                  onReverseRoute={handleReverseRoute}
+                  onResetAutoOrder={handleResetAutoOrder}
+                  startGalleryId={startGalleryId}
+                  endGalleryId={endGalleryId}
+                  originLocation={originLocation}
+                  onChangeOrigin={handleChangeOrigin}
+                  onRequestGps={handleRequestGps}
+                  isLocatingGps={isLocatingGps}
+                />
+              </Suspense>
             </div>
           </section>
         </div>

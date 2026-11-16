@@ -72,7 +72,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
     if (useLocalFallback && activeExhibition?.eventId === 21551) {
       posterUrl = `${import.meta.env.BASE_URL}assets/events/Event_21551.jpg`;
     } else {
-      const rawPoster = activeExhibition?.poster || gallery.posterImage || activeExhibition?.posterSmall || gallery.posterSmall || null;
+      const rawPoster = activeExhibition?.posterSmall || gallery.posterSmall || activeExhibition?.poster || gallery.posterImage || null;
       posterUrl = useProxy ? toOptimizedImageUrl(rawPoster) : rawPoster;
     }
   }
