@@ -29,6 +29,7 @@ const GalleryDetailModal = lazy(() => import('./components/GalleryDetailModal').
 const CuratedRouteRoadModal = lazy(() => import('./components/CuratedRouteRoadModal').then(m => ({ default: m.CuratedRouteRoadModal })));
 const AdminModal = lazy(() => import('./components/AdminModal').then(m => ({ default: m.AdminModal })));
 const PwaInstallPrompt = lazy(() => import('./components/PwaInstallPrompt').then(m => ({ default: m.PwaInstallPrompt })));
+const PrivacyPolicyModal = lazy(() => import('./components/PrivacyPolicyModal').then(m => ({ default: m.PrivacyPolicyModal })));
 import {
   Search,
   Sparkles,
@@ -505,6 +506,10 @@ export default function App() {
   const [isLocatingGps, setIsLocatingGps] = useState<boolean>(false);
   const [isDesktop, setIsDesktop] = useState<boolean>(() => typeof window !== 'undefined' && window.innerWidth >= 1024);
   const [isMapActive, setIsMapActive] = useState<boolean>(false);
+  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return window.location.pathname === '/privacy' || window.location.hash.includes('privacy');
+  });
 
   useEffect(() => {
     const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
@@ -1412,7 +1417,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-right">
           <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
             <img
-              src="./icons/brand-logo-icon.svg?v=1.125"
+              src="./icons/brand-logo-icon.svg?v=1.130"
               alt="آرت‌گشت"
               width="18"
               height="18"
@@ -1420,7 +1425,7 @@ export default function App() {
               className="w-4.5 h-4.5 object-contain shrink-0 block dark:hidden"
             />
             <img
-              src="./icons/brand-logo-icon-dark.svg?v=1.125"
+              src="./icons/brand-logo-icon-dark.svg?v=1.130"
               alt="آرت‌گشت"
               width="18"
               height="18"
@@ -1434,7 +1439,15 @@ export default function App() {
             <span>مسیریاب هوشمند گالری‌های هنری</span>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-3 shrink-0 flex-wrap justify-center">
+            <button
+              type="button"
+              onClick={() => setIsPrivacyModalOpen(true)}
+              className="text-stone-500 hover:text-[#10335e] dark:hover:text-[#93c5fd] transition-colors underline underline-offset-4 decoration-stone-300 dark:decoration-stone-600 cursor-pointer text-xs"
+            >
+              سیاست حریم خصوصی
+            </button>
+            <span className="text-stone-300 dark:text-stone-700">|</span>
             <span className="px-2.5 py-1 text-[11px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug font-ubuntu shadow-xs">
               {APP_VERSION}
             </span>
@@ -1501,6 +1514,18 @@ export default function App() {
             adminEnabled={serverConfig.adminEnabled}
             serverRole={serverConfig.serverRole}
             isStandalone={serverConfig.isStandalone}
+          />
+        )}
+
+        {isPrivacyModalOpen && (
+          <PrivacyPolicyModal
+            isOpen={isPrivacyModalOpen}
+            onClose={() => {
+              setIsPrivacyModalOpen(false);
+              if (window.location.pathname === '/privacy' || window.location.hash.includes('privacy')) {
+                window.history.replaceState(null, '', window.location.pathname === '/privacy' ? '/' : window.location.pathname + window.location.search);
+              }
+            }}
           />
         )}
       </Suspense>

@@ -354,7 +354,7 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.129',
+    version: 'بتا V 1.130',
     serverRole: SERVER_ROLE, // 'primary' | 'mirror'
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
@@ -372,7 +372,7 @@ app.get('/health', (req, res) => {
 app.get('/api/config', (req, res) => {
   res.json({
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.129',
+    version: 'بتا V 1.130',
     serverRole: SERVER_ROLE,
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
@@ -642,8 +642,27 @@ async function startServer() {
   } else {
     const distPath = path.join(__dirname, 'dist');
 
-    // Serve static files with proper caching headers
+    // Explicit handler for Google Play Trusted Web Activity (TWA) Digital Asset Links
+    app.get('/.well-known/assetlinks.json', (_req, res) => {
+      const assetlinksFile = path.join(distPath, '.well-known', 'assetlinks.json');
+      if (fs.existsSync(assetlinksFile)) {
+        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Cache-Control', 'public, max-age=86400');
+        return res.sendFile(assetlinksFile);
+      }
+      res.setHeader('Content-Type', 'application/json');
+      res.json([]);
+    });
+
+    // Privacy Policy direct URL for Google Play & CafeBazaar store listing
+    app.get(['/privacy', '/privacy/'], (_req, res) => {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.sendFile(path.join(distPath, 'index.html'));
+    });
+
+    // Serve static files with proper caching headers (and dotfiles allowed for .well-known)
     app.use(express.static(distPath, {
+      dotfiles: 'allow',
       setHeaders: (res, filePath) => {
         const norm = filePath.replace(/\\/g, '/');
         if (norm.endsWith('/index.html') || norm.endsWith('/sw.js') || norm.endsWith('/manifest.json')) {
