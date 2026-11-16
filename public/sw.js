@@ -1,31 +1,37 @@
-const CACHE_NAME = 'artgasht-pwa-v1.130';
+const CACHE_NAME = 'artgasht-pwa-v1.131';
 
 const STATIC_ASSETS = [
   './',
   './index.html',
-  './manifest.json?v=1.130',
-  './favicon.ico?v=1.130',
-  './favicon.svg?v=1.130',
+  './manifest.json?v=1.131',
+  './favicon.ico?v=1.131',
+  './favicon.svg?v=1.131',
   './favicon.png',
   './favicon-32x32.png',
   './favicon-48x48.png',
   './favicon-96x96.png',
   './favicon-144x144.png',
   './favicon-16x16.png',
-  './icons/brand-logo-icon.svg?v=1.130',
-  './icons/brand-logo-icon-dark.svg?v=1.130',
+  './icons/brand-logo-icon.svg?v=1.131',
+  './icons/brand-logo-icon-dark.svg?v=1.131',
   './icons/brand-logo-icon.png',
   './icons/brand-logo-icon-dark.png',
   './icons/brand-logo-orange.png',
-  './icons/brand-wordmark-light.svg?v=1.130',
-  './icons/brand-wordmark-dark.svg?v=1.130',
-  './icons/brand-wordmark-light.png?v=1.130',
-  './icons/brand-wordmark-dark.png?v=1.130',
-  './icons/icon-192.png?v=1.130',
-  './icons/icon-512.png?v=1.130',
-  './icons/icon-maskable-192.png?v=1.130',
-  './icons/icon-maskable-512.png?v=1.130',
-  './icons/apple-touch-icon.png?v=1.130',
+  './icons/brand-wordmark-light.svg?v=1.131',
+  './icons/brand-wordmark-dark.svg?v=1.131',
+  './icons/brand-wordmark-light.png?v=1.131',
+  './icons/brand-wordmark-dark.png?v=1.131',
+  './icons/icon-192.png?v=1.131',
+  './icons/icon-512.png?v=1.131',
+  './icons/icon-maskable-192.png?v=1.131',
+  './icons/icon-maskable-512.png?v=1.131',
+  './icons/apple-touch-icon.png?v=1.131',
+  './icons/shortcut-curated-96.png',
+  './icons/shortcut-curated-192.png',
+  './icons/shortcut-openings-96.png',
+  './icons/shortcut-openings-192.png',
+  './screenshots/mobile.png',
+  './screenshots/desktop.png',
   './fonts/shabnam/Shabnam-FD.woff2',
   './fonts/shabnam/Shabnam-Bold-FD.woff2',
   './fonts/shabnam/Shabnam-Medium-FD.woff2',
@@ -151,6 +157,63 @@ self.addEventListener('fetch', (event) => {
       });
 
       return cachedResponse || fetchPromise;
+    })
+  );
+});
+
+// App Capabilities: Background Sync for offline resilience
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'sync-exhibitions') {
+    event.waitUntil(
+      fetch('./api/galleries')
+        .then((res) => res.json())
+        .catch(() => {})
+    );
+  }
+});
+
+// App Capabilities: Periodic Background Sync for live data freshness
+self.addEventListener('periodicsync', (event) => {
+  if (event.tag === 'periodic-exhibitions-update') {
+    event.waitUntil(
+      fetch('./api/galleries')
+        .then((res) => res.json())
+        .catch(() => {})
+    );
+  }
+});
+
+// App Capabilities: Push Notifications for new exhibitions
+self.addEventListener('push', (event) => {
+  try {
+    const data = event.data ? event.data.json() : {};
+    const title = data.title || 'آرت‌گشت | رویداد جدید هنری';
+    const options = {
+      body: data.body || 'نمایشگاه‌های جدید این هفته تهران فعال شدند.',
+      icon: './icons/icon-192.png',
+      badge: './icons/brand-logo-icon.png',
+      dir: 'rtl',
+      lang: 'fa',
+      data: { url: data.url || './' }
+    };
+    event.waitUntil(self.registration.showNotification(title, options));
+  } catch (err) {}
+});
+
+// Notification click interaction
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const targetUrl = event.notification.data?.url || './';
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if (client.url.includes(self.location.origin) && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) {
+        return clients.openWindow(targetUrl);
+      }
     })
   );
 });
