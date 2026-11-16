@@ -529,7 +529,7 @@ export default function App() {
       window.addEventListener('mousemove', activate, { passive: true, once: true });
       window.addEventListener('touchstart', activate, { passive: true, once: true });
 
-      const timer = setTimeout(activate, 2800);
+      const timer = setTimeout(activate, 4800);
       return () => {
         clearTimeout(timer);
         window.removeEventListener('scroll', activate);
@@ -1124,7 +1124,7 @@ export default function App() {
             <div className="clay-card p-3.5 sm:p-4.5 bg-white dark:bg-[#181d27] border border-[#E1E1E1] dark:border-stone-800 space-y-3">
               {/* Search input with clay inset */}
               <div className="relative">
-                <Search className="w-5 h-5 text-[#3D5B99] absolute right-4 top-1/2 -translate-y-1/2" />
+                <Search className="w-5 h-5 text-[#10335e] absolute right-4 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="جستجوی نام هنرمند (مثلاً داریوش حسینی)، عنوان نمایشگاه، نگارخانه..."
@@ -1165,7 +1165,7 @@ export default function App() {
                     onClick={() => setGalleryFilterTab('all-active')}
                     className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 text-xs sm:text-sm text-center ${
                       galleryFilterTab === 'all-active'
-                        ? 'clay-button clay-base text-[#3D5B99] dark:text-[#A3C2E4] shadow-sm'
+                        ? 'clay-button clay-base text-[#10335e] dark:text-[#A3C2E4] shadow-sm'
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
                     }`}
                   >
@@ -1179,7 +1179,7 @@ export default function App() {
                     onClick={() => setGalleryFilterTab('all')}
                     className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 text-xs sm:text-sm text-center ${
                       galleryFilterTab === 'all'
-                        ? 'clay-button clay-base text-[#3D5B99] dark:text-[#A3C2E4] shadow-sm'
+                        ? 'clay-button clay-base text-[#10335e] dark:text-[#A3C2E4] shadow-sm'
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
                     }`}
                   >
@@ -1220,7 +1220,7 @@ export default function App() {
             </div>
 
             {/* Catalog Header Info */}
-            <div className="flex items-center justify-between text-sm sm:text-base text-[#3D5B99] dark:text-[#A3C2E4] px-1 font-bold gap-2">
+            <div className="flex items-center justify-between text-sm sm:text-base text-[#10335e] dark:text-[#A3C2E4] px-1 font-bold gap-2">
               <span>
                 نمایش <strong>{toPersianDigits(filteredGalleries.length)}</strong> نگارخانه
               </span>
