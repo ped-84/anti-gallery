@@ -127,9 +127,9 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
                   <Compass className="w-6 h-6 stroke-[2.2]" />
                 </div>
                 <div>
-                  <h3 className="text-sm sm:text-base font-black text-[#1c2944] dark:text-white leading-tight">
+                  <h2 className="text-sm sm:text-base font-black text-[#1c2944] dark:text-white leading-tight">
                     نصب اپلیکیشن آرت‌گشت
-                  </h3>
+                  </h2>
                   <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 mt-1 leading-relaxed font-medium">
                     برای دسترسی سریع، تمام‌صفحه و بدون نوار آدرس، اپلیکیشن را روی گوشی خود نصب کنید.
                   </p>
@@ -179,9 +179,9 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
                 <div className="w-9 h-9 clay-card clay-darkblue flex items-center justify-center text-white rounded-xl">
                   <Compass className="w-5 h-5 stroke-[2.2]" />
                 </div>
-                <h3 className="text-sm sm:text-base font-black text-[#1c2944] dark:text-white">
+                <h2 className="text-sm sm:text-base font-black text-[#1c2944] dark:text-white">
                   نصب روی آیفون (iOS)
-                </h3>
+                </h2>
               </div>
               <button
                 onClick={() => setShowIosModal(false)}

@@ -18,6 +18,7 @@ app.use(express.json({ limit: '20mb' }));
 // Persistent Data & Uploads directories (mounted via Docker volume)
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
 const UPLOADS_DIR = path.join(DATA_DIR, 'uploads');
+const IMAGE_CACHE_DIR = path.join(DATA_DIR, 'image_cache');
 const GALLERIES_FILE = path.join(DATA_DIR, 'galleries.json');
 const EXHIBITIONS_FILE = path.join(DATA_DIR, 'exhibitions_fa.json');
 const STANDALONE_FILE = path.join(DATA_DIR, 'STANDALONE');
@@ -33,6 +34,9 @@ if (!fs.existsSync(DATA_DIR)) {
 }
 if (!fs.existsSync(UPLOADS_DIR)) {
   fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+}
+if (!fs.existsSync(IMAGE_CACHE_DIR)) {
+  fs.mkdirSync(IMAGE_CACHE_DIR, { recursive: true });
 }
 
 // Synchronize persistent volume with bundled seed baseline when seed is newer or has equal/more data
@@ -350,7 +354,7 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.128',
+    version: 'بتا V 1.129',
     serverRole: SERVER_ROLE, // 'primary' | 'mirror'
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
@@ -368,7 +372,7 @@ app.get('/health', (req, res) => {
 app.get('/api/config', (req, res) => {
   res.json({
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.128',
+    version: 'بتا V 1.129',
     serverRole: SERVER_ROLE,
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
@@ -537,12 +541,26 @@ app.post('/api/sync-now', async (req, res) => {
   res.json(result);
 });
 
-// Proxy external galleryinfo.ir images with immutable 30-day Cache-Control
+// Proxy external galleryinfo.ir images with persistent disk cache & immutable Cache-Control
 app.get('/api/image-proxy', async (req, res) => {
   const targetUrl = req.query.url as string;
   if (!targetUrl || (!targetUrl.startsWith('https://galleryinfo.ir/') && !targetUrl.startsWith('http://galleryinfo.ir/'))) {
     return res.status(400).send('Invalid image URL');
   }
+
+  // Safe hashed disk cache filename
+  const hash = crypto.createHash('sha256').update(targetUrl).digest('hex').slice(0, 24);
+  const ext = path.extname(targetUrl.split('?')[0]) || '.jpg';
+  const cachedFilePath = path.join(IMAGE_CACHE_DIR, `${hash}${ext}`);
+
+  // Serve directly from persistent SSD disk cache (<10ms response time!)
+  if (fs.existsSync(cachedFilePath)) {
+    const contentType = ext === '.png' ? 'image/png' : ext === '.webp' ? 'image/webp' : 'image/jpeg';
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    return res.sendFile(cachedFilePath);
+  }
+
   try {
     const upstreamRes = await fetch(targetUrl, {
       headers: {
@@ -554,14 +572,60 @@ app.get('/api/image-proxy', async (req, res) => {
       return res.status(upstreamRes.status).send('Upstream image error');
     }
     const contentType = upstreamRes.headers.get('content-type') || 'image/jpeg';
-    res.setHeader('Content-Type', contentType);
-    res.setHeader('Cache-Control', 'public, max-age=2592000, immutable');
     const buffer = Buffer.from(await upstreamRes.arrayBuffer());
+
+    // Asynchronously save to persistent disk cache
+    fs.writeFile(cachedFilePath, buffer, (err) => {
+      if (err) console.warn('[ImageProxy] Failed to write cache file:', err.message);
+    });
+
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
     res.send(buffer);
   } catch (err: any) {
     res.status(502).send('Error proxying image');
   }
 });
+
+// Prewarm top active exhibition images in background on server boot
+async function prewarmTopImages() {
+  try {
+    if (!fs.existsSync(GALLERIES_FILE)) return;
+    const raw = fs.readFileSync(GALLERIES_FILE, 'utf-8');
+    const galleries = JSON.parse(raw);
+    const urlsToWarm: string[] = [];
+    for (const g of galleries) {
+      if (g.activeExhibition?.posterSmall) urlsToWarm.push(g.activeExhibition.posterSmall);
+      else if (g.activeExhibition?.poster) urlsToWarm.push(g.activeExhibition.poster);
+      else if (g.posterSmall) urlsToWarm.push(g.posterSmall);
+      else if (g.posterImage) urlsToWarm.push(g.posterImage);
+      if (urlsToWarm.length >= 25) break;
+    }
+    for (const url of urlsToWarm) {
+      if (!url.includes('galleryinfo.ir/')) continue;
+      const hash = crypto.createHash('sha256').update(url).digest('hex').slice(0, 24);
+      const ext = path.extname(url.split('?')[0]) || '.jpg';
+      const cachedFilePath = path.join(IMAGE_CACHE_DIR, `${hash}${ext}`);
+      if (!fs.existsSync(cachedFilePath)) {
+        try {
+          const resp = await fetch(url, {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+              'Referer': 'https://galleryinfo.ir/'
+            }
+          });
+          if (resp.ok) {
+            const buf = Buffer.from(await resp.arrayBuffer());
+            fs.writeFileSync(cachedFilePath, buf);
+          }
+        } catch (_) {}
+      }
+    }
+    console.log('[ImageCache] Pre-warmed top exhibition images on local disk');
+  } catch (e: any) {
+    console.warn('[ImageCache] Pre-warm notice:', e.message);
+  }
+}
 
 // Full-Stack Server Initialization (Vite in dev, static dist in prod)
 async function startServer() {
@@ -616,6 +680,11 @@ async function startServer() {
     console.log(`[Server] Running on http://0.0.0.0:${PORT} [Role: ${SERVER_ROLE.toUpperCase()}]`);
     console.log(`[Server] Admin Allowed: ${isAdminAllowed()} (Standalone: ${isStandaloneMode()})`);
     console.log(`[Server] Persistent data directory: ${DATA_DIR}`);
+
+    // Prewarm image cache after server start
+    setTimeout(() => {
+      prewarmTopImages();
+    }, 2000);
   });
 }
 

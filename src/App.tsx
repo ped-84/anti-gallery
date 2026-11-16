@@ -19,7 +19,6 @@ import {
 } from './utils/persianUtils';
 import { Header, APP_VERSION } from './components/Header';
 import { GalleryCard } from './components/GalleryCard';
-import { PwaInstallPrompt } from './components/PwaInstallPrompt';
 import { getTourColorTheme } from './utils/roadLayout';
 import { ClayDropdown } from './components/ClayDropdown';
 
@@ -29,6 +28,7 @@ const InteractiveMap = lazy(() => import('./components/InteractiveMap').then(m =
 const GalleryDetailModal = lazy(() => import('./components/GalleryDetailModal').then(m => ({ default: m.GalleryDetailModal })));
 const CuratedRouteRoadModal = lazy(() => import('./components/CuratedRouteRoadModal').then(m => ({ default: m.CuratedRouteRoadModal })));
 const AdminModal = lazy(() => import('./components/AdminModal').then(m => ({ default: m.AdminModal })));
+const PwaInstallPrompt = lazy(() => import('./components/PwaInstallPrompt').then(m => ({ default: m.PwaInstallPrompt })));
 import {
   Search,
   Sparkles,
@@ -512,7 +512,7 @@ export default function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Defer heavy Neshan Map SDK loading on desktop until user interacts or idle, eliminating main-thread TBT blocking
+  // Defer heavy Neshan Map SDK loading until user interaction or explicit mobile map tab selection
   useEffect(() => {
     if (mobileActiveTab === 'map') {
       setIsMapActive(true);
@@ -529,15 +529,22 @@ export default function App() {
       window.addEventListener('mousemove', activate, { passive: true, once: true });
       window.addEventListener('touchstart', activate, { passive: true, once: true });
 
-      const timer = setTimeout(activate, 4800);
       return () => {
-        clearTimeout(timer);
         window.removeEventListener('scroll', activate);
         window.removeEventListener('mousemove', activate);
         window.removeEventListener('touchstart', activate);
       };
     }
   }, [mobileActiveTab]);
+
+  // Progressive card hydration: mounts top 6 cards (above the fold) first, then loads remaining in background to eliminate React long tasks
+  const [visibleCardCount, setVisibleCardCount] = useState<number>(6);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setVisibleCardCount(9999);
+    }, 280);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleRequestGps = () => {
     if (typeof navigator === 'undefined' || !navigator.geolocation) {
@@ -1246,10 +1253,11 @@ export default function App() {
 
             {/* Gallery Cards Grid (with Square Posters and Compact Layouts) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {filteredGalleries.map((gallery, idx) => (
+              {filteredGalleries.slice(0, visibleCardCount).map((gallery, idx) => (
                 <GalleryCard
                   key={gallery.id}
                   gallery={gallery}
+                  priority={idx === 0}
                   isSelected={selectedGalleryIds.includes(gallery.id)}
                   orderNumber={galleryOrderMap.get(gallery.id)}
                   colorTheme={STICKDAZZLE_THEMES[idx % STICKDAZZLE_THEMES.length]}
@@ -1498,7 +1506,9 @@ export default function App() {
       </Suspense>
 
       {/* PWA Installation Prompt (Android / iOS / Desktop) */}
-      <PwaInstallPrompt externalTrigger={pwaInstallTrigger} />
+      <Suspense fallback={null}>
+        <PwaInstallPrompt externalTrigger={pwaInstallTrigger} />
+      </Suspense>
 
     </div>
   );
