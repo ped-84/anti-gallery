@@ -1215,6 +1215,7 @@ export default function App() {
                   orderNumber={galleryOrderMap.get(gallery.id)}
                   colorTheme={STICKDAZZLE_THEMES[idx % STICKDAZZLE_THEMES.length]}
                   isOpeningThisWeek={isThisWeekOpening(gallery.activeExhibition?.openingDate, maxOpeningScore)}
+                  priority={idx < 2}
                   onToggle={handleToggleGallery}
                   onSelectDetails={(g) => setActiveModalGallery(g)}
                 />
@@ -1363,9 +1364,20 @@ export default function App() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-right">
           <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
             <img
-              src="./icons/brand-logo-orange.png"
+              src="./icons/brand-logo-icon.svg?v=1.123"
               alt="آرت‌گشت"
-              className="w-4.5 h-4.5 object-contain shrink-0"
+              width="18"
+              height="18"
+              decoding="async"
+              className="w-4.5 h-4.5 object-contain shrink-0 block dark:hidden"
+            />
+            <img
+              src="./icons/brand-logo-icon-dark.svg?v=1.123"
+              alt="آرت‌گشت"
+              width="18"
+              height="18"
+              decoding="async"
+              className="w-4.5 h-4.5 object-contain shrink-0 hidden dark:block"
             />
             <span className="font-bold text-[#1d2d4c] dark:text-white text-sm">
               آرت‌گشت

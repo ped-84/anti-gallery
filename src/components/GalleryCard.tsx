@@ -21,6 +21,7 @@ interface GalleryCardProps {
   orderNumber?: number;
   colorTheme?: 'darkblue' | 'orange' | 'softblue' | 'gray';
   isOpeningThisWeek?: boolean;
+  priority?: boolean;
   onToggle: (gallery: Gallery) => void;
   onSelectDetails: (gallery: Gallery) => void;
 }
@@ -38,6 +39,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
   orderNumber,
   colorTheme = 'darkblue',
   isOpeningThisWeek = false,
+  priority = false,
   onToggle,
   onSelectDetails
 }) => {
@@ -102,7 +104,8 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
               src={posterUrl!}
               alt={activeExhibition?.title || getGalleryDisplayName(gallery)}
               referrerPolicy="no-referrer"
-              loading="lazy"
+              loading={priority ? 'eager' : 'lazy'}
+              fetchPriority={priority ? 'high' : 'low'}
               decoding="async"
               width="400"
               height="400"
