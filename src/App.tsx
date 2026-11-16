@@ -504,12 +504,40 @@ export default function App() {
   });
   const [isLocatingGps, setIsLocatingGps] = useState<boolean>(false);
   const [isDesktop, setIsDesktop] = useState<boolean>(() => typeof window !== 'undefined' && window.innerWidth >= 1024);
+  const [isMapActive, setIsMapActive] = useState<boolean>(false);
 
   useEffect(() => {
     const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Defer heavy Neshan Map SDK loading on desktop until user interacts or idle, eliminating main-thread TBT blocking
+  useEffect(() => {
+    if (mobileActiveTab === 'map') {
+      setIsMapActive(true);
+      return;
+    }
+    if (typeof window !== 'undefined') {
+      const activate = () => {
+        setIsMapActive(true);
+        window.removeEventListener('scroll', activate);
+        window.removeEventListener('mousemove', activate);
+        window.removeEventListener('touchstart', activate);
+      };
+      window.addEventListener('scroll', activate, { passive: true, once: true });
+      window.addEventListener('mousemove', activate, { passive: true, once: true });
+      window.addEventListener('touchstart', activate, { passive: true, once: true });
+
+      const timer = setTimeout(activate, 2800);
+      return () => {
+        clearTimeout(timer);
+        window.removeEventListener('scroll', activate);
+        window.removeEventListener('mousemove', activate);
+        window.removeEventListener('touchstart', activate);
+      };
+    }
+  }, [mobileActiveTab]);
 
   const handleRequestGps = () => {
     if (typeof navigator === 'undefined' || !navigator.geolocation) {
@@ -1049,12 +1077,12 @@ export default function App() {
         {/* FULL-WIDTH IMMERSIVE MAP (Desktop, Tablet & Mobile) */}
         <section className={`w-full ${mobileActiveTab === 'catalog' ? 'hidden lg:block' : 'block'}`}>
           <div className="h-[420px] sm:h-[480px] lg:h-[530px] w-full rounded-2xl overflow-hidden border border-[#E1E1E1] dark:border-stone-800 shadow-md">
-            {isDesktop || mobileActiveTab === 'map' ? (
+            {(isMapActive && (isDesktop || mobileActiveTab === 'map')) ? (
               <Suspense
                 fallback={
                   <div className="w-full h-full bg-[#f4f7fb] dark:bg-[#121620] animate-pulse flex flex-col items-center justify-center gap-2 text-stone-400">
-                    <MapIcon className="w-7 h-7 text-[#3D5B99] dark:text-[#F76B1C] animate-bounce" />
-                    <span className="text-xs font-bold text-[#1d2d4c] dark:text-stone-300">در حال بارگذاری نقشه تعاملی تهران...</span>
+                    <MapIcon className="w-7 h-7 text-[#10335e] dark:text-[#60a5fa] animate-bounce" />
+                    <span className="text-xs font-bold text-[#10335e] dark:text-stone-300">در حال بارگذاری نقشه تعاملی تهران...</span>
                   </div>
                 }
               >
@@ -1070,8 +1098,19 @@ export default function App() {
                 />
               </Suspense>
             ) : (
-              <div className="w-full h-full bg-[#f4f7fb] dark:bg-[#121620] flex items-center justify-center text-stone-400 text-xs font-bold">
-                نقشه در تب «نقشه و مسیر» فعال می‌شود
+              <div
+                onClick={() => setIsMapActive(true)}
+                className="w-full h-full bg-[#f4f7fb] dark:bg-[#121620] flex flex-col items-center justify-center gap-2 text-stone-400 cursor-pointer group p-4 text-center"
+              >
+                <div className="w-12 h-12 rounded-full bg-white dark:bg-stone-800 shadow-sm flex items-center justify-center transition-transform group-hover:scale-110">
+                  <MapIcon className="w-6 h-6 text-[#10335e] dark:text-[#60a5fa]" />
+                </div>
+                <span className="text-xs font-bold text-[#10335e] dark:text-stone-200">
+                  نقشه تعاملی گالری‌های تهران
+                </span>
+                <span className="text-[11px] text-stone-400">
+                  {isDesktop ? 'جهت بارگذاری سریع نقشه کلیک کنید یا صفحه را پیمایش نمایید' : 'نقشه در تب «نقشه و مسیر» فعال می‌شود'}
+                </span>
               </div>
             )}
           </div>
