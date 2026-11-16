@@ -30,6 +30,46 @@ export function getNeshanWebKey(): string {
   return DEFAULT_NESHAN_WEB_KEY;
 }
 
+let neshanSdkPromise: Promise<void> | null = null;
+
+export function loadNeshanSdk(): Promise<void> {
+  if (typeof window === 'undefined') return Promise.resolve();
+  if ((window as any).nmp_mapboxgl) return Promise.resolve();
+  if (neshanSdkPromise) return neshanSdkPromise;
+
+  neshanSdkPromise = new Promise<void>((resolve, reject) => {
+    // 1. Dynamic non-render-blocking stylesheet injection
+    if (!document.querySelector('link[href*="neshan-sdk"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://static.neshan.org/sdk/mapboxgl/v1.13.2/neshan-sdk/v1.1.3/index.css';
+      document.head.appendChild(link);
+    }
+
+    // 2. Check if script already injected
+    const existing = document.querySelector('script[src*="neshan-sdk"]') as HTMLScriptElement | null;
+    if (existing) {
+      if ((window as any).nmp_mapboxgl) {
+        resolve();
+      } else {
+        existing.addEventListener('load', () => resolve());
+        existing.addEventListener('error', (err) => reject(err));
+      }
+      return;
+    }
+
+    // 3. Dynamic async script loading on-demand
+    const script = document.createElement('script');
+    script.src = 'https://static.neshan.org/sdk/mapboxgl/v1.13.2/neshan-sdk/v1.1.3/index.js';
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = (err) => reject(err);
+    document.head.appendChild(script);
+  });
+
+  return neshanSdkPromise;
+}
+
 // Tehran Central Traffic Zone Polygon Coordinates (محدوده رسمی طرح ترافیک تهران)
 const TEHRAN_TRAFFIC_ZONE_GEOJSON: any = {
   type: 'Feature',
@@ -250,16 +290,20 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       resizeObserver.observe(mapContainerRef.current);
     }
 
+    let isCancelled = false;
+
     if ((window as any).nmp_mapboxgl) {
       initNeshanMap();
     } else {
-      const interval = setInterval(() => {
-        if ((window as any).nmp_mapboxgl) {
-          clearInterval(interval);
-          initNeshanMap();
-        }
-      }, 100);
-      return () => clearInterval(interval);
+      loadNeshanSdk()
+        .then(() => {
+          if (!isCancelled) {
+            initNeshanMap();
+          }
+        })
+        .catch((err) => {
+          console.warn('[Neshan] Dynamic SDK load warning:', err);
+        });
     }
 
     // Secondary watermark purge timer to catch delayed SDK injections
@@ -267,6 +311,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
     const purgeTimeout = setTimeout(() => clearInterval(purgeInterval), 6000);
 
     return () => {
+      isCancelled = true;
       clearInterval(purgeInterval);
       clearTimeout(purgeTimeout);
       if (mutationObserver) {

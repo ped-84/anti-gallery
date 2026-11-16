@@ -1,7 +1,6 @@
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
-import 'leaflet/dist/leaflet.css';
 import './index.css';
 
 // Register PWA Service Worker with no-cache check & auto-refresh on new version

@@ -1,11 +1,11 @@
-const CACHE_NAME = 'artgasht-pwa-v1.121';
+const CACHE_NAME = 'artgasht-pwa-v1.122';
 
 const STATIC_ASSETS = [
   './',
   './index.html',
-  './manifest.json?v=1.121',
-  './favicon.ico?v=1.121',
-  './favicon.svg?v=1.121',
+  './manifest.json?v=1.122',
+  './favicon.ico?v=1.122',
+  './favicon.svg?v=1.122',
   './favicon.png',
   './favicon-32x32.png',
   './favicon-48x48.png',
@@ -15,13 +15,13 @@ const STATIC_ASSETS = [
   './icons/brand-logo-icon.png',
   './icons/brand-logo-icon-dark.png',
   './icons/brand-logo-orange.png',
-  './icons/brand-wordmark-light.png?v=1.121',
-  './icons/brand-wordmark-dark.png?v=1.121',
-  './icons/icon-192.png?v=1.121',
-  './icons/icon-512.png?v=1.121',
-  './icons/icon-maskable-192.png?v=1.121',
-  './icons/icon-maskable-512.png?v=1.121',
-  './icons/apple-touch-icon.png?v=1.121',
+  './icons/brand-wordmark-light.png?v=1.122',
+  './icons/brand-wordmark-dark.png?v=1.122',
+  './icons/icon-192.png?v=1.122',
+  './icons/icon-512.png?v=1.122',
+  './icons/icon-maskable-192.png?v=1.122',
+  './icons/icon-maskable-512.png?v=1.122',
+  './icons/apple-touch-icon.png?v=1.122',
   './fonts/shabnam/Shabnam-FD.woff2',
   './fonts/shabnam/Shabnam-Bold-FD.woff2',
   './fonts/shabnam/Shabnam-Medium-FD.woff2',
@@ -92,6 +92,23 @@ self.addEventListener('fetch', (event) => {
 
   // Bypass cross-origin telemetry/analytics/APIs (Neshan tiles, Google maps, etc.)
   if (url.origin !== self.location.origin) {
+    // Cache third-party exhibition images from galleryinfo.ir with stale-while-revalidate
+    if (url.hostname.includes('galleryinfo.ir')) {
+      event.respondWith(
+        caches.match(request).then((cached) => {
+          const fetchPromise = fetch(request, { mode: 'no-cors' }).then((res) => {
+            if (res && (res.status === 200 || res.type === 'opaque')) {
+              const resClone = res.clone();
+              caches.open(CACHE_NAME).then((c) => c.put(request, resClone));
+            }
+            return res;
+          }).catch(() => cached);
+          return cached || fetchPromise;
+        })
+      );
+      return;
+    }
+
     // Cache Iranian Neshan SDK if requested
     if (url.hostname.includes('static.neshan.org')) {
       event.respondWith(
