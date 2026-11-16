@@ -21,6 +21,9 @@ export default defineConfig(() => {
       rollupOptions: {
         output: {
           manualChunks(id) {
+            if (id.includes('galleries.json')) {
+              return 'galleries-data';
+            }
             if (id.includes('node_modules')) {
               if (id.includes('lucide-react')) {
                 return 'lucide-icons';

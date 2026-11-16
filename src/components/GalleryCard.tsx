@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Gallery } from '../types/gallery';
 import { toPersianDigits, getGalleryDisplayName, getExhibitionMedium, formatGalleryAddress, formatArtistName, getExhibitionStatus } from '../utils/persianUtils';
+import { toOptimizedImageUrl } from '../utils/imageUrl';
 import {
   Plus,
   Check,
@@ -55,12 +56,14 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
   const [useLocalFallback, setUseLocalFallback] = useState(false);
   const [posterError, setPosterError] = useState(false);
   const [logoError, setLogoError] = useState(false);
+  const [useProxy, setUseProxy] = useState(true);
 
   // Reset errors whenever gallery or active exhibition changes
   React.useEffect(() => {
     setPosterError(false);
     setUseLocalFallback(false);
     setLogoError(false);
+    setUseProxy(true);
   }, [gallery.id, activeExhibition?.eventId, gallery.posterImage]);
 
   // Determine effective poster URL with robust multi-tier fallback
@@ -69,17 +72,20 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
     if (useLocalFallback && activeExhibition?.eventId === 21551) {
       posterUrl = `${import.meta.env.BASE_URL}assets/events/Event_21551.jpg`;
     } else {
-      posterUrl = activeExhibition?.poster || gallery.posterImage || activeExhibition?.posterSmall || gallery.posterSmall || null;
+      const rawPoster = activeExhibition?.poster || gallery.posterImage || activeExhibition?.posterSmall || gallery.posterSmall || null;
+      posterUrl = useProxy ? toOptimizedImageUrl(rawPoster) : rawPoster;
     }
   }
 
-  const galleryLogoUrl = gallery.logoImage || gallery.image;
+  const galleryLogoUrl = useProxy ? toOptimizedImageUrl(gallery.logoImage || gallery.image) : (gallery.logoImage || gallery.image);
   const hasActivePoster = Boolean(posterUrl);
 
   const handlePosterError = () => {
     // If museum of contemporary art fails remote load, try bundled high-res poster
     if (activeExhibition?.eventId === 21551 && !useLocalFallback) {
       setUseLocalFallback(true);
+    } else if (useProxy) {
+      setUseProxy(false);
     } else {
       setPosterError(true);
     }
@@ -159,12 +165,12 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
 
           {/* Name & Single Clean Location Line */}
           <div className="truncate flex-1">
-            <h3
+            <h2
               onClick={() => onSelectDetails(gallery)}
               className="text-base sm:text-lg font-bold text-[#1d2d4c] dark:text-white leading-snug hover:text-[#F76B1C] cursor-pointer transition-colors truncate"
             >
               {getGalleryDisplayName(gallery)}
-            </h3>
+            </h2>
             {/* Single location line: neighborhood · street address */}
             <div className="text-sm sm:text-base text-[#3D5B99] dark:text-[#A3C2E4] font-medium truncate mt-0.5">
               <span>{gallery.neighborhoodFa || 'تهران'}</span>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Gallery } from '../types/gallery';
 import { toPersianDigits, getGalleryDisplayName, getExhibitionMedium, formatGalleryAddress, formatArtistName, getExhibitionStatus } from '../utils/persianUtils';
+import { toOptimizedImageUrl } from '../utils/imageUrl';
 import {
   X,
   MapPin,
@@ -95,16 +96,17 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
     if (useLocalFallback && activeExhibition?.eventId === 21551) {
       posterUrl = `${import.meta.env.BASE_URL}assets/events/Event_21551.jpg`;
     } else {
-      posterUrl =
+      const rawPoster =
         activeExhibition?.poster ||
         currentSpace.posterImage ||
         activeExhibition?.posterSmall ||
         currentSpace.posterSmall ||
         null;
+      posterUrl = toOptimizedImageUrl(rawPoster);
     }
   }
 
-  const galleryLogoUrl = currentSpace.logoImage || currentSpace.image || gallery.logoImage || gallery.image;
+  const galleryLogoUrl = toOptimizedImageUrl(currentSpace.logoImage || currentSpace.image || gallery.logoImage || gallery.image);
   const galleryDisplayName = getGalleryDisplayName(gallery);
   const currentSpaceDisplayName = getGalleryDisplayName(currentSpace);
 

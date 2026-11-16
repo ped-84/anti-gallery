@@ -350,7 +350,7 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.123',
+    version: 'بتا V 1.124',
     serverRole: SERVER_ROLE, // 'primary' | 'mirror'
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
@@ -368,7 +368,7 @@ app.get('/health', (req, res) => {
 app.get('/api/config', (req, res) => {
   res.json({
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.123',
+    version: 'بتا V 1.124',
     serverRole: SERVER_ROLE,
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
@@ -537,6 +537,32 @@ app.post('/api/sync-now', async (req, res) => {
   res.json(result);
 });
 
+// Proxy external galleryinfo.ir images with immutable 30-day Cache-Control
+app.get('/api/image-proxy', async (req, res) => {
+  const targetUrl = req.query.url as string;
+  if (!targetUrl || (!targetUrl.startsWith('https://galleryinfo.ir/') && !targetUrl.startsWith('http://galleryinfo.ir/'))) {
+    return res.status(400).send('Invalid image URL');
+  }
+  try {
+    const upstreamRes = await fetch(targetUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Referer': 'https://galleryinfo.ir/'
+      }
+    });
+    if (!upstreamRes.ok) {
+      return res.status(upstreamRes.status).send('Upstream image error');
+    }
+    const contentType = upstreamRes.headers.get('content-type') || 'image/jpeg';
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Cache-Control', 'public, max-age=2592000, immutable');
+    const buffer = Buffer.from(await upstreamRes.arrayBuffer());
+    res.send(buffer);
+  } catch (err: any) {
+    res.status(502).send('Error proxying image');
+  }
+});
+
 // Full-Stack Server Initialization (Vite in dev, static dist in prod)
 async function startServer() {
   const isDev = process.env.NODE_ENV !== 'production';
@@ -560,7 +586,7 @@ async function startServer() {
           res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
           res.setHeader('Pragma', 'no-cache');
           res.setHeader('Expires', '0');
-        } else if (norm.includes('/assets/')) {
+        } else if (norm.includes('/assets/') || norm.includes('/fonts/') || norm.includes('/icons/') || norm.includes('/favicon')) {
           res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
         }
       }

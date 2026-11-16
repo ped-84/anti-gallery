@@ -1,31 +1,31 @@
-const CACHE_NAME = 'artgasht-pwa-v1.123';
+const CACHE_NAME = 'artgasht-pwa-v1.124';
 
 const STATIC_ASSETS = [
   './',
   './index.html',
-  './manifest.json?v=1.123',
-  './favicon.ico?v=1.123',
-  './favicon.svg?v=1.123',
+  './manifest.json?v=1.124',
+  './favicon.ico?v=1.124',
+  './favicon.svg?v=1.124',
   './favicon.png',
   './favicon-32x32.png',
   './favicon-48x48.png',
   './favicon-96x96.png',
   './favicon-144x144.png',
   './favicon-16x16.png',
-  './icons/brand-logo-icon.svg?v=1.123',
-  './icons/brand-logo-icon-dark.svg?v=1.123',
+  './icons/brand-logo-icon.svg?v=1.124',
+  './icons/brand-logo-icon-dark.svg?v=1.124',
   './icons/brand-logo-icon.png',
   './icons/brand-logo-icon-dark.png',
   './icons/brand-logo-orange.png',
-  './icons/brand-wordmark-light.svg?v=1.123',
-  './icons/brand-wordmark-dark.svg?v=1.123',
-  './icons/brand-wordmark-light.png?v=1.123',
-  './icons/brand-wordmark-dark.png?v=1.123',
-  './icons/icon-192.png?v=1.123',
-  './icons/icon-512.png?v=1.123',
-  './icons/icon-maskable-192.png?v=1.123',
-  './icons/icon-maskable-512.png?v=1.123',
-  './icons/apple-touch-icon.png?v=1.123',
+  './icons/brand-wordmark-light.svg?v=1.124',
+  './icons/brand-wordmark-dark.svg?v=1.124',
+  './icons/brand-wordmark-light.png?v=1.124',
+  './icons/brand-wordmark-dark.png?v=1.124',
+  './icons/icon-192.png?v=1.124',
+  './icons/icon-512.png?v=1.124',
+  './icons/icon-maskable-192.png?v=1.124',
+  './icons/icon-maskable-512.png?v=1.124',
+  './icons/apple-touch-icon.png?v=1.124',
   './fonts/shabnam/Shabnam-FD.woff2',
   './fonts/shabnam/Shabnam-Bold-FD.woff2',
   './fonts/shabnam/Shabnam-Medium-FD.woff2',
@@ -73,8 +73,12 @@ self.addEventListener('fetch', (event) => {
   // Only handle GET requests
   if (request.method !== 'GET') return;
 
-  // Never cache dynamic API, health check, or upload endpoints
-  if (url.pathname.startsWith('/api') || url.pathname === '/health') return;
+  // Never cache dynamic API, health check, or upload endpoints (image proxy is cacheable)
+  if (url.pathname.startsWith('/api') || url.pathname === '/health') {
+    if (!url.pathname.startsWith('/api/image-proxy')) {
+      return;
+    }
+  }
 
   // Always Network-First for HTML navigation so updates are instant
   if (request.mode === 'navigate' || url.pathname.endsWith('index.html') || url.pathname.endsWith('/')) {
