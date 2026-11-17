@@ -638,14 +638,32 @@ a.mapboxgl-ctrl-logo,
   --sar: env(safe-area-inset-right, 0px);
 }
 
+:root {
+  color-scheme: light;
+}
+
+:root.dark, html.dark {
+  color-scheme: dark;
+}
+
 html {
+  background-color: #f0f2f6;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
 
+html.dark {
+  background-color: #131722;
+}
+
 body {
+  background-color: #f0f2f6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.dark body {
+  background-color: #13161c;
 }
 
 /* Prevent unwanted double-tap zoom and touch delay on buttons and links */

@@ -49,4 +49,14 @@ if (typeof window !== 'undefined') {
   try {
     sessionStorage.removeItem('__artgasht_auto_reloaded');
   } catch (e) {}
+
+  // Gracefully transition & remove initial splash screen once app renders
+  const splash = document.getElementById('splash-loader');
+  if (splash) {
+    splash.style.opacity = '0';
+    splash.style.pointerEvents = 'none';
+    setTimeout(() => {
+      splash.remove();
+    }, 350);
+  }
 }

@@ -356,12 +356,21 @@ export default function App() {
     });
   };
 
-  // Sync dark class and mobile browser status/navigation bar theme-color
+  // Sync dark class, document color-scheme, and Android navigation bar/status bar theme-color
   useEffect(() => {
-    const metaTheme = document.querySelector('meta[name="theme-color"]');
-    if (metaTheme) {
-      metaTheme.setAttribute('content', isDarkMode ? '#131722' : '#f4f6fa');
+    const themeColor = isDarkMode ? '#131722' : '#f4f6fa';
+    const themeMetas = document.querySelectorAll('meta[name="theme-color"]');
+    themeMetas.forEach((meta) => {
+      meta.setAttribute('content', themeColor);
+    });
+
+    const colorSchemeMeta = document.querySelector('meta[name="color-scheme"]');
+    if (colorSchemeMeta) {
+      colorSchemeMeta.setAttribute('content', isDarkMode ? 'dark' : 'light');
     }
+
+    document.documentElement.style.colorScheme = isDarkMode ? 'dark' : 'light';
+
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
     } else {
