@@ -354,7 +354,7 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.134',
+    version: 'بتا V 1.135',
     serverRole: SERVER_ROLE, // 'primary' | 'mirror'
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
@@ -372,7 +372,7 @@ app.get('/health', (req, res) => {
 app.get('/api/config', (req, res) => {
   res.json({
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.134',
+    version: 'بتا V 1.135',
     serverRole: SERVER_ROLE,
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
@@ -595,10 +595,10 @@ async function prewarmTopImages() {
     const galleries = JSON.parse(raw);
     const urlsToWarm: string[] = [];
     for (const g of galleries) {
-      if (g.activeExhibition?.posterSmall) urlsToWarm.push(g.activeExhibition.posterSmall);
-      else if (g.activeExhibition?.poster) urlsToWarm.push(g.activeExhibition.poster);
-      else if (g.posterSmall) urlsToWarm.push(g.posterSmall);
+      if (g.activeExhibition?.poster) urlsToWarm.push(g.activeExhibition.poster);
       else if (g.posterImage) urlsToWarm.push(g.posterImage);
+      else if (g.activeExhibition?.posterSmall) urlsToWarm.push(g.activeExhibition.posterSmall);
+      else if (g.posterSmall) urlsToWarm.push(g.posterSmall);
       if (urlsToWarm.length >= 25) break;
     }
     for (const url of urlsToWarm) {
