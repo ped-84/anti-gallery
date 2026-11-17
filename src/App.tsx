@@ -356,7 +356,7 @@ export default function App() {
     });
   };
 
-  // Sync dark class, document color-scheme, and Android navigation bar/status bar theme-color
+  // Sync dark class, document color-scheme, body background, and Android navigation bar/status bar theme-color
   useEffect(() => {
     const themeColor = isDarkMode ? '#131722' : '#f4f6fa';
     const themeMetas = document.querySelectorAll('meta[name="theme-color"]');
@@ -370,6 +370,10 @@ export default function App() {
     }
 
     document.documentElement.style.colorScheme = isDarkMode ? 'dark' : 'light';
+    document.documentElement.style.backgroundColor = themeColor;
+    if (document.body) {
+      document.body.style.backgroundColor = themeColor;
+    }
 
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
@@ -1445,7 +1449,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-right">
           <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
             <img
-              src="./icons/brand-logo-icon.svg?v=1.136"
+              src="./icons/brand-logo-icon.svg?v=1.138"
               alt="آرت‌گشت"
               width="18"
               height="18"
@@ -1453,7 +1457,7 @@ export default function App() {
               className="w-4.5 h-4.5 object-contain shrink-0 block dark:hidden"
             />
             <img
-              src="./icons/brand-logo-icon-dark.svg?v=1.136"
+              src="./icons/brand-logo-icon-dark.svg?v=1.138"
               alt="آرت‌گشت"
               width="18"
               height="18"

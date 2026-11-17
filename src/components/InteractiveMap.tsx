@@ -105,7 +105,11 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
+  const currentMapTypeRef = useRef<string>(isDarkMode ? 'neshanVectorNight' : 'neshanVector');
   const [isMapReady, setIsMapReady] = useState(false);
+  const [mapError, setMapError] = useState<string | null>(null);
+  const [isTimedOut, setIsTimedOut] = useState(false);
+  const [initAttempt, setInitAttempt] = useState(0);
   const [showTrafficLayer, setShowTrafficLayer] = useState(true);
   const [showTrafficZone, setShowTrafficZone] = useState(true);
   const [mapFilterMode, setMapFilterMode] = useState<'all' | 'active-only' | 'openings-only'>('all');
@@ -151,7 +155,9 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
   // 1. Initialize Neshan Vector Map
   useEffect(() => {
-    if (!mapContainerRef.current || mapInstanceRef.current) return;
+    if (!mapContainerRef.current) return;
+    setMapError(null);
+    setIsTimedOut(false);
 
     // Intercept third-party Neshan tile/CORS failures in non-Iran / headless environments to keep Best Practices at 100
     const origConsoleError = console.error;
@@ -180,27 +186,31 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         '.neshan-logo',
         'a[href*="neshan.org"]',
         'a[href*="mapbox.com"]',
-        'a[href*="openstreetmap.org"]',
-        '[class*="mapboxgl-ctrl"]'
+        'a[href*="openstreetmap.org"]'
       ];
       selectors.forEach((sel) => {
         mapContainerRef.current?.querySelectorAll(sel).forEach((el: any) => {
-          el.style.display = 'none';
-          el.remove();
+          el.style.setProperty('display', 'none', 'important');
+          el.style.setProperty('visibility', 'hidden', 'important');
+          el.style.setProperty('opacity', '0', 'important');
+          el.style.setProperty('pointer-events', 'none', 'important');
         });
       });
+    };
 
-      // Also search by text content for any stubborn OSM or Neshan text nodes
-      const allDivs = mapContainerRef.current.querySelectorAll('div, a, span');
-      allDivs.forEach((el: any) => {
-        const text = el.textContent || '';
-        if (text.includes('OSM') || text.includes('©') || text.includes('Neshan') || text.includes('نشان')) {
-          // If this is an attribution overlay (not user legend or popup)
-          if (!el.closest('.clay-card') && !el.closest('.mapboxgl-popup') && !el.closest('.cursor-pointer')) {
-            el.style.display = 'none';
-            el.remove();
-          }
-        }
+    const resizeTimers: ReturnType<typeof setTimeout>[] = [];
+    const triggerProgressiveResize = (map: any) => {
+      if (!map) return;
+      try {
+        map.resize();
+      } catch {}
+      [60, 180, 400, 800].forEach((delay) => {
+        const t = setTimeout(() => {
+          try {
+            map.resize();
+          } catch {}
+        }, delay);
+        resizeTimers.push(t);
       });
     };
 
@@ -209,8 +219,11 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       if (!nmp || !mapContainerRef.current) return;
 
       try {
+        const initialMapType = isDarkMode ? nmp.Map.mapTypes.neshanVectorNight : nmp.Map.mapTypes.neshanVector;
+        currentMapTypeRef.current = isDarkMode ? 'neshanVectorNight' : 'neshanVector';
+
         const map = new nmp.Map({
-          mapType: isDarkMode ? nmp.Map.mapTypes.neshanVectorNight : nmp.Map.mapTypes.neshanVector,
+          mapType: initialMapType,
           container: mapContainerRef.current,
           zoom: 12.8,
           pitch: 0,
@@ -224,77 +237,68 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           attributionControl: false
         });
 
+        // Assign instance immediately so resizeObserver and unmount cleanup have reference!
+        mapInstanceRef.current = map;
+        triggerProgressiveResize(map);
+
         map.on('load', () => {
-          mapInstanceRef.current = map;
           setIsMapReady(true);
-          map.resize();
+          triggerProgressiveResize(map);
           purgeNeshanWatermarks();
 
           // Add Tehran Central Traffic Zone Layer
           try {
-            map.addSource('tehran-traffic-zone', {
-              type: 'geojson',
-              data: TEHRAN_TRAFFIC_ZONE_GEOJSON
-            });
+            if (!map.getSource('tehran-traffic-zone')) {
+              map.addSource('tehran-traffic-zone', {
+                type: 'geojson',
+                data: TEHRAN_TRAFFIC_ZONE_GEOJSON
+              });
 
-            // Fill Layer
-            map.addLayer({
-              id: 'tehran-traffic-zone-fill',
-              type: 'fill',
-              source: 'tehran-traffic-zone',
-              paint: {
-                'fill-color': '#EF4444',
-                'fill-opacity': 0.08
-              }
-            });
+              // Fill Layer
+              map.addLayer({
+                id: 'tehran-traffic-zone-fill',
+                type: 'fill',
+                source: 'tehran-traffic-zone',
+                paint: {
+                  'fill-color': '#EF4444',
+                  'fill-opacity': 0.08
+                }
+              });
 
-            // Border Layer
-            map.addLayer({
-              id: 'tehran-traffic-zone-border',
-              type: 'line',
-              source: 'tehran-traffic-zone',
-              paint: {
-                'line-color': '#DC2626',
-                'line-width': 2,
-                'line-dasharray': [3, 2],
-                'line-opacity': 0.85
-              }
-            });
+              // Border Layer
+              map.addLayer({
+                id: 'tehran-traffic-zone-border',
+                type: 'line',
+                source: 'tehran-traffic-zone',
+                paint: {
+                  'line-color': '#DC2626',
+                  'line-width': 2,
+                  'line-dasharray': [3, 2],
+                  'line-opacity': 0.85
+                }
+              });
+            }
           } catch (e) {
             console.warn('[Neshan] Traffic zone layer init note:', e);
           }
         });
 
-        map.on('render', () => {
-          purgeNeshanWatermarks();
+        map.on('error', (e: any) => {
+          console.warn('[Neshan] Internal map note:', e?.error?.message || e);
         });
-        map.on('sourcedata', () => {
-          purgeNeshanWatermarks();
-        });
-        map.on('styledata', () => {
-          purgeNeshanWatermarks();
-        });
-      } catch (err) {
+      } catch (err: any) {
         console.error('[Neshan] Map init error:', err);
+        setMapError(err?.message || 'خطا در مقداردهی اولیه نقشه نشان');
       }
     };
-
-    let mutationObserver: MutationObserver | null = null;
-    if (mapContainerRef.current && window.MutationObserver) {
-      mutationObserver = new MutationObserver(() => {
-        purgeNeshanWatermarks();
-      });
-      mutationObserver.observe(mapContainerRef.current, {
-        childList: true,
-        subtree: true
-      });
-    }
 
     let resizeObserver: ResizeObserver | null = null;
     if (mapContainerRef.current && window.ResizeObserver) {
       resizeObserver = new ResizeObserver(() => {
         if (mapInstanceRef.current) {
-          mapInstanceRef.current.resize();
+          try {
+            mapInstanceRef.current.resize();
+          } catch {}
         }
       });
       resizeObserver.observe(mapContainerRef.current);
@@ -313,21 +317,24 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         })
         .catch((err) => {
           console.warn('[Neshan] Dynamic SDK load warning:', err);
+          if (!isCancelled) {
+            setMapError('خطا در بارگذاری پکیج نقشه نشان. لطفاً اتصال اینترنت خود را بررسی نمایید.');
+          }
         });
     }
 
-    // Secondary watermark purge timer to catch delayed SDK injections
-    const purgeInterval = setInterval(purgeNeshanWatermarks, 200);
-    const purgeTimeout = setTimeout(() => clearInterval(purgeInterval), 6000);
+    // Safety timeout: if after 7.5s map is still not ready, reveal retry option
+    const watchdogTimer = setTimeout(() => {
+      if (!isMapReady) {
+        setIsTimedOut(true);
+      }
+    }, 7500);
 
     return () => {
       console.error = origConsoleError;
       isCancelled = true;
-      clearInterval(purgeInterval);
-      clearTimeout(purgeTimeout);
-      if (mutationObserver) {
-        mutationObserver.disconnect();
-      }
+      clearTimeout(watchdogTimer);
+      resizeTimers.forEach(clearTimeout);
       if (resizeObserver) {
         resizeObserver.disconnect();
       }
@@ -337,16 +344,23 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         } catch {}
         mapInstanceRef.current = null;
       }
+      setIsMapReady(false);
     };
-  }, []);
+  }, [initAttempt]);
 
-  // 2. Synchronize Dark / Light Mode with Neshan Style
+  // 2. Synchronize Dark / Light Mode with Neshan Style (Only when user explicitly switches theme)
   useEffect(() => {
     const map = mapInstanceRef.current;
     const nmp = (window as any).nmp_mapboxgl;
     if (!map || !nmp || !isMapReady) return;
 
+    const targetType = isDarkMode ? 'neshanVectorNight' : 'neshanVector';
+    if (currentMapTypeRef.current === targetType) {
+      return; // Prevent wiping map style immediately on load!
+    }
+
     try {
+      currentMapTypeRef.current = targetType;
       map.setMapType(isDarkMode ? nmp.Map.mapTypes.neshanVectorNight : nmp.Map.mapTypes.neshanVector);
     } catch (e) {
       console.warn('[Neshan] Style change note:', e);
@@ -687,8 +701,48 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
   return (
     <div className="clay-card relative w-full h-full min-h-[360px] sm:min-h-[420px] overflow-hidden border border-[#E1E1E1] dark:border-stone-800 shadow-md">
+      <style>{`
+        .mapboxgl-ctrl-bottom-left,
+        .mapboxgl-ctrl-bottom-right,
+        .mapboxgl-ctrl-top-left,
+        .mapboxgl-ctrl-top-right,
+        .mapboxgl-ctrl-attrib,
+        .mapboxgl-ctrl-attrib-inner,
+        .mapboxgl-ctrl-attrib-button,
+        .mapboxgl-compact,
+        .mapboxgl-ctrl-logo,
+        .neshan-watermark,
+        .neshan-logo {
+          display: none !important;
+          visibility: hidden !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+        }
+      `}</style>
+
       {/* Map Container */}
       <div ref={mapContainerRef} className="w-full h-full overflow-hidden" />
+
+      {/* Safety Fallback / Retry Overlay if SDK or Tiles take too long */}
+      {((!isMapReady && isTimedOut) || mapError) && (
+        <div className="absolute inset-0 z-20 bg-white/92 dark:bg-[#131722]/92 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center gap-3">
+          <p className="text-xs sm:text-sm font-bold text-stone-700 dark:text-stone-200">
+            {mapError || 'بارگذاری تایل‌های نقشه زمان‌بر شد.'}
+          </p>
+          <p className="text-[11px] text-stone-500 dark:text-stone-400 max-w-xs">
+            در صورت فعال بودن فیلترشکن، ممکن است اتصال به سرورهای نقشه مختل شود.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              setInitAttempt((c) => c + 1);
+            }}
+            className="clay-button bg-[#10335e] text-white px-4 py-2 text-xs font-bold shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
+          >
+            تلاش مجدد برای بارگذاری نقشه
+          </button>
+        </div>
+      )}
 
       {/* Floating Action Controls (placed at top-[68px] on mobile to never overlap top declutter tabs) */}
       <div className="absolute top-[68px] sm:top-4 left-3.5 sm:left-4 z-10 flex flex-col gap-2">

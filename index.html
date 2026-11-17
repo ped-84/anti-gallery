@@ -11,27 +11,29 @@
     <meta name="description" content="برنامه‌ریزی و بهینه‌سازی بهترین مسیر بازدید از گالری‌های هنری با نقشه دقیق و تخمین ترافیک تهران" />
     <meta name="robots" content="index, follow" />
     <meta name="color-scheme" content="light dark" id="color-scheme-meta" />
-    <meta name="theme-color" content="#f4f6fa" media="(prefers-color-scheme: light)" id="theme-color-light" />
-    <meta name="theme-color" content="#131722" media="(prefers-color-scheme: dark)" id="theme-color-dark" />
     <meta name="theme-color" content="#f4f6fa" id="theme-color-meta" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="application-name" content="آرت‌گشت" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="آرت‌گشت" />
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg?v=1.137" />
-    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png?v=1.137" />
-    <link rel="icon" type="image/png" sizes="96x96" href="./favicon-96x96.png?v=1.137" />
-    <link rel="icon" type="image/png" sizes="48x48" href="./favicon-48x48.png?v=1.137" />
-    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=1.137" />
-    <link rel="shortcut icon" href="./favicon.ico?v=1.137" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png?v=1.137" />
-    <link rel="apple-touch-icon" sizes="167x167" href="./icons/apple-touch-icon-167.png?v=1.137" />
-    <link rel="apple-touch-icon" sizes="152x152" href="./icons/apple-touch-icon-152.png?v=1.137" />
-    <link rel="apple-touch-icon" sizes="120x120" href="./icons/apple-touch-icon-120.png?v=1.137" />
-    <link rel="manifest" href="./manifest.json?v=1.137" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg?v=1.138" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png?v=1.138" />
+    <link rel="icon" type="image/png" sizes="96x96" href="./favicon-96x96.png?v=1.138" />
+    <link rel="icon" type="image/png" sizes="48x48" href="./favicon-48x48.png?v=1.138" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=1.138" />
+    <link rel="shortcut icon" href="./favicon.ico?v=1.138" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png?v=1.138" />
+    <link rel="apple-touch-icon" sizes="167x167" href="./icons/apple-touch-icon-167.png?v=1.138" />
+    <link rel="apple-touch-icon" sizes="152x152" href="./icons/apple-touch-icon-152.png?v=1.138" />
+    <link rel="apple-touch-icon" sizes="120x120" href="./icons/apple-touch-icon-120.png?v=1.138" />
+    <link rel="manifest" href="./manifest.json?v=1.138" />
     <link rel="preconnect" href="https://galleryinfo.ir" crossorigin />
     <link rel="dns-prefetch" href="https://galleryinfo.ir" />
+    <link rel="preconnect" href="https://static.neshan.org" crossorigin />
+    <link rel="dns-prefetch" href="https://static.neshan.org" />
+    <link rel="preconnect" href="https://vts.neshan.org" crossorigin />
+    <link rel="dns-prefetch" href="https://vts.neshan.org" />
     <meta property="og:title" content="آرت‌گشت | مسیریاب هوشمند گالری‌های هنری" />
     <meta property="og:description" content="برنامه‌ریزی و بهینه‌سازی بهترین مسیر بازدید از گالری‌های هنری با نقشه دقیق و تخمین ترافیک تهران" />
     <meta property="og:type" content="website" />
@@ -42,26 +44,29 @@
           var dark = localStorage.getItem('gallerygardi_dark_mode');
           var isDark = dark === 'true' || (!dark && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
           var docEl = document.documentElement;
+          var themeColor = isDark ? '#131722' : '#f4f6fa';
           if (isDark) {
             docEl.classList.add('dark');
             docEl.style.colorScheme = 'dark';
+            docEl.style.backgroundColor = '#131722';
             var meta = document.getElementById('theme-color-meta');
             if (meta) meta.setAttribute('content', '#131722');
-            var metaLight = document.getElementById('theme-color-light');
-            if (metaLight) metaLight.setAttribute('content', '#131722');
             var csMeta = document.getElementById('color-scheme-meta');
             if (csMeta) csMeta.setAttribute('content', 'dark');
           } else {
             docEl.classList.remove('dark');
             docEl.style.colorScheme = 'light';
+            docEl.style.backgroundColor = '#f4f6fa';
+            var meta = document.getElementById('theme-color-meta');
+            if (meta) meta.setAttribute('content', '#f4f6fa');
             var csMeta = document.getElementById('color-scheme-meta');
             if (csMeta) csMeta.setAttribute('content', 'light');
           }
         } catch (e) {}
       })();
     </script>
-    <link rel="preload" href="./icons/brand-wordmark-light.svg?v=1.137" as="image" type="image/svg+xml" fetchpriority="high" />
-    <link rel="preload" href="./icons/brand-wordmark-dark.svg?v=1.137" as="image" type="image/svg+xml" fetchpriority="high" />
+    <link rel="preload" href="./icons/brand-wordmark-light.svg?v=1.138" as="image" type="image/svg+xml" fetchpriority="high" />
+    <link rel="preload" href="./icons/brand-wordmark-dark.svg?v=1.138" as="image" type="image/svg+xml" fetchpriority="high" />
     <link rel="preload" href="./fonts/shabnam/Shabnam-Bold-FD.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="./fonts/shabnam/Shabnam-FD.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="./fonts/ubuntu/Ubuntu-Regular.woff2" as="font" type="font/woff2" crossorigin />
@@ -199,17 +204,17 @@
         padding: 0 !important;
         overflow: hidden !important;
       }
-      html {
-        background-color: #f0f2f6;
+      html, body {
+        background-color: #f4f6fa;
         color-scheme: light;
       }
-      html.dark {
-        background-color: #131722;
-        color-scheme: dark;
+      html.dark, html.dark body {
+        background-color: #131722 !important;
+        color-scheme: dark !important;
       }
     </style>
   </head>
-  <body class="bg-[#f0f2f6] dark:bg-[#13161c] text-stone-800 dark:text-stone-100 antialiased font-sans transition-colors duration-300">
+  <body class="bg-[#f4f6fa] dark:bg-[#131722] text-stone-800 dark:text-stone-100 antialiased font-sans transition-colors duration-300">
     <!-- Dedicated Theme-Aware Splash Loader (Monochrome Wordmark, Borderless, Instant Smooth Transition) -->
     <div id="splash-loader" aria-hidden="true" style="position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; z-index: 99999; font-family: 'Shabnam FD', system-ui, sans-serif; direction: rtl; text-align: center; transition: opacity 0.35s ease, visibility 0.35s ease; padding: 24px;">
       <style>
@@ -233,9 +238,13 @@
           display: flex;
           align-items: center;
           justify-content: center;
+          border: none !important;
+          box-shadow: none !important;
+          outline: none !important;
+          background: transparent !important;
         }
-        .splash-logo-light { display: block; width: 100%; height: 100%; object-fit: contain; }
-        .splash-logo-dark { display: none; width: 100%; height: 100%; object-fit: contain; }
+        .splash-logo-light { display: block; width: 100%; height: 100%; object-fit: contain; border: none !important; outline: none !important; }
+        .splash-logo-dark { display: none; width: 100%; height: 100%; object-fit: contain; border: none !important; outline: none !important; }
         .dark .splash-logo-light { display: none !important; }
         .dark .splash-logo-dark { display: block !important; }
         .splash-subtitle {
@@ -246,7 +255,7 @@
           letter-spacing: -0.2px;
         }
         .dark .splash-subtitle {
-          color: #e2e8f0;
+          color: #ffffff;
         }
         .splash-spinner {
           width: 22px;
@@ -265,8 +274,8 @@
         }
       </style>
       <div class="splash-wordmark-box">
-        <img src="./icons/brand-wordmark-light.svg?v=1.137" alt="art gasht" class="splash-logo-light" width="260" height="58" fetchpriority="high" decoding="async" />
-        <img src="./icons/brand-wordmark-dark.svg?v=1.137" alt="art gasht" class="splash-logo-dark" width="260" height="58" fetchpriority="high" decoding="async" />
+        <img src="./icons/brand-wordmark-light.svg?v=1.138" alt="art gasht" class="splash-logo-light" width="260" height="58" fetchpriority="high" decoding="async" />
+        <img src="./icons/brand-wordmark-dark.svg?v=1.138" alt="art gasht" class="splash-logo-dark" width="260" height="58" fetchpriority="high" decoding="async" />
       </div>
       <p class="splash-subtitle">مسیریاب هوشمند گالری‌های هنری</p>
       <div class="splash-spinner" style="margin-top: 4px;"></div>
@@ -350,8 +359,8 @@
         <header class="app-shell-header">
           <div style="max-width: 1280px; margin: 0 auto; width: 100%; display: flex; align-items: center; justify-content: space-between;">
             <div style="display: flex; flex-direction: column; text-align: right;">
-              <img src="./icons/brand-wordmark-light.svg?v=1.137" alt="art gasht" width="160" height="44" style="height: 38px; width: auto; object-fit: contain;" class="block dark:hidden" fetchpriority="high" />
-              <img src="./icons/brand-wordmark-dark.svg?v=1.137" alt="art gasht" width="160" height="44" style="height: 38px; width: auto; object-fit: contain;" class="hidden dark:block" fetchpriority="high" />
+              <img src="./icons/brand-wordmark-light.svg?v=1.138" alt="art gasht" width="160" height="44" style="height: 38px; width: auto; object-fit: contain; border: none !important; outline: none !important;" class="block dark:hidden" fetchpriority="high" />
+              <img src="./icons/brand-wordmark-dark.svg?v=1.138" alt="art gasht" width="160" height="44" style="height: 38px; width: auto; object-fit: contain; border: none !important; outline: none !important;" class="hidden dark:block" fetchpriority="high" />
               <p style="font-size: 12px; font-weight: 600; color: #10335e; margin: 4px 0 0 0; letter-spacing: -0.2px;">
                 مسیریاب هوشمند گالری‌های هنری
               </p>
