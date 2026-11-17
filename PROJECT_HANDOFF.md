@@ -3,7 +3,7 @@
 > **دستورالعمل‌های حیاتی برای هوش مصنوعی (MANDATORY INSTRUCTIONS FOR AGENTS):**
 > 1. **کیفیت و دقت بی‌نقص در اولویت اول است:** هرگز کیفیت کد، هماهنگی بصری و روانی رابط کاربری را فدای پاسخ سریع نکنید. کاربر یک محصول پروداکشن، بدون باگ، زیبا و فوق‌العاده تمیز می‌خواهد.
 > 2. **پاسخ‌های فارسی باید تماماً راست‌چین باشند:** در هر پاسخ به کاربر در محیط چت، کل متن پاسخ را داخل تگ `<div dir="rtl" style="text-align: right; direction: rtl;">` قرار دهید تا جهت نمایش و خوانایی فونت فارسی کاملاً راست‌به‌چپ باشد.
-> 3. **قانون افزایش نسخه (Version Increment):** به ازای هر درخواست تغییر از طرف کاربر، مقدار ثابت `APP_VERSION` در [`src/components/Header.tsx`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/src/components/Header.tsx) باید دقیقاً `0.001` واحد افزایش یابد (نسخه فعلی: `بتا V 1.120`، نسخه بعدی: `بتا V 1.121`). همچنین `CACHE_NAME` در [`public/sw.js`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/public/sw.js) و مقدار `version` در [`server.ts`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/server.ts) با همین نسخه به‌روز شود.
+> 3. **قانون افزایش نسخه (Version Increment):** به ازای هر درخواست تغییر از طرف کاربر، مقدار ثابت `APP_VERSION` در [`src/components/Header.tsx`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/src/components/Header.tsx) باید دقیقاً `0.001` واحد افزایش یابد (نسخه فعلی: `بتا V 1.136`، نسخه بعدی: `بتا V 1.137`). همچنین `CACHE_NAME` در [`public/sw.js`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/public/sw.js) و مقدار `version` در [`server.ts`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/server.ts) با همین نسخه به‌روز شود.
 > 4. **دامنه تهران در اولویت (Tehran-First Scope):** در حال حاضر در رابط کاربری فقط و فقط گالری‌های تهران به کاربر نمایش داده می‌شوند. گالری‌های سایر شهرها در پایگاه داده `data/galleries.json` و `src/data/galleries.json` با مشخصه شهر خودشان محفوظ هستند و فقط در لایه نمایش فرانت‌اند فیلتر می‌شوند. هرگز آنها را حذف نکنید.
 > 5. **یکپارچگی تایپوگرافی فارسی و انگلیسی:** تمام اعداد نمایشی فارسی باید از تابع `toPersianDigits()` عبور کنند. برای متون فارسی فونت **شبنم (Shabnam FD)** و برای کلیه حروف/متون انگلیسی فونت **Ubuntu** اعمال شده است. تمام فونت‌ها به صورت ۱۰۰٪ محلی در `public/fonts/` میزبانی می‌شوند.
 > 6. **ممنوعیت تگ `<select>` بومی:** هرگز از تگ پیش‌فرض HTML برای دراپ‌داون‌ها استفاده نکنید؛ همیشه از کامپوننت اختصاصی [`ClayDropdown.tsx`](file:///c:/Users/pemal/OneDrive/Desktop/Anti%20-%20Gallery/src/components/ClayDropdown.tsx) استفاده شود.
@@ -47,7 +47,7 @@
   * اندپوینت‌های مدیریت نمایشگاه‌ها (`/api/admin/*`) و آپلود مستقیم پوسترها
   * وب‌سرور ریورس‌پروکسی Caddy v2 با گواهینامه SSL خودکار و کشینگ پیشرفته
 * **معماری PWA:**
-  * Service Worker نسخه ۱.۱۱۶ (`public/sw.js`) با قابلیت کش دارایی‌های استاتیک و عدم مداخله در اندپوینت‌های API
+  * Service Worker نسخه ۱.۱۳۶ (`public/sw.js`) با قابلیت کش دارایی‌های استاتیک و عدم مداخله در اندپوینت‌های API
   * ذخیره وضعیت در `sessionStorage` برای جلوگیری از ریست شدن در زمان سوییچ بین اپلیکیشن‌ها در موبایل
 
 ---
@@ -112,7 +112,7 @@ c:\Users\pemal\OneDrive\Desktop\Anti - Gallery\
 │   ├── types/
 │   │   └── gallery.ts              # تایپ‌های Gallery, Exhibition, RouteLeg و غیره
 │   ├── components/
-│   │   ├── Header.tsx              # نوار بالا، دکمه ورود به ادمین، کلید تم تاریک، نسخه ۱.۰۹۳
+│   │   ├── Header.tsx              # نوار بالا، دکمه ورود به ادمین، کلید تم تاریک، نسخه ۱.۱۳۶
 │   │   ├── AdminModal.tsx          # پنل مدیریت رمزدار نمایشگاه‌ها و آپلود پوستر
 │   │   ├── GalleryCard.tsx         # کارت نمایشگاه با نشان مدیوم و تاریخ افتتاحیه
 │   │   ├── GalleryDetailModal.tsx  # پنجره جزئیات گالری، ساعات، آدرس و ۴ اپ ناوبری
@@ -164,7 +164,7 @@ npm.cmd run build
 
 # ۳. کامیت و پوش روی برنچ اصلی
 git add .
-git commit -m "feat: <توضیح تغییرات> (v1.09X)"
+git commit -m "feat: <توضیح تغییرات> (v1.13X)"
 git push origin main
 
 # ۴. استقرار روی برنچ gh-pages (سایت لایو آزمایشی)
