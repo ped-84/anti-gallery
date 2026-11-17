@@ -1346,7 +1346,11 @@ export default function App() {
         </div>
 
         {/* Floating Route Optimization Bar (Bottom-center, thumb-friendly, replaces header button) */}
-        <aside aria-label="نوار مسیریابی سریع" className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-lg w-[calc(100%-2rem)] sm:w-auto transition-all duration-300">
+        <aside
+          aria-label="نوار مسیریابی سریع"
+          className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-lg w-[calc(100%-2rem)] sm:w-auto transition-all duration-300"
+          style={{ bottom: 'max(1rem, calc(env(safe-area-inset-bottom, 0px) + 0.75rem))' }}
+        >
           <div className="clay-card bg-white/95 dark:bg-[#181d27]/95 backdrop-blur-md border border-[#E1E1E1] dark:border-stone-800 p-2 sm:p-2.5 rounded-2xl shadow-2xl flex items-center justify-between gap-2.5 sm:gap-4">
             <button
               type="button"
@@ -1417,7 +1421,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-right">
           <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
             <img
-              src="./icons/brand-logo-icon.svg?v=1.133"
+              src="./icons/brand-logo-icon.svg?v=1.134"
               alt="آرت‌گشت"
               width="18"
               height="18"
@@ -1425,7 +1429,7 @@ export default function App() {
               className="w-4.5 h-4.5 object-contain shrink-0 block dark:hidden"
             />
             <img
-              src="./icons/brand-logo-icon-dark.svg?v=1.133"
+              src="./icons/brand-logo-icon-dark.svg?v=1.134"
               alt="آرت‌گشت"
               width="18"
               height="18"

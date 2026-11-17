@@ -30,7 +30,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, 
                 سیاست حفظ حریم خصوصی آرت‌گشت
               </h2>
               <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5 font-medium">
-                تعهدنامه رسمی امنیت و عدم ذخیره‌سازی داده‌های کاربران (Google Play Compliance)
+                تعهدنامه رسمی امنیت و حفظ حریم خصوصی کاربران (Google Play & Apple App Store Guidelines Compliance)
               </p>
             </div>
           </div>

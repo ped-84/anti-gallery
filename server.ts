@@ -354,7 +354,7 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.133',
+    version: 'بتا V 1.134',
     serverRole: SERVER_ROLE, // 'primary' | 'mirror'
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
@@ -372,7 +372,7 @@ app.get('/health', (req, res) => {
 app.get('/api/config', (req, res) => {
   res.json({
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.133',
+    version: 'بتا V 1.134',
     serverRole: SERVER_ROLE,
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
@@ -652,6 +652,26 @@ async function startServer() {
       }
       res.setHeader('Content-Type', 'application/json');
       res.json([]);
+    });
+
+    // Explicit handler for Apple Universal Links (Apple App Site Association - AASA)
+    app.get(['/.well-known/apple-app-site-association', '/.well-known/apple-app-site-association.json', '/apple-app-site-association'], (_req, res) => {
+      const aasaFile = path.join(distPath, '.well-known', 'apple-app-site-association');
+      if (fs.existsSync(aasaFile)) {
+        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Cache-Control', 'public, max-age=86400');
+        return res.sendFile(aasaFile);
+      }
+      res.setHeader('Content-Type', 'application/json');
+      res.json({
+        applinks: {
+          apps: [],
+          details: [{ appID: "TEAMID.com.artgasht.app", paths: ["*"] }]
+        },
+        webcredentials: {
+          apps: ["TEAMID.com.artgasht.app"]
+        }
+      });
     });
 
     // Privacy Policy direct URL for Google Play & CafeBazaar store listing

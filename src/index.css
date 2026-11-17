@@ -627,3 +627,35 @@ a.mapboxgl-ctrl-logo,
 .dark ::-webkit-scrollbar-thumb {
   background: rgba(163, 194, 228, 0.25);
 }
+
+/* ========================================================
+   Apple iOS / WebKit & Safe Area Inset Support (Apple HIG)
+   ======================================================== */
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevent unwanted double-tap zoom and touch delay on buttons and links */
+button, a, input, select, textarea {
+  touch-action: manipulation;
+}
+
+/* Apple Human Interface: Prevent accidental selection/callout on touch icons & buttons */
+button, .clay-button, .clay-theme-toggle {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}

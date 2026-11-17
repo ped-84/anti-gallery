@@ -9,7 +9,7 @@ interface HeaderProps {
   isStandalone?: boolean;
 }
 
-export const APP_VERSION = 'بتا V 1.133';
+export const APP_VERSION = 'بتا V 1.134';
 
 export const Header: React.FC<HeaderProps> = ({
   isDarkMode,
@@ -18,7 +18,10 @@ export const Header: React.FC<HeaderProps> = ({
   isStandalone = false
 }) => {
   return (
-    <header className="sticky top-0 z-40 bg-[#f4f6fa]/95 dark:bg-[#131722]/95 backdrop-blur-md border-b border-[#E1E1E1] dark:border-stone-800 transition-colors duration-200">
+    <header
+      className="sticky top-0 z-40 bg-[#f4f6fa]/95 dark:bg-[#131722]/95 backdrop-blur-md border-b border-[#E1E1E1] dark:border-stone-800 transition-colors duration-200"
+      style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 sm:h-22 md:h-24 flex items-center justify-between gap-3 sm:gap-4">
         {/* Zone 1: Brand Wordmark Logo (Prominent, Sole Main Logo, Right-Aligned Subtitle) */}
         <div className="flex items-center shrink-0">
@@ -26,7 +29,7 @@ export const Header: React.FC<HeaderProps> = ({
             {/* English Brand Wordmark (Primary Logo, Enlarged) */}
             <div className="flex items-center group-hover:opacity-95 transition-opacity">
               <img
-                src="./icons/brand-wordmark-light.svg?v=1.133"
+                src="./icons/brand-wordmark-light.svg?v=1.134"
                 alt="art gasht"
                 width="160"
                 height="48"
@@ -34,7 +37,7 @@ export const Header: React.FC<HeaderProps> = ({
                 className="h-8 sm:h-10 md:h-12 w-auto object-contain block dark:hidden"
               />
               <img
-                src="./icons/brand-wordmark-dark.svg?v=1.133"
+                src="./icons/brand-wordmark-dark.svg?v=1.134"
                 alt="art gasht"
                 width="160"
                 height="48"
