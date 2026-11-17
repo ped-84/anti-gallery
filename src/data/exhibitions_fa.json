@@ -435,21 +435,6 @@
     "isExpired": false
   },
   {
-    "eventId": 21583,
-    "galleryId": 41,
-    "title": "ششمین جایزه هنر معاصر ویستا",
-    "artist": "تینا ابتهاج، راحله امیربهرامی",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 15 آبان 1405",
-    "fullDateRange": "15 آبان 1405 تا 25 آبان 1405",
-    "closingDate": "25 آبان 1405",
-    "openingHours": "16:۰۰ الی 19:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21583.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21583.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21583",
-    "isExpired": false
-  },
-  {
     "eventId": 21555,
     "galleryId": 26,
     "title": "حضور",
@@ -525,21 +510,6 @@
     "isExpired": false
   },
   {
-    "eventId": 21552,
-    "galleryId": 443,
-    "title": "۱۲٬۴۹۷گره",
-    "artist": "ماهان عباسیان، پردیس حسامی",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 15 آبان 1405",
-    "fullDateRange": "15 آبان 1405 تا 25 آبان 1405",
-    "closingDate": "25 آبان 1405",
-    "openingHours": "14:۰۰ الی 19:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21552.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21552.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21552",
-    "isExpired": false
-  },
-  {
     "eventId": 21581,
     "galleryId": 755,
     "title": "خواب نیم‌روز",
@@ -600,21 +570,6 @@
     "isExpired": false
   },
   {
-    "eventId": 21554,
-    "galleryId": 1026,
-    "title": "عجایب به مشغولات",
-    "artist": "ایمون رضایی",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 15 آبان 1405",
-    "fullDateRange": "15 آبان 1405 تا 25 آبان 1405",
-    "closingDate": "25 آبان 1405",
-    "openingHours": "16:۰۰ الی 20:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21554.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21554.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21554",
-    "isExpired": false
-  },
-  {
     "eventId": 21521,
     "galleryId": 18,
     "title": "منتخب نسل نو ۱۶",
@@ -657,21 +612,6 @@
     "poster": "https://galleryinfo.ir/Images/Events/Event_21540.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21540.jpg",
     "url": "https://galleryinfo.ir/Event/fa/21540",
-    "isExpired": false
-  },
-  {
-    "eventId": 21545,
-    "galleryId": 468,
-    "title": "مجموعه‌ی علیداد نمازی",
-    "artist": "نمایشگاه گروهی",
-    "type": "نمایشگاه گروهی",
-    "openingDate": "جمعه 8 آبان 1405",
-    "fullDateRange": "8 آبان 1405 تا 25 آبان 1405",
-    "closingDate": "25 آبان 1405",
-    "openingHours": "12:۰۰ الی 20:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21545.jpg#qoj",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21545.jpg#qoj",
-    "url": "https://galleryinfo.ir/Event/fa/21545",
     "isExpired": false
   },
   {
@@ -735,6 +675,21 @@
     "isExpired": false
   },
   {
+    "eventId": 21613,
+    "galleryId": 1030,
+    "title": "تیاب",
+    "artist": "پیمان برآبادی، محمودرضا زندپور، حمزه فرهادی، ساسان ابری، مصطفی دشتی، فرح ابوالقاسم، سارا ابری، سوگل کاشانی، شهرام کریمی، آرمان یعقوب‌پور، مهرداد ختایی، فریدون آو، احمد نصرالهی، مریم اسدی، مهرداد پورنظر‌علی، گارنیک دِرهاکوپیان، فائزه بهارلو، مرتضی بصراوی، منوچهر نیازی، ابراهیم حقیقی، شنتیا ذاکرعاملی، حسین محجوبی، فرشته ستایش، سعید شهلاپور، بویه سادات‌‎نیا، طاها بهبهانی، مجید فعال، احمدرضا احمدی، علی رضوانی، مهراب رمضانی، سپیده فرزام",
+    "type": "نمایشگاه انفرادی",
+    "openingDate": "جمعه 8 آبان 1405",
+    "fullDateRange": "8 آبان 1405 تا 8 دی 1405",
+    "closingDate": "8 دی 1405",
+    "openingHours": " 11:۰۰ الی 21:۰۰",
+    "poster": "https://galleryinfo.ir/Images/Events/Event_21613.jpg",
+    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21613.jpg",
+    "url": "https://galleryinfo.ir/Event/fa/21613",
+    "isExpired": false
+  },
+  {
     "eventId": 21550,
     "galleryId": 1027,
     "title": "خاطرات اشیاء",
@@ -783,7 +738,7 @@
     "eventId": 21425,
     "galleryId": 1013,
     "title": "چشم‌انداز",
-    "artist": "لیندا آهنی، احمد اسفندیاری، هوشنگ پزشک‌نیا، پرهام پیوندی، لیندا آهنی، هوشنگ پزشک‌نیا، پرهام پیوندی، محمدعلی ترقی‌جاه، علی ذاکری، علی رضا، محدیه سهرابی، سالومه سوزنچی، ترحم سلمانی، جلال شباهنگی، محدثه طاهری، یعقوب عشقی‌فر، لیندا آهنی، هوشنگ پزشک‌نیا، پرهام پیوندی، محمدعلی ترقی‌جاه، علی ذاکری، علی رضا، محدیه سهرابی، سالومه سوزنچی، ترحم سلمانی، جلال شباهنگی، محدثه طاهری، محمد فاسونکی، ساتین غفاری، دلناز نوذ ی، لیندا آهنی، احمد اسفندیاری، هوشنگ پزشک‌نیا، پرهام پیوندی، محمدعلی ترقی‌جاه، علی ذاکری، علی رضا، محدیه سهرابی، سالومه سوزنچی، ترحم سلمانی، جلال شباهنگی، محدثه طاهری، محمد فاسونکی، ساتین غفاری، علی گلستانه (۱۳۱۹-۱۴۰۰)، شهرام کریمی، حسین محجوبی، منوچهر معتبر، سعیده میقانی، منوچهر نیازی، آرمان یعقوب‌پور",
+    "artist": "لیندا آهنی، احمد اسفندیاری، هوشنگ پزشک‌نیا، پرهام پیوندی، لیندا آهنی، هوشنگ پزشک‌نیا، پرهام پیوندی، محمدعلی ترقی‌جاه، علی ذاکری، علی رضا، محدیه سهرابی، سالومه سوزنچی، ترحم سلمانی، جلال شباهنگی، محدثه طاهری، یعقوب عشقی‌فر، لیندا آهنی، هوشنگ پزشک‌نیا، پرهام پیوندی، محمدعلی ترقی‌جاه، علی ذاکری، علی رضا، محدیه سهرابی، سالومه سوزنچی، ترحم سلمانی، جلال شباهنگی، محدثه طاهری، محمد فاسونکی، ساتین غفاری، دلناز نوذ ی، لیندا آهنی، احمد اسفندیاری، هوش��گ پزشک‌نیا، پرهام پیوندی، محمدعلی ترقی‌جاه، علی ذاکری، علی رضا، محدیه سهرابی، سالومه سوزنچی، ترحم سلمانی، جلال شباهنگی، محدثه طاهری، محمد فاسونکی، ساتین غفاری، علی گلستانه (۱۳۱۹-۱۴۰۰)، شهرام کریمی، حسین محجوبی، منوچهر معتبر، سعیده میقانی، منوچهر نیازی، آرمان یعقوب‌پور",
     "type": "نمایشگاه انفرادی",
     "openingDate": "جمعه 10 مهر 1405",
     "fullDateRange": "10 مهر 1405 تا 30 آبان 1405",
