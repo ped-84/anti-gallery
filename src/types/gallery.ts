@@ -66,6 +66,54 @@ export interface CustomOrigin {
   lng: number;
 }
 
+export interface TimeWindow {
+  openMin: number;
+  closeMin: number;
+}
+
+export interface ScheduledStop {
+  nodeIndex: number;
+  id: string | number;
+  name?: string;
+  arrivalTimeMin: number;
+  arrivalTimeFormatted: string;
+  waitMinutes: number;
+  visitStartMin: number;
+  visitStartFormatted: string;
+  departureTimeMin: number;
+  departureTimeFormatted: string;
+  effectiveDwellMinutes: number;
+  isCompressedVisit: boolean;
+  travelMinutesFromPrev: number;
+  closingTimeMin: number;
+  closingTimeFormatted: string;
+  slackMinutesBeforeClose: number;
+}
+
+export interface DroppedStop {
+  nodeIndex: number;
+  id: string | number;
+  name?: string;
+  reason: 'ALREADY_CLOSED_AT_START' | 'CLOSED_BEFORE_ARRIVAL' | 'TIME_BUDGET_EXCEEDED';
+  closingTimeFormatted: string;
+  earliestPossibleArrivalFormatted: string;
+  shortfallMinutes: number;
+}
+
+export interface TspTwSolution {
+  isFullyFeasible: boolean;
+  orderedIndices: number[];
+  scheduledStops: ScheduledStop[];
+  droppedStops: DroppedStop[];
+  totalTravelMinutes: number;
+  totalWaitMinutes: number;
+  totalVisitMinutes: number;
+  routeStartFormatted: string;
+  routeEndFormatted: string;
+  suggestedEarlierStartMinutes: number | null;
+  computeTimeMs: number;
+}
+
 export interface RouteOptimizationResult {
   orderedGalleries: Gallery[];
   totalDistanceKm: number;
@@ -79,7 +127,8 @@ export interface RouteOptimizationResult {
   isRoundTrip: boolean;
   mode: 'driving' | 'walking';
   originPoint?: { name: string; lat: number; lng: number };
-  algorithmUsed: 'osrm-trip' | 'tsp-matrix' | 'osrm-route' | 'fixed-matrix';
+  algorithmUsed: 'osrm-trip' | 'tsp-matrix' | 'osrm-route' | 'fixed-matrix' | 'tsp-tw-osrm' | 'tsp-tw-offline';
+  tspTwSolution?: TspTwSolution;
 }
 
 export interface CuratedTour {

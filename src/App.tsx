@@ -628,13 +628,28 @@ export default function App() {
         ? { name: origin.name, lat: origin.lat, lng: origin.lng }
         : undefined;
 
+      const savedDuration = (() => {
+        try {
+          const s = localStorage.getItem('gallery_visit_duration_min');
+          return s ? parseInt(s, 10) : 35;
+        } catch {
+          return 35;
+        }
+      })();
+
+      const now = new Date();
+      const currentMins = now.getHours() * 60 + now.getMinutes();
+      const startTimeMin = currentMins >= 11 * 60 && currentMins <= 20 * 60 ? currentMins : 16 * 60;
+
       const result = await optimizeGalleryRoute(selectedGalleries, {
         mode,
         isRoundTrip,
         trafficCondition,
         customStart,
         startGalleryId: customStart ? null : startId,
-        endGalleryId: endId
+        endGalleryId: endId,
+        startTime: startTimeMin,
+        dwellMinutes: savedDuration
       });
       setRouteResult(result);
     } catch (err: any) {
@@ -1421,7 +1436,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-right">
           <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
             <img
-              src="./icons/brand-logo-icon.svg?v=1.135"
+              src="./icons/brand-logo-icon.svg?v=1.136"
               alt="آرت‌گشت"
               width="18"
               height="18"
@@ -1429,7 +1444,7 @@ export default function App() {
               className="w-4.5 h-4.5 object-contain shrink-0 block dark:hidden"
             />
             <img
-              src="./icons/brand-logo-icon-dark.svg?v=1.135"
+              src="./icons/brand-logo-icon-dark.svg?v=1.136"
               alt="آرت‌گشت"
               width="18"
               height="18"

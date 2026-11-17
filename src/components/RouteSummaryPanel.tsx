@@ -111,6 +111,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
     try {
       localStorage.setItem('gallery_visit_duration_min', val.toString());
     } catch {}
+    onRecalculate(mode, isRoundTrip, trafficCondition);
   };
 
   const handleModeChange = (newMode: 'driving' | 'walking') => {
@@ -495,6 +496,47 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
               )}
             </div>
           )}
+
+          {/* TSP-TW Time Window Insights */}
+          {routeResult.tspTwSolution && (
+            <div className="space-y-2 pt-1">
+              <div className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-blue-50/80 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50 text-xs">
+                <div className="flex items-center gap-1.5 font-bold text-[#1856C7] dark:text-[#93c5fd]">
+                  <Clock className="w-4 h-4 shrink-0 text-[#1856C7] dark:text-[#93c5fd]" />
+                  <span>بازه زمانی بهینه بازدید:</span>
+                  <span className="font-mono text-sm">{toPersianDigits(routeResult.tspTwSolution.routeStartFormatted)} الی {toPersianDigits(routeResult.tspTwSolution.routeEndFormatted)}</span>
+                </div>
+                <span className="text-[11px] text-stone-500 dark:text-stone-400 font-mono">
+                  (هماهنگ با ساعات کاری)
+                </span>
+              </div>
+
+              {routeResult.tspTwSolution.suggestedEarlierStartMinutes && (
+                <div className="flex items-start gap-2 p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800/60 text-xs text-amber-900 dark:text-amber-200">
+                  <Sparkles className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                  <p className="leading-relaxed font-medium">
+                    <strong>پیشنهاد هوشمند:</strong> با {toPersianDigits(routeResult.tspTwSolution.suggestedEarlierStartMinutes)} دقیقه شروع زودتر، زمان کافی برای بازدید از تمامی گالری‌ها پیش از تعطیلی فراهم می‌شود.
+                  </p>
+                </div>
+              )}
+
+              {routeResult.tspTwSolution.droppedStops.length > 0 && (
+                <div className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-xs text-rose-900 dark:text-rose-200 space-y-1">
+                  <div className="flex items-center gap-1.5 font-bold text-rose-700 dark:text-rose-300">
+                    <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+                    <span>هشدار تداخل ساعت کاری ({toPersianDigits(routeResult.tspTwSolution.droppedStops.length)} گالری):</span>
+                  </div>
+                  <div className="text-[11px] text-rose-800 dark:text-rose-300 space-y-0.5 pr-5">
+                    {routeResult.tspTwSolution.droppedStops.map((d, i) => (
+                      <div key={i}>
+                        • <strong>{d.name || `ایستگاه ${toPersianDigits(d.nodeIndex + 1)}`}</strong>: ساعت {toPersianDigits(d.closingTimeFormatted)} بسته می‌شود (رسیدن تقریبی: ~{toPersianDigits(d.earliestPossibleArrivalFormatted)}).
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
@@ -713,6 +755,46 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                           )}
                         </div>
                       )}
+
+                      {/* TSP-TW Schedule Info for this stop */}
+                      {(() => {
+                        const scheduledStop = routeResult.tspTwSolution?.scheduledStops.find(
+                          (s) => s.id === gallery.id
+                        );
+                        if (!scheduledStop) return null;
+                        return (
+                          <div className="mt-2.5 pt-2 border-t border-stone-100 dark:border-stone-800/80 flex items-center justify-between gap-2 flex-wrap text-xs">
+                            <div className="flex items-center gap-1.5 text-stone-700 dark:text-stone-300 font-bold font-mono">
+                              <Clock className="w-3.5 h-3.5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
+                              <span>ورود: {toPersianDigits(scheduledStop.arrivalTimeFormatted)}</span>
+                              <span className="text-stone-300 dark:text-stone-600">·</span>
+                              <span>خروج: {toPersianDigits(scheduledStop.departureTimeFormatted)}</span>
+                              <span className="text-stone-400 font-normal text-[11px]">
+                                ({toPersianDigits(scheduledStop.effectiveDwellMinutes)} دقیقه)
+                              </span>
+                            </div>
+
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              {scheduledStop.isCompressedVisit && (
+                                <span className="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 font-bold text-[11px] flex items-center gap-1">
+                                  <Zap className="w-3 h-3 text-amber-600" />
+                                  <span>بازدید فشرده</span>
+                                </span>
+                              )}
+                              {scheduledStop.waitMinutes > 0 && (
+                                <span className="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-[#1856C7] dark:text-[#93c5fd] font-bold text-[11px]">
+                                  ⏳ {toPersianDigits(scheduledStop.waitMinutes)} دقیقه انتظار
+                                </span>
+                              )}
+                              {scheduledStop.slackMinutesBeforeClose >= 0 && scheduledStop.slackMinutesBeforeClose <= 60 && (
+                                <span className="text-[11px] text-stone-500 dark:text-stone-400">
+                                  (تعطیلی: {toPersianDigits(scheduledStop.closingTimeFormatted)})
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })()}
 
                       {/* Distinct Start / End Point Controls & Badges */}
                       <div className="mt-2.5 pt-2 border-t border-stone-100 dark:border-stone-800/80 flex items-center justify-between gap-2 flex-wrap text-xs sm:text-[13px]">
