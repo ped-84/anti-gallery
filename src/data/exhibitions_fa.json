@@ -1,5 +1,35 @@
 [
   {
+    "eventId": 21626,
+    "galleryId": 174,
+    "title": "حقیقت باید مکان داشته باشد",
+    "artist": "محمدامین فولادشکن",
+    "type": "نمایشگاه انفرادی",
+    "openingDate": "جمعه 28 آبان 1405",
+    "fullDateRange": "28 آبان 1405 تا 6 آذر 1405",
+    "closingDate": "6 آذر 1405",
+    "openingHours": "13:۰۰ الی 20:۰۰",
+    "poster": "https://galleryinfo.ir/Images/Events/Event_21626.jpg",
+    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21626.jpg",
+    "url": "https://galleryinfo.ir/Event/fa/21626",
+    "isExpired": false
+  },
+  {
+    "eventId": 21623,
+    "galleryId": 504,
+    "title": "بستار",
+    "artist": "شیدا شکرگزار",
+    "type": "نمایشگاه انفرادی",
+    "openingDate": "جمعه 28 آبان 1405",
+    "fullDateRange": "28 آبان 1405 تا 30 آبان 1405",
+    "closingDate": "30 آبان 1405",
+    "openingHours": "۱۶:۰۰ الی  19:۰۰",
+    "poster": "https://galleryinfo.ir/Images/Events/Event_21623.jpg",
+    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21623.jpg",
+    "url": "https://galleryinfo.ir/Event/fa/21623",
+    "isExpired": false
+  },
+  {
     "eventId": 21609,
     "galleryId": 196,
     "title": "خاطرم سرشار باد",
@@ -120,36 +150,6 @@
     "isExpired": false
   },
   {
-    "eventId": 21610,
-    "galleryId": 147,
-    "title": "اسباب‌بازی‌ها",
-    "artist": "علی مهری، مهدی اسدی پور، نیکو وقری، روژان سرمست، هلهله",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 22 آبان 1405",
-    "fullDateRange": "22 آبان 1405 تا 27 آبان 1405",
-    "closingDate": "27 آبان 1405",
-    "openingHours": "17:۰۰ الی ۲1:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21610.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21610.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21610",
-    "isExpired": false
-  },
-  {
-    "eventId": 21606,
-    "galleryId": 325,
-    "title": "\" زمین خشن ، دست‌های گرم \"",
-    "artist": "یاسر میرزایی",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 22 آبان 1405",
-    "fullDateRange": "22 آبان 1405 تا 27 آبان 1405",
-    "closingDate": "27 آبان 1405",
-    "openingHours": " 14:۰۰ الی 20:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21606.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21606.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21606",
-    "isExpired": false
-  },
-  {
     "eventId": 21599,
     "galleryId": 258,
     "title": "کالبد وهم",
@@ -255,21 +255,6 @@
     "isExpired": false
   },
   {
-    "eventId": 21605,
-    "galleryId": 273,
-    "title": "\"خطوط سفیر و کرشمه\"",
-    "artist": "مهشید ارباب زاده، سعیده چهرزاد، مونا فریدونی، فهیمه آریادوست، محمد بخشی‌زاده، مرضیه بهرامی، سمیرا گلزاد، فرانک صابری، فرشید فقیهی، محدثه محتشمی، سیما پایا، صبا پناهی، نادر احمری، سما سلوکی، افسانه فتح‌اله نژاد، حمید قمصری، نازنین ابراهیمی، طهورا فراهانی، ندا یاور، سحر سلیمی",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 22 آبان 1405",
-    "fullDateRange": "22 آبان 1405 تا 27 آبان 1405",
-    "closingDate": "27 آبان 1405",
-    "openingHours": "15:۰۰ الی  21:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21605.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21605.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21605",
-    "isExpired": false
-  },
-  {
     "eventId": 21596,
     "galleryId": 1001,
     "title": "بزم در بزم 2",
@@ -297,21 +282,6 @@
     "poster": "https://galleryinfo.ir/Images/Events/Event_21608.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21608.jpg",
     "url": "https://galleryinfo.ir/Event/fa/21608",
-    "isExpired": false
-  },
-  {
-    "eventId": 21602,
-    "galleryId": 1008,
-    "title": "«ما، توت فرنگی ها»",
-    "artist": "آرش مهتافر",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 22 آبان 1405",
-    "fullDateRange": "22 آبان 1405 تا 27 آبان 1405",
-    "closingDate": "27 آبان 1405",
-    "openingHours": "15:۰۰ الی 19:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21602.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21602.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21602",
     "isExpired": false
   },
   {
@@ -543,7 +513,7 @@
     "eventId": 21541,
     "galleryId": 487,
     "title": "میان",
-    "artist": "مرجان تبریزی",
+    "artist": "مرجان ��بریزی",
     "type": "نمایشگاه انفرادی",
     "openingDate": "جمعه 8 آبان 1405",
     "fullDateRange": "8 آبان 1405 تا 29 آبان 1405",
