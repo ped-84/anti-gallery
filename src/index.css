@@ -639,7 +639,7 @@ a.mapboxgl-ctrl-logo,
 }
 
 :root {
-  color-scheme: light;
+  color-scheme: dark light;
 }
 
 :root.dark, html.dark {
@@ -647,9 +647,13 @@ a.mapboxgl-ctrl-logo,
 }
 
 html {
-  background-color: #f0f2f6;
+  background-color: #131722;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
+}
+
+html:not(.dark) {
+  background-color: #f0f2f6;
 }
 
 html.dark {
@@ -657,13 +661,17 @@ html.dark {
 }
 
 body {
-  background-color: #f0f2f6;
+  background-color: #131722;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+body:not(.dark) {
+  background-color: #f0f2f6;
+}
+
 .dark body {
-  background-color: #13161c;
+  background-color: #131722;
 }
 
 /* Prevent unwanted double-tap zoom and touch delay on buttons and links */
