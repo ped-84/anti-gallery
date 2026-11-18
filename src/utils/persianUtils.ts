@@ -490,7 +490,7 @@ export function getExhibitionStatus(
       isExpired: false,
       isClosingToday: false,
       isClosingSoon: true,
-      statusBadge: closingFormatted ? `روزهای پایانی · تا ${closingFormatted}` : 'روزهای پایانی نمایشگاه',
+      statusBadge: closingFormatted ? `روزهای پایانی (تا ${closingFormatted})` : 'روزهای پایانی نمایشگاه',
       badgeType: 'closing-soon',
       closingLabel: closingFormatted ? `تا ${closingFormatted}` : undefined
     };
@@ -498,7 +498,7 @@ export function getExhibitionStatus(
 
   // Ongoing exhibition from previous cycles
   const badgeLabel = closingFormatted
-    ? `در حال برگزاری · تا ${closingFormatted}`
+    ? `در حال برگزاری (تا ${closingFormatted})`
     : (exhibition.openingDate ? `در حال برگزاری (${toPersianDigits(exhibition.openingDate)})` : 'نمایشگاه جاری');
 
   return {
