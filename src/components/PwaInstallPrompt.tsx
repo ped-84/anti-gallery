@@ -137,8 +137,14 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
             {/* Top row: Icon, text & close */}
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 clay-card clay-darkblue flex items-center justify-center text-white shrink-0 rounded-2xl shadow-sm">
-                  <Compass className="w-6 h-6 stroke-[2.2]" />
+                <div className="w-11 h-11 bg-[#131722] border border-stone-700/60 flex items-center justify-center shrink-0 rounded-2xl shadow-md p-2">
+                  <img
+                    src="./icons/brand-logo-icon-dark.svg?v=1.146"
+                    alt="آرت‌گشت"
+                    width="24"
+                    height="24"
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <div>
                   <h2 className="text-sm sm:text-base font-black text-[#1c2944] dark:text-white leading-tight">
@@ -190,8 +196,14 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 clay-card clay-darkblue flex items-center justify-center text-white rounded-xl">
-                  <Compass className="w-5 h-5 stroke-[2.2]" />
+                <div className="w-9 h-9 bg-[#131722] border border-stone-700/60 flex items-center justify-center rounded-xl shadow-xs overflow-hidden p-1.5">
+                  <img
+                    src="./icons/brand-logo-icon-dark.svg?v=1.146"
+                    alt="آرت‌گشت"
+                    width="20"
+                    height="20"
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <h2 className="text-sm sm:text-base font-black text-[#1c2944] dark:text-white">
                   نصب روی آیفون (iOS)
@@ -255,8 +267,14 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 clay-card clay-orange flex items-center justify-center text-white rounded-xl">
-                  <Smartphone className="w-5 h-5 stroke-[2.2]" />
+                <div className="w-9 h-9 bg-[#131722] border border-stone-700/60 flex items-center justify-center rounded-xl shadow-xs overflow-hidden p-1.5">
+                  <img
+                    src="./icons/brand-logo-icon-dark.svg?v=1.146"
+                    alt="آرت‌گشت"
+                    width="20"
+                    height="20"
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <h2 className="text-sm sm:text-base font-black text-[#1c2944] dark:text-white">
                   نصب مستقیم در اندروید
