@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Download, X, Compass, Share2, PlusSquare, CheckCircle2 } from 'lucide-react';
+import { Download, X, Compass, Share2, PlusSquare, CheckCircle2, MoreVertical, Smartphone } from 'lucide-react';
 
 interface PwaInstallPromptProps {
   onInstallStateChange?: (canInstall: boolean) => void;
@@ -13,6 +13,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showBanner, setShowBanner] = useState<boolean>(false);
   const [showIosModal, setShowIosModal] = useState<boolean>(false);
+  const [showAndroidModal, setShowAndroidModal] = useState<boolean>(false);
   const [isInstalled, setIsInstalled] = useState<boolean>(false);
   const [showSuccessToast, setShowSuccessToast] = useState<boolean>(false);
 
@@ -79,22 +80,35 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
       triggerInstall();
     } else if (isIos && !isStandalone) {
       setShowIosModal(true);
-    } else {
-      // General prompt or info
-      setShowBanner(true);
+    } else if (!isStandalone) {
+      setShowAndroidModal(true);
     }
   }, [externalTrigger]);
 
   const triggerInstall = async () => {
     if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const choiceResult = await deferredPrompt.userChoice;
-      if (choiceResult.outcome === 'accepted') {
+      try {
+        deferredPrompt.prompt();
+        const choiceResult = await deferredPrompt.userChoice;
+        if (choiceResult?.outcome === 'accepted') {
+          setShowBanner(false);
+          setDeferredPrompt(null);
+        }
+      } catch (err) {
+        console.warn('Install prompt error:', err);
+        if (isIos) {
+          setShowIosModal(true);
+        } else {
+          setShowAndroidModal(true);
+        }
         setShowBanner(false);
-        setDeferredPrompt(null);
       }
     } else if (isIos) {
       setShowIosModal(true);
+      setShowBanner(false);
+    } else {
+      // Android / Desktop Chrome fallback when browser suppresses automatic prompt
+      setShowAndroidModal(true);
       setShowBanner(false);
     }
   };
@@ -225,6 +239,88 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
               type="button"
               onClick={() => setShowIosModal(false)}
               className="clay-button clay-base w-full py-2.5 text-xs sm:text-sm font-bold text-[#3D5B99] dark:text-[#A3C2E4] rounded-xl hover:brightness-105 active:scale-95 transition-all mt-1"
+            >
+              متوجه شدم
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* C. Android Chrome Installation Instruction Modal (Fallback when beforeinstallprompt is suppressed) */}
+      {showAndroidModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-3 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-sm clay-card p-5 bg-white dark:bg-[#1a2130] rounded-3xl border border-stone-200 dark:border-stone-800 shadow-2xl flex flex-col gap-4 animate-in slide-in-from-bottom duration-300"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 clay-card clay-orange flex items-center justify-center text-white rounded-xl">
+                  <Smartphone className="w-5 h-5 stroke-[2.2]" />
+                </div>
+                <h2 className="text-sm sm:text-base font-black text-[#1c2944] dark:text-white">
+                  نصب مستقیم در اندروید
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAndroidModal(false)}
+                className="w-7 h-7 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-stone-500 flex items-center justify-center cursor-pointer"
+                title="بستن"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed font-medium">
+              به دلیل اینکه اپلیکیشن قبلاً حذف شده، کروم پنجره خودکار را موقتاً محدود کرده است. برای نصب مجدد کافیست:
+            </p>
+
+            <div className="space-y-2.5 text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed font-medium">
+              <div className="flex items-start gap-2.5 p-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700">
+                <div className="w-6 h-6 rounded-lg bg-[#3D5B99]/15 text-[#3D5B99] dark:text-[#A3C2E4] flex items-center justify-center shrink-0 font-bold text-xs sm:text-sm">
+                  ۱
+                </div>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span>در بالای مرورگر کروم روی</span>
+                  <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-stone-200 dark:bg-stone-700 font-bold text-xs">
+                    <MoreVertical className="w-3.5 h-3.5" />
+                    منوی سه‌نقطه
+                  </span>
+                  <span>(بالا سمت راست) بزنید.</span>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-2.5 p-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700">
+                <div className="w-6 h-6 rounded-lg bg-[#F76B1C]/15 text-[#F76B1C] flex items-center justify-center shrink-0 font-bold text-xs sm:text-sm">
+                  ۲
+                </div>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span>گزینه</span>
+                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-200 dark:bg-stone-700 font-bold text-xs text-[#F76B1C]">
+                    <Download className="w-3.5 h-3.5 stroke-[2.2]" />
+                    نصب برنامه (Install app)
+                  </span>
+                  <span>یا «افزودن به صفحه اصلی» را انتخاب کنید.</span>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-2.5 p-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700">
+                <div className="w-6 h-6 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 font-bold text-xs sm:text-sm">
+                  ۳
+                </div>
+                <div className="flex items-center gap-1 flex-wrap">
+                  <span>روی</span>
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400">«نصب» (Install)</span>
+                  <span>تأیید نمایید تا نسخه تیره با موفقیت نصب شود.</span>
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowAndroidModal(false)}
+              className="clay-button clay-orange text-white w-full py-2.5 text-xs sm:text-sm font-bold rounded-xl hover:brightness-105 active:scale-95 transition-all mt-1 cursor-pointer"
             >
               متوجه شدم
             </button>
