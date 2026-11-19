@@ -25,7 +25,7 @@ if [ -f "$ENV_FILE" ]; then
     source "$ENV_FILE" 2>/dev/null || true
 fi
 
-PRIMARY_HOST="${PRIMARY_HOST:-86.54.42.206}"
+PRIMARY_HOST="${PRIMARY_HOST:-62.144.51.43}"
 PRIMARY_USER="${PRIMARY_USER:-deploy}"
 PRIMARY_PORT="${PRIMARY_PORT:-22}"
 PRIMARY_KEY="${PRIMARY_KEY:-/home/deploy/.ssh/id_rsa}"

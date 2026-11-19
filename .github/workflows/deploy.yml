@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  DEPLOY_HOST: 86.54.42.206
+  DEPLOY_HOST: 62.144.51.43
   DEPLOY_USER: deploy
   REMOTE_DIR: /opt/artgasht
 
@@ -53,6 +53,8 @@ jobs:
           printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy
           chmod 600 ~/.ssh/id_deploy
           printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+          ssh-keyscan -H "artgasht.com" >> ~/.ssh/known_hosts 2>/dev/null || true
           chmod 644 ~/.ssh/known_hosts
           cat > ~/.ssh/config <<EOF
           Host production
@@ -60,7 +62,7 @@ jobs:
             User $DEPLOY_USER
             IdentityFile ~/.ssh/id_deploy
             IdentitiesOnly yes
-            StrictHostKeyChecking yes
+            StrictHostKeyChecking accept-new
             ServerAliveInterval 15
             ServerAliveCountMax 8
           EOF
