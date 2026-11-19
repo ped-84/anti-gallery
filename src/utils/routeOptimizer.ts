@@ -1064,15 +1064,30 @@ export function buildGoogleMapsUrl(
   return url;
 }
 
-export function buildNeshanUrl(gallery: Gallery): string {
-  return `https://neshan.org/maps/@${gallery.lat},${gallery.lng},16z`;
+export function buildNeshanUrl(
+  gallery: Gallery,
+  origin?: { lat: number; lng: number }
+): string {
+  if (!gallery) return '';
+  if (origin && origin.lat && origin.lng) {
+    return `https://neshan.org/maps?origin=${origin.lat},${origin.lng}&destination=${gallery.lat},${gallery.lng}&type=drive`;
+  }
+  return `https://neshan.org/maps?destination=${gallery.lat},${gallery.lng}&type=drive`;
 }
 
-export function buildBaladUrl(gallery: Gallery): string {
-  return `https://balad.ir/location?latitude=${gallery.lat}&longitude=${gallery.lng}`;
+export function buildBaladUrl(
+  gallery: Gallery,
+  origin?: { lat: number; lng: number }
+): string {
+  if (!gallery) return '';
+  if (origin && origin.lat && origin.lng) {
+    return `https://balad.ir/directions/driving?destination=${gallery.lat}%2C${gallery.lng}&origin=${origin.lat}%2C${origin.lng}`;
+  }
+  return `https://balad.ir/directions/driving?destination=${gallery.lat}%2C${gallery.lng}`;
 }
 
 export function buildWazeUrl(gallery: Gallery): string {
+  if (!gallery) return '';
   return `https://waze.com/ul?ll=${gallery.lat},${gallery.lng}&navigate=yes`;
 }
 

@@ -44,7 +44,8 @@ import {
   Flame,
   Building2,
   Navigation,
-  ArrowLeft
+  ArrowLeft,
+  CheckCircle2
 } from 'lucide-react';
 
 const STICKDAZZLE_THEMES = ['darkblue', 'orange', 'softblue', 'gray'] as const;
@@ -345,6 +346,31 @@ export default function App() {
     }
   };
 
+  // Toast Notification State & Handler
+  const [toastMessage, setToastMessage] = useState<{
+    title: string;
+    subtitle?: string;
+  } | null>(null);
+  const toastTimeoutRef = React.useRef<number | null>(null);
+
+  const showToast = useCallback((title: string, subtitle?: string) => {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
+    setToastMessage({ title, subtitle });
+    toastTimeoutRef.current = window.setTimeout(() => {
+      setToastMessage(null);
+    }, 4500);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
+    };
+  }, []);
+
   // Dark Mode Toggle
   const toggleDarkMode = () => {
     setIsDarkMode((prev) => {
@@ -627,12 +653,12 @@ export default function App() {
     startId: number | null = startGalleryId,
     endId: number | null = endGalleryId,
     origin: CustomOrigin | null = originLocation
-  ) => {
+  ): Promise<RouteOptimizationResult | null> => {
     const hasCustomStart = Boolean(origin && origin.lat !== 0);
     const minRequired = hasCustomStart ? 1 : 2;
     if (selectedGalleries.length < minRequired) {
       setRouteResult(null);
-      return;
+      return null;
     }
 
     setIsOptimizing(true);
@@ -665,8 +691,10 @@ export default function App() {
         dwellMinutes: savedDuration
       });
       setRouteResult(result);
+      return result;
     } catch (err: any) {
       console.error('Route optimization error:', err);
+      return null;
     } finally {
       setIsOptimizing(false);
     }
@@ -898,11 +926,32 @@ export default function App() {
   const minRequired = hasCustomOrigin ? 1 : 2;
   const canOptimize = selectedGalleries.length >= minRequired;
 
+  const handleOptimizeClick = useCallback(async () => {
+    if (!canOptimize || isOptimizing) return;
+
+    setMobileActiveTab('map');
+    const res = await runRouteOptimization();
+    const count = res?.orderedGalleries.length || selectedGalleries.length;
+
+    showToast(
+      'مسیریابی بهینه برای گشت شما انجام شد',
+      `مسیر بهینه برای ${toPersianDigits(count)} نگارخانه بر اساس ترافیک و کمترین مسافت محاسبه شد.`
+    );
+
+    setTimeout(() => {
+      const el = document.getElementById('route-summary-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 150);
+  }, [canOptimize, isOptimizing, runRouteOptimization, selectedGalleries.length, showToast, setMobileActiveTab]);
+
   const handleGoToRouteSummary = useCallback(() => {
     if (selectedGalleries.length === 0) return;
 
     if (canOptimize && !routeResult) {
-      runRouteOptimization();
+      handleOptimizeClick();
+      return;
     }
     setMobileActiveTab('map');
 
@@ -912,7 +961,7 @@ export default function App() {
         el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }, 120);
-  }, [canOptimize, routeResult, selectedGalleries.length]);
+  }, [canOptimize, routeResult, selectedGalleries.length, handleOptimizeClick, setMobileActiveTab]);
 
   return (
     <div className="min-h-screen bg-[#f3f5f8] dark:bg-[#12151e] text-stone-800 dark:text-stone-100 flex flex-col font-sans transition-colors duration-200 overflow-x-hidden">
@@ -1415,10 +1464,7 @@ export default function App() {
 
               <button
                 type="button"
-                onClick={() => {
-                  runRouteOptimization();
-                  setMobileActiveTab('map');
-                }}
+                onClick={handleOptimizeClick}
                 disabled={!canOptimize || isOptimizing}
                 className={`clay-button px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold flex items-center gap-1.5 sm:gap-2 rounded-xl transition-all cursor-pointer ${
                   canOptimize
@@ -1449,7 +1495,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-right">
           <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
             <img
-              src="./icons/brand-logo-icon.svg?v=1.146"
+              src="./icons/brand-logo-icon.svg?v=1.147"
               alt="آرت‌گشت"
               width="18"
               height="18"
@@ -1457,7 +1503,7 @@ export default function App() {
               className="w-4.5 h-4.5 object-contain shrink-0 block dark:hidden"
             />
             <img
-              src="./icons/brand-logo-icon-dark.svg?v=1.146"
+              src="./icons/brand-logo-icon-dark.svg?v=1.147"
               alt="آرت‌گشت"
               width="18"
               height="18"
@@ -1566,6 +1612,29 @@ export default function App() {
       <Suspense fallback={null}>
         <PwaInstallPrompt externalTrigger={pwaInstallTrigger} />
       </Suspense>
+
+      {/* Floating Action & Route Optimization Toast Notification */}
+      {toastMessage && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed top-5 left-1/2 -translate-x-1/2 z-[100] max-w-[92vw] sm:max-w-md w-auto bg-[#182338]/95 dark:bg-[#10141c]/95 text-white border border-[#F76B1C]/60 px-4 sm:px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-300 pointer-events-auto"
+        >
+          <div className="w-8 h-8 rounded-xl bg-[#F76B1C] text-white flex items-center justify-center shrink-0 shadow-md">
+            <CheckCircle2 className="w-4.5 h-4.5 stroke-[2.5]" />
+          </div>
+          <div className="text-right min-w-0">
+            <p className="font-black text-white text-xs sm:text-sm leading-tight">
+              {toastMessage.title}
+            </p>
+            {toastMessage.subtitle && (
+              <p className="text-[11px] sm:text-xs text-stone-300 font-medium mt-0.5 leading-snug">
+                {toastMessage.subtitle}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
     </div>
   );
