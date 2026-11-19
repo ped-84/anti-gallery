@@ -113,6 +113,14 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
   const [showTrafficLayer, setShowTrafficLayer] = useState(true);
   const [showTrafficZone, setShowTrafficZone] = useState(true);
   const [mapFilterMode, setMapFilterMode] = useState<'all' | 'active-only' | 'openings-only'>('all');
+  const [showTourOnly, setShowTourOnly] = useState(false);
+
+  // Auto-reset tour filter if selected galleries are cleared
+  useEffect(() => {
+    if (selectedGalleries.length === 0 && showTourOnly) {
+      setShowTourOnly(false);
+    }
+  }, [selectedGalleries.length, showTourOnly]);
 
   // Compute maximum Persian opening score for the current Friday cycle
   const maxOpeningScore = useMemo(() => {
@@ -534,10 +542,18 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       const activeSpacesCount = venueGalleries.filter((g) => Boolean(g.activeExhibition || g.posterImage)).length;
       const hasExhibition = activeSpacesCount > 0;
 
-      // Smart Decluttering: filter markers based on active mapFilterMode
+      // Smart Decluttering: filter markers based on active mapFilterMode & showTourOnly
       // Selected tour destinations and route waypoints are NEVER hidden!
-      const isPartOfRoute = isSelected || orderNum !== undefined;
-      if (!isPartOfRoute) {
+      const isPartOfRoute =
+        isSelected ||
+        orderNum !== undefined ||
+        venueGalleries.some((g) => selectedIds.has(g.id) || orderIndexMap.has(g.id));
+
+      if (showTourOnly) {
+        if (!isPartOfRoute) {
+          return;
+        }
+      } else if (!isPartOfRoute) {
         if (mapFilterMode === 'openings-only' && !hasOpeningThisWeek) {
           return;
         }
@@ -673,7 +689,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         console.warn('[Neshan] fitBounds note:', e);
       }
     }
-  }, [galleries, selectedGalleries, routeResult, activeGalleryId, isMapReady, mapFilterMode, maxOpeningScore, venueMap]);
+  }, [galleries, selectedGalleries, routeResult, activeGalleryId, isMapReady, mapFilterMode, maxOpeningScore, venueMap, showTourOnly]);
 
   // Recenter controls
   const handleRecenterCluster = () => {
@@ -787,75 +803,121 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         </button>
       </div>
 
-      {/* Floating Map Declutter Toggle Bar (خلوت‌سازی هوشمند نقشه) */}
-      <div className="absolute top-3.5 right-3.5 z-10 clay-card bg-white/95 dark:bg-[#151922]/95 backdrop-blur-md p-1 rounded-2xl border border-[#E1E1E1] dark:border-stone-800 shadow-md flex items-center gap-1 text-xs font-bold">
-        <button
-          type="button"
-          onClick={() => setMapFilterMode('openings-only')}
-          className={`px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
-            mapFilterMode === 'openings-only'
-              ? 'bg-[#F76B1C] text-white shadow-xs'
-              : 'text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800'
-          }`}
-          title="فقط نمایش گالری‌های دارای افتتاحیه این هفته (خلوت‌ترین حالت)"
-        >
-          <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-          <span>افتتاحیه‌ها</span>
-          <span
-            className={`text-[10px] px-1.5 py-0.2 rounded-md ${
-              mapFilterMode === 'openings-only'
-                ? 'bg-white/25 text-white'
-                : 'bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300'
-            }`}
-          >
-            {toPersianDigits(openingsCount)}
-          </span>
-        </button>
+      {/* Floating Map Controls (Top-Right) */}
+      <div className="absolute top-3.5 right-3.5 z-10 flex flex-col items-end gap-1.5 max-w-[calc(100%-70px)]">
+        {/* Primary Tour Mode Toggle: Shown whenever user has galleries in their tour */}
+        {selectedGalleries.length > 0 && (
+          <div className="clay-card bg-white/95 dark:bg-[#151922]/95 backdrop-blur-md p-1 rounded-2xl border border-[#E1E1E1] dark:border-stone-800 shadow-md flex items-center gap-1 text-xs font-bold">
+            <button
+              type="button"
+              onClick={() => setShowTourOnly(true)}
+              className={`px-2.5 sm:px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
+                showTourOnly
+                  ? 'bg-[#10335e] dark:bg-[#1e335a] text-white shadow-xs ring-1 ring-[#F76B1C]'
+                  : 'text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800'
+              }`}
+              title="فقط نمایش گالری‌های منتخب و ایستگاه‌های گشت شما روی نقشه"
+            >
+              <span className={`w-2 h-2 rounded-full ${showTourOnly ? 'bg-[#F76B1C] animate-pulse' : 'bg-stone-400'}`} />
+              <span>فقط گالری‌های گشت</span>
+              <span
+                className={`text-[10px] px-1.5 py-0.2 rounded-md ${
+                  showTourOnly
+                    ? 'bg-[#F76B1C] text-white font-bold'
+                    : 'bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300'
+                }`}
+              >
+                {toPersianDigits(selectedGalleries.length)}
+              </span>
+            </button>
 
-        <button
-          type="button"
-          onClick={() => setMapFilterMode('active-only')}
-          className={`px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
-            mapFilterMode === 'active-only'
-              ? 'bg-[#3D5B99] text-white shadow-xs'
-              : 'text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800'
-          }`}
-          title="نمایش تمام گالری‌های دارای نمایشگاه فعال"
-        >
-          <span className="w-2 h-2 rounded-full bg-[#F76B1C]" />
-          <span>همه فعال‌ها</span>
-          <span
-            className={`text-[10px] px-1.5 py-0.2 rounded-md ${
-              mapFilterMode === 'active-only'
-                ? 'bg-white/25 text-white'
-                : 'bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300'
-            }`}
-          >
-            {toPersianDigits(activeCount)}
-          </span>
-        </button>
+            <button
+              type="button"
+              onClick={() => setShowTourOnly(false)}
+              className={`px-2.5 sm:px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
+                !showTourOnly
+                  ? 'bg-[#3D5B99] text-white shadow-xs'
+                  : 'text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800'
+              }`}
+              title="نمایش تمام گالری‌های تهران روی نقشه (حالت پیش‌فرض)"
+            >
+              <span>همه گالری‌ها</span>
+            </button>
+          </div>
+        )}
 
-        <button
-          type="button"
-          onClick={() => setMapFilterMode('all')}
-          className={`px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
-            mapFilterMode === 'all'
-              ? 'bg-[#1e335a] text-white shadow-xs'
-              : 'text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800'
-          }`}
-          title="نمایش تمام نگارخانه‌ها (شامل بین دو دوره)"
-        >
-          <span>همه</span>
-          <span
-            className={`text-[10px] px-1.5 py-0.2 rounded-md ${
-              mapFilterMode === 'all'
-                ? 'bg-white/25 text-white'
-                : 'bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300'
-            }`}
-          >
-            {toPersianDigits(allCount)}
-          </span>
-        </button>
+        {/* Secondary Declutter Tabs: Visible when in 'All Galleries' mode or before selecting tour */}
+        {(!showTourOnly || selectedGalleries.length === 0) && (
+          <div className="clay-card bg-white/95 dark:bg-[#151922]/95 backdrop-blur-md p-1 rounded-2xl border border-[#E1E1E1] dark:border-stone-800 shadow-xs flex items-center gap-1 text-[11px] font-bold">
+            <button
+              type="button"
+              onClick={() => setMapFilterMode('openings-only')}
+              className={`px-2 py-1 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
+                mapFilterMode === 'openings-only'
+                  ? 'bg-[#F76B1C] text-white shadow-xs'
+                  : 'text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800'
+              }`}
+              title="فقط نمایش گالری‌های دارای افتتاحیه این هفته (خلوت‌ترین حالت)"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+              <span>افتتاحیه‌ها</span>
+              <span
+                className={`text-[9.5px] px-1.5 py-0.2 rounded-md ${
+                  mapFilterMode === 'openings-only'
+                    ? 'bg-white/25 text-white'
+                    : 'bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300'
+                }`}
+              >
+                {toPersianDigits(openingsCount)}
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setMapFilterMode('active-only')}
+              className={`px-2 py-1 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
+                mapFilterMode === 'active-only'
+                  ? 'bg-[#3D5B99] text-white shadow-xs'
+                  : 'text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800'
+              }`}
+              title="نمایش تمام گالری‌های دارای نمایشگاه فعال"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#F76B1C]" />
+              <span>همه فعال‌ها</span>
+              <span
+                className={`text-[9.5px] px-1.5 py-0.2 rounded-md ${
+                  mapFilterMode === 'active-only'
+                    ? 'bg-white/25 text-white'
+                    : 'bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300'
+                }`}
+              >
+                {toPersianDigits(activeCount)}
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setMapFilterMode('all')}
+              className={`px-2 py-1 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
+                mapFilterMode === 'all'
+                  ? 'bg-[#1e335a] text-white shadow-xs'
+                  : 'text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800'
+              }`}
+              title="نمایش تمام نگارخانه‌ها (شامل بین دو دوره)"
+            >
+              <span>همه</span>
+              <span
+                className={`text-[9.5px] px-1.5 py-0.2 rounded-md ${
+                  mapFilterMode === 'all'
+                    ? 'bg-white/25 text-white'
+                    : 'bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300'
+                }`}
+              >
+                {toPersianDigits(allCount)}
+              </span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Map Legend Overlay */}
