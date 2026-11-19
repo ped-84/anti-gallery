@@ -947,31 +947,31 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
               <span className="text-xs text-stone-400 font-normal">کل مسیر یکپارچه</span>
             </div>
 
-            {/* Primary Action: Google Maps Full Itinerary */}
+            {/* Primary Action: Google Maps Full Itinerary (Standard Google Material Blue CTA) */}
             <a
               href={googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="clay-button clay-primary w-full py-3.5 px-4 rounded-2xl text-center font-bold flex items-center justify-between gap-3 text-white hover:scale-[1.01] active:scale-98 transition-all shadow-md group"
+              style={{ backgroundColor: '#1a73e8' }}
+              className="w-full py-4 px-4 sm:px-6 rounded-2xl flex items-center justify-center gap-3.5 text-white shadow-md hover:shadow-lg hover:brightness-105 active:scale-[0.98] transition-all cursor-pointer border border-[#1557b0]/30 group"
               title={`باز کردن مسیر کامل شامل ${toPersianDigits(totalStops)} گالری در گوگل مپس`}
             >
-              <div className="flex items-center gap-3 text-right">
-                <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shrink-0 shadow-sm p-1">
-                  <GoogleMapsIcon className="w-full h-full drop-shadow-sm group-hover:scale-110 transition-transform" />
-                </div>
-                <div>
-                  <div className="text-sm font-bold flex items-center gap-2">
-                    <span>مسیریابی یکپارچه کل گشت در گوگل‌مپس</span>
-                    <span className="text-[11px] font-ubuntu font-normal bg-white/20 text-white px-2 py-0.5 rounded-full">
-                      Google Maps
-                    </span>
-                  </div>
-                  <span className="text-[11.5px] text-white/90 font-medium block mt-0.5">
-                    مسیر پیوسته با ترتیب بهینه شامل تمام {toPersianDigits(totalStops)} گالری
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0 p-1.5 group-hover:scale-105 transition-transform">
+                <GoogleMapsIcon className="w-full h-full drop-shadow-xs" />
+              </div>
+              <div className="text-center flex flex-col items-center justify-center">
+                <div className="flex items-center justify-center gap-2 flex-wrap">
+                  <span className="font-bold text-sm sm:text-base text-white tracking-tight">
+                    مسیریابی یکپارچه کل گشت در گوگل‌مپس
+                  </span>
+                  <span className="text-[10.5px] sm:text-xs font-ubuntu font-bold bg-white/20 text-white px-2.5 py-0.5 rounded-full backdrop-blur-xs">
+                    Google Maps
                   </span>
                 </div>
+                <span className="text-[11px] sm:text-xs text-blue-100 font-medium mt-1">
+                  مسیر پیوسته با ترتیب بهینه شامل تمام {toPersianDigits(totalStops)} گالری و تخمین ترافیک تهران
+                </span>
               </div>
-              <ExternalLink className="w-4 h-4 text-white/80 shrink-0" />
             </a>
 
             {/* Subtle contextual hint */}
