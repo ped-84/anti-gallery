@@ -947,32 +947,29 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
               <span className="text-xs text-stone-400 font-normal">کل مسیر یکپارچه</span>
             </div>
 
-            {/* Primary Action: Google Maps Full Itinerary (Standard Google Material Blue CTA) */}
+            {/* Primary Action: Google Maps Full Itinerary (Classic Clay Button Style) */}
             <a
               href={googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ backgroundColor: '#1a73e8' }}
-              className="w-full py-4 px-4 sm:px-6 rounded-2xl flex items-center justify-center gap-3.5 text-white shadow-md hover:shadow-lg hover:brightness-105 active:scale-[0.98] transition-all cursor-pointer border border-[#1557b0]/30 group"
+              className="clay-button clay-base border border-[#E1E1E1] dark:border-stone-700 w-full py-3.5 px-4 rounded-2xl flex items-center justify-center gap-3 text-stone-800 dark:text-stone-100 shadow-md hover:scale-[1.01] active:scale-[0.98] transition-all cursor-pointer group"
               title={`باز کردن مسیر کامل شامل ${toPersianDigits(totalStops)} گالری در گوگل مپس`}
             >
-              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0 p-1.5 group-hover:scale-105 transition-transform">
-                <GoogleMapsIcon className="w-full h-full drop-shadow-xs" />
+              <div className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 flex items-center justify-center">
+                <GoogleMapsIcon className="w-full h-full drop-shadow-xs group-hover:scale-110 transition-transform" />
               </div>
-              <div className="text-center flex flex-col items-center justify-center">
-                <div className="flex items-center justify-center gap-2 flex-wrap">
-                  <span className="font-bold text-sm sm:text-base text-white tracking-tight">
-                    مسیریابی یکپارچه کل گشت در گوگل‌مپس
-                  </span>
-                  <span className="text-[10.5px] sm:text-xs font-ubuntu font-bold bg-white/20 text-white px-2.5 py-0.5 rounded-full backdrop-blur-xs">
-                    Google Maps
-                  </span>
-                </div>
-                <span className="text-[11px] sm:text-xs text-blue-100 font-medium mt-1">
-                  مسیر پیوسته با ترتیب بهینه شامل تمام {toPersianDigits(totalStops)} گالری و تخمین ترافیک تهران
-                </span>
-              </div>
+              <span className="font-bold text-sm sm:text-base text-stone-800 dark:text-stone-100 tracking-tight">
+                مسیریابی یکپارچه کل گشت
+              </span>
+              <span className="text-[11px] font-ubuntu font-bold bg-[#3D5B99]/10 dark:bg-[#A3C2E4]/20 text-[#3D5B99] dark:text-[#A3C2E4] px-2.5 py-0.5 rounded-full">
+                Google Maps
+              </span>
             </a>
+
+            {/* Subtitle / Details (Placed Outside, Above the Bulb Line) */}
+            <p className="text-xs text-stone-600 dark:text-stone-300 text-center font-medium leading-relaxed">
+              مسیر پیوسته با ترتیب بهینه شامل تمام {toPersianDigits(totalStops)} گالری و تخمین ترافیک تهران
+            </p>
 
             {/* Subtle contextual hint */}
             <p className="text-[11px] text-stone-500 dark:text-stone-400 text-center leading-relaxed">
