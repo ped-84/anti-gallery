@@ -463,12 +463,13 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
               </div>
             )}
 
-            {/* 3. Direct Navigation Apps Row: عنوان ۱۶ پیکسل، کلمات ۱۶ پیکسل، آیکون ۲۸ پیکسل */}
+            {/* 3. Direct Navigation Apps Row: نشان (راست)، ویز (وسط)، گوگل (چپ) */}
             <div className="pt-2.5 border-t border-stone-200/70 dark:border-stone-800">
               <span className="text-base font-bold text-stone-700 dark:text-stone-200 block mb-2.5">
                 مسیریابی مستقیم با اپلیکیشن‌ها:
               </span>
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-3 gap-2">
+                {/* ۱. راست: نشان */}
                 <a
                   href={buildNeshanUrl(currentSpace)}
                   target="_blank"
@@ -479,16 +480,18 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   <span className="text-[15px] font-bold text-stone-800 dark:text-white">نشان</span>
                 </a>
 
+                {/* ۲. وسط: ویز */}
                 <a
-                  href={buildBaladUrl(currentSpace)}
+                  href={buildWazeUrl(currentSpace)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
-                  <BaladIcon className="w-7 h-7 shrink-0" />
-                  <span className="text-[15px] font-bold text-stone-800 dark:text-white">بلد</span>
+                  <WazeIcon className="w-7 h-7 shrink-0" />
+                  <span className="text-[15px] font-bold text-stone-800 dark:text-white font-ubuntu">Waze</span>
                 </a>
 
+                {/* ۳. چپ: گوگل مپس */}
                 <a
                   href={buildGoogleMapsUrl([currentSpace])}
                   target="_blank"
@@ -499,15 +502,17 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   <span className="text-[15px] font-bold text-stone-800 dark:text-white font-ubuntu">Google</span>
                 </a>
 
+                {/* بلد فعلاً طبق درخواست کاربر هاید شده است (جهت بازگردانی احتمالی در آینده):
                 <a
-                  href={buildWazeUrl(currentSpace)}
+                  href={buildBaladUrl(currentSpace)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
-                  <WazeIcon className="w-7 h-7 shrink-0" />
-                  <span className="text-[15px] font-bold text-stone-800 dark:text-white font-ubuntu">Waze</span>
+                  <BaladIcon className="w-7 h-7 shrink-0" />
+                  <span className="text-[15px] font-bold text-stone-800 dark:text-white">بلد</span>
                 </a>
+                */}
               </div>
             </div>
           </div>

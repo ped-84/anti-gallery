@@ -1,5 +1,5 @@
 import { Gallery } from '../types/gallery';
-import { toPersianDigits, getGalleryDisplayName } from './persianUtils';
+import { toPersianDigits, getGalleryDisplayName, parsePersianDateToScore, isThisWeekOpening } from './persianUtils';
 
 export interface RoadRoute {
   id: string;
@@ -377,15 +377,15 @@ export function computeRoadLayout(
 }
 
 /**
- * 6 Curated Master Routes for Tehran
+ * Curated Road Routes (Default fallback: Verified 29 Aban openings)
  */
 export const CURATED_ROAD_ROUTES: RoadRoute[] = [
   {
     id: 'karimkhan',
-    label: 'کریم‌خان',
+    label: 'کریم‌خان و سنایی',
     color: '#3D5B99',
     pinTone: 'cool',
-    galleryIds: [65, 18, 1003, 952, 443, 24] // O, Shirin, Karshio, Bashgah, Ev, Homa (6 stops)
+    galleryIds: [406, 65, 443, 24, 120, 301] // 009821, O, Ev, Homa, Dena, Etemad 1
   },
   {
     id: 'beheshti-motahari',
@@ -394,39 +394,247 @@ export const CURATED_ROAD_ROUTES: RoadRoute[] = [
     tab: '#F76B1C',
     tabInk: '#1f2a44',
     pinTone: 'warm',
-    galleryIds: [8, 467, 25, 938] // Arya, Asr, Hoor, Boostan (4 stops)
-  },
-  {
-    id: 'museum-laleh',
-    label: 'پارک لاله و کشاورز',
-    color: '#00A892',
-    pinTone: 'cool',
-    galleryIds: [1014, 263, 43] // 33, TMoCA, Laleh (3 stops)
+    galleryIds: [938, 504, 937] // Bostan, Shar, Doost
   },
   {
     id: 'elahiyeh-fereshteh',
     label: 'الهیه و فرشته',
     color: '#6D01AD',
     pinTone: 'cool',
-    galleryIds: [1005, 1023, 28, 225] // Kyman, Dastan +2, Basement, Did (4 stops)
+    galleryIds: [5, 28, 997, 287] // Atbin, Dastan Basement, West, Queen
   },
   {
     id: 'vanak-zafar',
     label: 'ونک و ظفر',
     color: '#BF1932',
+    tab: '#ff4d4f',
+    tabInk: '#2e0f0f',
     pinTone: 'warm',
-    galleryIds: [26, 551, 1026] // Vali, Parallel Circuit, Zhour-A (3 stops)
+    galleryIds: [551, 1026, 1008] // Parallel Circuit, Zhour-A, Mirana
   },
   {
-    id: 'lolagar-enghelab',
-    label: 'تاریخی لولاگر و مرکز',
-    color: '#979DB1',
-    tab: '#979DB1',
-    tabInk: '#ffffff',
+    id: 'museum-laleh',
+    label: 'پارک لاله و کشاورز',
+    color: '#00A892',
     pinTone: 'cool',
-    galleryIds: [1020, 405, 487, 196] // Aartmaart, In/Ja, Soo, Iranshahr (4 stops)
+    galleryIds: [1014, 90] // Gallery 33, Zhinous
+  },
+  {
+    id: 'niavaran-north',
+    label: 'نیاوران و فرمانیه',
+    color: '#E58B2E',
+    pinTone: 'warm',
+    galleryIds: [834, 429] // Yafteh, Shamis
   }
 ];
+
+function distKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+function sortNearestNeighbor(list: Gallery[]): Gallery[] {
+  if (list.length <= 2) return list;
+  const remaining = [...list];
+  let current = remaining.shift()!;
+  const ordered = [current];
+  while (remaining.length > 0) {
+    let nearestIdx = 0;
+    let nearestDist = Infinity;
+    for (let i = 0; i < remaining.length; i++) {
+      const d = distKm(current.lat, current.lng, remaining[i].lat, remaining[i].lng);
+      if (d < nearestDist) {
+        nearestDist = d;
+        nearestIdx = i;
+      }
+    }
+    current = remaining.splice(nearestIdx, 1)[0];
+    ordered.push(current);
+  }
+  return ordered;
+}
+
+/**
+ * Dynamically computes curated road routes strictly based on THIS WEEK's opening exhibitions!
+ * Guarantees that only galleries with active openings in the current cycle are shown,
+ * and hubs with fewer than 2 galleries are automatically omitted.
+ */
+export function getCuratedRoadRoutes(allGalleries: Gallery[]): RoadRoute[] {
+  if (!allGalleries || allGalleries.length === 0) return CURATED_ROAD_ROUTES;
+
+  const maxOpeningScore = Math.max(
+    0,
+    ...allGalleries
+      .map((g) => parsePersianDateToScore(g.activeExhibition?.openingDate))
+      .filter((s) => s > 0)
+  );
+
+  const openings = allGalleries.filter((g) =>
+    isThisWeekOpening(g.activeExhibition?.openingDate, maxOpeningScore)
+  );
+
+  const routeTemplates = [
+    {
+      id: 'karimkhan',
+      label: 'کریم‌خان و سنایی',
+      color: '#3D5B99',
+      pinTone: 'cool' as const,
+      matcher: (g: Gallery) => {
+        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        return (
+          text.includes('کریم‌خان') ||
+          text.includes('کریمخان') ||
+          text.includes('سنایی') ||
+          text.includes('خردمند') ||
+          text.includes('قرنی') ||
+          text.includes('بهار') ||
+          text.includes('ایرانشهر') ||
+          text.includes('عضدی') ||
+          text.includes('آبان') ||
+          text.includes('شیرودی') ||
+          text.includes('هفت تیر')
+        );
+      }
+    },
+    {
+      id: 'beheshti-motahari',
+      label: 'بهشتی و مطهری',
+      color: '#E58B2E',
+      tab: '#F76B1C',
+      tabInk: '#1f2a44',
+      pinTone: 'warm' as const,
+      matcher: (g: Gallery) => {
+        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        return (
+          text.includes('بهشتی') ||
+          text.includes('مطهری') ||
+          text.includes('لارستان') ||
+          text.includes('عباس‌آباد') ||
+          text.includes('قائم مقام') ||
+          text.includes('خرمشهر') ||
+          text.includes('عشقیار')
+        );
+      }
+    },
+    {
+      id: 'elahiyeh-fereshteh',
+      label: 'الهیه و فرشته',
+      color: '#6D01AD',
+      pinTone: 'cool' as const,
+      matcher: (g: Gallery) => {
+        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        return (
+          text.includes('الهیه') ||
+          text.includes('فرشته') ||
+          text.includes('مریم') ||
+          text.includes('آقا بزرگی') ||
+          text.includes('فیاضی') ||
+          text.includes('دربندی') ||
+          text.includes('بیدار') ||
+          text.includes('پارک وی') ||
+          text.includes('پسیان') ||
+          text.includes('زعفرانیه')
+        );
+      }
+    },
+    {
+      id: 'vanak-zafar',
+      label: 'ونک و ظفر',
+      color: '#BF1932',
+      tab: '#ff4d4f',
+      tabInk: '#2e0f0f',
+      pinTone: 'warm' as const,
+      matcher: (g: Gallery) => {
+        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        return (
+          text.includes('ونک') ||
+          text.includes('سئول') ||
+          text.includes('خدامی') ||
+          text.includes('جردن') ||
+          text.includes('دریابندری') ||
+          text.includes('میرداماد') ||
+          text.includes('ظفر') ||
+          text.includes('ملاصدرا') ||
+          text.includes('شیخ بهایی')
+        );
+      }
+    },
+    {
+      id: 'museum-laleh',
+      label: 'پارک لاله و کشاورز',
+      color: '#00A892',
+      pinTone: 'cool' as const,
+      matcher: (g: Gallery) => {
+        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        return (
+          text.includes('لاله') ||
+          text.includes('کشاورز') ||
+          text.includes('فاطمی') ||
+          text.includes('کارگر') ||
+          text.includes('امیرآباد') ||
+          text.includes('انقلاب') ||
+          text.includes('گرد آفرید')
+        );
+      }
+    },
+    {
+      id: 'niavaran-north',
+      label: 'نیاوران و فرمانیه',
+      color: '#E58B2E',
+      pinTone: 'warm' as const,
+      matcher: (g: Gallery) => {
+        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        return (
+          text.includes('نیاوران') ||
+          text.includes('فرمانیه') ||
+          text.includes('اندرزگو') ||
+          text.includes('اقدسیه') ||
+          text.includes('دروس') ||
+          text.includes('پاسداران') ||
+          text.includes('قیطریه')
+        );
+      }
+    }
+  ];
+
+  const dynamicRoutes: RoadRoute[] = [];
+
+  for (const tmpl of routeTemplates) {
+    const matched = openings.filter(tmpl.matcher);
+    if (matched.length >= 2) {
+      const sorted = sortNearestNeighbor(matched);
+      dynamicRoutes.push({
+        id: tmpl.id,
+        label: tmpl.label,
+        color: tmpl.color,
+        tab: tmpl.tab,
+        tabInk: tmpl.tabInk,
+        pinTone: tmpl.pinTone,
+        galleryIds: sorted.map((g) => g.id)
+      });
+    }
+  }
+
+  // If dynamic grouping produced at least one valid route, return it
+  if (dynamicRoutes.length > 0) {
+    return dynamicRoutes;
+  }
+
+  // Graceful fallback to verified defaults filtered by existing catalog
+  return CURATED_ROAD_ROUTES.filter((r) => {
+    const validCount = r.galleryIds.filter((id) => allGalleries.some((g) => g.id === id)).length;
+    return validCount >= 2;
+  });
+}
 
 export interface TourColorTheme {
   color: string;

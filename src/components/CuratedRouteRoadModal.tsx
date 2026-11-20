@@ -7,7 +7,8 @@ import {
   computeRoadLayout,
   accentFor,
   mix,
-  safeFillForWhiteText
+  safeFillForWhiteText,
+  getCuratedRoadRoutes
 } from '../utils/roadLayout';
 import { X, Navigation, Compass } from 'lucide-react';
 import './route-map.css';
@@ -31,17 +32,9 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
 }) => {
   const [selectedRouteIdx, setSelectedRouteIdx] = useState<number>(0);
 
-  // Only show routes that have at least 2 valid galleries in the current catalog
+  // Dynamically resolve curated routes strictly based on this week's active opening exhibitions
   const validRoutes = useMemo(() => {
-    return CURATED_ROAD_ROUTES.map((route) => {
-      const validIds = route.galleryIds.filter((id) =>
-        allGalleries.some((g) => g.id === id)
-      );
-      return {
-        ...route,
-        galleryIds: validIds
-      };
-    }).filter((route) => route.galleryIds.length >= 2);
+    return getCuratedRoadRoutes(allGalleries);
   }, [allGalleries]);
 
   const activeRouteIdx = Math.max(0, Math.min(selectedRouteIdx, Math.max(0, validRoutes.length - 1)));

@@ -10,8 +10,8 @@ const PERSISTENT_EXHIBITIONS = path.join(DATA_DIR, 'exhibitions_fa.json');
 const SRC_GALLERIES = path.join(ROOT_DIR, 'src', 'data', 'galleries.json');
 const SRC_EXHIBITIONS = path.join(ROOT_DIR, 'src', 'data', 'exhibitions_fa.json');
 
-// Helper to make POST requests to GalleryInfo ASP.NET endpoint
-function fetchEventsPage(skip, count = 100) {
+// Helper to make POST requests to GalleryInfo ASP.NET endpoint (count <= 18 to avoid IIS TLS RST / truncated JSON)
+function fetchEventsPage(skip, count = 18) {
   return new Promise((resolve, reject) => {
     const postData = JSON.stringify({
       count,
@@ -56,7 +56,7 @@ function fetchEventsPage(skip, count = 100) {
   });
 }
 
-async function fetchEventsWithRetry(skip, count = 100, maxRetries = 3) {
+async function fetchEventsWithRetry(skip, count = 18, maxRetries = 3) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       return await fetchEventsPage(skip, count);
@@ -251,7 +251,7 @@ async function main() {
   // 1. Fetch all current events from upstream ASP.NET API
   let allEvents = [];
   let skip = 0;
-  const count = 100;
+  const count = 18;
 
   while (true) {
     console.log(`Fetching events (skip=${skip})...`);
