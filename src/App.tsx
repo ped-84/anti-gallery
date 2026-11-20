@@ -21,6 +21,7 @@ import { Header, APP_VERSION } from './components/Header';
 import { GalleryCard } from './components/GalleryCard';
 import { getTourColorTheme } from './utils/roadLayout';
 import { ClayDropdown } from './components/ClayDropdown';
+import { ToastNotification, ToastData, ToastType } from './components/ToastNotification';
 
 // Lazy-loaded heavy components for optimal initial mobile bundle & fast Core Web Vitals
 const RouteSummaryPanel = lazy(() => import('./components/RouteSummaryPanel').then(m => ({ default: m.RouteSummaryPanel })));
@@ -348,29 +349,28 @@ export default function App() {
     }
   };
 
-  // Toast Notification State & Handler
-  const [toastMessage, setToastMessage] = useState<{
-    title: string;
-    subtitle?: string;
-  } | null>(null);
-  const toastTimeoutRef = React.useRef<number | null>(null);
+  // Unified Standard Toast Notification State & Handler
+  const [toastData, setToastData] = useState<ToastData | null>(null);
 
-  const showToast = useCallback((title: string, subtitle?: string) => {
-    if (toastTimeoutRef.current) {
-      clearTimeout(toastTimeoutRef.current);
-    }
-    setToastMessage({ title, subtitle });
-    toastTimeoutRef.current = window.setTimeout(() => {
-      setToastMessage(null);
-    }, 4500);
+  const showToast = useCallback((
+    title: string,
+    subtitle?: string,
+    type: ToastType = 'success',
+    duration = 4500,
+    action?: { label: string; onClick: () => void }
+  ) => {
+    setToastData({
+      id: String(Date.now()),
+      title,
+      subtitle,
+      type,
+      duration,
+      action
+    });
   }, []);
 
-  useEffect(() => {
-    return () => {
-      if (toastTimeoutRef.current) {
-        clearTimeout(toastTimeoutRef.current);
-      }
-    };
+  const closeToast = useCallback(() => {
+    setToastData(null);
   }, []);
 
   // Dark Mode Toggle
@@ -653,7 +653,11 @@ export default function App() {
 
   const handleRequestGps = () => {
     if (typeof navigator === 'undefined' || !navigator.geolocation) {
-      alert('مرورگر شما از دریافت موقعیت مکانی پشتیبانی نمی‌کند.');
+      showToast(
+        'عدم پشتیبانی از موقعیت‌یاب',
+        'مرورگر شما از قابلیت دریافت خودکار موقعیت مکانی پشتیبانی نمی‌کند.',
+        'warning'
+      );
       return;
     }
     setIsLocatingGps(true);
@@ -679,11 +683,22 @@ export default function App() {
           endGalleryId,
           newOrigin
         );
+        showToast(
+          'موقعیت مکانی شما با موفقیت ثبت شد',
+          'مبدأ کل مسیر به موقعیت زنده فعلی شما تغییر کرد و برنامه سفر بر این اساس به‌روزرسانی شد.',
+          'success',
+          3500
+        );
       },
       (err) => {
         setIsLocatingGps(false);
         console.warn('Geolocation error:', err.message);
-        alert('امکان دریافت خودکار موقعیت مکانی وجود نداشت. لطفاً دسترسی GPS را در تنظیمات مرورگر تأیید کنید یا محله خود را از منو انتخاب کنید.');
+        showToast(
+          'عدم دسترسی به موقعیت مکانی',
+          'امکان دریافت خودکار موقعیت مکانی وجود نداشت. لطفاً مجوز GPS را در مرورگر تأیید کرده یا محله خود را از منو انتخاب فرمایید.',
+          'warning',
+          5000
+        );
       },
       { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
     );
@@ -970,6 +985,12 @@ export default function App() {
       localStorage.removeItem(STORAGE_KEYS.START_ID);
       localStorage.removeItem(STORAGE_KEYS.END_ID);
     } catch {}
+    showToast(
+      'برنامه سفر پاک شد',
+      'تمام نگارخانه‌ها از برنامه گشت شما خارج شدند.',
+      'info',
+      3000
+    );
   };
 
   const handleSelectCuratedTour = useCallback(
@@ -980,6 +1001,13 @@ export default function App() {
       setEndGalleryId(tour.galleryIds[tour.galleryIds.length - 1] || null);
       const theme = getTourColorTheme(tour.id + ' ' + tour.titleFa + ' ' + tour.neighborhoodFa);
       setActiveCuratedRouteId(theme.routeId);
+
+      showToast(
+        `گشت آماده «${tour.titleFa}» انتخاب شد`,
+        `${toPersianDigits(tour.galleryIds.length)} نگارخانه منتخب این مسیر به برنامه سفر شما افزوده شدند.`,
+        'info',
+        4000
+      );
 
       const matching = tour.galleryIds
         .map((id) => galleries.find((g) => g.id === id))
@@ -1398,6 +1426,7 @@ export default function App() {
                   onSetStartGallery={handleSetStartGallery}
                   activeGalleryId={highlightedGalleryId}
                   isDarkMode={isDarkMode}
+                  onShowToast={showToast}
                 />
               </Suspense>
             ) : (
@@ -1632,6 +1661,7 @@ export default function App() {
                   isLocatingGps={isLocatingGps}
                   currentMode={travelMode}
                   onModeChange={handleTravelModeChange}
+                  onShowToast={showToast}
                 />
               </Suspense>
             </div>
@@ -1711,7 +1741,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-right">
           <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
             <img
-              src="./icons/brand-logo-icon.svg?v=1.156"
+              src="./icons/brand-logo-icon.svg?v=1.157"
               alt="آرت‌گشت"
               width="18"
               height="18"
@@ -1719,7 +1749,7 @@ export default function App() {
               className="w-4.5 h-4.5 object-contain shrink-0 block dark:hidden"
             />
             <img
-              src="./icons/brand-logo-icon-dark.svg?v=1.156"
+              src="./icons/brand-logo-icon-dark.svg?v=1.157"
               alt="آرت‌گشت"
               width="18"
               height="18"
@@ -1842,27 +1872,12 @@ export default function App() {
         <PwaInstallPrompt externalTrigger={pwaInstallTrigger} />
       </Suspense>
 
-      {/* Floating Action & Route Optimization Toast Notification */}
-      {toastMessage && (
-        <div
-          role="status"
-          aria-live="polite"
-          className="fixed top-5 left-1/2 -translate-x-1/2 z-[100] max-w-[92vw] sm:max-w-md w-auto bg-[#182338]/95 dark:bg-[#10141c]/95 text-white border border-[#F76B1C]/60 px-4 sm:px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-300 pointer-events-auto"
-        >
-          <div className="w-8 h-8 rounded-xl bg-[#F76B1C] text-white flex items-center justify-center shrink-0 shadow-md">
-            <CheckCircle2 className="w-4.5 h-4.5 stroke-[2.5]" />
-          </div>
-          <div className="text-right min-w-0">
-            <p className="font-black text-white text-xs sm:text-sm leading-tight">
-              {toastMessage.title}
-            </p>
-            {toastMessage.subtitle && (
-              <p className="text-[11px] sm:text-xs text-stone-300 font-medium mt-0.5 leading-snug">
-                {toastMessage.subtitle}
-              </p>
-            )}
-          </div>
-        </div>
+      {/* Unified Standard Floating Toast Notification */}
+      {toastData && (
+        <ToastNotification
+          toast={toastData}
+          onClose={closeToast}
+        />
       )}
 
     </div>

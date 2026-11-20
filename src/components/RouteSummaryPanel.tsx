@@ -70,6 +70,7 @@ interface RouteSummaryPanelProps {
   isLocatingGps?: boolean;
   currentMode?: 'driving' | 'walking';
   onModeChange?: (mode: 'driving' | 'walking') => void;
+  onShowToast?: (title: string, subtitle?: string, type?: 'success' | 'info' | 'warning' | 'error', duration?: number) => void;
 }
 
 export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
@@ -92,7 +93,8 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
   onRequestGps,
   isLocatingGps = false,
   currentMode,
-  onModeChange
+  onModeChange,
+  onShowToast
 }) => {
   const [internalMode, setInternalMode] = useState<'driving' | 'walking'>(
     currentMode || routeResult?.mode || 'driving'
@@ -171,6 +173,12 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    onShowToast?.(
+      'فایل مسیر (GPX) دانلود شد',
+      'فایل مسیر گشت ذخیره شد و آماده استفاده در برنامه‌های ناوبری و GPS است.',
+      'info',
+      3500
+    );
   };
 
   const handleCopySummary = () => {
@@ -190,6 +198,12 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
     navigator.clipboard.writeText(textToCopy);
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
+    onShowToast?.(
+      'متن برنامه بازدید کپی شد',
+      'اطلاعات کامل گشت و لینک مستقیم در حافظه کپی شد و آماده اشتراک‌گذاری است.',
+      'info',
+      3500
+    );
   };
 
   const googleMapsUrl = routeResult

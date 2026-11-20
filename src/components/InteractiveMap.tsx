@@ -12,6 +12,7 @@ interface InteractiveMapProps {
   onSetStartGallery?: (galleryId: number) => void;
   activeGalleryId?: number | null;
   isDarkMode?: boolean;
+  onShowToast?: (title: string, subtitle?: string, type?: 'success' | 'info' | 'warning' | 'error', duration?: number) => void;
 }
 
 const DEFAULT_NESHAN_WEB_KEY = 'web.cd0b84e26a35496f87485087bce939da';
@@ -100,7 +101,8 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
   onSelectForDetails,
   onSetStartGallery,
   activeGalleryId,
-  isDarkMode = false
+  isDarkMode = false,
+  onShowToast
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
@@ -699,7 +701,11 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
   const handleLocateUser = () => {
     if (!navigator.geolocation) {
-      alert('موقعیت‌یاب در مرورگر شما پشتیبانی نمی‌شود.');
+      if (onShowToast) {
+        onShowToast('عدم پشتیبانی از موقعیت‌یاب', 'موقعیت‌یاب در مرورگر شما پشتیبانی نمی‌شود.', 'warning');
+      } else {
+        alert('موقعیت‌یاب در مرورگر شما پشتیبانی نمی‌شود.');
+      }
       return;
     }
     navigator.geolocation.getCurrentPosition(
@@ -711,6 +717,9 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       },
       (err) => {
         console.warn('Geolocation error:', err.message);
+        if (onShowToast) {
+          onShowToast('عدم دسترسی به موقعیت مکانی', 'امکان دریافت موقعیت مکانی شما میسر نشد. لطفاً مجوز دسترسی را بررسی فرمایید.', 'warning');
+        }
       }
     );
   };

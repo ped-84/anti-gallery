@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Download, X, Compass, Share2, PlusSquare, CheckCircle2, MoreVertical, Smartphone } from 'lucide-react';
+import { ToastNotification } from './ToastNotification';
 
 interface PwaInstallPromptProps {
   onInstallStateChange?: (canInstall: boolean) => void;
@@ -121,10 +122,15 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
   if (isInstalled) {
     if (!showSuccessToast) return null;
     return (
-      <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 bg-emerald-600 text-white px-4 py-2.5 rounded-2xl shadow-xl flex items-center gap-2 text-xs sm:text-sm font-bold animate-in fade-in slide-in-from-bottom duration-300">
-        <CheckCircle2 className="w-4 h-4" />
-        <span>اپلیکیشن آرت‌گشت با موفقیت نصب شد!</span>
-      </div>
+      <ToastNotification
+        toast={{
+          title: 'اپلیکیشن آرت‌گشت با موفقیت نصب شد!',
+          subtitle: 'اکنون می‌توانید بدون نیاز به مرورگر و به‌صورت تمام‌صفحه از صفحه اصلی گوشی به آرت‌گشت دسترسی داشته باشید.',
+          type: 'success',
+          duration: 4500
+        }}
+        onClose={() => setShowSuccessToast(false)}
+      />
     );
   }
 
@@ -139,7 +145,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 bg-[#131722] border border-stone-700/60 flex items-center justify-center shrink-0 rounded-2xl shadow-md p-2">
                   <img
-                    src="./icons/brand-logo-icon-dark.svg?v=1.156"
+                    src="./icons/brand-logo-icon-dark.svg?v=1.157"
                     alt="آرت‌گشت"
                     width="24"
                     height="24"
@@ -198,7 +204,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 bg-[#131722] border border-stone-700/60 flex items-center justify-center rounded-xl shadow-xs overflow-hidden p-1.5">
                   <img
-                    src="./icons/brand-logo-icon-dark.svg?v=1.156"
+                    src="./icons/brand-logo-icon-dark.svg?v=1.157"
                     alt="آرت‌گشت"
                     width="20"
                     height="20"
@@ -269,7 +275,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 bg-[#131722] border border-stone-700/60 flex items-center justify-center rounded-xl shadow-xs overflow-hidden p-1.5">
                   <img
-                    src="./icons/brand-logo-icon-dark.svg?v=1.156"
+                    src="./icons/brand-logo-icon-dark.svg?v=1.157"
                     alt="آرت‌گشت"
                     width="20"
                     height="20"
