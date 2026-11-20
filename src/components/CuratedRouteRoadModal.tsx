@@ -20,6 +20,7 @@ interface CuratedRouteRoadModalProps {
   onSelectGalleryDetails: (gallery: Gallery) => void;
   allGalleries: Gallery[];
   initialRouteId?: string | null;
+  travelMode?: 'driving' | 'walking';
 }
 
 export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
@@ -28,14 +29,15 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
   onSelectRoute,
   onSelectGalleryDetails,
   allGalleries,
-  initialRouteId
+  initialRouteId,
+  travelMode = 'driving'
 }) => {
   const [selectedRouteIdx, setSelectedRouteIdx] = useState<number>(0);
 
-  // Dynamically resolve curated routes strictly based on this week's active opening exhibitions
+  // Dynamically resolve curated routes strictly based on this week's active opening exhibitions and travel mode
   const validRoutes = useMemo(() => {
-    return getCuratedRoadRoutes(allGalleries);
-  }, [allGalleries]);
+    return getCuratedRoadRoutes(allGalleries, travelMode);
+  }, [allGalleries, travelMode]);
 
   const activeRouteIdx = Math.max(0, Math.min(selectedRouteIdx, Math.max(0, validRoutes.length - 1)));
   const currentRoute: RoadRoute = validRoutes[activeRouteIdx] || CURATED_ROAD_ROUTES[0];

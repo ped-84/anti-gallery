@@ -468,7 +468,10 @@ function sortNearestNeighbor(list: Gallery[]): Gallery[] {
  * Guarantees that only galleries with active openings in the current cycle are shown,
  * and hubs with fewer than 2 galleries are automatically omitted.
  */
-export function getCuratedRoadRoutes(allGalleries: Gallery[]): RoadRoute[] {
+export function getCuratedRoadRoutes(
+  allGalleries: Gallery[],
+  travelMode: 'driving' | 'walking' = 'driving'
+): RoadRoute[] {
   if (!allGalleries || allGalleries.length === 0) return CURATED_ROAD_ROUTES;
 
   const maxOpeningScore = Math.max(
@@ -611,16 +614,34 @@ export function getCuratedRoadRoutes(allGalleries: Gallery[]): RoadRoute[] {
   for (const tmpl of routeTemplates) {
     const matched = openings.filter(tmpl.matcher);
     if (matched.length >= 2) {
-      const sorted = sortNearestNeighbor(matched);
-      dynamicRoutes.push({
-        id: tmpl.id,
-        label: tmpl.label,
-        color: tmpl.color,
-        tab: tmpl.tab,
-        tabInk: tmpl.tabInk,
-        pinTone: tmpl.pinTone,
-        galleryIds: sorted.map((g) => g.id)
-      });
+      let sorted = sortNearestNeighbor(matched);
+
+      // In walking mode, only keep contiguous stops where hops are strictly <= 1.0 km
+      if (travelMode === 'walking') {
+        const walkable: Gallery[] = [sorted[0]];
+        let cur = sorted[0];
+        for (let i = 1; i < sorted.length; i++) {
+          const d = distKm(cur.lat, cur.lng, sorted[i].lat, sorted[i].lng);
+          if (d <= 1.0) {
+            walkable.push(sorted[i]);
+            cur = sorted[i];
+          }
+        }
+        sorted = walkable;
+      }
+
+      // If at least 2 galleries remain in this route, display it
+      if (sorted.length >= 2) {
+        dynamicRoutes.push({
+          id: tmpl.id,
+          label: tmpl.label,
+          color: tmpl.color,
+          tab: tmpl.tab,
+          tabInk: tmpl.tabInk,
+          pinTone: tmpl.pinTone,
+          galleryIds: sorted.map((g) => g.id)
+        });
+      }
     }
   }
 

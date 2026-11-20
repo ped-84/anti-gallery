@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RouteOptimizationResult, Gallery, CustomOrigin } from '../types/gallery';
 import {
   toPersianDigits,
@@ -68,6 +68,8 @@ interface RouteSummaryPanelProps {
   onChangeOrigin: (origin: CustomOrigin | null) => void;
   onRequestGps: () => void;
   isLocatingGps?: boolean;
+  currentMode?: 'driving' | 'walking';
+  onModeChange?: (mode: 'driving' | 'walking') => void;
 }
 
 export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
@@ -88,9 +90,28 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
   originLocation,
   onChangeOrigin,
   onRequestGps,
-  isLocatingGps = false
+  isLocatingGps = false,
+  currentMode,
+  onModeChange
 }) => {
-  const [mode, setMode] = useState<'driving' | 'walking'>(routeResult?.mode || 'driving');
+  const [internalMode, setInternalMode] = useState<'driving' | 'walking'>(
+    currentMode || routeResult?.mode || 'driving'
+  );
+  const activeMode = currentMode || internalMode;
+  const mode = activeMode;
+
+  useEffect(() => {
+    if (currentMode && currentMode !== internalMode) {
+      setInternalMode(currentMode);
+    }
+  }, [currentMode]);
+
+  useEffect(() => {
+    if (routeResult?.mode && routeResult.mode !== internalMode) {
+      setInternalMode(routeResult.mode);
+    }
+  }, [routeResult?.mode]);
+
   const [isRoundTrip, setIsRoundTrip] = useState<boolean>(routeResult?.isRoundTrip ?? false);
   const [trafficCondition, setTrafficCondition] = useState<TrafficCondition>(
     routeResult?.trafficCondition || 'peak'
@@ -110,23 +131,27 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
     try {
       localStorage.setItem('gallery_visit_duration_min', val.toString());
     } catch {}
-    onRecalculate(mode, isRoundTrip, trafficCondition);
+    onRecalculate(activeMode, isRoundTrip, trafficCondition);
   };
 
   const handleModeChange = (newMode: 'driving' | 'walking') => {
-    setMode(newMode);
-    onRecalculate(newMode, isRoundTrip, trafficCondition);
+    setInternalMode(newMode);
+    if (onModeChange) {
+      onModeChange(newMode);
+    } else {
+      onRecalculate(newMode, isRoundTrip, trafficCondition);
+    }
   };
 
   const handleRoundTripToggle = () => {
     const nextVal = !isRoundTrip;
     setIsRoundTrip(nextVal);
-    onRecalculate(mode, nextVal, trafficCondition);
+    onRecalculate(activeMode, nextVal, trafficCondition);
   };
 
   const handleTrafficChange = (cond: TrafficCondition) => {
     setTrafficCondition(cond);
-    onRecalculate(mode, isRoundTrip, cond);
+    onRecalculate(activeMode, isRoundTrip, cond);
   };
 
   const handleDownloadGpx = () => {
@@ -320,7 +345,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                   type="button"
                   onClick={() => handleModeChange('driving')}
                   className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 ${
-                    mode === 'driving'
+                    activeMode === 'driving'
                       ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                       : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
                   }`}
@@ -332,7 +357,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                   type="button"
                   onClick={() => handleModeChange('walking')}
                   className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 ${
-                    mode === 'walking'
+                    activeMode === 'walking'
                       ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                       : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
                   }`}

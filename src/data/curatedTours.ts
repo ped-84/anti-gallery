@@ -101,37 +101,37 @@ export const PERSIAN_OPENING_TOURS: PersianCuratedTour[] = [
     subtitle: 'Contemporary Museum & Laleh Openings',
     city: 'Tehran',
     neighborhood: 'Downtown, Enghelab & Amirabad',
-    titleFa: 'مسیر هنری پارک لاله و کشاورز',
-    subtitleFa: 'افتتاحیه این هفته در پارک لاله و بلوار کشاورز',
+    titleFa: 'مسیر خودرویی پارک لاله و کشاورز',
+    subtitleFa: 'افتتاحیه این هفته در پارک لاله و کشاورز (مسیر سواره)',
     neighborhoodFa: 'کارگر شمالی، پارک لاله و کشاورز',
     themeColor: 'softblue',
     isOpeningThisWeek: true,
     galleryIds: [1014, 90], // Gallery 33, Zhinous
     description:
-      'A cultural tour visiting new exhibition openings in Amirabad, Keshavarz, and Fatemi.',
+      'A cultural tour visiting new exhibition openings in Amirabad, Keshavarz, and Fatemi (recommended by car or taxi due to distance).',
     descriptionFa:
-      'پیاده‌روی فرهنگی و آرام در حاشیه امیرآباد، فاطمی و بلوار کشاورز برای بازدید از افتتاحیه‌های نگارخانه ۳۳ و ژینوس.',
+      'گشت فرهنگی در حاشیه امیرآباد، فاطمی و بلوار کشاورز برای بازدید از افتتاحیه‌های نگارخانه ۳۳ و ژینوس (توصیه به استفاده از خودرو یا تاکسی به علت فاصله ۱.۶ کیلومتری).',
     estimatedHours: 1.5,
-    maxHopKm: 0.95
+    maxHopKm: 1.61
   },
   {
     id: 'openings-niavaran',
-    title: 'Niavaran & Farmanieh Openings Walk',
-    subtitle: 'Fresh Openings in Northern Tehran',
+    title: 'Niavaran & Farmanieh Driving Circuit',
+    subtitle: 'Driving Circuit in Northern Tehran',
     city: 'Tehran',
     neighborhood: 'North Tehran & Niavaran',
-    titleFa: 'گشت افتتاحیه‌های نیاوران و فرمانیه',
-    subtitleFa: 'افتتاحیه این هفته در نیاوران و دروس',
+    titleFa: 'گشت خودرویی نیاوران و فرمانیه',
+    subtitleFa: 'افتتاحیه این هفته در نیاوران و دروس (مسیر سواره)',
     neighborhoodFa: 'نیاوران و شمال تهران',
     themeColor: 'orange',
     isOpeningThisWeek: true,
     galleryIds: [834, 429], // Yafteh, Shamis
     description:
-      'Discover fresh contemporary exhibitions in northern galleries in Daroos and Farmanieh.',
+      'A driving tour visiting contemporary exhibitions in northern galleries across Daroos and Farmanieh.',
     descriptionFa:
-      'بازدید از نگارخانه‌های دارای نمایشگاه و افتتاحیه جدید این هفته در دروس و فرمانیه (گالری یافته و گالری شمیس).',
+      'مسیر سواره برای بازدید از نگارخانه‌های دارای افتتاحیه جدید این هفته در دروس و فرمانیه (گالری یافته و گالری شمیس با خودرو - نامناسب برای پیاده‌روی به علت گذر از بزرگراه صدر).',
     estimatedHours: 2.0,
-    maxHopKm: 1.80
+    maxHopKm: 3.50
   }
 ];
 
@@ -279,16 +279,65 @@ export const PERSIAN_ACTIVE_TOURS: PersianCuratedTour[] = [
 export const PERSIAN_CURATED_TOURS = PERSIAN_OPENING_TOURS;
 export const CURATED_TOURS = PERSIAN_CURATED_TOURS;
 
+function haversineDistKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
 /**
- * Returns curated tours by mode:
- * 'openings-only': Strictly current week openings with hops <= 1.3 km.
- * 'all-active': All active open exhibitions including middle bridging galleries with hops <= 0.85 km.
+ * In walking mode, only keep consecutive stops where hop is <= maxHopKm (strictly <= 1.0 km).
+ * Distant outliers (e.g. across expressways) are dropped, and tours with < 2 stops are excluded.
+ */
+function filterWalkableGalleryChain(
+  galleryIds: number[],
+  allGalleries: Gallery[],
+  maxHopKm: number = 1.0
+): number[] {
+  const gList = galleryIds
+    .map((id) => allGalleries.find((g) => g.id === id))
+    .filter((g): g is Gallery => !!g);
+
+  if (gList.length < 2) return [];
+
+  const walkable: Gallery[] = [gList[0]];
+  let current = gList[0];
+
+  for (let i = 1; i < gList.length; i++) {
+    const nextG = gList[i];
+    const dist = haversineDistKm(current.lat, current.lng, nextG.lat, nextG.lng);
+    if (dist <= maxHopKm) {
+      walkable.push(nextG);
+      current = nextG;
+    }
+  }
+
+  return walkable.length >= 2 ? walkable.map((g) => g.id) : [];
+}
+
+/**
+ * Returns curated tours by exhibition filter mode ('openings-only' vs 'all-active')
+ * and travel mode ('driving' vs 'walking'):
+ *
+ * - In 'walking' mode: Strictly filters each tour down to walkable stops (consecutive hops <= 1.0 km).
+ *   Tours where galleries cannot be walked consecutively (such as Niavaran to Farmanieh across highway)
+ *   are COMPLETELY HIDDEN.
+ * - In 'driving' mode: Returns all regional circuits including wider district driving tours.
  *
  * RULE: Hubs with 0 or 1 gallery are strictly hidden (tours require >= 2 galleries).
  */
 export function getCuratedToursByMode(
   allGalleries: Gallery[],
-  mode: CuratedTourFilterMode = 'openings-only'
+  mode: CuratedTourFilterMode = 'openings-only',
+  travelMode: 'driving' | 'walking' = 'driving'
 ): PersianCuratedTour[] {
   const baseTours = mode === 'all-active' ? PERSIAN_ACTIVE_TOURS : PERSIAN_OPENING_TOURS;
 
@@ -315,11 +364,16 @@ export function getCuratedToursByMode(
         });
       }
 
+      // 3. In walking mode, only retain strictly walkable stops (hop <= 1.0 km)
+      if (travelMode === 'walking') {
+        validGalleryIds = filterWalkableGalleryChain(validGalleryIds, allGalleries, 1.0);
+      }
+
       return {
         ...tour,
         galleryIds: validGalleryIds
       };
     })
-    // 3. User Rule: Only show hubs with >= 2 galleries! If 0 or 1, do NOT show!
+    // 4. User Rule: Only show hubs with >= 2 galleries! If 0 or 1, do NOT show!
     .filter((tour) => tour.galleryIds.length >= 2);
 }

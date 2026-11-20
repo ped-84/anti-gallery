@@ -45,7 +45,9 @@ import {
   Building2,
   Navigation,
   ArrowLeft,
-  CheckCircle2
+  CheckCircle2,
+  Car,
+  Footprints
 } from 'lucide-react';
 
 const STICKDAZZLE_THEMES = ['darkblue', 'orange', 'softblue', 'gray'] as const;
@@ -435,10 +437,23 @@ export default function App() {
   }, [galleries, maxOpeningScore]);
 
   const [curatedTourMode, setCuratedTourMode] = useState<CuratedTourFilterMode>('openings-only');
+  const [travelMode, setTravelMode] = useState<'driving' | 'walking'>(() => {
+    try {
+      const saved = localStorage.getItem('gallerygardi_travel_mode');
+      if (saved === 'walking' || saved === 'driving') return saved;
+    } catch {}
+    return 'driving';
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('gallerygardi_travel_mode', travelMode);
+    } catch {}
+  }, [travelMode]);
 
   const currentCuratedTours = useMemo(() => {
-    return getCuratedToursByMode(galleries, curatedTourMode);
-  }, [galleries, curatedTourMode]);
+    return getCuratedToursByMode(galleries, curatedTourMode, travelMode);
+  }, [galleries, curatedTourMode, travelMode]);
 
   const neighborhoods = useMemo(() => {
     const set = new Set<string>();
@@ -647,16 +662,18 @@ export default function App() {
   };
 
   const runRouteOptimization = async (
-    mode: 'driving' | 'walking' = routeResult?.mode || 'driving',
+    mode: 'driving' | 'walking' = routeResult?.mode || travelMode || 'driving',
     isRoundTrip: boolean = routeResult?.isRoundTrip ?? false,
     trafficCondition: TrafficCondition = routeResult?.trafficCondition || 'peak',
     startId: number | null = startGalleryId,
     endId: number | null = endGalleryId,
-    origin: CustomOrigin | null = originLocation
+    origin: CustomOrigin | null = originLocation,
+    overrideGalleries?: Gallery[]
   ): Promise<RouteOptimizationResult | null> => {
+    const listToOptimize = overrideGalleries || selectedGalleries;
     const hasCustomStart = Boolean(origin && origin.lat !== 0);
     const minRequired = hasCustomStart ? 1 : 2;
-    if (selectedGalleries.length < minRequired) {
+    if (listToOptimize.length < minRequired) {
       setRouteResult(null);
       return null;
     }
@@ -680,7 +697,7 @@ export default function App() {
       const currentMins = now.getHours() * 60 + now.getMinutes();
       const startTimeMin = currentMins >= 11 * 60 && currentMins <= 20 * 60 ? currentMins : 16 * 60;
 
-      const result = await optimizeGalleryRoute(selectedGalleries, {
+      const result = await optimizeGalleryRoute(listToOptimize, {
         mode,
         isRoundTrip,
         trafficCondition,
@@ -906,11 +923,129 @@ export default function App() {
     } catch {}
   };
 
-  const handleSelectCuratedTour = (tour: PersianCuratedTour) => {
-    setSelectedGalleryIds(tour.galleryIds);
-    const theme = getTourColorTheme(tour.id + ' ' + tour.titleFa + ' ' + tour.neighborhoodFa);
-    setActiveCuratedRouteId(theme.routeId);
-  };
+  const handleSelectCuratedTour = useCallback(
+    (tour: PersianCuratedTour, overrideTravelMode?: 'driving' | 'walking') => {
+      const modeToUse = overrideTravelMode || travelMode;
+      setSelectedGalleryIds(tour.galleryIds);
+      setStartGalleryId(tour.galleryIds[0] || null);
+      setEndGalleryId(tour.galleryIds[tour.galleryIds.length - 1] || null);
+      const theme = getTourColorTheme(tour.id + ' ' + tour.titleFa + ' ' + tour.neighborhoodFa);
+      setActiveCuratedRouteId(theme.routeId);
+
+      const matching = tour.galleryIds
+        .map((id) => galleries.find((g) => g.id === id))
+        .filter((g): g is Gallery => !!g);
+
+      if (matching.length >= 2) {
+        runRouteOptimization(
+          modeToUse,
+          false,
+          'peak',
+          tour.galleryIds[0] || null,
+          tour.galleryIds[tour.galleryIds.length - 1] || null,
+          originLocation,
+          matching
+        );
+      }
+    },
+    [travelMode, galleries, originLocation]
+  );
+
+  const handleTravelModeChange = useCallback(
+    (newMode: 'driving' | 'walking') => {
+      setTravelMode(newMode);
+
+      // Check whether current selected galleries correspond to any curated tour
+      const drivingTours = getCuratedToursByMode(galleries, curatedTourMode, 'driving');
+      const currentDrivingTour = drivingTours.find(
+        (t) =>
+          t.galleryIds.length > 0 &&
+          t.galleryIds.length === selectedGalleryIds.length &&
+          t.galleryIds.every((id) => selectedGalleryIds.includes(id))
+      );
+
+      if (newMode === 'walking') {
+        const walkingTours = getCuratedToursByMode(galleries, curatedTourMode, 'walking');
+
+        if (currentDrivingTour) {
+          // Find matching walkable tour or subset (e.g. Elahiyeh 3 instead of 4)
+          const matchingWalkingTour = walkingTours.find(
+            (t) =>
+              t.id === currentDrivingTour.id ||
+              (t.galleryIds.length > 0 && t.galleryIds.every((id) => currentDrivingTour.galleryIds.includes(id)))
+          );
+
+          if (matchingWalkingTour) {
+            handleSelectCuratedTour(matchingWalkingTour, 'walking');
+            return;
+          }
+
+          // If current tour is unwalkable (e.g. Niavaran across highway or Laleh),
+          // auto-switch to the premier walkable tour (Karimkhan)
+          if (walkingTours.length > 0) {
+            handleSelectCuratedTour(walkingTours[0], 'walking');
+            return;
+          }
+        } else {
+          // If custom selection matches any walking tour exactly
+          const matchingWalkingTour = walkingTours.find(
+            (t) =>
+              t.galleryIds.length > 0 &&
+              t.galleryIds.length === selectedGalleryIds.length &&
+              t.galleryIds.every((id) => selectedGalleryIds.includes(id))
+          );
+          if (matchingWalkingTour) {
+            handleSelectCuratedTour(matchingWalkingTour, 'walking');
+            return;
+          }
+        }
+      } else {
+        // Switching to driving mode
+        // If current tour was a trimmed walking tour (e.g. Elahiyeh 3), restore full driving tour (Elahiyeh 4)
+        const walkingTours = getCuratedToursByMode(galleries, curatedTourMode, 'walking');
+        const currentWalkingTour = walkingTours.find(
+          (t) =>
+            t.galleryIds.length > 0 &&
+            t.galleryIds.length === selectedGalleryIds.length &&
+            t.galleryIds.every((id) => selectedGalleryIds.includes(id))
+        );
+
+        if (currentWalkingTour) {
+          const matchingDrivingTour = drivingTours.find(
+            (t) =>
+              t.id === currentWalkingTour.id ||
+              currentWalkingTour.galleryIds.every((id) => t.galleryIds.includes(id))
+          );
+          if (matchingDrivingTour) {
+            handleSelectCuratedTour(matchingDrivingTour, 'driving');
+            return;
+          }
+        }
+      }
+
+      if (selectedGalleries.length >= 2) {
+        runRouteOptimization(
+          newMode,
+          routeResult?.isRoundTrip ?? false,
+          routeResult?.trafficCondition || 'peak',
+          startGalleryId,
+          endGalleryId,
+          originLocation
+        );
+      }
+    },
+    [
+      galleries,
+      curatedTourMode,
+      selectedGalleryIds,
+      selectedGalleries.length,
+      routeResult,
+      startGalleryId,
+      endGalleryId,
+      originLocation,
+      handleSelectCuratedTour
+    ]
+  );
 
   const galleryOrderMap = useMemo(() => {
     const map = new Map<number, number>();
@@ -1059,6 +1194,36 @@ export default function App() {
               >
                 <Sparkles className={`w-3.5 h-3.5 shrink-0 ${curatedTourMode === 'all-active' ? 'text-[#1856C7] dark:text-[#93c5fd]' : 'text-stone-400 dark:text-stone-500'}`} />
                 <span>همه فعال و باز</span>
+              </button>
+            </div>
+
+            {/* Travel Mode Switcher Pill (با خودرو vs پیاده‌روی) */}
+            <div className="flex items-center p-1 rounded-full bg-[#eaedf4] dark:bg-[#121620] border border-[#d2d9e6] dark:border-[#262f40] shadow-inner text-xs sm:text-[13px] font-bold shrink-0 ml-1">
+              <button
+                type="button"
+                onClick={() => handleTravelModeChange('driving')}
+                className={`px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
+                  travelMode === 'driving'
+                    ? 'bg-white dark:bg-gradient-to-b dark:from-[#252e40] dark:to-[#1a2130] text-[#3D5B99] dark:text-[#A3C2E4] shadow-sm dark:shadow-md border border-black/5 dark:border-white/10'
+                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
+                }`}
+                title="مسیریابی سواره و نمایش تمام گشت‌های محله‌ای"
+              >
+                <Car className="w-3.5 h-3.5 shrink-0 text-[#3D5B99]" />
+                <span>با خودرو</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleTravelModeChange('walking')}
+                className={`px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
+                  travelMode === 'walking'
+                    ? 'bg-white dark:bg-gradient-to-b dark:from-[#252e40] dark:to-[#1a2130] text-[#F76B1C] dark:text-[#ff9d66] shadow-sm dark:shadow-md border border-black/5 dark:border-white/10'
+                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
+                }`}
+                title="فقط گشت‌های کاملاً پیاده با فواصل کوتاه و بدون عبور از بزرگراه"
+              >
+                <Footprints className="w-3.5 h-3.5 shrink-0 text-[#F76B1C]" />
+                <span>پیاده‌روی</span>
               </button>
             </div>
 
@@ -1416,6 +1581,8 @@ export default function App() {
                   onChangeOrigin={handleChangeOrigin}
                   onRequestGps={handleRequestGps}
                   isLocatingGps={isLocatingGps}
+                  currentMode={travelMode}
+                  onModeChange={handleTravelModeChange}
                 />
               </Suspense>
             </div>
@@ -1495,7 +1662,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-right">
           <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
             <img
-              src="./icons/brand-logo-icon.svg?v=1.153"
+              src="./icons/brand-logo-icon.svg?v=1.154"
               alt="آرت‌گشت"
               width="18"
               height="18"
@@ -1503,7 +1670,7 @@ export default function App() {
               className="w-4.5 h-4.5 object-contain shrink-0 block dark:hidden"
             />
             <img
-              src="./icons/brand-logo-icon-dark.svg?v=1.153"
+              src="./icons/brand-logo-icon-dark.svg?v=1.154"
               alt="آرت‌گشت"
               width="18"
               height="18"
@@ -1543,12 +1710,25 @@ export default function App() {
               setSelectedGalleryIds(ids);
               setStartGalleryId(ids[0] || null);
               setEndGalleryId(ids[ids.length - 1] || null);
+              const matching = ids.map((id) => galleries.find((g) => g.id === id)).filter((g): g is Gallery => !!g);
+              if (matching.length >= 2) {
+                runRouteOptimization(
+                  travelMode,
+                  false,
+                  'peak',
+                  ids[0] || null,
+                  ids[ids.length - 1] || null,
+                  originLocation,
+                  matching
+                );
+              }
               setMobileActiveTab('map');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             onSelectGalleryDetails={(g) => setActiveModalGallery(g)}
             allGalleries={galleries}
             initialRouteId={activeCuratedRouteId}
+            travelMode={travelMode}
           />
         )}
 

@@ -139,7 +139,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 bg-[#131722] border border-stone-700/60 flex items-center justify-center shrink-0 rounded-2xl shadow-md p-2">
                   <img
-                    src="./icons/brand-logo-icon-dark.svg?v=1.153"
+                    src="./icons/brand-logo-icon-dark.svg?v=1.154"
                     alt="آرت‌گشت"
                     width="24"
                     height="24"
@@ -198,7 +198,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 bg-[#131722] border border-stone-700/60 flex items-center justify-center rounded-xl shadow-xs overflow-hidden p-1.5">
                   <img
-                    src="./icons/brand-logo-icon-dark.svg?v=1.153"
+                    src="./icons/brand-logo-icon-dark.svg?v=1.154"
                     alt="آرت‌گشت"
                     width="20"
                     height="20"
@@ -269,7 +269,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 bg-[#131722] border border-stone-700/60 flex items-center justify-center rounded-xl shadow-xs overflow-hidden p-1.5">
                   <img
-                    src="./icons/brand-logo-icon-dark.svg?v=1.153"
+                    src="./icons/brand-logo-icon-dark.svg?v=1.154"
                     alt="آرت‌گشت"
                     width="20"
                     height="20"
