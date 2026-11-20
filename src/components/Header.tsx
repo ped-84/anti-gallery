@@ -9,7 +9,7 @@ interface HeaderProps {
   isStandalone?: boolean;
 }
 
-export const APP_VERSION = 'بتا V 1.155';
+export const APP_VERSION = 'بتا V 1.156';
 
 export const Header: React.FC<HeaderProps> = ({
   isDarkMode,
@@ -29,7 +29,7 @@ export const Header: React.FC<HeaderProps> = ({
             {/* English Brand Wordmark (Primary Logo, Enlarged) */}
             <div className="flex items-center group-hover:opacity-95 transition-opacity">
               <img
-                src="./icons/brand-wordmark-light.svg?v=1.155"
+                src="./icons/brand-wordmark-light.svg?v=1.156"
                 alt="art gasht"
                 width="160"
                 height="48"
@@ -37,7 +37,7 @@ export const Header: React.FC<HeaderProps> = ({
                 className="h-8 sm:h-10 md:h-12 w-auto object-contain block dark:hidden"
               />
               <img
-                src="./icons/brand-wordmark-dark.svg?v=1.155"
+                src="./icons/brand-wordmark-dark.svg?v=1.156"
                 alt="art gasht"
                 width="160"
                 height="48"

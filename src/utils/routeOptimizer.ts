@@ -1061,17 +1061,32 @@ export function buildGoogleMapsUrl(
     return `https://www.google.com/maps/dir/?api=1&destination=${g.lat},${g.lng}${travelParam}`;
   }
 
-  // 2. Multi-stop tour itinerary
-  const startPoint = origin
-    ? `${origin.lat},${origin.lng}`
-    : `${orderedGalleries[0].lat},${orderedGalleries[0].lng}`;
+  // 2. Multi-stop tour itinerary:
   const destinationPoint = `${orderedGalleries[orderedGalleries.length - 1].lat},${orderedGalleries[orderedGalleries.length - 1].lng}`;
+
+  // If an explicit origin point is provided (e.g. GPS or chosen hub), include it
+  if (origin && origin.lat && origin.lng) {
+    const waypoints = orderedGalleries
+      .slice(0, -1)
+      .map((g) => `${g.lat},${g.lng}`)
+      .join('|');
+
+    let url = `https://www.google.com/maps/dir/?api=1&origin=${origin.lat},${origin.lng}&destination=${encodeURIComponent(destinationPoint)}${travelParam}`;
+    if (waypoints) {
+      url += `&waypoints=${encodeURIComponent(waypoints)}`;
+    }
+    return url;
+  }
+
+  // When no fixed origin is specified: NEVER route from Gallery 1 to Gallery 2!
+  // Omitting origin forces Google Maps to route from the user's real-world current GPS location
+  // to Gallery 1, then Gallery 2, etc. (All galleries up to the last are waypoints, last is destination)
   const waypoints = orderedGalleries
-    .slice(origin ? 0 : 1, -1)
+    .slice(0, -1)
     .map((g) => `${g.lat},${g.lng}`)
     .join('|');
 
-  let url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(startPoint)}&destination=${encodeURIComponent(destinationPoint)}${travelParam}`;
+  let url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destinationPoint)}${travelParam}`;
   if (waypoints) {
     url += `&waypoints=${encodeURIComponent(waypoints)}`;
   }

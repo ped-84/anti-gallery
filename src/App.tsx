@@ -605,6 +605,52 @@ export default function App() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Auto-acquire current GPS position by default on startup (user request: GPS is the primary default)
+  useEffect(() => {
+    let savedOrigin = null;
+    let explicitlyDisabled = false;
+    try {
+      savedOrigin = localStorage.getItem(STORAGE_KEYS.ORIGIN_LOCATION);
+      explicitlyDisabled = localStorage.getItem('artgasht_origin_disabled') === 'true';
+    } catch {}
+
+    if (savedOrigin || explicitlyDisabled) return;
+
+    if (typeof navigator !== 'undefined' && navigator.geolocation) {
+      setIsLocatingGps(true);
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setIsLocatingGps(false);
+          const defaultOrigin: CustomOrigin = {
+            type: 'gps',
+            name: 'موقعیت فعلی شما (GPS)',
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude
+          };
+          setOriginLocation(defaultOrigin);
+          try {
+            localStorage.setItem(STORAGE_KEYS.ORIGIN_LOCATION, JSON.stringify(defaultOrigin));
+          } catch {}
+          if (selectedGalleries.length >= 1) {
+            runRouteOptimization(
+              travelMode,
+              routeResult?.isRoundTrip ?? false,
+              routeResult?.trafficCondition || 'peak',
+              startGalleryId,
+              endGalleryId,
+              defaultOrigin
+            );
+          }
+        },
+        (err) => {
+          setIsLocatingGps(false);
+          console.warn('Initial default GPS auto-detect:', err.message);
+        },
+        { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+      );
+    }
+  }, []);
+
   const handleRequestGps = () => {
     if (typeof navigator === 'undefined' || !navigator.geolocation) {
       alert('مرورگر شما از دریافت موقعیت مکانی پشتیبانی نمی‌کند.');
@@ -623,6 +669,7 @@ export default function App() {
         setOriginLocation(newOrigin);
         try {
           localStorage.setItem(STORAGE_KEYS.ORIGIN_LOCATION, JSON.stringify(newOrigin));
+          localStorage.removeItem('artgasht_origin_disabled');
         } catch {}
         runRouteOptimization(
           routeResult?.mode || 'driving',
@@ -647,12 +694,14 @@ export default function App() {
     try {
       if (origin) {
         localStorage.setItem(STORAGE_KEYS.ORIGIN_LOCATION, JSON.stringify(origin));
+        localStorage.removeItem('artgasht_origin_disabled');
       } else {
         localStorage.removeItem(STORAGE_KEYS.ORIGIN_LOCATION);
+        localStorage.setItem('artgasht_origin_disabled', 'true');
       }
     } catch {}
     runRouteOptimization(
-      routeResult?.mode || 'driving',
+      routeResult?.mode || travelMode || 'driving',
       routeResult?.isRoundTrip ?? false,
       routeResult?.trafficCondition || 'peak',
       startGalleryId,
@@ -1662,7 +1711,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-right">
           <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
             <img
-              src="./icons/brand-logo-icon.svg?v=1.155"
+              src="./icons/brand-logo-icon.svg?v=1.156"
               alt="آرت‌گشت"
               width="18"
               height="18"
@@ -1670,7 +1719,7 @@ export default function App() {
               className="w-4.5 h-4.5 object-contain shrink-0 block dark:hidden"
             />
             <img
-              src="./icons/brand-logo-icon-dark.svg?v=1.155"
+              src="./icons/brand-logo-icon-dark.svg?v=1.156"
               alt="آرت‌گشت"
               width="18"
               height="18"

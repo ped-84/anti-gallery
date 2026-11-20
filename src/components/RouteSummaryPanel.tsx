@@ -197,7 +197,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
     : '';
 
   const originDropdownOptions: DropdownOption[] = [
-    { value: 'gps', label: '📍 موقعیت زنده من (GPS)' },
+    { value: 'gps', label: '📍 موقعیت من (GPS) - پیش‌فرض' },
     { value: 'none', label: '🏛️ شروع از اولین نگارخانه (بدون موقعیت من)' },
     ...TEHRAN_START_HUBS.map((hub) => ({
       value: hub.id,
@@ -205,7 +205,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
     }))
   ];
 
-  let currentOriginValue = 'none';
+  let currentOriginValue = 'gps';
   if (originLocation) {
     if (originLocation.type === 'gps') {
       currentOriginValue = 'gps';
@@ -215,6 +215,12 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
       );
       currentOriginValue = matched ? matched.id : 'saadat_abad';
     }
+  } else {
+    try {
+      if (localStorage.getItem('artgasht_origin_disabled') === 'true') {
+        currentOriginValue = 'none';
+      }
+    } catch {}
   }
 
   const handleOriginChange = (val: string) => {
