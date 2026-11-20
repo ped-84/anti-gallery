@@ -1045,9 +1045,23 @@ export async function calculateFixedRoute(
  */
 export function buildGoogleMapsUrl(
   orderedGalleries: Gallery[],
-  origin?: { lat: number; lng: number }
+  origin?: { lat: number; lng: number },
+  mode: 'driving' | 'walking' = 'driving'
 ): string {
-  if (orderedGalleries.length === 0) return '';
+  if (!orderedGalleries || orderedGalleries.length === 0) return '';
+  const travelParam = mode === 'walking' ? '&travelmode=walking' : '&travelmode=driving';
+
+  // 1. Single gallery destination: navigate directly from current user GPS position
+  if (orderedGalleries.length === 1) {
+    const g = orderedGalleries[0];
+    if (origin && origin.lat && origin.lng && (origin.lat !== g.lat || origin.lng !== g.lng)) {
+      return `https://www.google.com/maps/dir/?api=1&origin=${origin.lat},${origin.lng}&destination=${g.lat},${g.lng}${travelParam}`;
+    }
+    // Omitting origin forces Google Maps to use device's live current GPS location
+    return `https://www.google.com/maps/dir/?api=1&destination=${g.lat},${g.lng}${travelParam}`;
+  }
+
+  // 2. Multi-stop tour itinerary
   const startPoint = origin
     ? `${origin.lat},${origin.lng}`
     : `${orderedGalleries[0].lat},${orderedGalleries[0].lng}`;
@@ -1057,7 +1071,7 @@ export function buildGoogleMapsUrl(
     .map((g) => `${g.lat},${g.lng}`)
     .join('|');
 
-  let url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(startPoint)}&destination=${encodeURIComponent(destinationPoint)}`;
+  let url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(startPoint)}&destination=${encodeURIComponent(destinationPoint)}${travelParam}`;
   if (waypoints) {
     url += `&waypoints=${encodeURIComponent(waypoints)}`;
   }
@@ -1066,13 +1080,16 @@ export function buildGoogleMapsUrl(
 
 export function buildNeshanUrl(
   gallery: Gallery,
-  origin?: { lat: number; lng: number }
+  origin?: { lat: number; lng: number },
+  mode: 'driving' | 'walking' = 'driving'
 ): string {
   if (!gallery) return '';
-  if (origin && origin.lat && origin.lng) {
-    return `https://neshan.org/maps?origin=${origin.lat},${origin.lng}&destination=${gallery.lat},${gallery.lng}&type=drive`;
+  const typeParam = mode === 'walking' ? 'foot' : 'drive';
+  if (origin && origin.lat && origin.lng && (origin.lat !== gallery.lat || origin.lng !== gallery.lng)) {
+    return `https://neshan.org/maps?origin=${origin.lat},${origin.lng}&destination=${gallery.lat},${gallery.lng}&type=${typeParam}`;
   }
-  return `https://neshan.org/maps?destination=${gallery.lat},${gallery.lng}&type=drive`;
+  // Launch Neshan directions directly to destination from current live location
+  return `https://neshan.org/maps?destination=${gallery.lat},${gallery.lng}&type=${typeParam}`;
 }
 
 export function buildBaladUrl(
@@ -1080,7 +1097,7 @@ export function buildBaladUrl(
   origin?: { lat: number; lng: number }
 ): string {
   if (!gallery) return '';
-  if (origin && origin.lat && origin.lng) {
+  if (origin && origin.lat && origin.lng && (origin.lat !== gallery.lat || origin.lng !== gallery.lng)) {
     return `https://balad.ir/directions/driving?destination=${gallery.lat}%2C${gallery.lng}&origin=${origin.lat}%2C${origin.lng}`;
   }
   return `https://balad.ir/directions/driving?destination=${gallery.lat}%2C${gallery.lng}`;
@@ -1088,7 +1105,7 @@ export function buildBaladUrl(
 
 export function buildWazeUrl(gallery: Gallery): string {
   if (!gallery) return '';
-  return `https://waze.com/ul?ll=${gallery.lat},${gallery.lng}&navigate=yes`;
+  return `https://www.waze.com/ul?ll=${gallery.lat}%2C${gallery.lng}&navigate=yes&zoom=17`;
 }
 
 export function exportToGpx(

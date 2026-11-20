@@ -185,7 +185,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
       )
       .join('\n\n');
 
-    const textToCopy = `برنامه بازدید و تور بهینه گالری‌های هنری (${toPersianDigits(routeResult.orderedGalleries.length)} گالری)\n${originText}مسافت کل: ${toPersianDigits(routeResult.totalDistanceKm)} کیلومتر | زمان میانگین جابجایی: ~${toPersianDigits(routeResult.totalDurationMin)} دقیقه\n\n${summary}\n\nلینک مستقیم گوگل مپس: ${buildGoogleMapsUrl(routeResult.orderedGalleries, routeResult.originPoint)}`;
+    const textToCopy = `برنامه بازدید و تور بهینه گالری‌های هنری (${toPersianDigits(routeResult.orderedGalleries.length)} گالری)\n${originText}مسافت کل: ${toPersianDigits(routeResult.totalDistanceKm)} کیلومتر | زمان میانگین جابجایی: ~${toPersianDigits(routeResult.totalDurationMin)} دقیقه\n\n${summary}\n\nلینک مستقیم گوگل مپس: ${buildGoogleMapsUrl(routeResult.orderedGalleries, routeResult.originPoint, mode)}`;
 
     navigator.clipboard.writeText(textToCopy);
     setCopied(true);
@@ -193,7 +193,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
   };
 
   const googleMapsUrl = routeResult
-    ? buildGoogleMapsUrl(routeResult.orderedGalleries, routeResult.originPoint)
+    ? buildGoogleMapsUrl(routeResult.orderedGalleries, routeResult.originPoint, mode)
     : '';
 
   const originDropdownOptions: DropdownOption[] = [
@@ -874,43 +874,33 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                         </span>
                         <div className="flex items-center gap-1.5 flex-wrap">
                           <a
-                            href={buildNeshanUrl(
-                              gallery,
-                              isFirst
-                                ? (routeResult.originPoint ? { lat: routeResult.originPoint.lat, lng: routeResult.originPoint.lng } : undefined)
-                                : { lat: routeResult.orderedGalleries[idx - 1].lat, lng: routeResult.orderedGalleries[idx - 1].lng }
-                            )}
+                            href={buildNeshanUrl(gallery, undefined, mode)}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="clay-button clay-base px-2.5 py-1 rounded-xl flex items-center gap-1 text-[11px] font-bold text-stone-700 dark:text-stone-200 hover:scale-105 active:scale-95 transition-all shadow-2xs border border-stone-200/80 dark:border-stone-700"
+                            className="clay-button clay-base px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-bold text-stone-700 dark:text-stone-200 hover:scale-105 active:scale-95 transition-all shadow-2xs border border-stone-200/80 dark:border-stone-700"
                             title={`مسیریابی با نشان به سمت ${getGalleryDisplayName(gallery)}`}
                           >
-                            <NeshanIcon className="w-3.5 h-3.5 shrink-0" />
+                            <NeshanIcon className="w-[18px] h-[18px] shrink-0" />
                             <span>نشان</span>
                           </a>
                           <a
                             href={buildWazeUrl(gallery)}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="clay-button clay-base px-2.5 py-1 rounded-xl flex items-center gap-1 text-[11px] font-bold text-stone-700 dark:text-stone-200 hover:scale-105 active:scale-95 transition-all shadow-2xs border border-stone-200/80 dark:border-stone-700"
+                            className="clay-button clay-base px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-bold text-stone-700 dark:text-stone-200 hover:scale-105 active:scale-95 transition-all shadow-2xs border border-stone-200/80 dark:border-stone-700"
                             title={`مسیریابی با ویز به سمت ${getGalleryDisplayName(gallery)}`}
                           >
-                            <WazeIcon className="w-3.5 h-3.5 shrink-0" />
+                            <WazeIcon className="w-[18px] h-[18px] shrink-0" />
                             <span className="font-ubuntu">Waze</span>
                           </a>
                           <a
-                            href={buildGoogleMapsUrl(
-                              [gallery],
-                              isFirst
-                                ? (routeResult.originPoint ? { lat: routeResult.originPoint.lat, lng: routeResult.originPoint.lng } : undefined)
-                                : { lat: routeResult.orderedGalleries[idx - 1].lat, lng: routeResult.orderedGalleries[idx - 1].lng }
-                            )}
+                            href={buildGoogleMapsUrl([gallery], undefined, mode)}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="clay-button clay-base px-2.5 py-1 rounded-xl flex items-center gap-1 text-[11px] font-bold text-stone-700 dark:text-stone-200 hover:scale-105 active:scale-95 transition-all shadow-2xs border border-stone-200/80 dark:border-stone-700"
+                            className="clay-button clay-base px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-bold text-stone-700 dark:text-stone-200 hover:scale-105 active:scale-95 transition-all shadow-2xs border border-stone-200/80 dark:border-stone-700"
                             title={`مسیریابی با گوگل مپس به سمت ${getGalleryDisplayName(gallery)}`}
                           >
-                            <GoogleMapsIcon className="w-3.5 h-3.5 shrink-0" />
+                            <GoogleMapsIcon className="w-[18px] h-[18px] shrink-0" />
                             <span className="font-ubuntu">Google</span>
                           </a>
                         </div>
