@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback, Suspense, lazy } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useRef, Suspense, lazy } from 'react';
 import { Gallery, RouteOptimizationResult, CustomOrigin } from './types/gallery';
 import rawGalleriesData from './data/galleries.json';
 import {
@@ -725,6 +725,9 @@ export default function App() {
     );
   };
 
+  const latestRequestIdRef = useRef<number>(0);
+  const skipNextRouteOptRef = useRef<boolean>(false);
+
   const runRouteOptimization = async (
     mode: 'driving' | 'walking' = routeResult?.mode || travelMode || 'driving',
     isRoundTrip: boolean = routeResult?.isRoundTrip ?? false,
@@ -742,6 +745,7 @@ export default function App() {
       return null;
     }
 
+    const requestId = ++latestRequestIdRef.current;
     setIsOptimizing(true);
     try {
       const customStart = hasCustomStart && origin
@@ -771,13 +775,21 @@ export default function App() {
         startTime: startTimeMin,
         dwellMinutes: savedDuration
       });
+
+      if (requestId !== latestRequestIdRef.current) {
+        // Discard stale result from race condition
+        return null;
+      }
+
       setRouteResult(result);
       return result;
     } catch (err: any) {
       console.error('Route optimization error:', err);
       return null;
     } finally {
-      setIsOptimizing(false);
+      if (requestId === latestRequestIdRef.current) {
+        setIsOptimizing(false);
+      }
     }
   };
 
@@ -868,11 +880,15 @@ export default function App() {
   };
 
   useEffect(() => {
+    if (skipNextRouteOptRef.current) {
+      skipNextRouteOptRef.current = false;
+      return;
+    }
     const hasCustomStart = Boolean(originLocation && originLocation.lat !== 0);
     const minRequired = hasCustomStart ? 1 : 2;
     if (selectedGalleries.length >= minRequired) {
       runRouteOptimization(
-        routeResult?.mode || 'driving',
+        travelMode,
         routeResult?.isRoundTrip ?? false,
         routeResult?.trafficCondition || 'peak',
         startGalleryId,
@@ -882,7 +898,7 @@ export default function App() {
     } else {
       setRouteResult(null);
     }
-  }, [selectedGalleryIds, originLocation]);
+  }, [selectedGalleryIds, originLocation, travelMode]);
 
   const handleSetStartGallery = (id: number) => {
     const venueGallery = galleries.find((g) => g.id === id);
@@ -995,7 +1011,11 @@ export default function App() {
 
   const handleSelectCuratedTour = useCallback(
     (tour: PersianCuratedTour, overrideTravelMode?: 'driving' | 'walking') => {
+      skipNextRouteOptRef.current = true;
       const modeToUse = overrideTravelMode || travelMode;
+      if (overrideTravelMode && overrideTravelMode !== travelMode) {
+        setTravelMode(overrideTravelMode);
+      }
       setSelectedGalleryIds(tour.galleryIds);
       setStartGalleryId(tour.galleryIds[0] || null);
       setEndGalleryId(tour.galleryIds[tour.galleryIds.length - 1] || null);
@@ -1786,6 +1806,7 @@ export default function App() {
             isOpen={isCuratedModalOpen}
             onClose={() => setIsCuratedModalOpen(false)}
             onSelectRoute={(ids, mode) => {
+              skipNextRouteOptRef.current = true;
               const effectiveMode = mode || travelMode;
               if (mode && mode !== travelMode) {
                 setTravelMode(mode);
