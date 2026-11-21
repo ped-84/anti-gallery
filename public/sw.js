@@ -1,19 +1,19 @@
-const CACHE_NAME = 'artgasht-pwa-v1.160';
+const CACHE_NAME = 'artgasht-pwa-v1.161';
 
 const STATIC_ASSETS = [
   './',
   './index.html',
-  './manifest.json?v=1.160',
-  './favicon.ico?v=1.160',
-  './favicon.svg?v=1.160',
+  './manifest.json?v=1.161',
+  './favicon.ico?v=1.161',
+  './favicon.svg?v=1.161',
   './favicon.png',
   './favicon-32x32.png',
   './favicon-48x48.png',
   './favicon-96x96.png',
   './favicon-144x144.png',
   './favicon-16x16.png',
-  './icons/brand-logo-icon.svg?v=1.160',
-  './icons/brand-logo-icon-dark.svg?v=1.160',
+  './icons/brand-logo-icon.svg?v=1.161',
+  './icons/brand-logo-icon-dark.svg?v=1.161',
   './icons/brand-logo-icon.png',
   './icons/brand-logo-icon-dark.png',
   './icons/brand-logo-orange.png',
@@ -100,8 +100,13 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
-        .catch(() => {
-          return caches.match('./index.html') || caches.match('./');
+        .catch(async () => {
+          const cached = (await caches.match('./index.html')) || (await caches.match('./')) || (await caches.match('/index.html')) || (await caches.match('/'));
+          if (cached) return cached;
+          return new Response(
+            '<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta http-equiv="refresh" content="3"><title>آرت‌گشت</title></head><body style="background:#131722;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;margin:0;"><p>در حال برقراری ارتباط با آرت‌گشت...</p></body></html>',
+            { headers: { 'Content-Type': 'text/html; charset=utf-8' } }
+          );
         })
     );
     return;

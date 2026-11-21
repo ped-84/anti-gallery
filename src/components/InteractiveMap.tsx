@@ -254,6 +254,20 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         mapInstanceRef.current = map;
         triggerProgressiveResize(map);
 
+        try {
+          const canvas = map.getCanvas && map.getCanvas();
+          if (canvas) {
+            canvas.addEventListener('webglcontextlost', (e: Event) => {
+              e.preventDefault();
+              console.warn('[Neshan] WebGL context lost handled safely');
+            });
+            canvas.addEventListener('webglcontextrestored', () => {
+              console.log('[Neshan] WebGL context restored');
+              try { map.resize(); } catch {}
+            });
+          }
+        } catch {}
+
         map.on('load', () => {
           setIsMapReady(true);
           triggerProgressiveResize(map);
@@ -426,59 +440,64 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
     // 5.1 Render Route Line
     try {
-      if (routeResult && routeResult.geometryCoords.length > 0) {
+      if (routeResult && Array.isArray(routeResult.geometryCoords) && routeResult.geometryCoords.length >= 2) {
         // Mapbox uses [lng, lat]
-        const coordinates = routeResult.geometryCoords.map((c) => [c[1], c[0]]);
+        const coordinates = routeResult.geometryCoords
+          .filter((c) => Array.isArray(c) && c.length >= 2 && !isNaN(c[0]) && !isNaN(c[1]))
+          .map((c) => [c[1], c[0]]);
 
-        const routeGeoJson: any = {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'LineString',
-            coordinates
+        if (coordinates.length >= 2) {
+          const routeGeoJson: any = {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'LineString',
+              coordinates
+            }
+          };
+
+          const isLoaded = typeof map.isStyleLoaded === 'function' ? map.isStyleLoaded() : true;
+          if (isLoaded) {
+            if (map.getSource('optimized-route')) {
+              map.getSource('optimized-route').setData(routeGeoJson);
+            } else {
+              map.addSource('optimized-route', {
+                type: 'geojson',
+                data: routeGeoJson
+              });
+
+              // Route casing
+              map.addLayer({
+                id: 'optimized-route-casing',
+                type: 'line',
+                source: 'optimized-route',
+                layout: { 'line-join': 'round', 'line-cap': 'round' },
+                paint: {
+                  'line-color': '#1E3A8A',
+                  'line-width': 7,
+                  'line-opacity': 0.45
+                }
+              });
+
+              // Main line
+              map.addLayer({
+                id: 'optimized-route-line',
+                type: 'line',
+                source: 'optimized-route',
+                layout: { 'line-join': 'round', 'line-cap': 'round' },
+                paint: {
+                  'line-color': '#F76B1C',
+                  'line-width': 4.5
+                }
+              });
+            }
           }
-        };
 
-        if (map.getSource('optimized-route')) {
-          map.getSource('optimized-route').setData(routeGeoJson);
-        } else {
-          map.addSource('optimized-route', {
-            type: 'geojson',
-            data: routeGeoJson
-          });
-
-          // Route casing
-          map.addLayer({
-            id: 'optimized-route-casing',
-            type: 'line',
-            source: 'optimized-route',
-            layout: { 'line-join': 'round', 'line-cap': 'round' },
-            paint: {
-              'line-color': '#1E3A8A',
-              'line-width': 7,
-              'line-opacity': 0.45
-            }
-          });
-
-          // Main line
-          map.addLayer({
-            id: 'optimized-route-line',
-            type: 'line',
-            source: 'optimized-route',
-            layout: { 'line-join': 'round', 'line-cap': 'round' },
-            paint: {
-              'line-color': '#F76B1C',
-              'line-width': 4.5
-            }
-          });
-        }
-
-        coordinates.forEach((coord: number[]) => {
-          if (coord.length >= 2) {
+          coordinates.forEach((coord: number[]) => {
             bounds.extend([coord[0], coord[1]]);
             hasValidBounds = true;
-          }
-        });
+          });
+        }
       } else {
         // Remove existing route if cleared
         if (map.getLayer('optimized-route-line')) map.removeLayer('optimized-route-line');
@@ -687,9 +706,16 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       }
     });
 
-    if (hasValidBounds) {
+    if (hasValidBounds && !bounds.isEmpty()) {
       try {
-        map.fitBounds(bounds, { padding: 45, maxZoom: 15 });
+        const sw = bounds.getSouthWest();
+        const ne = bounds.getNorthEast();
+        // Guard against degenerate/single-point bounds causing zoom: Infinity or NaN camera matrix
+        if (Math.abs(sw.lat - ne.lat) < 0.0001 && Math.abs(sw.lng - ne.lng) < 0.0001) {
+          map.flyTo({ center: [sw.lng, sw.lat], zoom: 14.5, essential: true });
+        } else {
+          map.fitBounds(bounds, { padding: 45, maxZoom: 15, duration: 800 });
+        }
       } catch (e) {
         console.warn('[Neshan] fitBounds note:', e);
       }

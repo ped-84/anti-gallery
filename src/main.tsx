@@ -26,15 +26,6 @@ if ('serviceWorker' in navigator && typeof window !== 'undefined') {
       .catch((err) => {
         console.warn('PWA Service Worker registration warning:', err);
       });
-
-    // When the service worker updates and takes control, auto-reload once to display latest version
-    let refreshing = false;
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-      if (!refreshing) {
-        refreshing = true;
-        window.location.reload();
-      }
-    });
   });
 }
 
@@ -46,9 +37,6 @@ createRoot(document.getElementById('root')!).render(
 
 if (typeof window !== 'undefined') {
   (window as any).__artgasht_mounted = true;
-  try {
-    sessionStorage.removeItem('__artgasht_auto_reloaded');
-  } catch (e) {}
 
   // Gracefully transition & remove initial splash screen once app renders
   const splash = document.getElementById('splash-loader');
