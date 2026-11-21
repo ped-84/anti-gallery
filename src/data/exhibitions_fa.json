@@ -360,21 +360,6 @@
     "isExpired": false
   },
   {
-    "eventId": 21623,
-    "galleryId": 504,
-    "title": "بستار",
-    "artist": "شیدا شکرگزار",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 28 آبان 1405",
-    "fullDateRange": "28 آبان 1405 تا 30 آبان 1405",
-    "closingDate": "30 آبان 1405",
-    "openingHours": "۱۶:۰۰ الی  19:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21623.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21623.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21623",
-    "isExpired": false
-  },
-  {
     "eventId": 21609,
     "galleryId": 196,
     "title": "خاطرم سرشار باد",
@@ -585,21 +570,6 @@
     "isExpired": false
   },
   {
-    "eventId": 21551,
-    "galleryId": 263,
-    "title": "جستجوی ایران",
-    "artist": "نمایشگاه گروهی",
-    "type": "نمایشگاه گروهی",
-    "openingDate": "جمعه 15 آبان 1405",
-    "fullDateRange": "15 آبان 1405 تا 30 آبان 1405",
-    "closingDate": "30 آبان 1405",
-    "openingHours": "10:۰۰ الی 18:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21551.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21551.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21551",
-    "isExpired": false
-  },
-  {
     "eventId": 21555,
     "galleryId": 26,
     "title": "حضور",
@@ -687,21 +657,6 @@
     "poster": "https://galleryinfo.ir/Images/Events/Event_21442.jpg#fbi",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21442.jpg#fbi",
     "url": "https://galleryinfo.ir/Event/fa/21442",
-    "isExpired": false
-  },
-  {
-    "eventId": 21425,
-    "galleryId": 1013,
-    "title": "چشم‌انداز",
-    "artist": "لیندا آهنی، احمد اسفندیاری، هوشنگ پزشک‌نیا، پرهام پیوندی، لیندا آهنی، هوشنگ پزشک‌نیا، پرهام پیوندی، محمدعلی ترقی‌جاه، علی ذاکری، علی رضا، محدیه سهرابی، سالومه سوزنچی، ترحم سلمانی، جلال شباهنگی، محدثه طاهری، یعقوب عشقی‌فر، لیندا آهنی، هوشنگ پزشک‌نیا، پرهام پیوندی، محمدعلی ترقی‌جاه، علی ذاکری، علی رضا، محدیه سهرابی، سالومه سوزنچی، ترحم سلمانی، جلال شباهنگی، محدثه طاهری، محمد فاسونکی، ساتین غفاری، دلناز نوذ ی، لیندا آهنی، احمد اسفندیاری، هوشنگ پزشک‌نیا، پرهام پیوندی، محمدعلی ترقی‌جاه، علی ذاکری، علی رضا، محدیه سهرابی، سالومه سوزنچی، ترحم سلمانی، جلال شباهنگی، محدثه طاهری، محمد فاسونکی، ساتین غفاری، علی گلستانه (۱۳۱۹-۱۴۰۰)، شهرام کریمی، حسین محجوبی، منوچهر معتبر، سعیده میقانی، منوچهر نیازی، آرمان یعقوب‌پور",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 10 مهر 1405",
-    "fullDateRange": "10 مهر 1405 تا 30 آبان 1405",
-    "closingDate": "30 آبان 1405",
-    "openingHours": "14:۰۰ الی 20:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21425.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21425.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21425",
     "isExpired": false
   }
 ]
