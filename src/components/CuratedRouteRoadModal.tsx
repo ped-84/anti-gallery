@@ -10,13 +10,13 @@ import {
   safeFillForWhiteText,
   getCuratedRoadRoutes
 } from '../utils/roadLayout';
-import { X, Navigation, Compass } from 'lucide-react';
+import { X, Navigation, Compass, Car, Footprints } from 'lucide-react';
 import './route-map.css';
 
 interface CuratedRouteRoadModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectRoute: (galleryIds: number[]) => void;
+  onSelectRoute: (galleryIds: number[], mode: 'driving' | 'walking') => void;
   onSelectGalleryDetails: (gallery: Gallery) => void;
   allGalleries: Gallery[];
   initialRouteId?: string | null;
@@ -33,11 +33,19 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
   travelMode = 'driving'
 }) => {
   const [selectedRouteIdx, setSelectedRouteIdx] = useState<number>(0);
+  const [curatedMode, setCuratedMode] = useState<'driving' | 'walking'>(travelMode);
 
-  // Dynamically resolve curated routes strictly based on this week's active opening exhibitions and travel mode
+  // Sync internal mode with travelMode when opened or updated
+  useEffect(() => {
+    if (travelMode) {
+      setCuratedMode(travelMode);
+    }
+  }, [travelMode, isOpen]);
+
+  // Dynamically resolve curated routes strictly based on active opening exhibitions and mode
   const validRoutes = useMemo(() => {
-    return getCuratedRoadRoutes(allGalleries, travelMode);
-  }, [allGalleries, travelMode]);
+    return getCuratedRoadRoutes(allGalleries, curatedMode);
+  }, [allGalleries, curatedMode]);
 
   const activeRouteIdx = Math.max(0, Math.min(selectedRouteIdx, Math.max(0, validRoutes.length - 1)));
   const currentRoute: RoadRoute = validRoutes[activeRouteIdx] || CURATED_ROAD_ROUTES[0];
@@ -87,8 +95,8 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
 
   // Compute dynamic road layout (road height, Bezier curves, pins, and distance bubbles)
   const layout = useMemo(() => {
-    return computeRoadLayout(currentRoute, allGalleries);
-  }, [currentRoute, allGalleries]);
+    return computeRoadLayout(currentRoute, allGalleries, curatedMode);
+  }, [currentRoute, allGalleries, curatedMode]);
 
   if (!isOpen) return null;
 
@@ -124,8 +132,44 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
             <X className="w-5 h-5" />
           </button>
 
-          <div>
-            <span className="ag-eyebrow">مسیرهای پیشنهادی آرت‌گشت</span>
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-wrap items-center justify-between gap-2 pl-12">
+              <span className="ag-eyebrow">مسیرهای پیشنهادی آرت‌گشت</span>
+              {/* Segmented Mode Switcher: با خودرو / پیاده‌روی */}
+              <div className="inline-flex items-center p-1 bg-stone-100 rounded-xl border border-stone-200/80 shadow-2xs">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCuratedMode('driving');
+                    setSelectedRouteIdx(0);
+                  }}
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
+                    curatedMode === 'driving'
+                      ? 'bg-white text-stone-900 shadow-xs'
+                      : 'text-stone-500 hover:text-stone-700'
+                  }`}
+                >
+                  <Car className="w-3.5 h-3.5 text-blue-600" />
+                  <span>با خودرو</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCuratedMode('walking');
+                    setSelectedRouteIdx(0);
+                  }}
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
+                    curatedMode === 'walking'
+                      ? 'bg-white text-stone-900 shadow-xs'
+                      : 'text-stone-500 hover:text-stone-700'
+                  }`}
+                >
+                  <Footprints className="w-3.5 h-3.5 text-amber-600" />
+                  <span>پیاده‌روی</span>
+                </button>
+              </div>
+            </div>
+
             <div className="ag-title-row">
               <span
                 className="ag-title-dot"
@@ -282,7 +326,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                     />
                   </svg>
 
-                  {/* Content layer (Distance text + Car Icon) */}
+                  {/* Content layer (Distance text + Car / Walking Icon) */}
                   <div
                     className="ag-leg-content"
                     style={{
@@ -294,23 +338,11 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                     <span className="font-sans tabular-nums text-xs font-black select-none">
                       {distLabel}
                     </span>
-                    <svg
-                      aria-hidden="true"
-                      width={16}
-                      height={16}
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#10335e"
-                      strokeWidth={2.2}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="shrink-0"
-                    >
-                      <path d="M5 16V11l2-5h10l2 5v5" />
-                      <path d="M3 16h18" />
-                      <circle cx={7.5} cy={16.5} r={1.5} />
-                      <circle cx={16.5} cy={16.5} r={1.5} />
-                    </svg>
+                    {curatedMode === 'walking' ? (
+                      <Footprints className="w-4 h-4 text-amber-600 shrink-0" />
+                    ) : (
+                      <Car className="w-4 h-4 text-[#10335e] shrink-0" />
+                    )}
                   </div>
                 </div>
               );
@@ -406,7 +438,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
               </React.Fragment>
             ))}
 
-            {/* 5. Animated Car (CSS Motion Path along road) */}
+            {/* 5. Animated Car / Walker (CSS Motion Path along road) */}
             <div
               className="ag-car"
               aria-hidden="true"
@@ -415,20 +447,28 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                 animationDuration: `${layout.carSeconds}s`
               }}
             >
-              <div className="ag-car__rig">
-                <i className="wheel" style={{ left: '7px', top: '-1px' }} />
-                <i className="wheel" style={{ left: '28px', top: '-1px' }} />
-                <i className="wheel" style={{ left: '7px', top: '22px' }} />
-                <i className="wheel" style={{ left: '28px', top: '22px' }} />
-                <i className="body" />
-                <i className="rear-glass" />
-                <i className="roof" />
-                <i className="front-glass" />
-                <i className="head" style={{ top: '5px' }} />
-                <i className="head" style={{ top: '17px' }} />
-                <i className="tail" style={{ top: '5px' }} />
-                <i className="tail" style={{ top: '17px' }} />
-              </div>
+              {curatedMode === 'walking' ? (
+                <div
+                  className="w-8 h-8 rounded-full bg-white shadow-md border-2 border-amber-600 text-amber-600 flex items-center justify-center animate-bounce -mt-1 -ml-1"
+                >
+                  <Footprints className="w-4 h-4" />
+                </div>
+              ) : (
+                <div className="ag-car__rig">
+                  <i className="wheel" style={{ left: '7px', top: '-1px' }} />
+                  <i className="wheel" style={{ left: '28px', top: '-1px' }} />
+                  <i className="wheel" style={{ left: '7px', top: '22px' }} />
+                  <i className="wheel" style={{ left: '28px', top: '22px' }} />
+                  <i className="body" />
+                  <i className="rear-glass" />
+                  <i className="roof" />
+                  <i className="front-glass" />
+                  <i className="head" style={{ top: '5px' }} />
+                  <i className="head" style={{ top: '17px' }} />
+                  <i className="tail" style={{ top: '5px' }} />
+                  <i className="tail" style={{ top: '17px' }} />
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -449,7 +489,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
           <button
             type="button"
             onClick={() => {
-              onSelectRoute(currentRoute.galleryIds);
+              onSelectRoute(currentRoute.galleryIds, curatedMode);
               onClose();
             }}
             style={{

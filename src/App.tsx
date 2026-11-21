@@ -1741,7 +1741,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-right">
           <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
             <img
-              src="./icons/brand-logo-icon.svg?v=1.157"
+              src="./icons/brand-logo-icon.svg?v=1.158"
               alt="آرت‌گشت"
               width="18"
               height="18"
@@ -1749,7 +1749,7 @@ export default function App() {
               className="w-4.5 h-4.5 object-contain shrink-0 block dark:hidden"
             />
             <img
-              src="./icons/brand-logo-icon-dark.svg?v=1.157"
+              src="./icons/brand-logo-icon-dark.svg?v=1.158"
               alt="آرت‌گشت"
               width="18"
               height="18"
@@ -1785,14 +1785,18 @@ export default function App() {
           <CuratedRouteRoadModal
             isOpen={isCuratedModalOpen}
             onClose={() => setIsCuratedModalOpen(false)}
-            onSelectRoute={(ids) => {
+            onSelectRoute={(ids, mode) => {
+              const effectiveMode = mode || travelMode;
+              if (mode && mode !== travelMode) {
+                setTravelMode(mode);
+              }
               setSelectedGalleryIds(ids);
               setStartGalleryId(ids[0] || null);
               setEndGalleryId(ids[ids.length - 1] || null);
               const matching = ids.map((id) => galleries.find((g) => g.id === id)).filter((g): g is Gallery => !!g);
               if (matching.length >= 2) {
                 runRouteOptimization(
-                  travelMode,
+                  effectiveMode,
                   false,
                   'peak',
                   ids[0] || null,

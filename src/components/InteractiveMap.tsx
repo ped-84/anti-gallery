@@ -180,8 +180,16 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
     };
 
     const purgeNeshanWatermarks = () => {
-      if (!mapContainerRef.current) return;
+      const container = mapContainerRef.current;
+      if (!container) return;
       const selectors = [
+        '#wm_protector',
+        '.wm-container',
+        '.water-mark',
+        '.water-mark-img',
+        '[id*="wm_protector"]',
+        '[class*="wm-container"]',
+        '[class*="water-mark"]',
         '.mapboxgl-ctrl-bottom-left',
         '.mapboxgl-ctrl-bottom-right',
         '.mapboxgl-ctrl-top-left',
@@ -194,19 +202,30 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         'a.mapboxgl-ctrl-logo',
         '.neshan-watermark',
         '.neshan-logo',
+        'a[href*="platform.neshan.org"]',
+        'a[href*="neshan.org/maps"]',
         'a[href*="neshan.org"]',
         'a[href*="mapbox.com"]',
         'a[href*="openstreetmap.org"]'
       ];
       selectors.forEach((sel) => {
-        mapContainerRef.current?.querySelectorAll(sel).forEach((el: any) => {
+        container.querySelectorAll(sel).forEach((el: any) => {
           el.style.setProperty('display', 'none', 'important');
           el.style.setProperty('visibility', 'hidden', 'important');
           el.style.setProperty('opacity', '0', 'important');
           el.style.setProperty('pointer-events', 'none', 'important');
+          el.style.setProperty('height', '0px', 'important');
+          el.style.setProperty('width', '0px', 'important');
+          el.style.setProperty('overflow', 'hidden', 'important');
+          el.style.setProperty('position', 'absolute', 'important');
+          el.style.setProperty('left', '-99999px', 'important');
+          el.style.setProperty('bottom', '-99999px', 'important');
         });
       });
     };
+
+    // Watch for Neshan's delayed watermark injection (which fires 2s after init)
+    const purgeInterval = setInterval(purgeNeshanWatermarks, 400);
 
     const resizeTimers: ReturnType<typeof setTimeout>[] = [];
     const triggerProgressiveResize = (map: any) => {
@@ -343,6 +362,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
     return () => {
       console.error = origConsoleError;
       isCancelled = true;
+      clearInterval(purgeInterval);
       clearTimeout(watchdogTimer);
       resizeTimers.forEach(clearTimeout);
       if (resizeObserver) {
@@ -727,6 +747,16 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
   return (
     <div className="clay-card relative w-full h-full min-h-[360px] sm:min-h-[420px] overflow-hidden border border-[#E1E1E1] dark:border-stone-800 shadow-md">
       <style>{`
+        #wm_protector,
+        #wm_protector *,
+        .wm-container,
+        .wm-container *,
+        .water-mark,
+        .water-mark *,
+        .water-mark-img,
+        [id*="wm_protector"],
+        [class*="wm-container"],
+        [class*="water-mark"],
         .mapboxgl-ctrl-bottom-left,
         .mapboxgl-ctrl-bottom-right,
         .mapboxgl-ctrl-top-left,
@@ -742,6 +772,15 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           visibility: hidden !important;
           opacity: 0 !important;
           pointer-events: none !important;
+          height: 0 !important;
+          width: 0 !important;
+          max-height: 0 !important;
+          max-width: 0 !important;
+          overflow: hidden !important;
+          position: absolute !important;
+          left: -99999px !important;
+          bottom: -99999px !important;
+          transform: scale(0) !important;
         }
       `}</style>
 

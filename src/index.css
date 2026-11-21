@@ -568,9 +568,20 @@ body {
   /* NO transition on transform here so dragging never lags */
 }
 
-/* Hide Neshan / Mapbox attribution & watermarks */
+/* Hide Neshan / Mapbox attribution & watermarks completely */
+#wm_protector,
+#wm_protector *,
+.wm-container,
+.wm-container *,
+.water-mark,
+.water-mark *,
+.water-mark-img,
+[id*="wm_protector"],
+[class*="wm-container"],
+[class*="water-mark"],
 .mapboxgl-ctrl-attrib,
 .mapboxgl-ctrl-attrib-inner,
+.mapboxgl-ctrl-attrib-button,
 .mapboxgl-compact,
 .mapboxgl-ctrl-bottom-right,
 .mapboxgl-ctrl-bottom-left,
@@ -583,16 +594,29 @@ a.mapboxgl-ctrl-logo,
 [class*="mapboxgl-ctrl-logo"],
 [class*="neshan-watermark"],
 [class*="neshan-logo"],
-.mapboxgl-ctrl-logo {
+.mapboxgl-ctrl-logo,
+a[href*="platform.neshan.org"],
+a[href*="neshan.org/maps"],
+a[href*="openstreetmap.org"] {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
   pointer-events: none !important;
   height: 0 !important;
   width: 0 !important;
+  max-height: 0 !important;
+  max-width: 0 !important;
+  line-height: 0 !important;
+  font-size: 0 !important;
   margin: 0 !important;
   padding: 0 !important;
   overflow: hidden !important;
+  position: absolute !important;
+  left: -99999px !important;
+  bottom: -99999px !important;
+  clip-path: inset(100%) !important;
+  z-index: -9999 !important;
+  transform: scale(0) !important;
 }
 
 /* Ensure Mapbox GL canvas fills the entire container seamlessly */

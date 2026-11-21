@@ -162,7 +162,8 @@ export const ROAD_CONSTANTS = {
  */
 export function computeRoadLayout(
   route: RoadRoute,
-  allGalleries: Gallery[]
+  allGalleries: Gallery[],
+  travelMode: 'driving' | 'walking' = 'driving'
 ): RoadLayoutResult {
   const C = ROAD_CONSTANTS;
 
@@ -201,7 +202,10 @@ export function computeRoadLayout(
       // Direct haversine distance with 1.25 urban street factor
       const straight = haversineKm(a.lat, a.lng, b.lat, b.lng);
       const urbanKm = parseFloat((straight * 1.25).toFixed(2));
-      const mins = Math.max(2, Math.round(urbanKm * 4 + 2));
+      // Pace: walking = ~13 mins/km; driving = ~4 mins/km + traffic buffer
+      const mins = travelMode === 'walking'
+        ? Math.max(2, Math.round(urbanKm * 13))
+        : Math.max(2, Math.round(urbanKm * 4 + 2));
       legData.push([urbanKm, mins]);
     } else {
       legData.push(null);
@@ -335,7 +339,9 @@ export function computeRoadLayout(
       text: lg
         ? dense
           ? `${toPersianDigits(km!)} کیلومتر`
-          : `${toPersianDigits(km!)} کیلومتر · ~${toPersianDigits(minutes!)} دقیقه`
+          : travelMode === 'walking'
+            ? `${toPersianDigits(km!)} کیلومتر · ~${toPersianDigits(minutes!)} دقیقه پیاده`
+            : `${toPersianDigits(km!)} کیلومتر · ~${toPersianDigits(minutes!)} دقیقه خودرو`
         : '[فاصله]'
     };
   });
@@ -369,8 +375,16 @@ export function computeRoadLayout(
     legs,
     stats: {
       stops: `${toPersianDigits(n)} گالری`,
-      km: knownAll ? `${toPersianDigits(kmTotal.toFixed(2))} کیلومتر` : '[مسافت]',
-      time: knownAll ? `حدود ${timeText}` : '[زمان کل]'
+      km: knownAll
+        ? travelMode === 'walking'
+          ? `${toPersianDigits(kmTotal.toFixed(2))} کیلومتر پیاده‌روی`
+          : `${toPersianDigits(kmTotal.toFixed(2))} کیلومتر با خودرو`
+        : '[مسافت]',
+      time: knownAll
+        ? travelMode === 'walking'
+          ? `حدود ${timeText} (پیاده)`
+          : `حدود ${timeText} (سواره)`
+        : '[زمان کل]'
     },
     carSeconds: Math.max(6, (n + 1) * 2.6)
   };
@@ -485,7 +499,7 @@ export function getCuratedRoadRoutes(
     isThisWeekOpening(g.activeExhibition?.openingDate, maxOpeningScore)
   );
 
-  const routeTemplates = [
+  const drivingTemplates = [
     {
       id: 'karimkhan',
       label: 'کریم‌خان و سنایی',
@@ -609,20 +623,102 @@ export function getCuratedRoadRoutes(
     }
   ];
 
-  const dynamicRoutes: RoadRoute[] = [];
+  // Dedicated walking templates: ONLY strictly walkable dense clusters (hop <= 750m - 850m)
+  const walkingTemplates = [
+    {
+      id: 'walk-karimkhan',
+      label: 'کریم‌خان و سنایی',
+      color: '#3D5B99',
+      pinTone: 'cool' as const,
+      maxHopKm: 0.75, // 750m max straight hop (~900m walking)
+      matcher: (g: Gallery) => {
+        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        return (
+          text.includes('کریم‌خان') ||
+          text.includes('کریمخان') ||
+          text.includes('سنایی') ||
+          text.includes('خردمند') ||
+          text.includes('قرنی') ||
+          text.includes('آبان') ||
+          text.includes('عضدی') ||
+          text.includes('شیرودی') ||
+          text.includes('اعرابی') ||
+          text.includes('هفت تیر')
+        );
+      }
+    },
+    {
+      id: 'walk-museum-laleh',
+      label: 'پارک لاله و کشاورز',
+      color: '#00A892',
+      pinTone: 'cool' as const,
+      maxHopKm: 0.85,
+      matcher: (g: Gallery) => {
+        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        return (
+          text.includes('کشاورز') ||
+          text.includes('وصال') ||
+          text.includes('قدس') ||
+          text.includes('فاطمی') ||
+          text.includes('کارگر') ||
+          text.includes('لاله') ||
+          text.includes('امیرآباد') ||
+          text.includes('گرد آفرید')
+        );
+      }
+    },
+    {
+      id: 'walk-center-lolagar',
+      label: 'مرکز تاریخی و لولاگر',
+      color: '#D97706',
+      pinTone: 'warm' as const,
+      maxHopKm: 0.85,
+      matcher: (g: Gallery) => {
+        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        return (
+          text.includes('لولاگر') ||
+          text.includes('حافظ') ||
+          text.includes('انقلاب') ||
+          text.includes('فردوسی') ||
+          text.includes('طالقانی') ||
+          text.includes('ایرانشهر') ||
+          text.includes('باغ هنر')
+        );
+      }
+    },
+    {
+      id: 'walk-beheshti',
+      label: 'بهشتی و مطهری',
+      color: '#E58B2E',
+      pinTone: 'warm' as const,
+      maxHopKm: 0.80,
+      matcher: (g: Gallery) => {
+        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        return (
+          text.includes('لارستان') ||
+          text.includes('قائم مقام') ||
+          (text.includes('مطهری') && !text.includes('خرمشهر'))
+        );
+      }
+    }
+  ];
 
-  for (const tmpl of routeTemplates) {
+  const dynamicRoutes: RoadRoute[] = [];
+  const templatesToUse = travelMode === 'walking' ? walkingTemplates : drivingTemplates;
+
+  for (const tmpl of templatesToUse) {
     const matched = openings.filter(tmpl.matcher);
     if (matched.length >= 2) {
       let sorted = sortNearestNeighbor(matched);
 
-      // In walking mode, only keep contiguous stops where hops are strictly <= 1.0 km
+      // In walking mode, only keep contiguous stops where hops are strictly <= maxHopKm (<= 750-850m)
       if (travelMode === 'walking') {
+        const maxLimit = (tmpl as any).maxHopKm || 0.85;
         const walkable: Gallery[] = [sorted[0]];
         let cur = sorted[0];
         for (let i = 1; i < sorted.length; i++) {
           const d = distKm(cur.lat, cur.lng, sorted[i].lat, sorted[i].lng);
-          if (d <= 1.0) {
+          if (d <= maxLimit) {
             walkable.push(sorted[i]);
             cur = sorted[i];
           }
@@ -636,8 +732,8 @@ export function getCuratedRoadRoutes(
           id: tmpl.id,
           label: tmpl.label,
           color: tmpl.color,
-          tab: tmpl.tab,
-          tabInk: tmpl.tabInk,
+          tab: (tmpl as any).tab,
+          tabInk: (tmpl as any).tabInk,
           pinTone: tmpl.pinTone,
           galleryIds: sorted.map((g) => g.id)
         });
@@ -650,7 +746,23 @@ export function getCuratedRoadRoutes(
     return dynamicRoutes;
   }
 
-  // Graceful fallback to verified defaults filtered by existing catalog
+  // Fallback: If walking mode, return verified walkable route in Karimkhan
+  if (travelMode === 'walking') {
+    return [
+      {
+        id: 'karimkhan-walk-fallback',
+        label: 'کریم‌خان و سنایی (پیاده)',
+        color: '#3D5B99',
+        pinTone: 'cool' as const,
+        galleryIds: [406, 65, 443, 24, 120, 301]
+      }
+    ].filter((r) => {
+      const validCount = r.galleryIds.filter((id) => allGalleries.some((g) => g.id === id)).length;
+      return validCount >= 2;
+    });
+  }
+
+  // Graceful fallback to verified defaults for driving mode
   return CURATED_ROAD_ROUTES.filter((r) => {
     const validCount = r.galleryIds.filter((id) => allGalleries.some((g) => g.id === id)).length;
     return validCount >= 2;
