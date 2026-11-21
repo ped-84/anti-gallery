@@ -474,31 +474,113 @@
   background: #ff5a4f;
 }
 
-/* The Animated Walker (Art-Lover Pedestrian) */
+/* The Animated Walker (Art-Lover Pedestrian with Multi-Joint Walk Cycle) */
 .ag-walker {
   position: absolute;
   left: 0;
   top: 0;
-  width: 42px;
-  height: 58px;
-  offset-rotate: 0deg;
+  width: 48px;
+  height: 64px;
+  offset-rotate: auto -90deg;
   offset-anchor: 50% 90%;
   animation: ag-drive linear infinite;
   pointer-events: none;
   z-index: 20;
+  filter: drop-shadow(0 4px 6px rgba(15, 23, 42, 0.35));
 }
 
 .ag-walker__rig {
   position: relative;
-  width: 42px;
-  height: 58px;
-  animation: ag-walk-bob 0.38s ease-in-out infinite alternate;
-  transform-origin: bottom center;
+  width: 48px;
+  height: 64px;
 }
 
-@keyframes ag-walk-bob {
-  0% { transform: translateY(0) scaleY(1); }
-  100% { transform: translateY(-3px) scaleY(0.98); }
+/* Walk Cycle Keyframes (Natural ~105 bpm Walking Cadence, Period = 0.68s) */
+@keyframes ag-step-left {
+  0%   { transform: rotate(-22deg); }
+  25%  { transform: rotate(2deg) translateY(-2px); }
+  50%  { transform: rotate(22deg); }
+  75%  { transform: rotate(-6deg) translateY(-1px); }
+  100% { transform: rotate(-22deg); }
+}
+
+@keyframes ag-knee-left {
+  0%   { transform: rotate(4deg); }
+  25%  { transform: rotate(28deg); } /* Knee bends as foot lifts forward */
+  50%  { transform: rotate(2deg); }
+  75%  { transform: rotate(0deg); }
+  100% { transform: rotate(4deg); }
+}
+
+@keyframes ag-step-right {
+  0%   { transform: rotate(22deg); }
+  25%  { transform: rotate(-6deg) translateY(-1px); }
+  50%  { transform: rotate(-22deg); }
+  75%  { transform: rotate(2deg) translateY(-2px); }
+  100% { transform: rotate(22deg); }
+}
+
+@keyframes ag-knee-right {
+  0%   { transform: rotate(2deg); }
+  25%  { transform: rotate(0deg); }
+  50%  { transform: rotate(4deg); }
+  75%  { transform: rotate(28deg); } /* Knee bends as foot lifts forward */
+  100% { transform: rotate(2deg); }
+}
+
+@keyframes ag-arm-swing-left {
+  0%   { transform: rotate(22deg); }
+  50%  { transform: rotate(-18deg); }
+  100% { transform: rotate(22deg); }
+}
+
+@keyframes ag-arm-swing-right {
+  0%   { transform: rotate(-18deg); }
+  50%  { transform: rotate(22deg); }
+  100% { transform: rotate(-18deg); }
+}
+
+@keyframes ag-torso-bob {
+  0%, 50%, 100% { transform: translateY(0); }
+  25%, 75%      { transform: translateY(-2.8px); }
+}
+
+@keyframes ag-shadow-breath {
+  0%, 50%, 100% { transform: scale(1); opacity: 0.45; }
+  25%, 75%      { transform: scale(0.85); opacity: 0.28; }
+}
+
+/* Rig Animation Classes */
+.ag-anim-bob {
+  animation: ag-torso-bob 0.68s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.ag-anim-leg-l {
+  animation: ag-step-left 0.68s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  transform-origin: 0 0;
+}
+.ag-anim-knee-l {
+  animation: ag-knee-left 0.68s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  transform-origin: 0 0;
+}
+.ag-anim-leg-r {
+  animation: ag-step-right 0.68s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  transform-origin: 0 0;
+}
+.ag-anim-knee-r {
+  animation: ag-knee-right 0.68s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  transform-origin: 0 0;
+}
+.ag-anim-arm-l {
+  animation: ag-arm-swing-left 0.68s ease-in-out infinite;
+  transform-origin: 0 0;
+}
+.ag-anim-arm-r {
+  animation: ag-arm-swing-right 0.68s ease-in-out infinite;
+  transform-origin: 0 0;
+}
+.ag-anim-shadow {
+  animation: ag-shadow-breath 0.68s ease-in-out infinite;
+  transform-origin: 24px 58px;
 }
 
 /* Animations */
@@ -508,7 +590,9 @@
 @keyframes ag-hum   { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-.6px); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .ag-road--dash, .ag-pin, .ag-car, .ag-car__rig, .ag-walker, .ag-walker__rig {
+  .ag-road--dash, .ag-pin, .ag-car, .ag-car__rig, .ag-walker, .ag-walker__rig,
+  .ag-anim-bob, .ag-anim-leg-l, .ag-anim-knee-l, .ag-anim-leg-r, .ag-anim-knee-r,
+  .ag-anim-arm-l, .ag-anim-arm-r, .ag-anim-shadow {
     animation: none;
   }
 }

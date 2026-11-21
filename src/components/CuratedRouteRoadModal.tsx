@@ -459,113 +459,245 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
               >
                 <div className="ag-walker__rig">
                   <svg
-                    width="42"
-                    height="58"
-                    viewBox="0 0 42 58"
+                    width="48"
+                    height="64"
+                    viewBox="0 0 48 64"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                     className="overflow-visible"
                   >
                     <defs>
+                      {/* Shirt 3D Claymorphic Gradient matching road & car theme */}
                       <linearGradient id="walker-shirt-grad" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" stopColor={carHi} />
-                        <stop offset="52%" stopColor={pin} />
+                        <stop offset="48%" stopColor={pin} />
                         <stop offset="100%" stopColor={carLo} />
                       </linearGradient>
-                      <linearGradient id="walker-pants-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stopColor="#4378ba" />
-                        <stop offset="100%" stopColor="#254d80" />
+
+                      {/* Back Leg / Shadow Denim */}
+                      <linearGradient id="walker-denim-back" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stopColor="#23426e" />
+                        <stop offset="100%" stopColor="#142845" />
                       </linearGradient>
-                      <linearGradient id="walker-cuff-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#93c5fd" />
-                        <stop offset="100%" stopColor="#bfdbfe" />
+
+                      {/* Front Leg Denim */}
+                      <linearGradient id="walker-denim-front" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stopColor="#467bb8" />
+                        <stop offset="100%" stopColor="#28538c" />
+                      </linearGradient>
+
+                      {/* Hair 3D Volume Gradient */}
+                      <linearGradient id="walker-hair-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#25334d" />
+                        <stop offset="50%" stopColor="#182236" />
+                        <stop offset="100%" stopColor="#0c121e" />
                       </linearGradient>
                     </defs>
 
-                    {/* Ground shadow on asphalt */}
-                    <ellipse cx="21" cy="54" rx="14" ry="3.2" fill="#0f172a" opacity="0.45" />
-
-                    {/* Back arm swinging behind body */}
-                    <path
-                      d="M 19 20 L 14 29 L 10 31"
-                      stroke="#f5beaa"
-                      strokeWidth="2.8"
-                      strokeLinecap="round"
+                    {/* 1. Ground Contact Shadow on Asphalt (pulses with foot strikes) */}
+                    <ellipse
+                      className="ag-anim-shadow"
+                      cx="24"
+                      cy="58"
+                      rx="14"
+                      ry="3.5"
+                      fill="#090d16"
+                      opacity="0.45"
                     />
 
-                    {/* Back leg (stepping back) */}
-                    <path
-                      d="M 20 29 L 14 43 L 9 51"
-                      stroke="#254d80"
-                      strokeWidth="4.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    {/* Back shoe */}
-                    <path
-                      d="M 7 51 L 14 52.5 L 6 54 Z"
-                      fill="#ffffff"
-                      stroke="#0f172a"
-                      strokeWidth="0.9"
-                    />
+                    {/* 2. Animated Character Body (with natural rhythmic step bounce) */}
+                    <g className="ag-anim-bob">
+                      {/* BACK ARM (swings opposite to back leg) */}
+                      <g transform="translate(18, 22)">
+                        <g className="ag-anim-arm-l">
+                          <path
+                            d="M 0 0 L -3 8 L -4 14"
+                            stroke="#e09c85"
+                            strokeWidth="2.6"
+                            strokeLinecap="round"
+                          />
+                          <circle cx="-4" cy="15" r="1.6" fill="#e09c85" />
+                        </g>
+                      </g>
 
-                    {/* Front leg (stepping forward) */}
-                    <path
-                      d="M 21 29 L 28 41 L 34 50"
-                      stroke="url(#walker-pants-grad)"
-                      strokeWidth="4.8"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    {/* Front rolled jean cuff */}
-                    <ellipse cx="32" cy="48" rx="2.8" ry="1.3" fill="url(#walker-cuff-grad)" />
-                    {/* Front shoe */}
-                    <path
-                      d="M 31 50.5 L 38.5 50.5 L 38.5 53.5 L 30 53.5 Z"
-                      fill="#ffffff"
-                      stroke="#0f172a"
-                      strokeWidth="0.9"
-                    />
-                    <line x1="30" y1="53.5" x2="38.5" y2="53.5" stroke="#0f172a" strokeWidth="1.2" />
+                      {/* BACK LEG (shaded darker for depth, full walking stride + knee flex) */}
+                      <g transform="translate(20, 33)">
+                        <g className="ag-anim-leg-l">
+                          {/* Thigh */}
+                          <path
+                            d="M 0 0 L -2 11"
+                            stroke="url(#walker-denim-back)"
+                            strokeWidth="4.8"
+                            strokeLinecap="round"
+                          />
+                          {/* Knee joint -> Shin & Foot */}
+                          <g transform="translate(-2, 11)">
+                            <g className="ag-anim-knee-l">
+                              {/* Calf */}
+                              <path
+                                d="M 0 0 L -1 10"
+                                stroke="url(#walker-denim-back)"
+                                strokeWidth="4.2"
+                                strokeLinecap="round"
+                              />
+                              {/* Rolled Cuff */}
+                              <ellipse cx="-1" cy="8.5" rx="2.5" ry="1.2" fill="#7fa6d8" />
+                              {/* Sneaker */}
+                              <path
+                                d="M -2 9 L 4 11.5 L 3.5 13.5 L -3 13 Z"
+                                fill="#e2e8f0"
+                                stroke="#090d16"
+                                strokeWidth="0.8"
+                              />
+                              <line
+                                x1="-3"
+                                y1="13.2"
+                                x2="3.5"
+                                y2="13.2"
+                                stroke="#090d16"
+                                strokeWidth="1.1"
+                              />
+                            </g>
+                          </g>
+                        </g>
+                      </g>
 
-                    {/* Torso & 3D T-shirt (Color matches road & car theme) */}
-                    <path
-                      d="M 17 17.5 L 25 17.5 L 24 30 L 18 30 Z"
-                      fill="url(#walker-shirt-grad)"
-                      stroke="rgba(0,0,0,0.18)"
-                      strokeWidth="0.8"
-                    />
-                    {/* Shirt sleeve */}
-                    <path
-                      d="M 23 17.5 L 26.5 22 L 23.5 23.5 L 21 18.5 Z"
-                      fill="url(#walker-shirt-grad)"
-                    />
-                    {/* Waistband trim */}
-                    <line x1="18" y1="30" x2="24" y2="30" stroke="#1e293b" strokeWidth="1.1" />
+                      {/* TORSO & HIPS (Claymorphic 3D styling) */}
+                      {/* Hips / Jeans Waistband */}
+                      <path d="M 17 31 L 31 31 L 29 35 L 19 35 Z" fill="#28538c" />
+                      <line
+                        x1="18"
+                        y1="31"
+                        x2="30"
+                        y2="31"
+                        stroke="#162c4c"
+                        strokeWidth="1"
+                      />
 
-                    {/* Neck */}
-                    <path d="M 20 15 L 22.5 15 L 22.5 17.5 L 20 17.5 Z" fill="#f5beaa" />
+                      {/* T-Shirt Body (Dynamic Tour Colors) */}
+                      <path
+                        d="M 18 19 L 30 19 L 31 31 L 17 31 Z"
+                        fill="url(#walker-shirt-grad)"
+                      />
+                      {/* 3D Clay highlight on shirt top edge */}
+                      <path
+                        d="M 18.5 19.5 L 29.5 19.5 L 23 20 Z"
+                        fill="rgba(255,255,255,0.45)"
+                      />
 
-                    {/* Front arm swinging forward */}
-                    <path
-                      d="M 23 21 L 28 27 L 32 28"
-                      stroke="#f5beaa"
-                      strokeWidth="2.8"
-                      strokeLinecap="round"
-                    />
+                      {/* Crossbody Tote Strap */}
+                      <line
+                        x1="20"
+                        y1="19"
+                        x2="29"
+                        y2="33"
+                        stroke="#1e293b"
+                        strokeWidth="1.3"
+                      />
+                      {/* Mini Exhibition Tote Bag */}
+                      <rect
+                        x="27"
+                        y="30"
+                        width="5"
+                        height="6.5"
+                        rx="1.2"
+                        fill="#fff7ed"
+                        stroke={pin}
+                        strokeWidth="0.8"
+                      />
 
-                    {/* Head */}
-                    <circle cx="22" cy="12" r="4.3" fill="#f5beaa" />
+                      {/* FRONT LEG (bright denim, clear forward stride + knee flex) */}
+                      <g transform="translate(26, 33)">
+                        <g className="ag-anim-leg-r">
+                          {/* Thigh */}
+                          <path
+                            d="M 0 0 L 2 11"
+                            stroke="url(#walker-denim-front)"
+                            strokeWidth="5"
+                            strokeLinecap="round"
+                          />
+                          {/* Knee joint -> Shin & Foot */}
+                          <g transform="translate(2, 11)">
+                            <g className="ag-anim-knee-r">
+                              {/* Calf */}
+                              <path
+                                d="M 0 0 L 1 10"
+                                stroke="url(#walker-denim-front)"
+                                strokeWidth="4.4"
+                                strokeLinecap="round"
+                              />
+                              {/* Rolled Jean Cuff */}
+                              <ellipse cx="1" cy="8.5" rx="2.7" ry="1.3" fill="#bfdbfe" />
+                              {/* Clean White Sneaker */}
+                              <path
+                                d="M -1 9 L 6 11.5 L 5.5 13.5 L -2 13 Z"
+                                fill="#ffffff"
+                                stroke="#090d16"
+                                strokeWidth="0.8"
+                              />
+                              <line
+                                x1="-2"
+                                y1="13.2"
+                                x2="5.5"
+                                y2="13.2"
+                                stroke="#090d16"
+                                strokeWidth="1.2"
+                              />
+                            </g>
+                          </g>
+                        </g>
+                      </g>
 
-                    {/* Hair: stylized sleek silhouette from reference */}
-                    <path
-                      d="M 17.5 12 C 17 6.5, 25.5 5.5, 26 10.5 C 27 13.5, 25.5 17, 22.5 17 C 18.5 17, 17 15.5, 17.5 12 Z"
-                      fill="#1e293b"
-                    />
-                    <path
-                      d="M 17 11 C 16 13.5, 16 16.5, 18 18.5 C 17 18.5, 15.5 15.5, 16 11 Z"
-                      fill="#0f172a"
-                    />
+                      {/* FRONT ARM & SLEEVE (swings opposite to front leg) */}
+                      <g transform="translate(28, 22)">
+                        <g className="ag-anim-arm-r">
+                          {/* Sleeve */}
+                          <path d="M -2 -2 L 3 1 L 2 5 L -2 4 Z" fill="url(#walker-shirt-grad)" />
+                          {/* Forearm */}
+                          <path
+                            d="M 1 4 L 4 11 L 6 15"
+                            stroke="#fcd7c7"
+                            strokeWidth="2.8"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          {/* Hand */}
+                          <circle cx="6" cy="15.5" r="1.7" fill="#fcd7c7" />
+                        </g>
+                      </g>
+
+                      {/* HEAD & HAIR */}
+                      {/* Neck */}
+                      <rect x="22" y="16.5" width="4" height="3" fill="#fcd7c7" />
+
+                      {/* Back Hair Volume */}
+                      <path
+                        d="M 18 12 C 17 6, 29 5, 30 11 C 31 16, 27 20, 23 20 C 18 20, 17 16, 18 12 Z"
+                        fill="url(#walker-hair-grad)"
+                      />
+
+                      {/* Face */}
+                      <circle cx="24.5" cy="13.5" r="4.8" fill="#fcd7c7" />
+                      {/* Cheek Blush */}
+                      <circle cx="26.5" cy="15" r="1.3" fill="#fca5a5" opacity="0.6" />
+
+                      {/* Front Bob Hair Fringe & Bangs */}
+                      <path
+                        d="M 19 12 C 20 8, 28 8, 29 11 C 26 12, 23 11, 21 14 Z"
+                        fill="#182236"
+                      />
+                      <path
+                        d="M 18 13 C 17 16, 18 18, 20 19 C 19 19, 18 16, 18 13 Z"
+                        fill="#0f172a"
+                      />
+                      {/* 3D Hair Gloss / Clay Highlight */}
+                      <path
+                        d="M 22 7.5 C 24 7, 27 7.5, 28 8.5"
+                        stroke="rgba(255,255,255,0.4)"
+                        strokeWidth="1.1"
+                        strokeLinecap="round"
+                      />
+                    </g>
                   </svg>
                 </div>
               </div>

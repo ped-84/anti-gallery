@@ -386,7 +386,7 @@ export function computeRoadLayout(
           : `حدود ${timeText} (سواره)`
         : '[زمان کل]'
     },
-    carSeconds: Math.max(6, (n + 1) * 2.6)
+    carSeconds: Math.max(6, (n + 1) * (travelMode === 'walking' ? 3.2 : 2.6))
   };
 }
 
