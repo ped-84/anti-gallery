@@ -474,6 +474,33 @@
   background: #ff5a4f;
 }
 
+/* The Animated Walker (Art-Lover Pedestrian) */
+.ag-walker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 42px;
+  height: 58px;
+  offset-rotate: 0deg;
+  offset-anchor: 50% 90%;
+  animation: ag-drive linear infinite;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.ag-walker__rig {
+  position: relative;
+  width: 42px;
+  height: 58px;
+  animation: ag-walk-bob 0.38s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+
+@keyframes ag-walk-bob {
+  0% { transform: translateY(0) scaleY(1); }
+  100% { transform: translateY(-3px) scaleY(0.98); }
+}
+
 /* Animations */
 @keyframes ag-dash  { to { stroke-dashoffset: -52; } }
 @keyframes ag-drive { from { offset-distance: 0%; } to { offset-distance: 100%; } }
@@ -481,7 +508,7 @@
 @keyframes ag-hum   { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-.6px); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .ag-road--dash, .ag-pin, .ag-car, .ag-car__rig {
+  .ag-road--dash, .ag-pin, .ag-car, .ag-car__rig, .ag-walker, .ag-walker__rig {
     animation: none;
   }
 }

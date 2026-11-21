@@ -204,8 +204,8 @@ export function computeRoadLayout(
       const urbanKm = parseFloat((straight * 1.25).toFixed(2));
       // Pace: walking = ~13 mins/km; driving = ~4 mins/km + traffic buffer
       const mins = travelMode === 'walking'
-        ? Math.max(2, Math.round(urbanKm * 13))
-        : Math.max(2, Math.round(urbanKm * 4 + 2));
+        ? Math.max(1, Math.round(urbanKm * 13))
+        : Math.max(1, Math.round(urbanKm * 4 + 2));
       legData.push([urbanKm, mins]);
     } else {
       legData.push(null);

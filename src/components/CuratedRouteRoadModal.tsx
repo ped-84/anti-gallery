@@ -290,8 +290,17 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
             {/* 3. Distance Bubbles: Unified Single-Piece Vector Pointer */}
             {layout.legs.map((lg, idx) => {
               const kmVal = lg.km !== null && lg.km !== undefined ? lg.km : 0.25;
-              const distLabel = `${toPersianDigits(kmVal)} کیلومتر`;
-              const badgeW = 124;
+              const minsVal =
+                lg.minutes !== null && lg.minutes !== undefined
+                  ? lg.minutes
+                  : curatedMode === 'walking'
+                  ? Math.max(1, Math.round(kmVal * 13))
+                  : 2;
+              const distLabel =
+                curatedMode === 'walking'
+                  ? `${toPersianDigits(kmVal)} کیلومتر - ${toPersianDigits(minsVal)} دقیقه`
+                  : `${toPersianDigits(kmVal)} کیلومتر`;
+              const badgeW = curatedMode === 'walking' ? 164 : 124;
               const badgeH = 34;
 
               return (
@@ -330,16 +339,16 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                   <div
                     className="ag-leg-content"
                     style={{
-                      paddingLeft: lg.rightSide ? '18px' : '14px',
-                      paddingRight: lg.rightSide ? '14px' : '18px',
+                      paddingLeft: lg.rightSide ? '16px' : '12px',
+                      paddingRight: lg.rightSide ? '12px' : '16px',
                       flexDirection: lg.rightSide ? 'row-reverse' : 'row'
                     }}
                   >
-                    <span className="font-sans tabular-nums text-xs font-black select-none">
+                    <span className="font-sans tabular-nums text-[11px] sm:text-xs font-black select-none whitespace-nowrap">
                       {distLabel}
                     </span>
                     {curatedMode === 'walking' ? (
-                      <Footprints className="w-4 h-4 text-amber-600 shrink-0" />
+                      <Footprints className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                     ) : (
                       <Car className="w-4 h-4 text-[#10335e] shrink-0" />
                     )}
@@ -439,21 +448,136 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
             ))}
 
             {/* 5. Animated Car / Walker (CSS Motion Path along road) */}
-            <div
-              className="ag-car"
-              aria-hidden="true"
-              style={{
-                offsetPath: `path('${layout.pathD}')`,
-                animationDuration: `${layout.carSeconds}s`
-              }}
-            >
-              {curatedMode === 'walking' ? (
-                <div
-                  className="w-8 h-8 rounded-full bg-white shadow-md border-2 border-amber-600 text-amber-600 flex items-center justify-center animate-bounce -mt-1 -ml-1"
-                >
-                  <Footprints className="w-4 h-4" />
+            {curatedMode === 'walking' ? (
+              <div
+                className="ag-walker"
+                aria-hidden="true"
+                style={{
+                  offsetPath: `path('${layout.pathD}')`,
+                  animationDuration: `${layout.carSeconds}s`
+                }}
+              >
+                <div className="ag-walker__rig">
+                  <svg
+                    width="42"
+                    height="58"
+                    viewBox="0 0 42 58"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="overflow-visible"
+                  >
+                    <defs>
+                      <linearGradient id="walker-shirt-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor={carHi} />
+                        <stop offset="52%" stopColor={pin} />
+                        <stop offset="100%" stopColor={carLo} />
+                      </linearGradient>
+                      <linearGradient id="walker-pants-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stopColor="#4378ba" />
+                        <stop offset="100%" stopColor="#254d80" />
+                      </linearGradient>
+                      <linearGradient id="walker-cuff-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#93c5fd" />
+                        <stop offset="100%" stopColor="#bfdbfe" />
+                      </linearGradient>
+                    </defs>
+
+                    {/* Ground shadow on asphalt */}
+                    <ellipse cx="21" cy="54" rx="14" ry="3.2" fill="#0f172a" opacity="0.45" />
+
+                    {/* Back arm swinging behind body */}
+                    <path
+                      d="M 19 20 L 14 29 L 10 31"
+                      stroke="#f5beaa"
+                      strokeWidth="2.8"
+                      strokeLinecap="round"
+                    />
+
+                    {/* Back leg (stepping back) */}
+                    <path
+                      d="M 20 29 L 14 43 L 9 51"
+                      stroke="#254d80"
+                      strokeWidth="4.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    {/* Back shoe */}
+                    <path
+                      d="M 7 51 L 14 52.5 L 6 54 Z"
+                      fill="#ffffff"
+                      stroke="#0f172a"
+                      strokeWidth="0.9"
+                    />
+
+                    {/* Front leg (stepping forward) */}
+                    <path
+                      d="M 21 29 L 28 41 L 34 50"
+                      stroke="url(#walker-pants-grad)"
+                      strokeWidth="4.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    {/* Front rolled jean cuff */}
+                    <ellipse cx="32" cy="48" rx="2.8" ry="1.3" fill="url(#walker-cuff-grad)" />
+                    {/* Front shoe */}
+                    <path
+                      d="M 31 50.5 L 38.5 50.5 L 38.5 53.5 L 30 53.5 Z"
+                      fill="#ffffff"
+                      stroke="#0f172a"
+                      strokeWidth="0.9"
+                    />
+                    <line x1="30" y1="53.5" x2="38.5" y2="53.5" stroke="#0f172a" strokeWidth="1.2" />
+
+                    {/* Torso & 3D T-shirt (Color matches road & car theme) */}
+                    <path
+                      d="M 17 17.5 L 25 17.5 L 24 30 L 18 30 Z"
+                      fill="url(#walker-shirt-grad)"
+                      stroke="rgba(0,0,0,0.18)"
+                      strokeWidth="0.8"
+                    />
+                    {/* Shirt sleeve */}
+                    <path
+                      d="M 23 17.5 L 26.5 22 L 23.5 23.5 L 21 18.5 Z"
+                      fill="url(#walker-shirt-grad)"
+                    />
+                    {/* Waistband trim */}
+                    <line x1="18" y1="30" x2="24" y2="30" stroke="#1e293b" strokeWidth="1.1" />
+
+                    {/* Neck */}
+                    <path d="M 20 15 L 22.5 15 L 22.5 17.5 L 20 17.5 Z" fill="#f5beaa" />
+
+                    {/* Front arm swinging forward */}
+                    <path
+                      d="M 23 21 L 28 27 L 32 28"
+                      stroke="#f5beaa"
+                      strokeWidth="2.8"
+                      strokeLinecap="round"
+                    />
+
+                    {/* Head */}
+                    <circle cx="22" cy="12" r="4.3" fill="#f5beaa" />
+
+                    {/* Hair: stylized sleek silhouette from reference */}
+                    <path
+                      d="M 17.5 12 C 17 6.5, 25.5 5.5, 26 10.5 C 27 13.5, 25.5 17, 22.5 17 C 18.5 17, 17 15.5, 17.5 12 Z"
+                      fill="#1e293b"
+                    />
+                    <path
+                      d="M 17 11 C 16 13.5, 16 16.5, 18 18.5 C 17 18.5, 15.5 15.5, 16 11 Z"
+                      fill="#0f172a"
+                    />
+                  </svg>
                 </div>
-              ) : (
+              </div>
+            ) : (
+              <div
+                className="ag-car"
+                aria-hidden="true"
+                style={{
+                  offsetPath: `path('${layout.pathD}')`,
+                  animationDuration: `${layout.carSeconds}s`
+                }}
+              >
                 <div className="ag-car__rig">
                   <i className="wheel" style={{ left: '7px', top: '-1px' }} />
                   <i className="wheel" style={{ left: '28px', top: '-1px' }} />
@@ -468,8 +592,8 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                   <i className="tail" style={{ top: '5px' }} />
                   <i className="tail" style={{ top: '17px' }} />
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
 
