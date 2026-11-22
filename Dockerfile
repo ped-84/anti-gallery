@@ -24,7 +24,8 @@ ENV NODE_ENV=production
 ENV PORT=3000
 ENV DATA_DIR=/app/data
 
-# Install production dependencies only (express, tsx, etc.)
+# Install production dependencies only: express + tsx. Frontend packages (react, vite,
+# map SDKs...) are devDependencies, needed only in the builder stage.
 COPY package*.json ./
 RUN npm ci --omit=dev --legacy-peer-deps --ignore-scripts && npm cache clean --force
 
@@ -53,5 +54,6 @@ EXPOSE 3000
 HEALTHCHECK --interval=20s --timeout=4s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/health || exit 1
 
-# Start full-stack server
-CMD ["npx", "tsx", "server.ts"]
+# Start full-stack server with the locally installed tsx (no registry access needed at
+# start-up, so the container also boots on the Iran mirror during an internet cut)
+CMD ["./node_modules/.bin/tsx", "server.ts"]

@@ -37,3 +37,24 @@ jobs:
       - name: Backend smoke test
         timeout-minutes: 5
         run: node scripts/smoke-test.mjs
+
+      # Builds the real production image (prod dependencies only) and boots it,
+      # so a package wrongly moved to devDependencies fails here, not on the server.
+      - name: Production image boots
+        timeout-minutes: 8
+        run: |
+          docker build -t artgasht:ci .
+          docker run -d --name artgasht-ci -p 3000:3000 \
+            -e ADMIN_PASSWORD=ciCheckPassword123 -e ADMIN_SECRET=ciCheckSecret0123456789 \
+            -e SCRAPER_ENABLED=false artgasht:ci
+          for i in $(seq 1 30); do
+            if curl -fsS -m 5 http://127.0.0.1:3000/health > health.json 2>/dev/null; then break; fi
+            sleep 2
+          done
+          cat health.json || { docker logs artgasht-ci; exit 1; }
+          grep -q '"status":"ok"' health.json
+          grep -q '"adminConfigured":true' health.json
+          curl -fsS -m 5 http://127.0.0.1:3000/api/galleries | head -c 200; echo
+          curl -fsS -m 5 -o /dev/null -w 'index.html %{http_code}\n' http://127.0.0.1:3000/
+          docker exec artgasht-ci sh -c 'du -sh /app/node_modules; ls /app/node_modules | wc -l'
+          docker rm -f artgasht-ci
