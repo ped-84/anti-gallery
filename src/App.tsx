@@ -749,10 +749,12 @@ export default function App() {
 
       const savedDuration = (() => {
         try {
+          // همان پیش‌فرض پنل مسیر (۱۵ دقیقه)؛ قبلاً اینجا ۳۵ بود و ساعت‌ها با پنل نمی‌خواند
           const s = localStorage.getItem('gallery_visit_duration_min');
-          return s ? parseInt(s, 10) : 35;
+          const v = s ? parseInt(s, 10) : NaN;
+          return Number.isFinite(v) && v > 0 ? v : 15;
         } catch {
-          return 35;
+          return 15;
         }
       })();
 
