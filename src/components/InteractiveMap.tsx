@@ -182,11 +182,6 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
     const purgeNeshanWatermarks = () => {
       const container = mapContainerRef.current;
       if (!container) return;
-      const wm = container.querySelector('#wm_protector') as HTMLElement | null;
-      if (wm) {
-        wm.style.setProperty('clip-path', 'inset(100%)', 'important');
-        wm.style.setProperty('pointer-events', 'none', 'important');
-      }
       const selectors = [
         '.mapboxgl-ctrl-bottom-left',
         '.mapboxgl-ctrl-bottom-right',
@@ -756,10 +751,6 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
   return (
     <div className="clay-card relative w-full h-full min-h-[360px] sm:min-h-[420px] overflow-hidden border border-[#E1E1E1] dark:border-stone-800 shadow-md">
       <style>{`
-        #wm_protector {
-          clip-path: inset(100%) !important;
-          pointer-events: none !important;
-        }
         .mapboxgl-ctrl-bottom-left,
         .mapboxgl-ctrl-bottom-right,
         .mapboxgl-ctrl-top-left,

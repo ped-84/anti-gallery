@@ -591,15 +591,6 @@ a.mapboxgl-ctrl-logo,
   pointer-events: none !important;
 }
 
-/* Safe suppression of Neshan SDK watermark:
-   Do NOT alter display, opacity, visibility, width or height,
-   as Neshan SDK Mc() watchdog verifies them against expected styles.
-   Instead, clip-path cleanly hides it with zero visual footprint without triggering Mc() retaliation. */
-#wm_protector {
-  clip-path: inset(100%) !important;
-  pointer-events: none !important;
-}
-
 /* Ensure Mapbox GL canvas fills the entire container seamlessly */
 .mapboxgl-map {
   width: 100% !important;
