@@ -35,4 +35,5 @@ jobs:
         run: npm run build
 
       - name: Backend smoke test
+        timeout-minutes: 5
         run: node scripts/smoke-test.mjs

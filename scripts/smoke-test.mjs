@@ -38,21 +38,54 @@ function start(extraEnv = {}) {
     ...extraEnv
   };
   for (const [k, v] of Object.entries(env)) if (v === undefined) delete env[k];
-  server = spawn('npx', ['tsx', 'server.ts'], { cwd: ROOT, env, stdio: ['ignore', 'pipe', 'pipe'] });
+  // Own process group, so stop() can kill tsx and the node process it starts together.
+  server = spawn(path.join(ROOT, 'node_modules', '.bin', 'tsx'), ['server.ts'], {
+    cwd: ROOT,
+    env,
+    stdio: ['ignore', 'pipe', 'pipe'],
+    detached: true
+  });
   server.stdout.on('data', (d) => process.stdout.write(`  [server] ${d}`));
   server.stderr.on('data', (d) => process.stdout.write(`  [server] ${d}`));
   return waitForHealth();
+}
+
+function killGroup(child, signal) {
+  try {
+    process.kill(-child.pid, signal);
+  } catch {}
 }
 
 async function stop() {
   if (!server) return;
   const s = server;
   server = null;
-  await new Promise((resolve) => {
-    s.on('exit', resolve);
-    s.kill('SIGTERM');
-    setTimeout(() => s.kill('SIGKILL'), 5000);
-  });
+  if (s.exitCode === null && s.signalCode === null) {
+    await new Promise((resolve) => {
+      const timer = setTimeout(() => {
+        killGroup(s, 'SIGKILL');
+        resolve();
+      }, 5000);
+      s.once('exit', () => {
+        clearTimeout(timer);
+        resolve();
+      });
+      killGroup(s, 'SIGTERM');
+    });
+  }
+  killGroup(s, 'SIGKILL'); // make sure no grandchild keeps the port
+  s.stdout.destroy();
+  s.stderr.destroy();
+  // Wait until the port is actually free before the next start.
+  for (let i = 0; i < 20; i++) {
+    try {
+      await fetch(`${BASE}/health`);
+    } catch {
+      return;
+    }
+    await new Promise((r) => setTimeout(r, 250));
+  }
+  throw new Error('previous server is still answering on the test port');
 }
 
 async function waitForHealth() {
@@ -173,6 +206,7 @@ try {
   console.error('\n✘ Smoke test failed:', err);
   process.exitCode = 1;
 } finally {
-  await stop();
+  await stop().catch(() => {});
   fs.rmSync(dataDir, { recursive: true, force: true });
+  process.exit(process.exitCode ?? 0);
 }
