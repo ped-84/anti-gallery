@@ -45,5 +45,18 @@ jobs:
           path: out
           retention-days: 3
 
+      # Artifact storage is not reachable from the agent's sandbox, but job logs
+      # are. Print only the files the build generated (public/ is in the repo)
+      # as base64 so the preview can be rebuilt from `gh run view --log`.
+      - name: Print generated files for the agent preview
+        run: |
+          cd out
+          find . -type f | sed 's|^\./||' | while read -r f; do [ -e "../public/$f" ] || echo "$f"; done > ../generated.txt
+          tar czf ../generated.tgz -T ../generated.txt
+          cd ..
+          echo "PVB64-BEGIN $(stat -c%s generated.tgz) $(sha256sum generated.tgz | cut -c1-64)"
+          base64 -w 60000 generated.tgz | sed 's/^/PVB64:/'
+          echo "PVB64-END"
+
       - name: Fail if typecheck or build failed
         run: grep -q 'tsc exit 0' tsc.log && grep -q 'build exit 0' build.log
