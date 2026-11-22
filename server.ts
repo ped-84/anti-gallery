@@ -39,46 +39,118 @@ if (!fs.existsSync(IMAGE_CACHE_DIR)) {
   fs.mkdirSync(IMAGE_CACHE_DIR, { recursive: true });
 }
 
-// Synchronize persistent volume with bundled seed baseline when seed is newer or has equal/more data
-function syncVolumeFromSeed(volumePath: string, seedPath: string, name: string) {
-  if (!fs.existsSync(seedPath)) return;
-  if (!fs.existsSync(volumePath)) {
-    fs.copyFileSync(seedPath, volumePath);
-    console.log(`[Data] Seeded ${name} to persistent volume`);
-    return;
-  }
+// --------------------------------------------------------
+// Safe JSON persistence
+// --------------------------------------------------------
+// Write to a temp file in the same folder, then rename over the target.
+// rename() is atomic on the same filesystem, so a crash mid-write can never
+// leave a half-written (corrupt) galleries.json behind.
+function writeJsonAtomic(filePath: string, data: unknown) {
+  const tmpPath = `${filePath}.${process.pid}.${Date.now()}.tmp`;
+  fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf-8');
+  fs.renameSync(tmpPath, filePath);
+}
+
+function readJsonArray(filePath: string): any[] | null {
   try {
-    const seedStat = fs.statSync(seedPath);
-    const volStat = fs.statSync(volumePath);
-    const seedData = JSON.parse(fs.readFileSync(seedPath, 'utf-8'));
-    const volData = JSON.parse(fs.readFileSync(volumePath, 'utf-8'));
-
-    let shouldUpdate = false;
-    if (Array.isArray(seedData) && Array.isArray(volData)) {
-      const seedActive = seedData.filter((x: any) => x.activeExhibition || x.openingDate).length;
-      const volActive = volData.filter((x: any) => x.activeExhibition || x.openingDate).length;
-      if (
-        seedActive > volActive ||
-        (seedActive >= volActive && seedStat.mtimeMs > volStat.mtimeMs) ||
-        seedData.length > volData.length
-      ) {
-        shouldUpdate = true;
-      }
-    } else if (seedStat.mtimeMs > volStat.mtimeMs) {
-      shouldUpdate = true;
-    }
-
-    if (shouldUpdate) {
-      fs.copyFileSync(seedPath, volumePath);
-      console.log(`[Data] Auto-updated persistent ${name} from newer bundled seed`);
-    }
-  } catch (e) {
-    console.warn(`[Data] Error checking seed vs volume for ${name}:`, e);
+    if (!fs.existsSync(filePath)) return null;
+    const parsed = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    return Array.isArray(parsed) ? parsed : null;
+  } catch {
+    return null;
   }
 }
 
-syncVolumeFromSeed(GALLERIES_FILE, SEED_GALLERIES_FILE, 'galleries.json');
-syncVolumeFromSeed(EXHIBITIONS_FILE, SEED_EXHIBITIONS_FILE, 'exhibitions_fa.json');
+const BACKUP_DIR = path.join(DATA_DIR, 'backups', 'startup');
+const MAX_STARTUP_BACKUPS = 10;
+
+// Keep a copy of the live file before startup touches it (last 10 kept).
+function backupBeforeChange(filePath: string, name: string) {
+  try {
+    if (!fs.existsSync(filePath)) return;
+    fs.mkdirSync(BACKUP_DIR, { recursive: true });
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+    fs.copyFileSync(filePath, path.join(BACKUP_DIR, `${name}.${stamp}.json`));
+    const old = fs
+      .readdirSync(BACKUP_DIR)
+      .filter((f) => f.startsWith(`${name}.`))
+      .sort()
+      .reverse()
+      .slice(MAX_STARTUP_BACKUPS);
+    old.forEach((f) => fs.rmSync(path.join(BACKUP_DIR, f), { force: true }));
+  } catch (e) {
+    console.warn(`[Data] Could not back up ${name}:`, e);
+  }
+}
+
+function timestampOf(record: any): number {
+  const t = record && record.updatedAt ? new Date(record.updatedAt).getTime() : NaN;
+  return Number.isNaN(t) ? 0 : t;
+}
+
+// Merge the seed bundled in the Docker image into the live data on the volume.
+// The live data is the source of truth (admin edits + server scraper). Rules:
+//   - seed record whose id is not on the volume  -> added
+//   - same id, seed has a strictly newer updatedAt -> seed version wins
+//   - otherwise the volume version is kept (admin edits, soft deletes survive deploys)
+//   - nothing is ever removed from the volume
+function mergeSeedIntoLive(live: any[], seed: any[]): { merged: any[]; added: number; updated: number } {
+  const byId = new Map<any, number>();
+  live.forEach((g, i) => {
+    if (g && g.id !== undefined) byId.set(g.id, i);
+  });
+  const merged = live.slice();
+  let added = 0;
+  let updated = 0;
+  for (const s of seed) {
+    if (!s || s.id === undefined) continue;
+    const idx = byId.get(s.id);
+    if (idx === undefined) {
+      merged.push(s);
+      byId.set(s.id, merged.length - 1);
+      added++;
+    } else if (timestampOf(s) > timestampOf(merged[idx])) {
+      // Never resurrect a record that was deleted on the live server.
+      merged[idx] = merged[idx].deleted ? { ...s, deleted: true, deletedAt: merged[idx].deletedAt } : s;
+      updated++;
+    }
+  }
+  return { merged, added, updated };
+}
+
+function syncGalleriesFromSeed() {
+  const seed = readJsonArray(SEED_GALLERIES_FILE);
+  if (!seed) return;
+  const live = readJsonArray(GALLERIES_FILE);
+  if (!live || live.length === 0) {
+    if (fs.existsSync(GALLERIES_FILE)) backupBeforeChange(GALLERIES_FILE, 'galleries-unreadable');
+    writeJsonAtomic(GALLERIES_FILE, seed);
+    console.log(`[Data] Seeded galleries.json (${seed.length} records)`);
+    return;
+  }
+  const { merged, added, updated } = mergeSeedIntoLive(live, seed);
+  if (added === 0 && updated === 0) {
+    console.log('[Data] galleries.json is up to date with the seed; nothing changed');
+    return;
+  }
+  backupBeforeChange(GALLERIES_FILE, 'galleries');
+  writeJsonAtomic(GALLERIES_FILE, merged);
+  console.log(`[Data] Merged seed into galleries.json: ${added} added, ${updated} newer from seed`);
+}
+
+// Exhibitions file is written only by the scraper; keep the live copy unless it is missing or broken.
+function syncExhibitionsFromSeed() {
+  const seed = readJsonArray(SEED_EXHIBITIONS_FILE);
+  if (!seed) return;
+  const live = readJsonArray(EXHIBITIONS_FILE);
+  if (live && live.length > 0) return;
+  if (fs.existsSync(EXHIBITIONS_FILE)) backupBeforeChange(EXHIBITIONS_FILE, 'exhibitions-unreadable');
+  writeJsonAtomic(EXHIBITIONS_FILE, seed);
+  console.log(`[Data] Seeded exhibitions_fa.json (${seed.length} records)`);
+}
+
+syncGalleriesFromSeed();
+syncExhibitionsFromSeed();
 
 // ========================================================
 // 1. Role & Standalone Mode Configuration
@@ -92,6 +164,7 @@ function isStandaloneMode(): boolean {
 }
 
 function isAdminAllowed(): boolean {
+  if (!ADMIN_CREDENTIALS_OK) return false;
   // If explicitly disabled via env
   if (process.env.ADMIN_ENABLED === 'false') {
     return isStandaloneMode();
@@ -129,14 +202,41 @@ function getGalleries(): any[] {
 }
 
 function saveGalleries(galleries: any[]) {
-  fs.writeFileSync(GALLERIES_FILE, JSON.stringify(galleries, null, 2), 'utf-8');
+  writeJsonAtomic(GALLERIES_FILE, galleries);
+}
+
+// Soft-deleted records stay in the file (so deletes replicate to the mirror and
+// survive seed merges) but are never sent to visitors.
+function getVisibleGalleries(): any[] {
+  return getGalleries().filter((g) => !g.deleted);
 }
 
 // ========================================================
 // 2. Admin Authentication & Rate Limiting
 // ========================================================
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'artgasht2026';
-const ADMIN_SECRET = process.env.ADMIN_SECRET || 'artgasht-secret-token-key-2026';
+// No fallback values: this repository is public, so any default would be a public password.
+// If either variable is missing or too short, the admin panel stays disabled.
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
+const ADMIN_SECRET = process.env.ADMIN_SECRET || '';
+const KNOWN_PUBLIC_VALUES = new Set([
+  'artgasht2026',
+  'artgasht-secret-token-key-2026',
+  'changeThisToALongRandomAlphanumericPassword2026',
+  'generateA32CharAlphanumericSecretStringHere2026',
+  'K8mP2x9Lq4vW7zR1tY5nB3cD6eF0jH9a',
+  'X7vB2mK9qL4zR1tY5nP8wD3cE6fJ0hA1'
+]);
+const ADMIN_CREDENTIALS_OK =
+  ADMIN_PASSWORD.length >= 12 &&
+  ADMIN_SECRET.length >= 16 &&
+  !KNOWN_PUBLIC_VALUES.has(ADMIN_PASSWORD) &&
+  !KNOWN_PUBLIC_VALUES.has(ADMIN_SECRET);
+if (!ADMIN_CREDENTIALS_OK) {
+  console.warn(
+    '[Security] ADMIN_PASSWORD (12+ chars) and ADMIN_SECRET (16+ chars) must be set in .env to non-public values. Admin panel is DISABLED until then.'
+  );
+}
+const ADMIN_TOKEN_TTL_MS = 12 * 60 * 60 * 1000; // admin sessions expire after 12 hours
 
 // Rate Limiter for Login: max 5 failed attempts per IP within 15 minutes
 interface LoginAttemptRecord {
@@ -178,8 +278,28 @@ function recordSuccessfulLogin(ip: string) {
   loginRateLimitMap.delete(ip);
 }
 
+function safeEqual(a: string, b: string): boolean {
+  const ha = crypto.createHash('sha256').update(a).digest();
+  const hb = crypto.createHash('sha256').update(b).digest();
+  return crypto.timingSafeEqual(ha, hb);
+}
+
+function signAdminPayload(expiresAt: number): string {
+  // Including the password means changing ADMIN_PASSWORD logs out every session.
+  return crypto.createHmac('sha256', ADMIN_SECRET).update(`admin:${expiresAt}:${ADMIN_PASSWORD}`).digest('hex');
+}
+
+// Token format: "<expiresAtMs>.<hmac>"
 function generateAdminToken(): string {
-  return crypto.createHmac('sha256', ADMIN_SECRET).update(`admin:${ADMIN_PASSWORD}`).digest('hex');
+  const expiresAt = Date.now() + ADMIN_TOKEN_TTL_MS;
+  return `${expiresAt}.${signAdminPayload(expiresAt)}`;
+}
+
+function isValidAdminToken(token: string): boolean {
+  const [expStr, sig] = token.split('.');
+  const expiresAt = Number(expStr);
+  if (!sig || !Number.isFinite(expiresAt) || expiresAt < Date.now()) return false;
+  return safeEqual(sig, signAdminPayload(expiresAt));
 }
 
 function verifyAdminAuth(req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -191,10 +311,8 @@ function verifyAdminAuth(req: express.Request, res: express.Response, next: expr
 
   const authHeader = req.headers.authorization || '';
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : (req.headers['x-admin-token'] as string);
-  const expected = generateAdminToken();
-
-  if (!token || token !== expected) {
-    return res.status(401).json({ error: 'دسترسی غیرمجاز. لطفاً با رمز عبور مدیریت وارد شوید.' });
+  if (!token || !isValidAdminToken(token)) {
+    return res.status(401).json({ error: 'نشست مدیریت منقضی شده یا نامعتبر است. لطفاً دوباره وارد شوید.' });
   }
   next();
 }
@@ -350,13 +468,14 @@ if (SCRAPER_ENABLED) {
 
 // Health check endpoint (exposing role, admin state, sync status)
 app.get('/health', (req, res) => {
-  const galleries = getGalleries();
+  const galleries = getVisibleGalleries();
   res.json({
     status: 'ok',
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.163',
+    version: 'بتا V 1.164',
     serverRole: SERVER_ROLE, // 'primary' | 'mirror'
     adminEnabled: isAdminAllowed(),
+    adminConfigured: ADMIN_CREDENTIALS_OK,
     isStandalone: isStandaloneMode(),
     scraperEnabled: SCRAPER_ENABLED,
     lastSyncFromPrimary: getLastSyncTime(),
@@ -372,7 +491,7 @@ app.get('/health', (req, res) => {
 app.get('/api/config', (req, res) => {
   res.json({
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.163',
+    version: 'بتا V 1.164',
     serverRole: SERVER_ROLE,
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
@@ -397,7 +516,7 @@ app.use('/api/admin', (req, res, next) => {
 
 // Serve galleries list
 app.get('/api/galleries', (req, res) => {
-  const galleries = getGalleries();
+  const galleries = getVisibleGalleries();
   res.json(galleries);
 });
 
@@ -413,6 +532,13 @@ app.post('/api/admin/login', (req, res) => {
     });
   }
 
+  if (!ADMIN_CREDENTIALS_OK) {
+    return res.status(403).json({
+      success: false,
+      error: 'پنل مدیریت غیرفعال است: رمز مدیریت روی سرور تنظیم نشده است (ADMIN_PASSWORD و ADMIN_SECRET در فایل .env).'
+    });
+  }
+
   if (!isAdminAllowed()) {
     return res.status(403).json({
       success: false,
@@ -421,7 +547,7 @@ app.post('/api/admin/login', (req, res) => {
   }
 
   const { password } = req.body || {};
-  if (!password || password !== ADMIN_PASSWORD) {
+  if (typeof password !== 'string' || !password || !safeEqual(password, ADMIN_PASSWORD)) {
     recordFailedLogin(clientIp);
     return res.status(401).json({ success: false, error: 'رمز عبور مدیریت نادرست است' });
   }
@@ -430,8 +556,17 @@ app.post('/api/admin/login', (req, res) => {
   res.json({ success: true, token: generateAdminToken() });
 });
 
+// The scraper runs in a child process that reads galleries.json, works for a while and
+// writes it back. An admin save in between would be silently overwritten, so writes wait.
+function rejectIfSyncing(req: express.Request, res: express.Response, next: express.NextFunction) {
+  if (syncState.isSyncing) {
+    return res.status(409).json({ error: 'همگام‌سازی خودکار نمایشگاه‌ها در حال انجام است. لطفاً یک دقیقه دیگر دوباره ذخیره کنید.' });
+  }
+  next();
+}
+
 // Admin: Add Gallery / Exhibition
-app.post('/api/admin/galleries', verifyAdminAuth, (req, res) => {
+app.post('/api/admin/galleries', verifyAdminAuth, rejectIfSyncing, (req, res) => {
   const newGallery = req.body;
   if (!newGallery || !newGallery.name) {
     return res.status(400).json({ error: 'نام نگارخانه الزامی است' });
@@ -440,9 +575,10 @@ app.post('/api/admin/galleries', verifyAdminAuth, (req, res) => {
   const maxId = galleries.reduce((max, g) => (typeof g.id === 'number' && g.id > max ? g.id : max), 1000);
   const nowIso = new Date().toISOString();
 
+  const { deleted: _d, deletedAt: _da, ...cleanGallery } = newGallery;
   const created = {
-    ...newGallery,
-    id: newGallery.id || maxId + 1,
+    ...cleanGallery,
+    id: maxId + 1,
     city: newGallery.city || 'tehran',
     cityFa: newGallery.cityFa || 'تهران',
     updatedAt: nowIso
@@ -455,11 +591,11 @@ app.post('/api/admin/galleries', verifyAdminAuth, (req, res) => {
 });
 
 // Admin: Update Gallery / Exhibition
-app.put('/api/admin/galleries/:id', verifyAdminAuth, (req, res) => {
+app.put('/api/admin/galleries/:id', verifyAdminAuth, rejectIfSyncing, (req, res) => {
   const id = parseInt(req.params.id, 10);
-  const updates = req.body;
+  const { deleted: _ignoredDeleted, deletedAt: _ignoredDeletedAt, ...updates } = req.body || {};
   const galleries = getGalleries();
-  const index = galleries.findIndex((g) => g.id === id);
+  const index = galleries.findIndex((g) => g.id === id && !g.deleted);
 
   if (index === -1) {
     return res.status(404).json({ error: 'نگارخانه مورد نظر یافت نشد' });
@@ -479,19 +615,35 @@ app.put('/api/admin/galleries/:id', verifyAdminAuth, (req, res) => {
 });
 
 // Admin: Delete Gallery
-app.delete('/api/admin/galleries/:id', verifyAdminAuth, (req, res) => {
+app.delete('/api/admin/galleries/:id', verifyAdminAuth, rejectIfSyncing, (req, res) => {
   const id = parseInt(req.params.id, 10);
   const galleries = getGalleries();
-  const filtered = galleries.filter((g) => g.id !== id);
+  const index = galleries.findIndex((g) => g.id === id && !g.deleted);
 
-  if (filtered.length === galleries.length) {
+  if (index === -1) {
     return res.status(404).json({ error: 'نگارخانه مورد نظر یافت نشد' });
   }
 
-  saveGalleries(filtered);
+  // Soft delete: keeps the record so the delete replicates to the mirror and is not
+  // brought back by the seed bundled in the next deploy.
+  const nowIso = new Date().toISOString();
+  galleries[index] = { ...galleries[index], deleted: true, deletedAt: nowIso, updatedAt: nowIso };
+  saveGalleries(galleries);
   console.log(`[Admin] Deleted gallery ID ${id} on ${SERVER_ROLE}`);
   res.json({ success: true, message: 'نگارخانه با موفقیت حذف گردید' });
 });
+
+const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+
+function detectImageExtension(buf: Buffer): 'jpg' | 'png' | 'webp' | 'gif' | null {
+  if (buf.length < 12) return null;
+  if (buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return 'jpg';
+  if (buf.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) return 'png';
+  if (buf.subarray(0, 4).toString('ascii') === 'RIFF' && buf.subarray(8, 12).toString('ascii') === 'WEBP') return 'webp';
+  const head = buf.subarray(0, 6).toString('ascii');
+  if (head === 'GIF87a' || head === 'GIF89a') return 'gif';
+  return null;
+}
 
 // Admin: Upload Image (Stored in persistent data/uploads/)
 app.post('/api/admin/upload', verifyAdminAuth, (req, res) => {
@@ -501,15 +653,26 @@ app.post('/api/admin/upload', verifyAdminAuth, (req, res) => {
       return res.status(400).json({ error: 'داده تصویر ارسال نشده است' });
     }
 
-    const matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-    const ext = matches ? (matches[1].split('/')[1] || 'jpg') : 'jpg';
-    const cleanBase64 = matches ? matches[2] : base64Data;
+    if (typeof base64Data !== 'string') {
+      return res.status(400).json({ error: 'داده تصویر نامعتبر است' });
+    }
+    const matches = base64Data.match(/^data:[^;]+;base64,(.+)$/s);
+    const buffer = Buffer.from(matches ? matches[1] : base64Data, 'base64');
 
-    const safeExt = ext === 'jpeg' ? 'jpg' : ext.replace(/[^a-zA-Z0-9]/g, '');
-    const safeName = `poster_${Date.now()}_${Math.random().toString(36).slice(2, 7)}.${safeExt}`;
+    // Decide the type from the file's own bytes, never from what the client claims.
+    // Only raster images are accepted (no SVG/HTML, which could run scripts on our domain).
+    const safeExt = detectImageExtension(buffer);
+    if (!safeExt) {
+      return res.status(415).json({ error: 'فقط تصویر JPG، PNG، WebP یا GIF قابل آپلود است' });
+    }
+    if (buffer.length > MAX_UPLOAD_BYTES) {
+      return res.status(413).json({ error: 'حجم تصویر نباید بیشتر از ۱۰ مگابایت باشد' });
+    }
+
+    const safeName = `poster_${Date.now()}_${crypto.randomBytes(4).toString('hex')}.${safeExt}`;
     const filePath = path.join(UPLOADS_DIR, safeName);
 
-    fs.writeFileSync(filePath, Buffer.from(cleanBase64, 'base64'));
+    fs.writeFileSync(filePath, buffer);
     console.log(`[Upload] Image saved: ${safeName} on ${SERVER_ROLE}`);
     res.json({ success: true, url: `/uploads/${safeName}` });
   } catch (err: any) {
@@ -519,7 +682,15 @@ app.post('/api/admin/upload', verifyAdminAuth, (req, res) => {
 });
 
 // Serve persistent uploads statically
-app.use('/uploads', express.static(UPLOADS_DIR));
+app.use(
+  '/uploads',
+  express.static(UPLOADS_DIR, {
+    setHeaders: (res) => {
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+      res.setHeader('Content-Security-Policy', "default-src 'none'; img-src 'self'; sandbox");
+    }
+  })
+);
 
 // Upstream sync status & manual trigger
 app.get('/api/sync-status', (req, res) => {

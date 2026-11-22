@@ -1,12 +1,15 @@
 # راهنمای جامع استقرار سرور فرانکفورت (PRIMARY) و معماری دو-سروره
-## اپلیکیشن «آرت‌گشت» (Anti-Gallery) — نسخه بتا V 1.095
+## اپلیکیشن «آرت‌گشت» (Anti-Gallery)
+
+> [!NOTE]
+> **استقرار روزمره خودکار است.** هر Merge به `main` با GitHub Actions (`.github/workflows/deploy.yml`) ایمیج را می‌سازد، روی سرور فرانکفورت بالا می‌آورد، `/health` را چک می‌کند و در صورت شکست به نسخه‌ی قبل برمی‌گردد. این راهنما برای **راه‌اندازی اولیه‌ی سرور**، استقرار دستی و سرور آینه‌ی ایران است. گردش کار کامل: `PROJECT_HANDOFF.md` بخش ۵.
 
 ---
 
 ## ۱. مشخصات سرور اصلی (Primary Server Specifications)
 
 * **موقعیت:** فرانکفورت، آلمان (Frankfurt VPS)
-* **آدرس IP سرور:** `86.54.42.206`
+* **آدرس IP سرور:** `62.144.51.43`
 * **دامنه فعال:** `artgasht.com` و `www.artgasht.com` (DNS تایید شده و متصل به این آی‌پی)
 * **کاربر استقرار:** `deploy` (دارای دسترسی sudo، احراز هویت فقط با کلید SSH، ورود کاربر root غیرفعال است)
 * **فایروال (UFW):** پورت‌های ۲۲ (SSH)، ۸۰ (HTTP) و ۴۴۳ (HTTPS) باز هستند.
@@ -46,7 +49,7 @@ sudo bash setup-server.sh
 {
   "primary": {
     "name": "Germany VPS (artgasht.com - Primary)",
-    "host": "86.54.42.206",
+    "host": "62.144.51.43",
     "user": "deploy",
     "port": 22,
     "key": "~/.ssh/id_rsa",
@@ -101,25 +104,27 @@ sudo bash setup-server.sh
 پس از اولین استقرار، یک‌بار وارد سرور شده و رمز عبور تصادفی و قوی برای ادمین تنظیم کنید:
 
 ```bash
-ssh deploy@86.54.42.206
+ssh deploy@62.144.51.43
 nano /opt/artgasht/.env
 ```
 
 > [!IMPORTANT]
 > **قانون حیاتی رمزهای عبور:** مقادیر `ADMIN_PASSWORD` و `ADMIN_SECRET` باید **صرفاً الفبانمایی (Alphanumeric)** شامل حروف انگلیسی و ارقام (`[a-zA-Z0-9]`) باشند (بدون کاراکترهای خاص مانند `$`, `!`, `&`, `"`)، زیرا اسکریپت‌های شل لینوکس این فایل را با دستور `source` فراخوانی می‌کنند.
+>
+> **از v1.164:** اگر `ADMIN_PASSWORD` کمتر از ۱۲ یا `ADMIN_SECRET` کمتر از ۱۶ کاراکتر باشد، خالی باشد یا یکی از مقادیر نمونه‌ی قدیمی این راهنما باشد، پنل ادمین خاموش می‌شود. ساخت مقدار تصادفی: `openssl rand -hex 16`. بعد از استقرار، `curl -s https://artgasht.com/health` باید `"adminConfigured": true` نشان دهد.
 
 نمونه محتوای `/opt/artgasht/.env` در سرور فرانکفورت:
 ```env
 SERVER_ROLE=primary
 DOMAIN=artgasht.com
 ADMIN_ENABLED=true
-ADMIN_PASSWORD=K8mP2x9Lq4vW7zR1tY5nB3cD6eF0jH9a
-ADMIN_SECRET=X7vB2mK9qL4zR1tY5nP8wD3cE6fJ0hA1
+ADMIN_PASSWORD=<یک رمز تصادفی ۳۲ کاراکتری الفبانمایی>
+ADMIN_SECRET=<یک رشته‌ی تصادفی ۳۲ کاراکتری دیگر>
 SCRAPER_ENABLED=true
 PORT=3000
 NODE_ENV=production
 DATA_DIR=/app/data
-NESHAN_KEY_COM=web.cd0b84e26a35496f87485087bce939da
+NESHAN_KEY_COM=<کلید وب نشان برای artgasht.com>
 ```
 
 پس از ویرایش `.env`، کانتینر را بازنشانی کنید:
@@ -158,7 +163,7 @@ cd /opt/artgasht && docker compose up -d
   به آدرس [https://artgasht.com](https://artgasht.com) مراجعه کنید. نقشه وکتور نشان، لیست گالری‌ها با فونت شبنم و فونت انگلیسی اوبونتو، بج‌های نارنجی افتتاحیه و گشت‌های پیشنهادی باید بدون هیچ خطایی در کنسول لود شوند.
 
 - [ ] **۳. تست ورود به پنل مدیریت:**
-  روی آیکون قفل هدر کلیک کرده یا به [https://artgasht.com/#admin](https://artgasht.com/#admin) بروید. با رمز عبور `ADMIN_PASSWORD` وارد شوید.
+  به [https://artgasht.com/admin](https://artgasht.com/admin) بروید (آیکون قفل از هدر حذف شده است). با رمز عبور `ADMIN_PASSWORD` وارد شوید.
 
 - [ ] **۴. افزودن گالری تستی و آپلود پوستر:**
   یک نمایشگاه تستی جدید اضافه کنید، یک عکس به عنوان پوستر آپلود نمایید و تغییرات را ذخیره کنید. پوستر باید در مسیر `/opt/artgasht/data/uploads/` با مالکیت `deploy:deploy` (نه root) ذخیره شود و در سایت نمایش یابد.

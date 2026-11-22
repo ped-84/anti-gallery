@@ -1,7 +1,7 @@
 {
   "primary": {
     "name": "Germany VPS (artgasht.com - Source of Truth)",
-    "host": "86.54.42.206",
+    "host": "62.144.51.43",
     "user": "deploy",
     "port": 22,
     "key": "~/.ssh/id_rsa",

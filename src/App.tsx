@@ -108,15 +108,10 @@ export default function App() {
         return res.json();
       })
       .then((freshList: Gallery[]) => {
+        // The server merges the bundled seed into its live data on every start, so its list is
+        // never older than the bundle. Always prefer it: it carries admin edits and deletions.
         if (Array.isArray(freshList) && freshList.length > 0) {
-          const freshOpenings = freshList.filter((g) => g.activeExhibition?.openingDate).length;
-          const bundledOpenings = (rawGalleriesData as Gallery[]).filter((g) => g.activeExhibition?.openingDate).length;
-          // Safeguard: only apply freshList if it has at least as many active exhibitions or galleries as bundled data
-          if (freshOpenings >= bundledOpenings || freshList.length > (rawGalleriesData as Gallery[]).length) {
-            setAllGalleries(freshList);
-          } else {
-            console.warn('[App] Server API returned fewer exhibitions than bundled dataset; preserving bundled dataset');
-          }
+          setAllGalleries(freshList);
         }
       })
       .catch(() => {
