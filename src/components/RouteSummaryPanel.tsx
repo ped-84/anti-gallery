@@ -433,7 +433,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                     <Clock className="w-4 h-4 text-[#F76B1C]" />
                     <span>ساعت حرکت در ترافیک تهران:</span>
                   </span>
-                  <span className="text-[11px] font-medium text-stone-400 hidden xs:inline">تخمین هوشمند</span>
+                  <span className="text-2xs font-medium text-stone-400 hidden xs:inline">تخمین هوشمند</span>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   <button
@@ -446,7 +446,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                     }`}
                   >
                     <span>عادی</span>
-                    <span className="text-[10px] font-normal opacity-70">(روان)</span>
+                    <span className="text-2xs font-normal opacity-70">(روان)</span>
                   </button>
                   <button
                     type="button"
@@ -458,7 +458,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                     }`}
                   >
                     <span>عصر</span>
-                    <span className="text-[10px] font-normal opacity-70">(شلوغ)</span>
+                    <span className="text-2xs font-normal opacity-70">(شلوغ)</span>
                   </button>
                   <button
                     type="button"
@@ -470,7 +470,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                     }`}
                   >
                     <span>جمعه</span>
-                    <span className="text-[10px] font-normal opacity-70">(تعطیلات)</span>
+                    <span className="text-2xs font-normal opacity-70">(تعطیلات)</span>
                   </button>
                 </div>
               </div>
@@ -504,20 +504,20 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
           <div className="clay-card p-3 sm:p-3.5 bg-white dark:bg-[#181d28] border border-[#E1E1E1]/80 dark:border-stone-800 flex items-center justify-between gap-2.5 shadow-xs rounded-xl">
             {/* Primary ETA: Tour Duration */}
             <div>
-              <span className="text-[11px] sm:text-xs font-medium text-stone-500 dark:text-stone-400 block mb-0.5">
+              <span className="text-2xs sm:text-xs font-medium text-stone-500 dark:text-stone-400 block mb-0.5">
                 زمان کل برنامه ({toPersianDigits(visitDurationMin)} دقیقه بازدید در هر گالری)
               </span>
-              <span className="text-base sm:text-lg font-bold text-[#F76B1C] font-mono">
+              <span className="text-base sm:text-lg font-bold text-[#F76B1C] tabular-nums">
                 {avgHours > 0 ? `${toPersianDigits(avgHours)} ساعت و ` : ''}{toPersianDigits(avgMins)} دقیقه
               </span>
             </div>
 
             {/* Secondary Transit Metrics */}
             <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1.5 shrink-0">
-              <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-[#f0f4fa] dark:bg-stone-800 text-[#1d2d4c] dark:text-stone-200 border border-[#E1E1E1]/80 dark:border-stone-700/80 font-mono">
+              <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-[#f0f4fa] dark:bg-stone-800 text-[#1d2d4c] dark:text-stone-200 border border-[#E1E1E1]/80 dark:border-stone-700/80 tabular-nums">
                 {toPersianDigits(routeResult.totalDistanceKm)} کیلومتر مسافت
               </span>
-              <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-[#f0f4fa] dark:bg-stone-800 text-[#1d2d4c] dark:text-stone-200 border border-[#E1E1E1]/80 dark:border-stone-700/80 font-mono">
+              <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-[#f0f4fa] dark:bg-stone-800 text-[#1d2d4c] dark:text-stone-200 border border-[#E1E1E1]/80 dark:border-stone-700/80 tabular-nums">
                 ~{toPersianDigits(routeResult.totalDurationMin)} دقیقه {mode === 'walking' ? 'پیاده' : 'رانندگی'}
               </span>
             </div>
@@ -548,9 +548,9 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                 <div className="flex items-center gap-1.5 font-bold text-[#1856C7] dark:text-[#93c5fd]">
                   <Clock className="w-4 h-4 shrink-0 text-[#1856C7] dark:text-[#93c5fd]" />
                   <span>بازه زمانی بهینه بازدید:</span>
-                  <span className="font-mono text-sm">{toPersianDigits(routeResult.tspTwSolution.routeStartFormatted)} الی {toPersianDigits(routeResult.tspTwSolution.routeEndFormatted)}</span>
+                  <span className="tabular-nums text-sm">{toPersianDigits(routeResult.tspTwSolution.routeStartFormatted)} الی {toPersianDigits(routeResult.tspTwSolution.routeEndFormatted)}</span>
                 </div>
-                <span className="text-[11px] text-stone-500 dark:text-stone-400 font-mono">
+                <span className="text-2xs text-stone-500 dark:text-stone-400 tabular-nums">
                   (هماهنگ با ساعات کاری)
                 </span>
               </div>
@@ -570,7 +570,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                     <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
                     <span>هشدار تداخل ساعت کاری ({toPersianDigits(routeResult.tspTwSolution.droppedStops.length)} گالری):</span>
                   </div>
-                  <div className="text-[11px] text-rose-800 dark:text-rose-300 space-y-0.5 pr-5">
+                  <div className="text-2xs text-rose-800 dark:text-rose-300 space-y-0.5 pr-5">
                     {routeResult.tspTwSolution.droppedStops.map((d, i) => (
                       <div key={i}>
                         • <strong>{d.name || `ایستگاه ${toPersianDigits(d.nodeIndex + 1)}`}</strong>: ساعت {toPersianDigits(d.closingTimeFormatted)} بسته می‌شود (رسیدن تقریبی: ~{toPersianDigits(d.earliestPossibleArrivalFormatted)}).
@@ -619,7 +619,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                       <div className="font-bold text-[#1d2d4c] dark:text-white truncate text-sm sm:text-base">
                         {getGalleryDisplayName(g)}
                       </div>
-                      <div className="text-stone-500 dark:text-stone-400 truncate text-[13px] sm:text-sm">
+                      <div className="text-stone-500 dark:text-stone-400 truncate text-xs sm:text-sm">
                         {g.neighborhoodFa} · {formatGalleryAddress(g.addressFa || g.address)}
                       </div>
                     </div>
@@ -680,7 +680,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                             مبدأ حرکت
                           </span>
                         </div>
-                        <div className="text-[13px] text-stone-500 dark:text-stone-400 mt-0.5">
+                        <div className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
                           شروع حرکت از این نقطه به سمت نزدیک‌ترین نگارخانه منتخب شما
                         </div>
                       </div>
@@ -690,7 +690,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                   {/* Transit Leg 0: Origin to First Gallery */}
                   {routeResult.legs[0] && (
                     <div className="my-2.5 flex items-center justify-center">
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f1f4fa] dark:bg-[#151a24] text-xs text-stone-600 dark:text-stone-300 border border-emerald-200/80 dark:border-emerald-800/50 shadow-2xs font-mono">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f1f4fa] dark:bg-[#151a24] text-xs text-stone-600 dark:text-stone-300 border border-emerald-200/80 dark:border-emerald-800/50 shadow-2xs tabular-nums">
                         {mode === 'walking' ? (
                           <Footprints className="w-3.5 h-3.5 text-[#F76B1C]" />
                         ) : (
@@ -719,7 +719,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                   <div key={gallery.id} className="relative group">
                     {/* Order Pin on Timeline */}
                     <div
-                      className={`absolute -right-6 sm:-right-7.5 top-2 w-6.5 h-6.5 sm:w-7 sm:h-7 rounded-full text-xs sm:text-sm font-bold flex items-center justify-center border-2 border-white dark:border-stone-900 shadow-sm z-10 font-mono ${
+                      className={`absolute -right-6 sm:-right-7.5 top-2 w-6.5 h-6.5 sm:w-7 sm:h-7 rounded-full text-xs sm:text-sm font-bold flex items-center justify-center border-2 border-white dark:border-stone-900 shadow-sm z-10 tabular-nums ${
                         isFirst && !hasOrigin
                           ? 'bg-[#1856C7] text-white'
                           : isLast && !routeResult.isRoundTrip
@@ -736,11 +736,11 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                         <div className="flex-1 truncate">
                           <span
                             onClick={() => onSelectGallery(gallery)}
-                            className="font-black text-[#1d2d4c] dark:text-white hover:text-[#F76B1C] cursor-pointer block leading-snug text-base sm:text-[17px] truncate"
+                            className="font-black text-[#1d2d4c] dark:text-white hover:text-[#F76B1C] cursor-pointer block leading-snug text-base sm:text-lg truncate"
                           >
                             {getGalleryDisplayName(gallery)}
                           </span>
-                          <div className="text-[13px] sm:text-sm text-stone-500 dark:text-stone-300 mt-0.5 truncate">
+                          <div className="text-xs sm:text-sm text-stone-500 dark:text-stone-300 mt-0.5 truncate">
                             {gallery.neighborhoodFa} · {formatGalleryAddress(gallery.addressFa || gallery.address)}
                           </div>
                         </div>
@@ -779,13 +779,13 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                       {gallery.activeExhibition && (
                         <div className="mt-2.5 pt-2 border-t border-stone-100 dark:border-stone-800/80 space-y-1.5 text-xs">
                           <div className="flex items-center gap-1.5 flex-wrap">
-                            <span className="px-2.5 py-1 rounded-lg bg-[#F76B1C]/10 dark:bg-[#F76B1C]/20 text-[#F76B1C] dark:text-[#ff8a3d] font-black text-[14.5px] sm:text-[15px] border border-[#F76B1C]/20">
+                            <span className="px-2.5 py-1 rounded-lg bg-[#F76B1C]/10 dark:bg-[#F76B1C]/20 text-[#F76B1C] dark:text-[#ff8a3d] font-black text-sm sm:text-md border border-[#F76B1C]/20">
                               {gallery.activeExhibition.title}
                             </span>
                           </div>
                           {gallery.activeExhibition.artist && (
                             <p
-                              className="text-stone-600 dark:text-stone-300 font-normal leading-relaxed line-clamp-2 text-[14.5px] sm:text-[15.5px]"
+                              className="text-stone-600 dark:text-stone-300 font-normal leading-relaxed line-clamp-2 text-sm sm:text-md"
                               style={{
                                 display: '-webkit-box',
                                 WebkitLineClamp: 2,
@@ -808,30 +808,30 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                         if (!scheduledStop) return null;
                         return (
                           <div className="mt-2.5 pt-2 border-t border-stone-100 dark:border-stone-800/80 flex items-center justify-between gap-2 flex-wrap text-xs">
-                            <div className="flex items-center gap-1.5 text-stone-700 dark:text-stone-300 font-bold font-mono">
+                            <div className="flex items-center gap-1.5 text-stone-700 dark:text-stone-300 font-bold tabular-nums">
                               <Clock className="w-3.5 h-3.5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
                               <span>ورود: {toPersianDigits(scheduledStop.arrivalTimeFormatted)}</span>
                               <span className="text-stone-300 dark:text-stone-600">·</span>
                               <span>خروج: {toPersianDigits(scheduledStop.departureTimeFormatted)}</span>
-                              <span className="text-stone-400 font-normal text-[11px]">
+                              <span className="text-stone-400 font-normal text-2xs">
                                 ({toPersianDigits(scheduledStop.effectiveDwellMinutes)} دقیقه)
                               </span>
                             </div>
 
                             <div className="flex items-center gap-1.5 flex-wrap">
                               {scheduledStop.isCompressedVisit && (
-                                <span className="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 font-bold text-[11px] flex items-center gap-1">
+                                <span className="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 font-bold text-2xs flex items-center gap-1">
                                   <Zap className="w-3 h-3 text-amber-600" />
                                   <span>بازدید فشرده</span>
                                 </span>
                               )}
                               {scheduledStop.waitMinutes > 0 && (
-                                <span className="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-[#1856C7] dark:text-[#93c5fd] font-bold text-[11px]">
+                                <span className="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-[#1856C7] dark:text-[#93c5fd] font-bold text-2xs">
                                   ⏳ {toPersianDigits(scheduledStop.waitMinutes)} دقیقه انتظار
                                 </span>
                               )}
                               {scheduledStop.slackMinutesBeforeClose >= 0 && scheduledStop.slackMinutesBeforeClose <= 60 && (
-                                <span className="text-[11px] text-stone-500 dark:text-stone-400">
+                                <span className="text-2xs text-stone-500 dark:text-stone-400">
                                   (تعطیلی: {toPersianDigits(scheduledStop.closingTimeFormatted)})
                                 </span>
                               )}
@@ -841,7 +841,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                       })()}
 
                       {/* Distinct Start / End Point Controls & Badges */}
-                      <div className="mt-2.5 pt-2 border-t border-stone-100 dark:border-stone-800/80 flex items-center justify-between gap-2 flex-wrap text-xs sm:text-[13px]">
+                      <div className="mt-2.5 pt-2 border-t border-stone-100 dark:border-stone-800/80 flex items-center justify-between gap-2 flex-wrap text-xs sm:text-xs">
                         {isFirst ? (
                           hasOrigin ? (
                             <span className="inline-flex items-center gap-1.5 font-bold text-[#1856C7] dark:text-[#93c5fd] bg-[#edf3ff] dark:bg-blue-950/40 px-3 py-1 rounded-xl border border-blue-200 dark:border-blue-800/50 shadow-xs">
@@ -888,7 +888,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
 
                       {/* Direct Navigation Quick Buttons for this stop */}
                       <div className="mt-2.5 pt-2 border-t border-stone-100 dark:border-stone-800/80 flex items-center justify-between gap-2 flex-wrap">
-                        <span className="text-[11.5px] font-bold text-stone-600 dark:text-stone-300 flex items-center gap-1">
+                        <span className="text-2xs font-bold text-stone-600 dark:text-stone-300 flex items-center gap-1">
                           <Navigation className="w-3.5 h-3.5 text-[#F76B1C]" />
                           <span>ناوبری مستقیم به این توقف:</span>
                         </span>
@@ -930,7 +930,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                     {/* Transit Leg Info: Clean Centered Travel Pill */}
                     {leg && (
                       <div className="my-2.5 flex items-center justify-center">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f1f4fa] dark:bg-[#151a24] text-xs text-stone-600 dark:text-stone-300 border border-stone-200/70 dark:border-stone-800 shadow-2xs font-mono">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f1f4fa] dark:bg-[#151a24] text-xs text-stone-600 dark:text-stone-300 border border-stone-200/70 dark:border-stone-800 shadow-2xs tabular-nums">
                           {mode === 'walking' ? (
                             <Footprints className="w-3.5 h-3.5 text-[#F76B1C]" />
                           ) : (
@@ -953,14 +953,14 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
               {/* Final Return Card for Round-Trip */}
               {routeResult.isRoundTrip && (
                 <div className="relative group">
-                  <div className="absolute -right-6 sm:-right-7.5 top-2 w-6.5 h-6.5 sm:w-7 sm:h-7 rounded-full text-xs font-bold flex items-center justify-center border-2 border-white dark:border-stone-900 shadow-sm z-10 bg-amber-600 text-white font-mono">
+                  <div className="absolute -right-6 sm:-right-7.5 top-2 w-6.5 h-6.5 sm:w-7 sm:h-7 rounded-full text-xs font-bold flex items-center justify-center border-2 border-white dark:border-stone-900 shadow-sm z-10 bg-amber-600 text-white tabular-nums">
                     🏁
                   </div>
                   <div className="clay-card p-3 bg-amber-50/70 dark:bg-amber-950/30 text-xs border border-amber-200 dark:border-amber-800/60 shadow-xs flex items-center justify-between">
                     <span className="font-bold text-amber-800 dark:text-amber-300">
                       بازگشت به {routeResult.originPoint ? routeResult.originPoint.name : 'نقطه آغاز (گالری اول)'}
                     </span>
-                    <span className="text-[10px] bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 px-2 py-0.5 rounded-full font-bold">
+                    <span className="text-2xs bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 px-2 py-0.5 rounded-full font-bold">
                       پایان مسیر رفت‌وبرگشت
                     </span>
                   </div>
@@ -993,10 +993,10 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
               <div className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 flex items-center justify-center">
                 <GoogleMapsIcon className="w-full h-full drop-shadow-xs group-hover:scale-110 transition-transform" />
               </div>
-              <span className="font-bold text-sm sm:text-base text-stone-800 dark:text-stone-100 tracking-tight">
+              <span className="font-bold text-sm sm:text-base text-stone-800 dark:text-stone-100">
                 مسیریابی یکپارچه کل گشت
               </span>
-              <span className="text-[11px] font-ubuntu font-bold bg-[#3D5B99]/10 dark:bg-[#A3C2E4]/20 text-[#3D5B99] dark:text-[#A3C2E4] px-2.5 py-0.5 rounded-full">
+              <span className="text-2xs font-ubuntu font-bold bg-[#3D5B99]/10 dark:bg-[#A3C2E4]/20 text-[#3D5B99] dark:text-[#A3C2E4] px-2.5 py-0.5 rounded-full">
                 Google Maps
               </span>
             </a>
@@ -1007,7 +1007,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
             </p>
 
             {/* Subtle contextual hint */}
-            <p className="text-[11px] text-stone-500 dark:text-stone-400 text-center leading-relaxed">
+            <p className="text-2xs text-stone-500 dark:text-stone-400 text-center leading-relaxed">
               💡 برای مسیریابی مرحله‌به‌مرحله به یک گالری خاص با <strong>نشان</strong> یا <strong>Waze</strong>، از دکمه‌های مستقیم داخل کارت همان گالری استفاده کنید.
             </p>
 

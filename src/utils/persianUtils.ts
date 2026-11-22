@@ -19,6 +19,23 @@ export function formatDistanceFa(km: number | null | undefined): string {
   return `${toPersianDigits(v).replace('.', '٫')} کیلومتر`;
 }
 
+/**
+ * ساعت کاری خوانا و یکدست: «16:۰۰ الی 20:۰۰» یا «۱۶ - ۲۰» → «۱۶ تا ۲۰»؛
+ * دقیقه‌ی غیرصفر حفظ می‌شود («۱۰:۳۰ تا ۱۳ و ۱۵ تا ۱۹»). اگر قابل خواندن نبود، همان متن با ارقام فارسی.
+ */
+export function formatHoursFa(raw: string | null | undefined): string {
+  if (!raw || !raw.trim()) return '';
+  const latin = raw
+    .replace(/[۰-۹]/g, (d) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
+    .replace(/[٠-٩]/g, (d) => String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)));
+  const re = /(\d{1,2})(?::(\d{2}))?\s*(?:الی|تا|-|–|—|to)\s*(\d{1,2})(?::(\d{2}))?/gi;
+  const parts: string[] = [];
+  const t = (h: string, m?: string) => (m && m !== '00' ? `${Number(h)}:${m}` : `${Number(h)}`);
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(latin)) !== null) parts.push(`${t(m[1], m[2])} تا ${t(m[3], m[4])}`);
+  return toPersianDigits(parts.length ? parts.join(' و ') : raw.trim());
+}
+
 /** مدت خوانا به فارسی: «۴۵ دقیقه»، «۱ ساعت و ۵ دقیقه»، «۲ ساعت» */
 export function formatDurationFa(totalMinutes: number): string {
   const t = Math.max(0, Math.round(totalMinutes));

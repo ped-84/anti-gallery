@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Gallery } from '../types/gallery';
-import { toPersianDigits, getGalleryDisplayName, getExhibitionMedium, formatGalleryAddress, formatArtistName, getExhibitionStatus } from '../utils/persianUtils';
+import { toPersianDigits, getGalleryDisplayName, getExhibitionMedium, formatGalleryAddress, formatArtistName, getExhibitionStatus, formatHoursFa } from '../utils/persianUtils';
 import { toOptimizedImageUrl } from '../utils/imageUrl';
 import {
   X,
@@ -156,7 +156,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
               </div>
 
               <div className="truncate">
-                <h2 className="font-bold text-[18px] sm:text-xl text-[#1d2d4c] dark:text-white truncate leading-tight">
+                <h2 className="font-bold text-lg sm:text-xl text-[#1d2d4c] dark:text-white truncate leading-tight">
                   {galleryDisplayName}
                 </h2>
                 <div className="text-xs sm:text-sm text-[#3D5B99] dark:text-[#A3C2E4] truncate mt-0.5 font-medium flex items-center gap-1.5">
@@ -278,7 +278,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   let badgeColors = 'bg-white/95 dark:bg-stone-900/95 text-[#10335e] dark:text-[#dbeafe] border-[#10335e]/15 dark:border-[#93c5fd]/20';
                   let clockColor = 'text-[#3D5B99] dark:text-[#A3C2E4]';
                   let timeBadge = (
-                    <span className="text-xs sm:text-[13px] font-bold bg-[#10335e] dark:bg-[#253555] text-white px-2.5 py-1 rounded-xl shadow-xs shrink-0 whitespace-nowrap">
+                    <span className="text-xs sm:text-xs font-bold bg-[#10335e] dark:bg-[#253555] text-white px-2.5 py-1 rounded-xl shadow-xs shrink-0 whitespace-nowrap">
                       ساعت ۱۶ تا ۲۰
                     </span>
                   );
@@ -287,21 +287,21 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                     badgeColors = 'bg-white/95 dark:bg-stone-900/95 text-[#F76B1C] border-[#F76B1C]/25';
                     clockColor = 'text-[#F76B1C]';
                     timeBadge = (
-                      <span className="text-xs sm:text-[13px] font-bold bg-[#F76B1C] text-white px-2.5 py-1 rounded-xl shadow-xs shrink-0 whitespace-nowrap">
+                      <span className="text-xs sm:text-xs font-bold bg-[#F76B1C] text-white px-2.5 py-1 rounded-xl shadow-xs shrink-0 whitespace-nowrap">
                         افتتاحیه ۱۶ تا ۲۰
                       </span>
                     );
                   } else if (isClosingToday) {
                     badgeColors = 'bg-rose-50/95 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-300 dark:border-rose-800';
                     timeBadge = (
-                      <span className="text-xs sm:text-[13px] font-bold bg-rose-600 text-white px-2.5 py-1 rounded-xl shadow-xs shrink-0 whitespace-nowrap animate-pulse">
+                      <span className="text-xs sm:text-xs font-bold bg-rose-600 text-white px-2.5 py-1 rounded-xl shadow-xs shrink-0 whitespace-nowrap animate-pulse">
                         امروز پایان
                       </span>
                     );
                   } else if (isClosingSoon) {
                     badgeColors = 'bg-amber-50/95 dark:bg-amber-950/40 text-amber-800 dark:text-amber-200 border-amber-300 dark:border-amber-800';
                     timeBadge = (
-                      <span className="text-xs sm:text-[13px] font-bold bg-amber-600 text-white px-2.5 py-1 rounded-xl shadow-xs shrink-0 whitespace-nowrap">
+                      <span className="text-xs sm:text-xs font-bold bg-amber-600 text-white px-2.5 py-1 rounded-xl shadow-xs shrink-0 whitespace-nowrap">
                         روزهای پایانی
                       </span>
                     );
@@ -309,7 +309,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
 
                   return (
                     <div className={`flex items-center justify-between gap-1.5 flex-nowrap px-3 py-2 rounded-xl font-bold shadow-xs border ${badgeColors}`}>
-                      <div className="flex items-center gap-1.5 text-[15px] sm:text-base font-bold min-w-0">
+                      <div className="flex items-center gap-1.5 text-md sm:text-base font-bold min-w-0">
                         {isClosingToday ? (
                           <Clock className="w-4.5 h-4.5 shrink-0 text-rose-600 dark:text-rose-400 animate-pulse" />
                         ) : (
@@ -324,27 +324,27 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
 
                 {/* عنوان نمایشگاه: ۴ پیکسل فاصله با سطر افتتاحیه اضافه شد */}
                 <div className="pt-1 mt-0.5">
-                  <h3 className="text-[22px] font-black text-[#10335e] dark:text-[#dbeafe] leading-tight">
+                  <h3 className="text-xl font-black text-[#10335e] dark:text-[#dbeafe] leading-tight">
                     {activeExhibition.title}
                   </h3>
                 </div>
 
                 {/* نام هنرمند و کلمه هنرمند: ۱۵ پیکسل */}
                 {activeExhibition.artist && (
-                  <div className="flex items-center gap-2 text-[15px] text-[#1d2d4c] dark:text-stone-200 font-bold pt-2 border-t border-[#A3C2E4]/30 dark:border-stone-700/60">
+                  <div className="flex items-center gap-2 text-md text-[#1d2d4c] dark:text-stone-200 font-bold pt-2 border-t border-[#A3C2E4]/30 dark:border-stone-700/60">
                     <User className="w-4 h-4 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
-                    <span className="text-stone-500 dark:text-stone-400 font-medium text-[15px]">هنرمند:</span>
-                    <span className="text-[15px] font-bold">{formatArtistName(activeExhibition.artist)}</span>
+                    <span className="text-stone-500 dark:text-stone-400 font-medium text-md">هنرمند:</span>
+                    <span className="text-md font-bold">{formatArtistName(activeExhibition.artist)}</span>
                   </div>
                 )}
 
                 {/* موضوع و مدیوم آثار: ۱ پیکسل کوچکتر (۱۳ پیکسل) */}
-                <div className="flex items-center justify-between gap-2 text-[15px] pt-2 border-t border-[#A3C2E4]/30 dark:border-stone-700/60">
-                  <div className="flex items-center gap-2 text-stone-700 dark:text-stone-300 font-bold text-[15px]">
+                <div className="flex items-center justify-between gap-2 text-md pt-2 border-t border-[#A3C2E4]/30 dark:border-stone-700/60">
+                  <div className="flex items-center gap-2 text-stone-700 dark:text-stone-300 font-bold text-md">
                     <Palette className="w-4.5 h-4.5 text-[#F76B1C] shrink-0" />
                     <span>موضوع و مدیوم آثار:</span>
                   </div>
-                  <span className="px-3.5 py-1 rounded-xl text-[13px] font-bold bg-[#edf3ff] dark:bg-blue-950/60 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/80 dark:border-blue-800 shadow-2xs">
+                  <span className="px-3.5 py-1 rounded-xl text-xs font-bold bg-[#edf3ff] dark:bg-blue-950/60 text-[#1856C7] dark:text-[#93c5fd] border border-blue-200/80 dark:border-blue-800 shadow-2xs">
                     {getExhibitionMedium(
                       activeExhibition.title,
                       activeExhibition.artist,
@@ -357,7 +357,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
 
                 {/* دوره برگزاری: ۱ پیکسل کوچکتر (۱۴ پیکسل) */}
                 {activeExhibition.fullDateRange && (
-                  <div className="text-[14px] text-stone-500 dark:text-stone-400 flex items-center gap-2 pt-1 font-medium">
+                  <div className="text-sm text-stone-500 dark:text-stone-400 flex items-center gap-2 pt-1 font-medium">
                     <Clock className="w-4 h-4 text-[#F76B1C]" />
                     <span>دوره برگزاری: {toPersianDigits(activeExhibition.fullDateRange)}</span>
                   </div>
@@ -398,12 +398,19 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                 <Clock className="w-6 h-6 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0 mt-0.5" />
                 <div>
                   <span className="font-bold text-stone-800 dark:text-stone-200 block text-base">برنامه و ساعات بازدید:</span>
-                  <div className="text-stone-600 dark:text-stone-300 text-[15px] leading-relaxed mt-1 space-y-0.5 font-medium">
+                  <div className="text-stone-600 dark:text-stone-300 text-md leading-relaxed mt-1 space-y-0.5 font-medium">
                     {activeExhibition?.fullDateRange && (
                       <div>• دوره برگزاری: {toPersianDigits(activeExhibition.fullDateRange)}</div>
                     )}
-                    <div>• افتتاحیه: {activeExhibition?.openingDate ? toPersianDigits(activeExhibition.openingDate) : 'جمعه‌ها ساعت ۱۶:۰۰ الی ۲۰:۰۰'}</div>
-                    <div>• روزهای عادی: یکشنبه تا پنجشنبه {toPersianDigits(gallery.hoursFa || gallery.hours || '۱۶ الی ۲۰')} (شنبه تعطیل)</div>
+                    {activeExhibition?.openingDate && (
+                      <div>• افتتاحیه: {toPersianDigits(activeExhibition.openingDate)}</div>
+                    )}
+                    <div>
+                      • ساعت بازدید:{' '}
+                      <bdi>
+                        {formatHoursFa(activeExhibition?.openingHours || gallery.hoursFa || gallery.hours) || 'ثبت نشده'}
+                      </bdi>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -413,7 +420,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                 <MapPin className="w-6 h-6 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0 mt-0.5" />
                 <div>
                   <span className="font-bold text-stone-800 dark:text-stone-200 block text-base">نشانی:</span>
-                  <span className="text-stone-600 dark:text-stone-300 text-[15px] leading-relaxed block mt-1 font-medium">
+                  <span className="text-stone-600 dark:text-stone-300 text-md leading-relaxed block mt-1 font-medium">
                     {formatGalleryAddress(gallery.addressFa || gallery.address)}
                   </span>
                 </div>
@@ -426,7 +433,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   <span className="font-bold text-stone-800 dark:text-stone-200 text-base">تلفن:</span>
                   <a
                     href={`tel:${gallery.phone}`}
-                    className="text-[#F76B1C] font-bold hover:underline font-mono text-sm sm:text-base"
+                    className="text-[#F76B1C] font-bold hover:underline tabular-nums text-sm sm:text-base"
                   >
                     {toPersianDigits(gallery.phone)}
                   </a>
@@ -477,7 +484,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
                   <NeshanIcon className="w-7 h-7 shrink-0" />
-                  <span className="text-[15px] font-bold text-stone-800 dark:text-white">نشان</span>
+                  <span className="text-md font-bold text-stone-800 dark:text-white">نشان</span>
                 </a>
 
                 {/* ۲. وسط: ویز */}
@@ -488,7 +495,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
                   <WazeIcon className="w-7 h-7 shrink-0" />
-                  <span className="text-[15px] font-bold text-stone-800 dark:text-white font-ubuntu">Waze</span>
+                  <span className="text-md font-bold text-stone-800 dark:text-white font-ubuntu">Waze</span>
                 </a>
 
                 {/* ۳. چپ: گوگل مپس */}
@@ -499,7 +506,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
                   <GoogleMapsIcon className="w-7 h-7 shrink-0" />
-                  <span className="text-[15px] font-bold text-stone-800 dark:text-white font-ubuntu">Google</span>
+                  <span className="text-md font-bold text-stone-800 dark:text-white font-ubuntu">Google</span>
                 </a>
 
                 {/* بلد فعلاً طبق درخواست کاربر هاید شده است (جهت بازگردانی احتمالی در آینده):
@@ -510,7 +517,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
                 >
                   <BaladIcon className="w-7 h-7 shrink-0" />
-                  <span className="text-[15px] font-bold text-stone-800 dark:text-white">بلد</span>
+                  <span className="text-md font-bold text-stone-800 dark:text-white">بلد</span>
                 </a>
                 */}
               </div>

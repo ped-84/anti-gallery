@@ -1223,10 +1223,10 @@ export default function App() {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap sm:flex-nowrap">
-                  <span className="text-[15px] sm:text-base font-black text-[#1c2944] dark:text-white tracking-tight shrink-0 whitespace-nowrap">
+                  <span className="text-md sm:text-base font-black text-[#1c2944] dark:text-white shrink-0 whitespace-nowrap">
                     گشت‌های آماده آرت‌گشت
                   </span>
-                  <span className="whitespace-nowrap px-3 sm:px-3.5 py-0.5 sm:py-1 text-xs sm:text-[13px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug inline-flex items-center shrink-0 shadow-xs">
+                  <span className="whitespace-nowrap px-3 sm:px-3.5 py-0.5 sm:py-1 text-xs sm:text-xs font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug inline-flex items-center shrink-0 shadow-xs">
                     مسیرهای پیشنهادی تهران
                   </span>
                 </div>
@@ -1250,7 +1250,7 @@ export default function App() {
 
         {/* Editorial Claymorphic Banner */}
         <section className="clay-card p-4 sm:p-6 bg-white dark:bg-[#181d27] border border-[#E1E1E1] dark:border-stone-800">
-          <h1 className="text-xl sm:text-3xl font-bold text-[#1d2d4c] dark:text-white tracking-tight leading-snug">
+          <h1 className="text-xl sm:text-3xl font-bold text-[#1d2d4c] dark:text-white leading-snug">
             بهترین مسیر آرت‌گشت در تهران
           </h1>
           <p className="text-sm sm:text-base text-stone-600 dark:text-stone-300 mt-2 leading-relaxed">
@@ -1260,7 +1260,7 @@ export default function App() {
           {/* Quick Tour Presets */}
           <div className="mt-4 pt-3.5 border-t border-[#E1E1E1] dark:border-stone-800 flex items-center gap-2 flex-wrap">
             {/* Mode Switcher Pill (Authentic Claymorphic Segmented Control) */}
-            <div className="flex items-center p-1 rounded-full bg-[#eaedf4] dark:bg-[#121620] border border-[#d2d9e6] dark:border-[#262f40] shadow-inner text-xs sm:text-[13px] font-bold shrink-0 ml-1">
+            <div className="flex items-center p-1 rounded-full bg-[#eaedf4] dark:bg-[#121620] border border-[#d2d9e6] dark:border-[#262f40] shadow-inner text-xs sm:text-xs font-bold shrink-0 ml-1">
               <button
                 type="button"
                 onClick={() => setCuratedTourMode('openings-only')}
@@ -1290,7 +1290,7 @@ export default function App() {
             </div>
 
             {/* Travel Mode Switcher Pill (با خودرو vs پیاده‌روی) */}
-            <div className="flex items-center p-1 rounded-full bg-[#eaedf4] dark:bg-[#121620] border border-[#d2d9e6] dark:border-[#262f40] shadow-inner text-xs sm:text-[13px] font-bold shrink-0 ml-1">
+            <div className="flex items-center p-1 rounded-full bg-[#eaedf4] dark:bg-[#121620] border border-[#d2d9e6] dark:border-[#262f40] shadow-inner text-xs sm:text-xs font-bold shrink-0 ml-1">
               <button
                 type="button"
                 onClick={() => handleTravelModeChange('driving')}
@@ -1455,7 +1455,7 @@ export default function App() {
                 <span className="text-xs font-bold text-[#10335e] dark:text-stone-200">
                   نقشه تعاملی گالری‌های تهران
                 </span>
-                <span className="text-[11px] text-stone-400">
+                <span className="text-2xs text-stone-400">
                   {isDesktop ? 'جهت بارگذاری سریع نقشه کلیک کنید یا صفحه را پیمایش نمایید' : 'نقشه در تب «نقشه و مسیر» فعال می‌شود'}
                 </span>
               </div>
@@ -1477,7 +1477,7 @@ export default function App() {
                   placeholder="جستجوی نام هنرمند (مثلاً داریوش حسینی)، عنوان نمایشگاه، نگارخانه..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="clay-input w-full pr-12 pl-4 py-3 bg-[#f6f8fb] dark:bg-[#141822] text-sm sm:text-base placeholder:text-stone-400 focus:outline-none text-[#1d2d4c] dark:text-white transition-all font-medium border border-[#E1E1E1]/50 rounded-2xl"
+                  className="clay-input w-full pr-12 pl-4 py-3 bg-[#f6f8fb] dark:bg-[#141822] text-base placeholder:text-stone-400 focus:outline-none text-[#1d2d4c] dark:text-white transition-all font-medium border border-[#E1E1E1]/50 rounded-2xl"
                 />
                 {searchQuery && (
                   <button
@@ -1496,44 +1496,44 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => setGalleryFilterTab('this-week')}
-                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 text-xs sm:text-sm text-center ${
+                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap text-sm text-center ${
                       galleryFilterTab === 'this-week'
                         ? 'clay-button clay-base text-[#F76B1C] shadow-sm'
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
                     }`}
                   >
-                    <Flame className={`w-4 h-4 shrink-0 ${galleryFilterTab === 'this-week' ? 'text-[#F76B1C]' : 'text-amber-500'}`} />
+                    <Flame className={`w-4 h-4 shrink-0 hidden sm:block ${galleryFilterTab === 'this-week' ? 'text-[#F76B1C]' : 'text-amber-500'}`} />
                     <span className="hidden sm:inline">افتتاحیه‌های این هفته</span>
                     <span className="sm:hidden">این هفته</span>
-                    <span className="text-xs sm:text-sm font-bold font-sans opacity-90"><bdi>({toPersianDigits(totalThisWeek)})</bdi></span>
+                    <span className="text-xs sm:text-sm font-bold font-sans opacity-80"><bdi>({toPersianDigits(totalThisWeek)})</bdi></span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setGalleryFilterTab('all-active')}
-                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 text-xs sm:text-sm text-center ${
+                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap text-sm text-center ${
                       galleryFilterTab === 'all-active'
                         ? 'clay-button clay-base text-[#10335e] dark:text-[#A3C2E4] shadow-sm'
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
                     }`}
                   >
-                    <Palette className="w-4 h-4 shrink-0" />
+                    <Palette className="w-4 h-4 shrink-0 hidden sm:block" />
                     <span className="hidden sm:inline">نمایشگاه‌های جاری</span>
                     <span className="sm:hidden">جاری</span>
-                    <span className="text-xs sm:text-sm font-bold font-sans opacity-90"><bdi>({toPersianDigits(totalWithPosters)})</bdi></span>
+                    <span className="text-xs sm:text-sm font-bold font-sans opacity-80"><bdi>({toPersianDigits(totalWithPosters)})</bdi></span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setGalleryFilterTab('all')}
-                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 text-xs sm:text-sm text-center ${
+                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap text-sm text-center ${
                       galleryFilterTab === 'all'
                         ? 'clay-button clay-base text-[#10335e] dark:text-[#A3C2E4] shadow-sm'
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
                     }`}
                   >
-                    <Grid className="w-4 h-4 shrink-0" />
+                    <Grid className="w-4 h-4 shrink-0 hidden sm:block" />
                     <span className="hidden sm:inline">همه نگارخانه‌ها</span>
                     <span className="sm:hidden">همه</span>
-                    <span className="text-xs sm:text-sm font-bold font-sans opacity-90"><bdi>({toPersianDigits(galleries.length)})</bdi></span>
+                    <span className="text-xs sm:text-sm font-bold font-sans opacity-80"><bdi>({toPersianDigits(galleries.length)})</bdi></span>
                   </button>
                 </div>
 
@@ -1787,7 +1787,7 @@ export default function App() {
               سیاست حریم خصوصی
             </button>
             <span className="text-stone-300 dark:text-stone-700">|</span>
-            <span className="px-2.5 py-1 text-[11px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug font-ubuntu shadow-xs">
+            <span className="px-2.5 py-1 text-2xs font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug font-ubuntu shadow-xs">
               {APP_VERSION}
             </span>
           </div>

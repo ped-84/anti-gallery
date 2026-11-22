@@ -518,7 +518,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 2l7 19-7-4-7 4 7-19z"></path>
             </svg>
           </div>
-          <div class="mt-1 bg-emerald-900/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-md border border-emerald-500/50 whitespace-nowrap pointer-events-none">
+          <div class="mt-1 bg-emerald-900/90 text-white text-2xs font-bold px-2 py-0.5 rounded-md shadow-md border border-emerald-500/50 whitespace-nowrap pointer-events-none">
             ${origin.name}
           </div>
         </div>
@@ -619,7 +619,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
               ${toPersianDigits(orderNum)}
             </div>
             ${activeSpacesCount > 1 ? `
-              <span class="absolute -top-1.5 -right-1.5 bg-[#F76B1C] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-white shadow-xs">
+              <span class="absolute -top-1.5 -right-1.5 bg-[#F76B1C] text-white text-2xs font-black w-4 h-4 rounded-full flex items-center justify-center border border-white shadow-xs">
                 ${toPersianDigits(activeSpacesCount)}
               </span>
             ` : ''}
@@ -634,7 +634,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
               </svg>
             </div>
             ${activeSpacesCount > 1 ? `
-              <span class="absolute -top-1.5 -right-1.5 bg-[#F76B1C] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-white shadow-xs">
+              <span class="absolute -top-1.5 -right-1.5 bg-[#F76B1C] text-white text-2xs font-black w-4 h-4 rounded-full flex items-center justify-center border border-white shadow-xs">
                 ${toPersianDigits(activeSpacesCount)}
               </span>
             ` : ''}
@@ -650,7 +650,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
               <div class="w-2.5 h-2.5 rounded-full bg-white shadow-xs"></div>
             </div>
             ${activeSpacesCount > 1 ? `
-              <span class="absolute -top-1.5 -right-1.5 bg-[#1e335a] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-white shadow-xs">
+              <span class="absolute -top-1.5 -right-1.5 bg-[#1e335a] text-white text-2xs font-black w-4 h-4 rounded-full flex items-center justify-center border border-white shadow-xs">
                 ${toPersianDigits(activeSpacesCount)}
               </span>
             ` : ''}
@@ -668,7 +668,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
               <div class="w-2 h-2 rounded-full bg-[#F76B1C]"></div>
             </div>
             ${activeSpacesCount > 1 ? `
-              <span class="absolute -top-1.5 -right-1.5 bg-[#F76B1C] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-white shadow-xs">
+              <span class="absolute -top-1.5 -right-1.5 bg-[#F76B1C] text-white text-2xs font-black w-4 h-4 rounded-full flex items-center justify-center border border-white shadow-xs">
                 ${toPersianDigits(activeSpacesCount)}
               </span>
             ` : ''}
@@ -778,7 +778,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           <p className="text-xs sm:text-sm font-bold text-stone-700 dark:text-stone-200">
             {mapError || 'بارگذاری تایل‌های نقشه زمان‌بر شد.'}
           </p>
-          <p className="text-[11px] text-stone-500 dark:text-stone-400 max-w-xs">
+          <p className="text-2xs text-stone-500 dark:text-stone-400 max-w-xs">
             در صورت فعال بودن فیلترشکن، ممکن است اتصال به سرورهای نقشه مختل شود.
           </p>
           <button
@@ -854,7 +854,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
               <span className={`w-2 h-2 rounded-full ${showTourOnly ? 'bg-[#F76B1C] animate-pulse' : 'bg-stone-400'}`} />
               <span>فقط گالری‌های گشت</span>
               <span
-                className={`text-[10px] px-1.5 py-0.2 rounded-md ${
+                className={`text-2xs px-1.5 py-0.2 rounded-md ${
                   showTourOnly
                     ? 'bg-[#F76B1C] text-white font-bold'
                     : 'bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300'
@@ -881,7 +881,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
         {/* Secondary Declutter Tabs: Visible when in 'All Galleries' mode or before selecting tour */}
         {(!showTourOnly || selectedGalleries.length === 0) && (
-          <div className="clay-card bg-white/95 dark:bg-[#151922]/95 backdrop-blur-md p-1 rounded-2xl border border-[#E1E1E1] dark:border-stone-800 shadow-xs flex items-center gap-1 text-[11px] font-bold">
+          <div className="clay-card bg-white/95 dark:bg-[#151922]/95 backdrop-blur-md p-1 rounded-2xl border border-[#E1E1E1] dark:border-stone-800 shadow-xs flex items-center gap-1 text-2xs font-bold">
             <button
               type="button"
               onClick={() => setMapFilterMode('openings-only')}
@@ -895,7 +895,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
               <span>افتتاحیه‌ها</span>
               <span
-                className={`text-[9.5px] px-1.5 py-0.2 rounded-md ${
+                className={`text-2xs px-1.5 py-0.2 rounded-md ${
                   mapFilterMode === 'openings-only'
                     ? 'bg-white/25 text-white'
                     : 'bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300'
@@ -918,7 +918,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
               <span className="w-1.5 h-1.5 rounded-full bg-[#F76B1C]" />
               <span>همه فعال‌ها</span>
               <span
-                className={`text-[9.5px] px-1.5 py-0.2 rounded-md ${
+                className={`text-2xs px-1.5 py-0.2 rounded-md ${
                   mapFilterMode === 'active-only'
                     ? 'bg-white/25 text-white'
                     : 'bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300'
@@ -940,7 +940,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
             >
               <span>همه</span>
               <span
-                className={`text-[9.5px] px-1.5 py-0.2 rounded-md ${
+                className={`text-2xs px-1.5 py-0.2 rounded-md ${
                   mapFilterMode === 'all'
                     ? 'bg-white/25 text-white'
                     : 'bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300'
@@ -954,7 +954,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       </div>
 
       {/* Map Legend Overlay */}
-      <div className="absolute bottom-3.5 right-3.5 z-10 clay-card bg-white/95 dark:bg-[#161a22]/95 px-3 py-1.5 text-[11px] text-stone-600 dark:text-stone-300 hidden md:flex items-center gap-3 border border-[#E1E1E1] dark:border-stone-800">
+      <div className="absolute bottom-3.5 right-3.5 z-10 clay-card bg-white/95 dark:bg-[#161a22]/95 px-3 py-1.5 text-2xs text-stone-600 dark:text-stone-300 hidden md:flex items-center gap-3 border border-[#E1E1E1] dark:border-stone-800">
         {routeResult?.originPoint && (
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 inline-block"></span>
@@ -962,7 +962,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           </div>
         )}
         <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#1e335a] text-white text-[8px] font-bold flex items-center justify-center">۱</span>
+          <span className="w-2.5 h-2.5 rounded-full bg-[#1e335a] text-white text-2xs font-bold flex items-center justify-center">۱</span>
           <span>در برنامه گشت</span>
         </div>
         <div className="flex items-center gap-1.5">

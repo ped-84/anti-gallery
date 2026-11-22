@@ -46,7 +46,7 @@ export const Header: React.FC<HeaderProps> = ({
               />
             </div>
             {/* Slogan with comfortable breathing room below wordmark */}
-            <p className="text-xs sm:text-sm font-semibold text-[#3D5B99] dark:text-[#A3C2E4] text-right mt-1.5 sm:mt-2 leading-tight tracking-tight">
+            <p className="text-xs sm:text-sm font-semibold text-[#3D5B99] dark:text-[#A3C2E4] text-right mt-1.5 sm:mt-2 leading-tight">
               مسیریاب هوشمند گالری‌های هنری
             </p>
           </a>

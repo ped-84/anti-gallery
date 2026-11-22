@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Gallery } from '../types/gallery';
-import { toPersianDigits, getGalleryDisplayName, getExhibitionMedium, formatGalleryAddress, formatArtistName, getExhibitionStatus } from '../utils/persianUtils';
+import { toPersianDigits, getGalleryDisplayName, getExhibitionMedium, formatGalleryAddress, formatArtistName, getExhibitionStatus, formatHoursFa } from '../utils/persianUtils';
 import { toOptimizedImageUrl } from '../utils/imageUrl';
 import {
   Plus,
@@ -128,14 +128,14 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
 
             {/* Order number badge if in tour */}
             {orderNumber !== undefined && (
-              <div className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-[#3D5B99] dark:bg-[#F76B1C] text-white font-bold text-xs flex items-center justify-center shadow-lg border-2 border-white dark:border-stone-900 z-10 font-mono">
+              <div className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-[#3D5B99] dark:bg-[#F76B1C] text-white font-bold text-xs flex items-center justify-center shadow-lg border-2 border-white dark:border-stone-900 z-10 tabular-nums">
                 {toPersianDigits(orderNumber)}
               </div>
             )}
 
             {/* Traffic Zone Indicator */}
             {gallery.isInTrafficZone && (
-              <div className="absolute top-2.5 left-2.5 bg-[#F76B1C] text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm backdrop-blur-sm z-10">
+              <div className="absolute top-2.5 left-2.5 bg-[#F76B1C] text-white text-2xs font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm backdrop-blur-sm z-10">
                 <AlertTriangle className="w-3 h-3" />
                 <span>طرح ترافیک</span>
               </div>
@@ -188,7 +188,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
 
           {/* Order badge for cards without poster */}
           {!hasActivePoster && orderNumber !== undefined && (
-            <div className="w-8 h-8 rounded-full bg-[#3D5B99] dark:bg-[#F76B1C] text-white font-bold text-xs flex items-center justify-center shadow-md shrink-0 font-mono">
+            <div className="w-8 h-8 rounded-full bg-[#3D5B99] dark:bg-[#F76B1C] text-white font-bold text-xs flex items-center justify-center shadow-md shrink-0 tabular-nums">
               {toPersianDigits(orderNumber)}
             </div>
           )}
@@ -240,10 +240,16 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
                   </div>
                 );
               })()}
-              <div className="text-sm sm:text-base text-stone-600 dark:text-stone-300 px-1 font-medium flex items-center justify-between">
-                <span>بازدید عادی: یکشنبه تا پنجشنبه {toPersianDigits(gallery.hoursFa || gallery.hours || '۱۶ الی ۲۰')}</span>
-                <span className="text-stone-400 font-normal">شنبه تعطیل</span>
-              </div>
+              {(() => {
+                // روزهای کاری در داده نیست؛ فقط ساعت واقعی نمایشگاه (یا گالری) را نشان می‌دهیم
+                const hours = formatHoursFa(activeExhibition.openingHours || gallery.hoursFa || gallery.hours);
+                return hours ? (
+                  <div className="text-sm text-stone-600 dark:text-stone-300 px-1 font-medium flex items-center gap-1.5">
+                    <Clock className="w-4 h-4 shrink-0 text-[#3D5B99] dark:text-[#A3C2E4]" aria-hidden="true" />
+                    <span>ساعت بازدید: <bdi className="font-bold text-[#1d2d4c] dark:text-white">{hours}</bdi></span>
+                  </div>
+                ) : null;
+              })()}
             </div>
 
             {/* Exhibition Title (Clean, without redundant type subtitle) */}
@@ -299,9 +305,9 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
               <span>ساعات کاری عادی نگارخانه</span>
               <span className="text-xs sm:text-sm bg-white dark:bg-stone-800 px-2.5 py-0.5 rounded-full text-stone-500">بین دو نمایشگاه</span>
             </div>
-            <div className="text-sm sm:text-base text-stone-500 dark:text-stone-400 flex items-center gap-1.5 font-mono">
+            <div className="text-sm sm:text-base text-stone-500 dark:text-stone-400 flex items-center gap-1.5 tabular-nums">
               <Clock className="w-4 h-4 text-[#3D5B99]" />
-              <span>{toPersianDigits(gallery.hoursFa || gallery.hours || '۱۶ الی ۲۰')}</span>
+              <span>{formatHoursFa(gallery.hoursFa || gallery.hours) || 'ساعت کاری ثبت نشده'}</span>
             </div>
           </div>
         )}

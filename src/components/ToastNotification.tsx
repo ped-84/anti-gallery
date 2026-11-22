@@ -130,11 +130,11 @@ export const ToastNotification: React.FC<ToastNotificationProps> = ({
 
         {/* Text Content: Title & Subtitle with wide, comfortable layout */}
         <div className="flex-1 min-w-0 pt-0.5 text-right">
-          <h4 className="font-black text-[#102a4e] dark:text-white text-sm sm:text-[15.5px] leading-snug tracking-tight">
+          <h4 className="font-black text-[#102a4e] dark:text-white text-sm sm:text-md leading-snug">
             {title}
           </h4>
           {subtitle && (
-            <p className="text-xs sm:text-[13.5px] text-stone-600 dark:text-stone-300 font-medium mt-1 leading-relaxed">
+            <p className="text-xs sm:text-xs text-stone-600 dark:text-stone-300 font-medium mt-1 leading-relaxed">
               {subtitle}
             </p>
           )}

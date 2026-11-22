@@ -171,7 +171,7 @@ export const ROAD_CONSTANTS = {
   PIN_GAP: 16,
   CARD_W: 162,
   CARD_X: { left: 12, right: 306 },
-  CARD_H: { roomy: 150, dense: 124 },
+  CARD_H: { roomy: 156, dense: 134 },
   PIN: { roomy: 40, dense: 36 },
   BUBBLE_H: 34,
   BUBBLE_W: { walking: 158, driving: 118 },
@@ -204,7 +204,7 @@ function placeRoadTrees(
   });
 
   const trees: RoadTree[] = [];
-  const SPACING = 44;
+  const SPACING = 40;
   let acc = SPACING / 2;
   let k = 0;
   for (let i = 1; i < curve.length; i++) {
@@ -219,8 +219,8 @@ function placeRoadTrees(
     const ny = (b.x - a.x) / seg;
     [1, -1].forEach((side) => {
       k++;
-      const r = 7 + ((k * 7) % 5); // ۷ تا ۱۱
-      const off = C.ROAD_HALF + 12 + r + ((k * 3) % 4);
+      const r = 11 + ((k * 7) % 5); // ۱۱ تا ۱۵
+      const off = C.ROAD_HALF + 10 + r + ((k * 3) % 5);
       const x = b.x + nx * off * side;
       const y = b.y + ny * off * side;
       if (x < r + 6 || x > C.MAP_W - r - 6 || y < r + 6 || y > mapH - r - 6) return;
@@ -229,7 +229,7 @@ function placeRoadTrees(
       // فاصله از جاده در همه‌ی نمونه‌ها (برای پیچ‌های تند)
       const nearRoad = curve.some((p) => Math.hypot(p.x - x, p.y - y) < C.ROAD_HALF + 6 + r);
       if (nearRoad) return;
-      if (trees.some((t) => Math.hypot(t.x - x, t.y - y) < t.r + r + 8)) return;
+      if (trees.some((t) => Math.hypot(t.x - x, t.y - y) < t.r + r + 4)) return;
       trees.push({ x: Math.round(x), y: Math.round(y), r, tone: (k % 3) as 0 | 1 | 2 });
     });
   }

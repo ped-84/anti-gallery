@@ -309,10 +309,14 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                   const tone = TREE_TONES[t.tone];
                   return (
                     <g key={i}>
-                      <ellipse cx={t.x + t.r * 0.35} cy={t.y + t.r * 0.55} rx={t.r * 1.05} ry={t.r * 0.8} fill="#1d2d4c" opacity={0.1} />
-                      <circle cx={t.x} cy={t.y} r={t.r} fill={tone.lo} />
-                      <circle cx={t.x - t.r * 0.12} cy={t.y - t.r * 0.14} r={t.r * 0.84} fill={tone.base} />
-                      <circle cx={t.x - t.r * 0.34} cy={t.y - t.r * 0.36} r={t.r * 0.34} fill={tone.hi} opacity={0.85} />
+                      {/* soft ground shadow */}
+                      <ellipse cx={t.x + t.r * 0.32} cy={t.y + t.r * 0.62} rx={t.r * 1.15} ry={t.r * 0.78} fill="#1d2d4c" opacity={0.11} />
+                      {/* canopy: three overlapping clay blobs, lit from the top-left */}
+                      <circle cx={t.x + t.r * 0.38} cy={t.y + t.r * 0.18} r={t.r * 0.72} fill={tone.lo} />
+                      <circle cx={t.x - t.r * 0.36} cy={t.y + t.r * 0.22} r={t.r * 0.68} fill={tone.lo} />
+                      <circle cx={t.x} cy={t.y - t.r * 0.12} r={t.r * 0.82} fill={tone.base} />
+                      <circle cx={t.x - t.r * 0.3} cy={t.y - t.r * 0.36} r={t.r * 0.32} fill={tone.hi} opacity={0.9} />
+                      <circle cx={t.x + t.r * 0.26} cy={t.y - t.r * 0.02} r={t.r * 0.14} fill={tone.hi} opacity={0.55} />
                     </g>
                   );
                 })}
