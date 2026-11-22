@@ -8,6 +8,26 @@ export function toPersianDigits(input: number | string | null | undefined): stri
   return str.replace(/[0-9]/g, (w) => persianDigits[parseInt(w, 10)]);
 }
 
+/**
+ * مسافت خوانا به فارسی: زیر یک کیلومتر به متر (گرد به ۱۰ متر)، بالاتر با یک رقم اعشار و ممیز فارسی.
+ * مثال: 0.14 → «۱۴۰ متر»، 1.25 → «۱٫۳ کیلومتر»
+ */
+export function formatDistanceFa(km: number | null | undefined): string {
+  if (km === null || km === undefined || !Number.isFinite(km)) return '';
+  if (km < 1) return `${toPersianDigits(Math.max(10, Math.round((km * 1000) / 10) * 10))} متر`;
+  const v = km >= 10 ? Math.round(km).toString() : km.toFixed(1).replace(/\.0$/, '');
+  return `${toPersianDigits(v).replace('.', '٫')} کیلومتر`;
+}
+
+/** مدت خوانا به فارسی: «۴۵ دقیقه»، «۱ ساعت و ۵ دقیقه»، «۲ ساعت» */
+export function formatDurationFa(totalMinutes: number): string {
+  const t = Math.max(0, Math.round(totalMinutes));
+  const h = Math.floor(t / 60);
+  const m = t % 60;
+  if (!h) return `${toPersianDigits(m)} دقیقه`;
+  return `${toPersianDigits(h)} ساعت${m ? ` و ${toPersianDigits(m)} دقیقه` : ''}`;
+}
+
 export type TrafficCondition = 'normal' | 'peak' | 'weekend';
 
 export interface TrafficConfig {

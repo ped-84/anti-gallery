@@ -45,6 +45,11 @@ export interface TspTwOptions {
   osrmDurationMatrixMin?: number[][];
   /** آیا گره اول (ایندکس 0) موقعیت فعلی کاربر یا نقطه شروع ثابت است؟ */
   fixStart?: boolean;
+  /**
+   * چند گره اول (به همان ترتیب ایندکس) باید ابتدای مسیر بیایند.
+   * مثلاً ۲ یعنی «موقعیت کاربر» و بعد «گالری شروع انتخابی کاربر». پیش‌فرض: fixStart ? 1 : 0
+   */
+  fixedPrefixLength?: number;
   /** ایندکس گره پایان ثابت (پیش‌فرض: -1 یعنی آزاد) */
   fixEndNode?: number;
   /** آیا مسیر باید به نقطه اول بازگردد؟ */
@@ -185,6 +190,23 @@ export function buildBaseTravelMinutesMatrix(
   return matrix;
 }
 
+/** سرعت پیاده‌روی شهری (کیلومتر بر ساعت)؛ با ماتریس آفلاین یکی است. */
+const WALK_KMH = 4.5;
+
+/**
+ * مسافت پیاده بین دو نقطه از روی مسافت خیابانی خودرو:
+ * مسیر خودرو بالادستِ مسیر پیاده است (یک‌طرفه‌ها)، پس با خط مستقیم × ۱٫۳۵ سقف می‌خورد.
+ */
+function walkingKm(roadKm: number, a: { lat: number; lng: number }, b: { lat: number; lng: number }): number {
+  const straight = haversineDistance(a.lat, a.lng, b.lat, b.lng);
+  if (!(roadKm > 0)) return straight * 1.3;
+  return Math.max(straight * 1.05, Math.min(roadKm, straight * 1.35));
+}
+
+function walkingMinutes(roadKm: number, a: { lat: number; lng: number }, b: { lat: number; lng: number }): number {
+  return Math.max(1, Math.round((walkingKm(roadKm, a, b) / WALK_KMH) * 60));
+}
+
 // ============================================================================
 // ۲. هسته اصلی حل‌کننده TSP-TW / OPTW (مقید به پنجره‌های زمانی چندگانه)
 // ============================================================================
@@ -223,6 +245,8 @@ export function solveTspWithTimeWindows(
   const mode = options.travelMode ?? 'walking';
   const fixStart = options.fixStart ?? false;
   const fixEndNode = options.fixEndNode ?? -1;
+  // گره‌های ابتدای مسیر که ترتیبشان ثابت است (موقعیت کاربر و/یا گالری شروع)
+  let prefixLen = Math.min(n, Math.max(options.fixedPrefixLength ?? (fixStart ? 1 : 0), 0));
   const isRoundTrip = options.isRoundTrip ?? false;
   const applyTraffic = options.applyTrafficModel ?? true;
   const maxComputeTimeMs = options.maxComputeTimeMs ?? 35;
@@ -356,6 +380,15 @@ export function solveTspWithTimeWindows(
     return { feasible: true, steps, totalPriority, totalCost, endTime: curr };
   };
 
+  // اگر یکی از گره‌های پیشوند در جای خودش شدنی نیست (مثلاً گالری شروع الان بسته است)،
+  // پیشوند همان‌جا کوتاه می‌شود تا بقیه‌ی مسیر از دست نرود.
+  for (let i = 0; i < prefixLen; i++) {
+    if (!evaluateSequence(Array.from({ length: i + 1 }, (_, k) => k)).feasible) {
+      prefixLen = i;
+      break;
+    }
+  }
+
   // ==========================================================================
   // فاز ۱: جستجوی دقیق Branch-and-Bound با Bitmask Memoization و EDF Ordering
   // ==========================================================================
@@ -392,7 +425,9 @@ export function solveTspWithTimeWindows(
       }
     }
 
-    const endNodeValid = fixEndNode === -1 || path.length < n || lastNode === fixEndNode;
+    // گره پایان ثابت یا باید آخرین گره باشد یا (اگر به آن نمی‌رسیم) اصلاً در مسیر نباشد
+    const endNodeValid =
+      fixEndNode === -1 || lastNode === fixEndNode || (mask & (1 << fixEndNode)) === 0;
     if (path.length > 0 && endNodeValid) {
       const roundTripExtra =
         isRoundTrip && path.length > 1 ? getTravelMin(lastNode, path[0], currTime) : 0;
@@ -410,6 +445,8 @@ export function solveTspWithTimeWindows(
     }
 
     if (path.length === n) return;
+    // بعد از گره پایان ثابت، ادامه دادن مسیر بی‌معنی است
+    if (fixEndNode !== -1 && lastNode === fixEndNode) return;
 
     // هرس تسلط حالت (State Dominance Pruning) برای N <= 20
     if (lastNode !== -1 && n <= 20) {
@@ -434,7 +471,9 @@ export function solveTspWithTimeWindows(
     for (let i = 0; i < n; i++) {
       const v = edfOrder[i];
       if ((mask & (1 << v)) !== 0) continue;
-      if (fixStart && path.length === 0 && v !== 0) continue;
+      // پیشوند ثابت: تا وقتی کامل نشده، فقط گره بعدی همان پیشوند مجاز است
+      if (path.length < prefixLen && v !== path.length) continue;
+      if (path.length >= prefixLen && v < prefixLen) continue;
 
       const ev = evaluateTransition(currTime, lastNode, v);
       if (ev.feasible) {
@@ -477,13 +516,16 @@ export function solveTspWithTimeWindows(
     const unvisited = new Set<number>(Array.from({ length: n }, (_, i) => i));
     const route: number[] = [];
 
-    if (fixStart && unvisited.has(0)) {
-      const ev0 = evaluateTransition(startMin, -1, 0);
-      if (ev0.feasible) {
-        route.push(0);
-        unvisited.delete(0);
-      }
+    // پیشوند ثابت را به ترتیب می‌گذاریم (تا جایی که از نظر زمانی شدنی است)
+    for (let i = 0; i < prefixLen; i++) {
+      if (!evaluateSequence([...route, i]).feasible) break;
+      route.push(i);
+      unvisited.delete(i);
     }
+    const placedPrefix = route.length;
+    // گره پایان ثابت جدا نگه داشته می‌شود و در آخر اضافه می‌شود
+    const holdEnd = fixEndNode >= placedPrefix && unvisited.has(fixEndNode);
+    if (holdEnd) unvisited.delete(fixEndNode);
 
     let inserted = true;
     while (inserted && unvisited.size > 0) {
@@ -494,8 +536,7 @@ export function solveTspWithTimeWindows(
       let bestInsertionScore = Infinity;
 
       for (const cand of unvisited) {
-        const minPos = fixStart && route.length > 0 && route[0] === 0 ? 1 : 0;
-        for (let pos = minPos; pos <= route.length; pos++) {
+        for (let pos = placedPrefix; pos <= route.length; pos++) {
           const trial = [...route.slice(0, pos), cand, ...route.slice(pos)];
           const ev = evaluateSequence(trial);
           if (ev.feasible) {
@@ -518,6 +559,13 @@ export function solveTspWithTimeWindows(
       }
     }
 
+    // گره پایان ثابت در انتها (اگر شدنی باشد)
+    let endPlaced = false;
+    if (holdEnd && evaluateSequence([...route, fixEndNode]).feasible) {
+      route.push(fixEndNode);
+      endPlaced = true;
+    }
+
     // بهبود محلی با Or-Opt
     let improved = true;
     let locIter = 0;
@@ -526,10 +574,11 @@ export function solveTspWithTimeWindows(
     while (improved && locIter < 30 && route.length > 2) {
       improved = false;
       locIter++;
-      const startIndex = fixStart && route[0] === 0 ? 1 : 0;
+      const startIndex = placedPrefix;
+      const stopIndex = endPlaced ? route.length - 1 : route.length;
 
-      for (let i = startIndex; i < route.length; i++) {
-        for (let j = startIndex; j < route.length; j++) {
+      for (let i = startIndex; i < stopIndex; i++) {
+        for (let j = startIndex; j < stopIndex; j++) {
           if (i === j) continue;
           const trial = route.slice();
           const [moved] = trial.splice(i, 1);
@@ -719,11 +768,15 @@ export async function optimizeGalleryRoute(
   let workingGalleries = [...galleries];
 
   // 1. Position startGallery at the beginning
+  let startGalleryFound = false;
   if (options.startGalleryId) {
     const sIdx = workingGalleries.findIndex((g) => g.id === options.startGalleryId);
-    if (sIdx > 0) {
-      const [startG] = workingGalleries.splice(sIdx, 1);
-      workingGalleries.unshift(startG);
+    if (sIdx >= 0) {
+      startGalleryFound = true;
+      if (sIdx > 0) {
+        const [startG] = workingGalleries.splice(sIdx, 1);
+        workingGalleries.unshift(startG);
+      }
     }
   }
 
@@ -754,8 +807,15 @@ export async function optimizeGalleryRoute(
     });
   });
 
-  const hasFixedStart = Boolean(options.customStart || options.startGalleryId);
-  const hasFixedEnd = Boolean(options.endGalleryId && !isRoundTrip);
+  const hasFixedStart = Boolean(options.customStart || startGalleryFound);
+  // موقعیت کاربر (اگر هست) و بعد گالری شروع انتخابی کاربر، هر دو ثابت در ابتدای مسیر
+  const fixedPrefixLength = (options.customStart ? 1 : 0) + (startGalleryFound ? 1 : 0);
+  const hasFixedEnd = Boolean(
+    options.endGalleryId &&
+      !isRoundTrip &&
+      options.endGalleryId !== options.startGalleryId &&
+      workingGalleries.some((g) => g.id === options.endGalleryId)
+  );
   const fixEndNode = hasFixedEnd ? allPoints.length - 1 : -1;
 
   // Build GalleryNode array for TSP-TW
@@ -783,7 +843,7 @@ export async function optimizeGalleryRoute(
     if (!isOffline) {
       const coordsStr = allPoints.map((p) => `${p.lng},${p.lat}`).join(';');
       const osrmMode = mode === 'walking' ? 'walking' : 'driving';
-      const tableUrl = `https://router.project-osrm.org/table/v1/${osrmMode}/${coordsStr}?annotations=duration`;
+      const tableUrl = `https://router.project-osrm.org/table/v1/${osrmMode}/${coordsStr}?annotations=duration,distance`;
 
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 1500);
@@ -793,8 +853,19 @@ export async function optimizeGalleryRoute(
       if (res.ok) {
         const data = await res.json();
         if (data.code === 'Ok' && Array.isArray(data.durations)) {
-          osrmDurationMatrixMin = data.durations.map((row: number[]) =>
-            row.map((sec: number) => Math.max(1, Math.round(sec / 60)))
+          const fallback = buildBaseTravelMinutesMatrix(allPoints, mode);
+          osrmDurationMatrixMin = data.durations.map((row: (number | null)[], i: number) =>
+            row.map((sec: number | null, j: number) => {
+              if (i === j) return 0;
+              // سرور عمومی OSRM فقط پروفایل خودرو دارد؛ برای پیاده زمان را از مسافت می‌سازیم
+              if (mode === 'walking') {
+                const meters = data.distances?.[i]?.[j];
+                if (typeof meters !== 'number') return fallback[i][j];
+                return walkingMinutes(meters / 1000, allPoints[i], allPoints[j]);
+              }
+              // جفت نقطه‌ی بدون مسیر (null) نباید «۱ دقیقه» حساب شود
+              return typeof sec === 'number' ? Math.max(1, Math.round(sec / 60)) : fallback[i][j];
+            })
           );
         }
       }
@@ -809,6 +880,7 @@ export async function optimizeGalleryRoute(
     travelMode: mode,
     osrmDurationMatrixMin,
     fixStart: hasFixedStart,
+    fixedPrefixLength,
     fixEndNode,
     isRoundTrip,
     applyTrafficModel: mode === 'driving',
@@ -912,7 +984,7 @@ export async function calculateFixedRoute(
     }
     const coordsStr = coords.join(';');
     const osrmMode = mode === 'walking' ? 'walking' : 'driving';
-    const routeUrl = `https://router.project-osrm.org/route/v1/${osrmMode}/${coordsStr}?overview=full&geometries=geojson&steps=true`;
+    const routeUrl = `https://router.project-osrm.org/route/v1/${osrmMode}/${coordsStr}?overview=full&geometries=geojson&steps=false`;
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 1500);
@@ -934,13 +1006,21 @@ export async function calculateFixedRoute(
             ? allPoints[0]?.name || 'نقطه آغاز'
             : allPoints[nextIdx]?.name || `توقف ${idx + 2}`;
 
-          const baseDurMin = Math.max(1, Math.round((leg.duration || 0) / 60));
+          const a = allPoints[idx];
+          const b = isRoundTrip && idx === allPoints.length - 1 ? allPoints[0] : allPoints[nextIdx];
+          const roadKm = (leg.distance || 0) / 1000;
+          // پیاده: مسافت خیابانی سقف دارد (پیاده محدود به یک‌طرفه‌ها نیست) و زمان از مسافت ساخته می‌شود
+          const legKm = mode === 'walking' && a && b ? walkingKm(roadKm, a, b) : roadKm;
+          const baseDurMin =
+            mode === 'walking' && a && b
+              ? walkingMinutes(roadKm, a, b)
+              : Math.max(1, Math.round((leg.duration || 0) / 60));
           const durWithTrafficMin = Math.max(1, Math.round(baseDurMin * trafficMultiplier));
 
           return {
             fromName: from,
             toName: to,
-            distanceKm: parseFloat(((leg.distance || 0) / 1000).toFixed(2)),
+            distanceKm: parseFloat(legKm.toFixed(2)),
             durationMin: baseDurMin,
             durationWithTrafficMin: durWithTrafficMin,
             summary: leg.summary || '',
@@ -948,8 +1028,14 @@ export async function calculateFixedRoute(
           };
         });
 
-        const totalDistKm = parseFloat(((route.distance || 0) / 1000).toFixed(2));
-        const totalDurationMin = Math.max(1, Math.round((route.duration || 0) / 60));
+        const totalDistKm =
+          mode === 'walking'
+            ? parseFloat(legs.reduce((acc, l) => acc + l.distanceKm, 0).toFixed(2))
+            : parseFloat(((route.distance || 0) / 1000).toFixed(2));
+        const totalDurationMin =
+          mode === 'walking'
+            ? Math.max(1, legs.reduce((acc, l) => acc + l.durationMin, 0))
+            : Math.max(1, Math.round((route.duration || 0) / 60));
         const totalDurationWithTrafficMin = Math.max(1, Math.round(totalDurationMin * trafficMultiplier));
 
         return {

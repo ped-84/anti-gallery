@@ -1,5 +1,12 @@
 import { Gallery } from '../types/gallery';
-import { toPersianDigits, getGalleryDisplayName, parsePersianDateToScore, isThisWeekOpening } from './persianUtils';
+import {
+  toPersianDigits,
+  getGalleryDisplayName,
+  parsePersianDateToScore,
+  isThisWeekOpening,
+  formatDistanceFa,
+  formatDurationFa
+} from './persianUtils';
 
 export interface RoadRoute {
   id: string;
@@ -42,10 +49,21 @@ export interface RoadLeg {
   y: number;
   rightSide: boolean;
   x: number;
+  /** ابعاد برچسب فاصله روی بوم */
+  w: number;
+  h: number;
   km: number | null;
   minutes: number | null;
   known: boolean;
   text: string;
+}
+
+/** درخت‌های تزئینی کنار جاده (ثابت، بدون انیمیشن) */
+export interface RoadTree {
+  x: number;
+  y: number;
+  r: number;
+  tone: 0 | 1 | 2;
 }
 
 export interface RoadLayoutResult {
@@ -56,6 +74,7 @@ export interface RoadLayoutResult {
   pts: Array<{ x: number; y: number }>;
   stops: RoadStop[];
   legs: RoadLeg[];
+  trees: RoadTree[];
   stats: {
     stops: string;
     km: string;
@@ -138,24 +157,84 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
 }
 
 /* ---- Geometry Constants ---- */
+// بوم ۴۸۰ واحدی (به‌جای ۵۶۰) تا روی گوشی با مقیاس بزرگ‌تری نمایش داده شود و متن‌ها ریز نشوند.
 export const ROAD_CONSTANTS = {
-  MAP_W: 560,
-  PAD_TOP: 110,
-  PAD_BOTTOM: 85,
-  MAX_H: 900,
-  MAX_SPACING: 170,
-  DENSE_BELOW: 150,
-  LANE_L: 245,
-  LANE_R: 315,
+  MAP_W: 480,
+  PAD_TOP: 116,
+  PAD_BOTTOM: 90,
+  MAX_H: 960,
+  MAX_SPACING: 178,
+  DENSE_BELOW: 158,
+  LANE_L: 210,
+  LANE_R: 270,
   ROAD_HALF: 27,
   PIN_GAP: 16,
-  CARD_W: 168,
-  CARD_H: { roomy: 136, dense: 114 },
+  CARD_W: 162,
+  CARD_X: { left: 12, right: 306 },
+  CARD_H: { roomy: 150, dense: 124 },
   PIN: { roomy: 40, dense: 36 },
-  BUBBLE_H: 28,
-  BUBBLE_GAP: 24,
+  BUBBLE_H: 34,
+  BUBBLE_W: { walking: 158, driving: 118 },
+  BUBBLE_GAP: 16,
   CAR_OVERRUN: 24
 };
+
+/**
+ * درخت‌های تزئینی دو طرف جاده: در فاصله‌های منظم روی منحنی، فقط جاهایی که با کارت، پین،
+ * برچسب فاصله یا لبه‌ی بوم برخورد ندارند. قطعی (بدون تصادف) تا با هر رندر جابه‌جا نشوند.
+ */
+function placeRoadTrees(
+  samples: Array<{ x: number; y: number }>,
+  stops: RoadStop[],
+  legs: RoadLeg[],
+  mapH: number
+): RoadTree[] {
+  const C = ROAD_CONSTANTS;
+  const curve = samples;
+  if (curve.length < 3) return [];
+
+  const blocks: Array<{ x1: number; y1: number; x2: number; y2: number }> = [];
+  stops.forEach((s) => {
+    blocks.push({ x1: s.card.x - 8, y1: s.card.y - s.card.h / 2 - 8, x2: s.card.x + s.card.w + 8, y2: s.card.y + s.card.h / 2 + 8 });
+    blocks.push({ x1: s.pin.x - 8, y1: s.pin.y - 8, x2: s.pin.x + s.pin.size + 8, y2: s.pin.y + s.pin.size + 12 });
+  });
+  legs.forEach((l) => {
+    const x1 = l.rightSide ? l.x : l.x - l.w;
+    blocks.push({ x1: x1 - 8, y1: l.y - l.h / 2 - 8, x2: x1 + l.w + 8, y2: l.y + l.h / 2 + 8 });
+  });
+
+  const trees: RoadTree[] = [];
+  const SPACING = 44;
+  let acc = SPACING / 2;
+  let k = 0;
+  for (let i = 1; i < curve.length; i++) {
+    const a = curve[i - 1];
+    const b = curve[i];
+    const seg = Math.hypot(b.x - a.x, b.y - a.y);
+    if (seg < 0.001) continue;
+    acc += seg;
+    if (acc < SPACING) continue;
+    acc = 0;
+    const nx = -(b.y - a.y) / seg;
+    const ny = (b.x - a.x) / seg;
+    [1, -1].forEach((side) => {
+      k++;
+      const r = 7 + ((k * 7) % 5); // ۷ تا ۱۱
+      const off = C.ROAD_HALF + 12 + r + ((k * 3) % 4);
+      const x = b.x + nx * off * side;
+      const y = b.y + ny * off * side;
+      if (x < r + 6 || x > C.MAP_W - r - 6 || y < r + 6 || y > mapH - r - 6) return;
+      const hit = blocks.some((bl) => x + r > bl.x1 && x - r < bl.x2 && y + r > bl.y1 && y - r < bl.y2);
+      if (hit) return;
+      // فاصله از جاده در همه‌ی نمونه‌ها (برای پیچ‌های تند)
+      const nearRoad = curve.some((p) => Math.hypot(p.x - x, p.y - y) < C.ROAD_HALF + 6 + r);
+      if (nearRoad) return;
+      if (trees.some((t) => Math.hypot(t.x - x, t.y - y) < t.r + r + 8)) return;
+      trees.push({ x: Math.round(x), y: Math.round(y), r, tone: (k % 3) as 0 | 1 | 2 });
+    });
+  }
+  return trees;
+}
 
 /**
  * Turns route & galleries into an exact layout for the winding road map.
@@ -184,6 +263,7 @@ export function computeRoadLayout(
       pts: resolvedGalleries.map(() => ({ x: C.LANE_L, y: C.PAD_TOP })),
       stops: [],
       legs: [],
+      trees: [],
       stats: {
         stops: `${toPersianDigits(n)} گالری`,
         km: '۰ کیلومتر',
@@ -244,6 +324,13 @@ export function computeRoadLayout(
     }
   }
 
+  // منحنی مرتب جاده (با تکه‌ی صاف بالا و پایین) برای چیدن درخت‌ها
+  const curveSamples = [
+    { x: pts[0].x, y: -C.CAR_OVERRUN },
+    ...samples,
+    { x: pts[n - 1].x, y: mapH + C.CAR_OVERRUN }
+  ];
+
   pts.forEach((p) => samples.push({ x: p.x, y: p.y }));
   if (pts.length > 0) {
     samples.push({ x: pts[0].x, y: 0 });
@@ -257,7 +344,7 @@ export function computeRoadLayout(
     const left = i % 2 === 0;
     const cardH = dense ? C.CARD_H.dense : C.CARD_H.roomy;
     const cardW = C.CARD_W;
-    const cardX = left ? 22 : 370;
+    const cardX = left ? C.CARD_X.left : C.CARD_X.right;
     const cardY = p.y;
     const cardTop = cardY - cardH / 2;
 
@@ -317,6 +404,7 @@ export function computeRoadLayout(
     const midY = Math.round((pts[i].y + pts[i + 1].y) / 2) - 20;
     const y = Math.round(Math.min(midY, targetMaxY));
     const rightSide = (i + 1) % 2 === 1;
+    const bw = travelMode === 'walking' ? C.BUBBLE_W.walking : C.BUBBLE_W.driving;
     let edge = rightSide ? -1e9 : 1e9;
 
     samples.forEach((p) => {
@@ -329,20 +417,24 @@ export function computeRoadLayout(
     const km = lg ? lg[0] : null;
     const minutes = lg ? lg[1] : null;
 
+    let x = Math.round(rightSide ? edge + C.BUBBLE_GAP : edge - C.BUBBLE_GAP);
+    // برچسب نباید از لبه‌ی بوم بیرون بزند
+    x = rightSide ? Math.min(x, C.MAP_W - 8 - bw) : Math.max(x, 8 + bw);
+
     return {
       y,
       rightSide,
-      x: Math.round(rightSide ? edge + C.BUBBLE_GAP : edge - C.BUBBLE_GAP),
+      x,
+      w: bw,
+      h: C.BUBBLE_H,
       km,
       minutes,
       known: Boolean(lg),
       text: lg
-        ? dense
-          ? `${toPersianDigits(km!)} کیلومتر`
-          : travelMode === 'walking'
-            ? `${toPersianDigits(km!)} کیلومتر · ~${toPersianDigits(minutes!)} دقیقه پیاده`
-            : `${toPersianDigits(km!)} کیلومتر · ~${toPersianDigits(minutes!)} دقیقه خودرو`
-        : '[فاصله]'
+        ? travelMode === 'walking'
+          ? `${toPersianDigits(minutes!)} دقیقه، ${formatDistanceFa(km!)}`
+          : formatDistanceFa(km!)
+        : 'فاصله نامعلوم'
     };
   });
 
@@ -361,9 +453,9 @@ export function computeRoadLayout(
   });
 
   const totalTime = n * 15 + minsTotal;
-  const h = Math.floor(totalTime / 60);
-  const m = totalTime % 60;
-  const timeText = (h ? `${toPersianDigits(h)} ساعت${m ? ' و ' : ''}` : '') + (m ? `${toPersianDigits(m)} دقیقه` : '');
+  const timeText = formatDurationFa(totalTime);
+
+  const trees = placeRoadTrees(curveSamples, stops, legs, mapH);
 
   return {
     n,
@@ -373,18 +465,15 @@ export function computeRoadLayout(
     pts,
     stops,
     legs,
+    trees,
     stats: {
       stops: `${toPersianDigits(n)} گالری`,
       km: knownAll
         ? travelMode === 'walking'
-          ? `${toPersianDigits(kmTotal.toFixed(2))} کیلومتر پیاده‌روی`
-          : `${toPersianDigits(kmTotal.toFixed(2))} کیلومتر با خودرو`
-        : '[مسافت]',
-      time: knownAll
-        ? travelMode === 'walking'
-          ? `حدود ${timeText} (پیاده)`
-          : `حدود ${timeText} (سواره)`
-        : '[زمان کل]'
+          ? `${formatDistanceFa(kmTotal)} پیاده‌روی`
+          : `${formatDistanceFa(kmTotal)} رانندگی`
+        : 'مسافت نامعلوم',
+      time: knownAll ? `حدود ${timeText} با بازدیدها` : 'زمان نامعلوم'
     },
     carSeconds: Math.max(6, (n + 1) * (travelMode === 'walking' ? 3.2 : 2.6))
   };

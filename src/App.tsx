@@ -765,7 +765,7 @@ export default function App() {
         isRoundTrip,
         trafficCondition,
         customStart,
-        startGalleryId: customStart ? null : startId,
+        startGalleryId: startId,
         endGalleryId: endId,
         startTime: startTimeMin,
         dwellMinutes: savedDuration
