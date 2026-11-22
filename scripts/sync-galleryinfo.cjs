@@ -10,6 +10,12 @@ const PERSISTENT_EXHIBITIONS = path.join(DATA_DIR, 'exhibitions_fa.json');
 const SRC_GALLERIES = path.join(ROOT_DIR, 'src', 'data', 'galleries.json');
 const SRC_EXHIBITIONS = path.join(ROOT_DIR, 'src', 'data', 'exhibitions_fa.json');
 
+function writeJsonAtomic(filePath, data) {
+  const tmpPath = `${filePath}.${process.pid}.${Date.now()}.tmp`;
+  fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf-8');
+  fs.renameSync(tmpPath, filePath);
+}
+
 // Helper to make POST requests to GalleryInfo ASP.NET endpoint (count <= 18 to avoid IIS TLS RST / truncated JSON)
 function fetchEventsPage(skip, count = 18) {
   return new Promise((resolve, reject) => {
@@ -417,15 +423,15 @@ async function main() {
     fs.mkdirSync(DATA_DIR, { recursive: true });
   }
 
-  // Save to persistent database
-  fs.writeFileSync(PERSISTENT_GALLERIES, JSON.stringify(galleries, null, 2), 'utf-8');
-  fs.writeFileSync(PERSISTENT_EXHIBITIONS, JSON.stringify(allExhibitionsFa, null, 2), 'utf-8');
+  // Save to persistent database (temp file + rename, so a crash never leaves a half-written file)
+  writeJsonAtomic(PERSISTENT_GALLERIES, galleries);
+  writeJsonAtomic(PERSISTENT_EXHIBITIONS, allExhibitionsFa);
 
   // Also sync to src/data if it exists (for repo consistency)
   const srcDataDir = path.join(ROOT_DIR, 'src', 'data');
   if (fs.existsSync(srcDataDir)) {
-    fs.writeFileSync(SRC_GALLERIES, JSON.stringify(galleries, null, 2), 'utf-8');
-    fs.writeFileSync(SRC_EXHIBITIONS, JSON.stringify(allExhibitionsFa, null, 2), 'utf-8');
+    writeJsonAtomic(SRC_GALLERIES, galleries);
+    writeJsonAtomic(SRC_EXHIBITIONS, allExhibitionsFa);
   }
 
   console.log(`--- Sync Completed Successfully! ---`);

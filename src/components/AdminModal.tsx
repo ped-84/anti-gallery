@@ -159,6 +159,14 @@ export const AdminModal: React.FC<AdminModalProps> = ({
     setIsCreatingNew(false);
   };
 
+  // Admin sessions expire on the server (12h). On 401, drop the token and show the login form again.
+  const sessionExpired = (res: Response): boolean => {
+    if (res.status !== 401) return false;
+    handleLogout();
+    setLoginError('نشست مدیریت منقضی شد. لطفاً دوباره وارد شوید.');
+    return true;
+  };
+
   // Open Edit Form
   const startEdit = (gallery: Gallery) => {
     setEditingGallery(gallery);
@@ -232,6 +240,10 @@ export const AdminModal: React.FC<AdminModalProps> = ({
           },
           body: JSON.stringify({ filename: file.name, base64Data })
         });
+        if (sessionExpired(res)) {
+          setIsUploading(false);
+          return;
+        }
         const data = await res.json();
         if (res.ok && data.url) {
           setFormData((prev) => ({ ...prev, posterUrl: data.url }));
@@ -297,6 +309,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
           },
           body: JSON.stringify(payload)
         });
+        if (sessionExpired(res)) return;
         const created = await res.json();
         if (res.ok) {
           const updated = [created, ...galleries];
@@ -315,6 +328,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
           },
           body: JSON.stringify(payload)
         });
+        if (sessionExpired(res)) return;
         const updatedItem = await res.json();
         if (res.ok) {
           const updated = galleries.map((g) => (g.id === editingGallery.id ? updatedItem : g));
@@ -340,6 +354,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
         method: 'DELETE',
         headers: { Authorization: `Bearer ${authToken}` }
       });
+      if (sessionExpired(res)) return;
       const data = await res.json();
       if (res.ok) {
         const updated = galleries.filter((g) => g.id !== id);
