@@ -6,7 +6,8 @@ import {
   TrafficCondition,
   getGalleryDisplayName,
   formatGalleryAddress,
-  TEHRAN_START_HUBS
+  TEHRAN_START_HUBS,
+  formatDistanceFa
 } from '../utils/persianUtils';
 import { ClayDropdown, DropdownOption } from './ClayDropdown';
 import {
@@ -193,7 +194,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
       )
       .join('\n\n');
 
-    const textToCopy = `برنامه بازدید و تور بهینه گالری‌های هنری (${toPersianDigits(routeResult.orderedGalleries.length)} گالری)\n${originText}مسافت کل: ${toPersianDigits(routeResult.totalDistanceKm)} کیلومتر | زمان میانگین جابجایی: ~${toPersianDigits(routeResult.totalDurationMin)} دقیقه\n\n${summary}\n\nلینک مستقیم گوگل مپس: ${buildGoogleMapsUrl(routeResult.orderedGalleries, routeResult.originPoint, mode)}`;
+    const textToCopy = `برنامه بازدید و تور بهینه گالری‌های هنری (${toPersianDigits(routeResult.orderedGalleries.length)} گالری)\n${originText}مسافت کل: ${formatDistanceFa(routeResult.totalDistanceKm)}، زمان جابه‌جایی حدود ${toPersianDigits(routeResult.totalDurationMin)} دقیقه\n\n${summary}\n\nلینک مستقیم گوگل مپس: ${buildGoogleMapsUrl(routeResult.orderedGalleries, routeResult.originPoint, mode)}`;
 
     navigator.clipboard.writeText(textToCopy);
     setCopied(true);
@@ -515,7 +516,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
             {/* Secondary Transit Metrics */}
             <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1.5 shrink-0">
               <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-[#f0f4fa] dark:bg-stone-800 text-[#1d2d4c] dark:text-stone-200 border border-[#E1E1E1]/80 dark:border-stone-700/80 tabular-nums">
-                {toPersianDigits(routeResult.totalDistanceKm)} کیلومتر مسافت
+                {formatDistanceFa(routeResult.totalDistanceKm)} مسافت
               </span>
               <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-[#f0f4fa] dark:bg-stone-800 text-[#1d2d4c] dark:text-stone-200 border border-[#E1E1E1]/80 dark:border-stone-700/80 tabular-nums">
                 ~{toPersianDigits(routeResult.totalDurationMin)} دقیقه {mode === 'walking' ? 'پیاده' : 'رانندگی'}
@@ -696,12 +697,11 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                         ) : (
                           <Car className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                         )}
-                        <span className="font-bold text-stone-800 dark:text-stone-200">
-                          {toPersianDigits(routeResult.legs[0].distanceKm)} کیلومتر
-                        </span>
-                        <span className="text-stone-300 dark:text-stone-600">·</span>
                         <span className="font-bold text-[#1d2d4c] dark:text-white">
-                          ~{toPersianDigits(routeResult.legs[0].durationWithTrafficMin || routeResult.legs[0].durationMin)} دقیقه تا اولین نگارخانه
+                          حدود {toPersianDigits(routeResult.legs[0].durationWithTrafficMin || routeResult.legs[0].durationMin)} دقیقه تا اولین نگارخانه
+                        </span>
+                        <span className="font-medium text-stone-500 dark:text-stone-400">
+                          ({formatDistanceFa(routeResult.legs[0].distanceKm)})
                         </span>
                       </div>
                     </div>
@@ -936,12 +936,11 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                           ) : (
                             <Car className="w-3.5 h-3.5 text-[#3D5B99]" />
                           )}
-                          <span className="font-bold text-stone-800 dark:text-stone-200">
-                            {toPersianDigits(leg.distanceKm)} کیلومتر
-                          </span>
-                          <span className="text-stone-300 dark:text-stone-600">·</span>
                           <span className="font-bold text-[#1d2d4c] dark:text-white">
-                            ~{toPersianDigits(leg.durationWithTrafficMin || leg.durationMin)} دقیقه {isLast && routeResult.isRoundTrip ? 'بازگشت به مبدأ' : 'جابجایی'}
+                            حدود {toPersianDigits(leg.durationWithTrafficMin || leg.durationMin)} دقیقه {isLast && routeResult.isRoundTrip ? 'بازگشت به مبدأ' : mode === 'walking' ? 'پیاده' : 'رانندگی'}
+                          </span>
+                          <span className="font-medium text-stone-500 dark:text-stone-400">
+                            ({formatDistanceFa(leg.distanceKm)})
                           </span>
                         </div>
                       </div>
