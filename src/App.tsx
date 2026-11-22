@@ -1706,7 +1706,7 @@ export default function App() {
               />
               <span className="text-xs sm:text-sm font-bold text-[#1c2944] dark:text-stone-200 truncate">
                 {selectedGalleries.length === 0
-                  ? `انتخاب حداقل ${toPersianDigits(minRequired)} گالری`
+                  ? 'گشت هنوز خالی است'
                   : `${toPersianDigits(selectedGalleries.length)} گالری در مسیر`}
               </span>
             </button>
@@ -1717,6 +1717,7 @@ export default function App() {
                   type="button"
                   onClick={handleClearAll}
                   title="پاک کردن انتخاب‌ها"
+                  aria-label="پاک کردن همه‌ی گالری‌های انتخاب‌شده"
                   className="clay-button clay-base p-2 text-stone-500 hover:text-rose-500 rounded-xl transition-all active:scale-95 cursor-pointer shrink-0"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
@@ -1740,7 +1741,7 @@ export default function App() {
                 />
                 <span>
                   {isOptimizing
-                    ? 'محاسبه مسیر...'
+                    ? 'در حال مسیریابی…'
                     : canOptimize
                     ? `مسیریابی بهینه (${toPersianDigits(selectedGalleries.length)})`
                     : `حداقل ${toPersianDigits(minRequired)} گالری`}
