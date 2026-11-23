@@ -395,7 +395,7 @@ body {
 /* ========================================================
    Fateme Faramarzian — display face for exhibition titles only.
    Single weight (400), Persian glyphs only; Latin falls back to Shabnam.
-   NOTE: commercial font (FontIRAN) — needs a web licence for artgasht.com.
+   Free font (kafice.ir/product/font31, «رایگان»).
    ======================================================== */
 @font-face {
   font-family: 'Fateme';

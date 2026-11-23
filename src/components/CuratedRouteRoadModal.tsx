@@ -94,8 +94,10 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
     const updateScale = () => {
       const vw = window.innerWidth;
       const pad = vw < 640 ? 20 : 32;
-      const available = Math.min(vw - pad, MAP_W);
-      const s = Math.min(1, Math.max(0.55, available / MAP_W));
+      // نقشه هم‌عرض کارت بالا و پایین (حداکثر ۵۲۰px) می‌شود؛ روی دسکتاپ کمی بزرگ‌تر از ۴۸۰ هم مقیاس می‌گیرد
+      const FRAME_W = 520;
+      const available = Math.min(vw - pad, FRAME_W);
+      const s = Math.min(FRAME_W / MAP_W, Math.max(0.55, available / MAP_W));
       setMapScale(s);
     };
 

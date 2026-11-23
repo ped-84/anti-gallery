@@ -156,7 +156,7 @@
 .ag-map {
   position: relative;
   width: 100%;
-  max-width: 480px;
+  max-width: none;
   margin: 0 auto;
   flex-shrink: 0;
   overflow: hidden;
@@ -204,10 +204,10 @@
   stroke-linejoin: round;
 }
 
-.ag-road--rim     { stroke: var(--road-rim, #fff); stroke-width: 54px; }
-.ag-road--curb    { stroke: var(--road-curb); stroke-width: 48px; }
-.ag-road--asphalt { stroke: var(--road); stroke-width: 36px; }
-.ag-road--sheen   { stroke: #fff; stroke-width: 24px; opacity: .10; }
+.ag-road--rim     { stroke: var(--road-rim, #fff); stroke-width: 60px; }
+.ag-road--curb    { stroke: var(--road-curb); stroke-width: 54px; }
+.ag-road--asphalt { stroke: var(--road); stroke-width: 42px; }
+.ag-road--sheen   { stroke: #fff; stroke-width: 28px; opacity: .10; }
 .ag-road--dash    { stroke: #fff; stroke-width: 3px; stroke-dasharray: 14 12; opacity: .95; animation: ag-dash 1.6s linear infinite; }
 
 /* Pins (Pointer events none as requested) */
