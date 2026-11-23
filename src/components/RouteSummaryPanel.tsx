@@ -743,7 +743,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
 
                           {gallery.activeExhibition && (
                             <div className="min-w-0">
-                              <div className="font-exhibit text-md text-[#c2410c] dark:text-[#ff8a3d] leading-snug truncate">
+                              <div className="font-exhibit text-lg text-[#c2410c] dark:text-[#ff8a3d] leading-snug truncate">
                                 {gallery.activeExhibition.title}
                               </div>
                               {gallery.activeExhibition.artist && (
