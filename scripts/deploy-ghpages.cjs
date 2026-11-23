@@ -9,6 +9,26 @@ function run(cmd, cwd) {
 
 const distDir = path.join(process.cwd(), 'dist');
 
+// Keep the frozen copies (e.g. v1.168) that live next to the preview on gh-pages.
+// This script force-pushes a fresh gh-pages, which would otherwise delete them.
+const KEEP_DIRS = ['v1.168'];
+{
+  const tmp = path.join(require('os').tmpdir(), 'ag-ghpages-keep');
+  fs.rmSync(tmp, { recursive: true, force: true });
+  try {
+    execSync(`git clone --depth 1 --branch gh-pages https://github.com/ped-84/anti-gallery.git "${tmp}"`, { stdio: 'inherit' });
+    for (const d of KEEP_DIRS) {
+      const src = path.join(tmp, d);
+      if (fs.existsSync(src)) {
+        fs.cpSync(src, path.join(distDir, d), { recursive: true });
+        console.log('Preserved frozen copy:', d);
+      }
+    }
+  } catch (e) {
+    console.warn('Could not read existing gh-pages to preserve frozen copies:', e.message);
+  }
+}
+
 // Ensure dist/.git is fresh to avoid dirty index or no-op commit errors
 const gitDir = path.join(distDir, '.git');
 if (fs.existsSync(gitDir)) {
