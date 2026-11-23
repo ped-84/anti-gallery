@@ -427,12 +427,12 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                   type="button"
                   onClick={() => onSelectGalleryDetails(s.gallery)}
                   aria-label={`مشاهده مشخصات ${s.name} - نمایشگاه ${s.show}`}
-                  className="ag-card"
+                  className={`ag-card${s.isStart || s.isEnd ? ' ag-card--tagged' : ''}`}
                   style={{
                     left: `${s.card.x}px`,
                     top: `${s.card.y}px`,
                     width: `${s.card.w}px`,
-                    height: `${s.card.h}px`
+                    minHeight: `${s.card.h}px`
                   }}
                 >
                   {s.isStart && (
