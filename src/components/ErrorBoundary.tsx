@@ -67,7 +67,7 @@ export class ErrorBoundary extends Component<Props, State> {
               <button
                 type="button"
                 onClick={this.handleReset}
-                className="clay-button clay-orange text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-md hover:brightness-105 active:scale-95 transition-all"
+                className="clay-button clay-orange text-white px-4 py-2.5 rounded-full text-xs font-bold flex items-center justify-center gap-2 shadow-md hover:brightness-105 active:scale-95 transition-all"
               >
                 <RotateCcw className="w-4 h-4" />
                 <span>بارگذاری مجدد برنامه</span>
@@ -76,7 +76,7 @@ export class ErrorBoundary extends Component<Props, State> {
               <button
                 type="button"
                 onClick={this.handleClearAndReset}
-                className="clay-button clay-base text-stone-700 dark:text-stone-300 px-4 py-2.5 rounded-xl text-xs font-medium hover:bg-stone-100 dark:hover:bg-stone-800 active:scale-95 transition-all"
+                className="clay-button clay-base text-stone-700 dark:text-stone-300 px-4 py-2.5 rounded-full text-xs font-medium hover:bg-stone-100 dark:hover:bg-stone-800 active:scale-95 transition-all"
               >
                 <span>تنظیم مجدد حافظه موقت</span>
               </button>

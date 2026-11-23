@@ -218,7 +218,7 @@ export const CuratedToursModal: React.FC<CuratedToursModalProps> = ({
                       onSelectTour(tour);
                       onClose();
                     }}
-                    className={`clay-button ${btnClass} px-5 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-black flex items-center justify-center gap-2 transition-all active:scale-95 shadow-md hover:brightness-105 shrink-0 rounded-xl cursor-pointer w-full md:w-auto mt-2 md:mt-0`}
+                    className={`clay-button ${btnClass} px-5 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-black flex items-center justify-center gap-2 transition-all active:scale-95 shadow-md hover:brightness-105 shrink-0 rounded-full cursor-pointer w-full md:w-auto mt-2 md:mt-0`}
                   >
                     <span>بارگذاری و مشاهده مسیر</span>
                     <ArrowLeft className="w-4 h-4" />

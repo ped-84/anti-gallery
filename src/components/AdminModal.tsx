@@ -394,7 +394,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
               <button
                 onClick={handleLogout}
                 title="خروج از حساب مدیریت"
-                className="clay-button clay-base px-2.5 py-1.5 text-xs text-stone-600 dark:text-stone-300 flex items-center gap-1.5 rounded-xl cursor-pointer hover:text-red-500"
+                className="clay-button clay-base px-2.5 py-1.5 text-xs text-stone-600 dark:text-stone-300 flex items-center gap-1.5 rounded-full cursor-pointer hover:text-red-500"
               >
                 <LogOut className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">خروج</span>
@@ -403,7 +403,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
             <button
               onClick={onClose}
               title="بستن پنجره"
-              className="clay-button clay-base w-8 h-8 flex items-center justify-center text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-100 rounded-xl cursor-pointer"
+              className="clay-button clay-base w-8 h-8 flex items-center justify-center text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-100 rounded-full cursor-pointer"
             >
               <X className="w-4 h-4 stroke-[2.5]" />
             </button>
@@ -465,7 +465,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                 <button
                   type="submit"
                   disabled={isLoggingIn}
-                  className="clay-button clay-orange text-white w-full py-2.5 rounded-xl font-bold text-sm cursor-pointer active:scale-98 transition-all flex items-center justify-center gap-2"
+                  className="clay-button clay-orange text-white w-full py-2.5 rounded-full font-bold text-sm cursor-pointer active:scale-98 transition-all flex items-center justify-center gap-2"
                 >
                   {isLoggingIn ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Lock className="w-4 h-4" />}
                   <span>ورود به سامانه</span>
@@ -710,13 +710,13 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                     setEditingGallery(null);
                     setIsCreatingNew(false);
                   }}
-                  className="clay-button clay-base px-4 py-2 text-xs font-bold text-stone-600 dark:text-stone-300 rounded-xl cursor-pointer"
+                  className="clay-button clay-base px-4 py-2 text-xs font-bold text-stone-600 dark:text-stone-300 rounded-full cursor-pointer"
                 >
                   انصراف
                 </button>
                 <button
                   type="submit"
-                  className="clay-button clay-orange text-white px-6 py-2 text-xs font-bold rounded-xl cursor-pointer active:scale-95 transition-all shadow-md"
+                  className="clay-button clay-orange text-white px-6 py-2 text-xs font-bold rounded-full cursor-pointer active:scale-95 transition-all shadow-md"
                 >
                   ذخیره تغییرات در دیتابیس سرور
                 </button>
@@ -744,7 +744,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                   </span>
                   <button
                     onClick={startCreate}
-                    className="clay-button clay-orange text-white px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all shadow-xs"
+                    className="clay-button clay-orange text-white px-3 py-2 rounded-full text-xs font-bold flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all shadow-xs"
                   >
                     <Plus className="w-4 h-4 stroke-[2.5]" />
                     <span>افزودن نمایشگاه جدید</span>
@@ -798,7 +798,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                         <button
                           onClick={() => startEdit(gallery)}
                           title="ویرایش"
-                          className="clay-button clay-base px-2.5 py-1.5 rounded-xl text-xs font-bold text-[#3D5B99] dark:text-[#A3C2E4] flex items-center gap-1 cursor-pointer active:scale-95"
+                          className="clay-button clay-base px-2.5 py-1.5 rounded-full text-xs font-bold text-[#3D5B99] dark:text-[#A3C2E4] flex items-center gap-1 cursor-pointer active:scale-95"
                         >
                           <Edit3 className="w-3.5 h-3.5" />
                           <span>ویرایش</span>
@@ -806,7 +806,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                         <button
                           onClick={() => handleDelete(gallery.id, gallery.name)}
                           title="حذف"
-                          className="clay-button clay-base px-2 py-1.5 rounded-xl text-xs text-rose-500 hover:text-rose-700 flex items-center cursor-pointer active:scale-95"
+                          className="clay-button clay-base px-2 py-1.5 rounded-full text-xs text-rose-500 hover:text-rose-700 flex items-center cursor-pointer active:scale-95"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>

@@ -1231,7 +1231,7 @@ export default function App() {
             <button
               type="button"
               onClick={() => setIsCuratedModalOpen(true)}
-              className="clay-button clay-orange text-white px-4 py-2.5 text-sm font-bold flex items-center justify-center gap-2 rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all shrink-0 cursor-pointer w-full sm:w-auto"
+              className="clay-button clay-orange text-white px-4 py-2.5 text-sm font-bold flex items-center justify-center gap-2 rounded-full shadow-md hover:brightness-105 active:scale-95 transition-all shrink-0 cursor-pointer w-full sm:w-auto"
             >
               <Sparkles className="w-4 h-4 text-white stroke-[2.2] shrink-0" aria-hidden="true" />
               <span>گشت‌های آماده روی نقشه</span>
@@ -1378,7 +1378,7 @@ export default function App() {
           <button
             type="button"
             onClick={() => setMobileActiveTab('catalog')}
-            className={`flex-1 h-12 min-h-[48px] px-2 sm:px-3 text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all whitespace-nowrap shrink-0 ${
+            className={`flex-1 h-12 min-h-[48px] px-2 sm:px-3 text-xs sm:text-sm font-bold rounded-full flex items-center justify-center gap-1.5 transition-all whitespace-nowrap shrink-0 ${
               mobileActiveTab === 'catalog'
                 ? 'clay-darkblue text-white shadow-sm'
                 : 'clay-base text-stone-600 dark:text-stone-300'
@@ -1390,7 +1390,7 @@ export default function App() {
           <button
             type="button"
             onClick={() => setMobileActiveTab('map')}
-            className={`flex-1 h-12 min-h-[48px] px-2 sm:px-3 text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all whitespace-nowrap shrink-0 ${
+            className={`flex-1 h-12 min-h-[48px] px-2 sm:px-3 text-xs sm:text-sm font-bold rounded-full flex items-center justify-center gap-1.5 transition-all whitespace-nowrap shrink-0 ${
               mobileActiveTab === 'map'
                 ? 'clay-orange text-white shadow-sm'
                 : 'clay-base text-stone-600 dark:text-stone-300'
@@ -1458,7 +1458,7 @@ export default function App() {
                   placeholder="جستجوی نام هنرمند (مثلاً داریوش حسینی)، عنوان نمایشگاه، نگارخانه..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="clay-input w-full pr-12 pl-4 py-3 bg-[#f6f8fb] dark:bg-[#141822] text-base placeholder:text-stone-400 focus:outline-none text-[#1d2d4c] dark:text-white transition-all font-medium border border-[#E1E1E1]/50 rounded-2xl"
+                  className="clay-input clay-track w-full pr-12 pl-4 py-3 bg-[#f6f8fb] dark:bg-[#141822] text-base placeholder:text-stone-400 focus:outline-none text-[#1d2d4c] dark:text-white transition-all font-medium border border-[#E1E1E1]/50 rounded-2xl"
                 />
                 {searchQuery && (
                   <button
@@ -1473,11 +1473,11 @@ export default function App() {
               {/* View filter tabs & Controls (Authentic Claymorphic Segmented Control) */}
               <div className="space-y-2.5 w-full">
                 {/* 1. Sleek Claymorphic Segmented Control: 3 tabs on one line, no scroll, authentic Clay style */}
-                <div className="clay-card p-1.5 flex items-center gap-1.5 bg-[#f0f3f8] dark:bg-stone-900 rounded-2xl w-full border border-[#E1E1E1] dark:border-stone-800 shadow-xs">
+                <div className="clay-card clay-track p-1.5 flex items-center gap-1.5 bg-[#f0f3f8] dark:bg-stone-900 w-full border border-[#E1E1E1] dark:border-stone-800 shadow-xs">
                   <button
                     type="button"
                     onClick={() => setGalleryFilterTab('this-week')}
-                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap text-sm text-center ${
+                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-full font-bold transition-all flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap text-sm text-center ${
                       galleryFilterTab === 'this-week'
                         ? 'clay-button clay-base text-[#F76B1C] shadow-sm'
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
@@ -1491,7 +1491,7 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => setGalleryFilterTab('all-active')}
-                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap text-sm text-center ${
+                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-full font-bold transition-all flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap text-sm text-center ${
                       galleryFilterTab === 'all-active'
                         ? 'clay-button clay-base text-[#10335e] dark:text-[#A3C2E4] shadow-sm'
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
@@ -1505,7 +1505,7 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => setGalleryFilterTab('all')}
-                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap text-sm text-center ${
+                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-full font-bold transition-all flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap text-sm text-center ${
                       galleryFilterTab === 'all'
                         ? 'clay-button clay-base text-[#10335e] dark:text-[#A3C2E4] shadow-sm'
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
@@ -1677,7 +1677,7 @@ export default function App() {
           className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-lg w-[calc(100%-2rem)] sm:w-auto transition-all duration-300"
           style={{ bottom: 'max(1rem, calc(env(safe-area-inset-bottom, 0px) + 0.75rem))' }}
         >
-          <div className="clay-card bg-white/95 dark:bg-[#181d27]/95 backdrop-blur-md border border-[#E1E1E1] dark:border-stone-800 p-2 sm:p-2.5 rounded-2xl shadow-2xl flex items-center justify-between gap-2.5 sm:gap-4">
+          <div className="clay-card clay-track bg-white/95 dark:bg-[#181d27]/95 backdrop-blur-md border border-[#E1E1E1] dark:border-stone-800 p-2 sm:p-2.5 shadow-2xl flex items-center justify-between gap-2.5 sm:gap-4">
             <button
               type="button"
               onClick={handleGoToRouteSummary}
@@ -1706,7 +1706,7 @@ export default function App() {
                   onClick={handleClearAll}
                   title="پاک کردن انتخاب‌ها"
                   aria-label="پاک کردن همه‌ی گالری‌های انتخاب‌شده"
-                  className="clay-button clay-base p-2 text-stone-500 hover:text-rose-500 rounded-xl transition-all active:scale-95 cursor-pointer shrink-0"
+                  className="clay-button clay-base p-2 text-stone-500 hover:text-rose-500 rounded-full transition-all active:scale-95 cursor-pointer shrink-0"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                 </button>
@@ -1716,7 +1716,7 @@ export default function App() {
                 type="button"
                 onClick={handleOptimizeClick}
                 disabled={!canOptimize || isOptimizing}
-                className={`clay-button px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold flex items-center gap-1.5 sm:gap-2 rounded-xl transition-all cursor-pointer ${
+                className={`clay-button px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold flex items-center gap-1.5 sm:gap-2 rounded-full transition-all cursor-pointer ${
                   canOptimize
                     ? 'clay-orange text-white shadow-md hover:brightness-105 active:scale-95'
                     : 'clay-base text-stone-400 dark:text-stone-600 cursor-not-allowed opacity-75'

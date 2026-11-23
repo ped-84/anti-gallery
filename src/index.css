@@ -40,7 +40,7 @@
    In the light theme, text set in brand orange uses the deeper #C2410C (5.2:1). */
 html:not(.dark) .text-\[\#F76B1C\]:not(svg),
 html:not(.dark) .hover\:text-\[\#F76B1C\]:not(svg):hover {
-  color: #c2410c;
+  color: #E05A10;
 }
 
 /* ========================================================
@@ -395,7 +395,7 @@ body {
 /* ========================================================
    Fateme Faramarzian — display face for exhibition titles only.
    Single weight (400), Persian glyphs only; Latin falls back to Shabnam.
-   NOTE: commercial font (FontIRAN) — needs a web licence for artgasht.com.
+   Free font (kafice.ir/product/font31, «رایگان»).
    ======================================================== */
 @font-face {
   font-family: 'Fateme';
@@ -410,7 +410,9 @@ body {
   font-weight: 400 !important;
   font-synthesis: none;
   letter-spacing: 0;
-  line-height: 1.5;
+  /* سرکش ک و گ در فاطمه بلند است؛ با truncate/overflow:hidden بریده می‌شد */
+  line-height: 1.9;
+  padding-block: 0.08em;
 }
 
 .clay-card {
@@ -452,7 +454,9 @@ body {
 }
 
 .clay-button {
-  border-radius: 1.125rem;
+  /* Every button is a pill (or a circle when square). This rule is unlayered, so
+     it beats Tailwind's rounded-* utilities: do not fight it with rounded-xl. */
+  border-radius: 9999px;
   transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 
     4px 6px 14px -2px rgba(61, 91, 153, 0.18),
@@ -478,6 +482,12 @@ body {
   box-shadow: 
     inset 3px 4px 8px rgba(0, 0, 0, 0.55),
     inset -2px -2px 6px rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Pill containers that hold buttons or text (segmented tracks, floating bars,
+   the search field). Needed because .clay-card / .clay-input set their own radius. */
+.clay-track {
+  border-radius: 9999px !important;
 }
 
 /* Clay Inset Input */
@@ -646,6 +656,7 @@ body {
 }
 
 /* Hide Neshan / Mapbox attribution & watermarks */
+.mapboxgl-control-container,
 .mapboxgl-ctrl-attrib,
 .mapboxgl-ctrl-attrib-inner,
 .mapboxgl-ctrl-attrib-button,

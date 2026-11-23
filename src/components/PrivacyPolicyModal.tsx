@@ -129,7 +129,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, 
           <button
             type="button"
             onClick={onClose}
-            className="clay-button clay-base px-6 py-2 rounded-xl text-xs sm:text-sm font-bold text-[#10335e] dark:text-[#93c5fd] hover:text-[#F76B1C] transition-colors cursor-pointer"
+            className="clay-button clay-base px-6 py-2 rounded-full text-xs sm:text-sm font-bold text-[#10335e] dark:text-[#93c5fd] hover:text-[#F76B1C] transition-colors cursor-pointer"
           >
             متوجه شدم و موافقم
           </button>

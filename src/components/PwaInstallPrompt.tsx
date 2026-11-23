@@ -145,7 +145,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 bg-[#131722] border border-stone-700/60 flex items-center justify-center shrink-0 rounded-2xl shadow-md p-2">
                   <img
-                    src="./icons/brand-logo-icon-dark.svg?v=1.168"
+                    src="./icons/brand-logo-icon-dark.svg?v=1.180"
                     alt="آرت‌گشت"
                     width="24"
                     height="24"
@@ -176,14 +176,14 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
               <button
                 type="button"
                 onClick={dismissBanner}
-                className="px-3.5 py-2 text-xs sm:text-sm font-bold text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 rounded-xl transition-colors cursor-pointer"
+                className="px-3.5 py-2 text-xs sm:text-sm font-bold text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 rounded-full transition-colors cursor-pointer"
               >
                 بعداً
               </button>
               <button
                 type="button"
                 onClick={triggerInstall}
-                className="clay-button clay-orange text-white px-4 py-2.5 text-xs sm:text-sm font-bold flex items-center gap-1.5 rounded-xl shadow-md hover:brightness-105 active:scale-95 transition-all cursor-pointer"
+                className="clay-button clay-orange text-white px-4 py-2.5 text-xs sm:text-sm font-bold flex items-center gap-1.5 rounded-full shadow-md hover:brightness-105 active:scale-95 transition-all cursor-pointer"
               >
                 <Download className="w-4 h-4 stroke-[2.2]" />
                 <span>نصب اپلیکیشن</span>
@@ -204,7 +204,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 bg-[#131722] border border-stone-700/60 flex items-center justify-center rounded-xl shadow-xs overflow-hidden p-1.5">
                   <img
-                    src="./icons/brand-logo-icon-dark.svg?v=1.168"
+                    src="./icons/brand-logo-icon-dark.svg?v=1.180"
                     alt="آرت‌گشت"
                     width="20"
                     height="20"
@@ -256,7 +256,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
             <button
               type="button"
               onClick={() => setShowIosModal(false)}
-              className="clay-button clay-base w-full py-2.5 text-xs sm:text-sm font-bold text-[#3D5B99] dark:text-[#A3C2E4] rounded-xl hover:brightness-105 active:scale-95 transition-all mt-1"
+              className="clay-button clay-base w-full py-2.5 text-xs sm:text-sm font-bold text-[#3D5B99] dark:text-[#A3C2E4] rounded-full hover:brightness-105 active:scale-95 transition-all mt-1"
             >
               متوجه شدم
             </button>
@@ -275,7 +275,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 bg-[#131722] border border-stone-700/60 flex items-center justify-center rounded-xl shadow-xs overflow-hidden p-1.5">
                   <img
-                    src="./icons/brand-logo-icon-dark.svg?v=1.168"
+                    src="./icons/brand-logo-icon-dark.svg?v=1.180"
                     alt="آرت‌گشت"
                     width="20"
                     height="20"
@@ -344,7 +344,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
             <button
               type="button"
               onClick={() => setShowAndroidModal(false)}
-              className="clay-button clay-orange text-white w-full py-2.5 text-xs sm:text-sm font-bold rounded-xl hover:brightness-105 active:scale-95 transition-all mt-1 cursor-pointer"
+              className="clay-button clay-orange text-white w-full py-2.5 text-xs sm:text-sm font-bold rounded-full hover:brightness-105 active:scale-95 transition-all mt-1 cursor-pointer"
             >
               متوجه شدم
             </button>
