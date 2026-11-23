@@ -1204,7 +1204,7 @@ export default function App() {
 
       {/* Operational Ribbon */}
       <div className="bg-[#e4ebf5] dark:bg-[#161a24] text-stone-700 dark:text-stone-300 py-2.5 sm:py-3 border-b border-[#E1E1E1] dark:border-stone-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 font-medium">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-3 font-medium">
           <div className="flex items-center gap-2.5 shrink-0">
             <span className="w-3 h-3 rounded-full bg-[#F76B1C] inline-block shadow-sm shrink-0"></span>
             <span className="text-sm sm:text-base font-medium">
@@ -1215,9 +1215,9 @@ export default function App() {
       </div>
 
       {/* Main Content Layout */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6">
         {/* Editorial Claymorphic Banner */}
-        <section className="clay-card p-4 sm:p-6 bg-white dark:bg-[#181d27] border border-[#E1E1E1] dark:border-stone-800">
+        <section className="clay-card p-3.5 sm:p-6 bg-white dark:bg-[#181d27] border border-[#E1E1E1] dark:border-stone-800">
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
             <div className="min-w-0">
               <h1 className="text-xl sm:text-2xl font-bold text-[#1d2d4c] dark:text-white leading-snug">
@@ -1573,7 +1573,7 @@ export default function App() {
             </div>
 
             {/* Gallery Cards Grid (with Square Posters and Compact Layouts) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               {filteredGalleries.slice(0, visibleCardCount).map((gallery, idx) => (
                 <GalleryCard
                   key={gallery.id}
@@ -1590,10 +1590,17 @@ export default function App() {
             </div>
 
             {filteredGalleries.length === 0 && (
-              <div className="clay-card p-10 text-center bg-white dark:bg-[#181d27] text-stone-500 space-y-3 border border-[#E1E1E1]">
+              <div className="clay-card p-8 text-center bg-white dark:bg-[#181d27] text-stone-500 space-y-3 border border-[#E1E1E1] dark:border-stone-800">
                 <MapPin className="w-10 h-10 text-stone-300 dark:text-stone-600 mx-auto stroke-1" />
                 <p className="text-base font-bold text-stone-800 dark:text-stone-200">
-                  هیچ گالری‌ای با این فیلتر یافت نشد
+                  {searchQuery.trim()
+                    ? <>برای «<bdi>{searchQuery.trim()}</bdi>» نمایشگاهی پیدا نشد</>
+                    : 'با این فیلتر نمایشگاهی پیدا نشد'}
+                </p>
+                <p className="text-sm text-stone-500 dark:text-stone-400">
+                  {searchQuery.trim()
+                    ? 'املای دیگری از نام هنرمند یا گالری را امتحان کن، یا فیلترها را بردار.'
+                    : 'فیلتر محله یا زمان را عوض کن، یا همه را ببین.'}
                 </p>
                 <button
                   onClick={() => {

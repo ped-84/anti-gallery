@@ -106,7 +106,7 @@ export const ToastNotification: React.FC<ToastNotificationProps> = ({
       dir="rtl"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-[120] w-[calc(100%-24px)] sm:w-auto sm:min-w-[460px] sm:max-w-[580px] pointer-events-auto select-none transition-all"
+      className="fixed bottom-[5.75rem] sm:bottom-auto sm:top-6 left-1/2 -translate-x-1/2 z-[120] w-[calc(100%-24px)] sm:w-auto sm:min-w-[460px] sm:max-w-[580px] pointer-events-auto select-none transition-all"
     >
       <div
         className={`
@@ -117,7 +117,7 @@ export const ToastNotification: React.FC<ToastNotificationProps> = ({
           dark:shadow-[0_24px_55px_-8px_rgba(0,0,0,0.88),0_8px_24px_rgba(0,0,0,0.65)]
           ring-1 ring-black/5 dark:ring-white/15
           p-4 sm:p-4.5 flex items-start gap-3.5 sm:gap-4
-          animate-in fade-in slide-in-from-top-4 duration-300
+          animate-in fade-in slide-in-from-bottom-4 sm:slide-in-from-top-4 duration-300
           ${sideAccentBorder}
         `}
       >

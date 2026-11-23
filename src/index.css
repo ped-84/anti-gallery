@@ -392,6 +392,27 @@ body {
 /* ========================================================
    Claymorphic 3D Soft Shadow System
    ======================================================== */
+/* ========================================================
+   Fateme Faramarzian — display face for exhibition titles only.
+   Single weight (400), Persian glyphs only; Latin falls back to Shabnam.
+   NOTE: commercial font (FontIRAN) — needs a web licence for artgasht.com.
+   ======================================================== */
+@font-face {
+  font-family: 'Fateme';
+  src: url('/fonts/fateme/Fateme.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-exhibit {
+  font-family: 'Fateme', 'Shabnam FD', 'Shabnam', sans-serif;
+  font-weight: 400;
+  font-synthesis: none;
+  letter-spacing: 0;
+  line-height: 1.5;
+}
+
 .clay-card {
   border-radius: 1.5rem;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -408,6 +429,26 @@ body {
     -4px -4px 14px 0px rgba(61, 91, 153, 0.12),
     inset 1px 1px 1px 0px rgba(255, 255, 255, 0.1),
     inset -1px -1px 2px 0px rgba(0, 0, 0, 0.4);
+}
+
+/* موبایل: حاشیه‌ی صفحه ۱۲px است؛ سایه‌ی رسی کمی جمع‌تر می‌شود تا به لبه‌ی صفحه نچسبد
+   ولی حس برجسته‌ی کلی‌مورفیک حفظ شود. */
+@media (max-width: 639px) {
+  .clay-card {
+    border-radius: 1.25rem;
+    box-shadow:
+      5px 8px 16px -4px rgba(61, 91, 153, 0.16),
+      -4px -4px 12px 0px rgba(255, 255, 255, 0.95),
+      inset 1px 1px 2px 0px rgba(255, 255, 255, 0.8),
+      inset -1px -1px 2px 0px rgba(0, 0, 0, 0.04);
+  }
+  .dark .clay-card {
+    box-shadow:
+      5px 8px 16px -4px rgba(0, 0, 0, 0.6),
+      -3px -3px 10px 0px rgba(61, 91, 153, 0.1),
+      inset 1px 1px 1px 0px rgba(255, 255, 255, 0.1),
+      inset -1px -1px 2px 0px rgba(0, 0, 0, 0.4);
+  }
 }
 
 .clay-button {

@@ -348,14 +348,14 @@ export function solveTspWithTimeWindows(
   };
 
   // ارزیابی کامل یک دنباله از گره‌ها
-  const evaluateSequence = (seq: number[]): {
+  const evaluateSequence = (seq: number[], departMin: number = startMin): {
     feasible: boolean;
     steps: StepEval[];
     totalPriority: number;
     totalCost: number;
     endTime: number;
   } => {
-    let curr = startMin;
+    let curr = departMin;
     let totalCost = 0;
     let totalPriority = 0;
     const steps: StepEval[] = [];
@@ -608,6 +608,37 @@ export function solveTspWithTimeWindows(
   // ==========================================================================
   // فاز ۳: ساخت خروجی نهایی، تشخیص ایستگاه‌های حذف‌شده و پیشنهاد شروع زودتر
   // ==========================================================================
+  // ---- حرکت دیرتر به‌جای انتظار پشت در بسته ----
+  // اگر کاربر الان (مثلاً ۱۱:۳۰) راه بیفتد و گالری‌ها ۱۶:۰۰ باز شوند، برنامه چند ساعت «انتظار» نشان می‌داد.
+  // با همان ترتیب، شروع را تا جایی عقب می‌اندازیم که انتظار کم شود و هیچ توقفی دیر نشود
+  // (فرمول کلاسیک forward slack: D ≤ مجموع انتظارِ تا توقف k + حاشیه‌ی تا تعطیلی k، برای هر k).
+  let departureDelayMinutes = 0;
+  if (bestSeq.length > 0) {
+    const waitBefore = bestSteps.reduce((a, st) => a + st.waitMin, 0);
+    if (waitBefore > 0) {
+      let cumWait = 0;
+      let maxDelay = Infinity;
+      for (const st of bestSteps) {
+        cumWait += st.waitMin;
+        maxDelay = Math.min(maxDelay, cumWait + Math.max(0, st.closingMin - st.departureMin));
+      }
+      // گرد به ۵ دقیقه‌ی پایین‌تر تا ساعت حرکت خوانا باشد
+      let delay = Math.floor(Math.min(waitBefore, maxDelay) / 5) * 5;
+      // در حالت خودرو ضریب ترافیک با ساعت حرکت عوض می‌شود؛ اگر شدنی نبود کمی کمترش می‌کنیم
+      while (delay > 0) {
+        const ev = evaluateSequence(bestSeq, startMin + delay);
+        const newWait = ev.steps.reduce((a, st) => a + st.waitMin, 0);
+        if (ev.feasible && newWait < waitBefore) {
+          bestSteps = ev.steps;
+          departureDelayMinutes = delay;
+          break;
+        }
+        delay -= 10;
+      }
+    }
+  }
+  const departureMin = startMin + departureDelayMinutes;
+
   const scheduledSet = new Set<number>(bestSeq);
   const scheduledStops: ScheduledStop[] = bestSeq.map((nodeIdx, i) => {
     const st = bestSteps[i];
@@ -635,7 +666,7 @@ export function solveTspWithTimeWindows(
   const lastDepartureMin =
     scheduledStops.length > 0
       ? scheduledStops[scheduledStops.length - 1].departureTimeMin
-      : startMin;
+      : departureMin;
   const lastVisitedIdx = bestSeq.length > 0 ? bestSeq[bestSeq.length - 1] : -1;
 
   const droppedStops: DroppedStop[] = [];
@@ -687,8 +718,9 @@ export function solveTspWithTimeWindows(
     totalTravelMinutes,
     totalWaitMinutes,
     totalVisitMinutes,
-    routeStartFormatted: formatMinutesToTime(startMin),
+    routeStartFormatted: formatMinutesToTime(departureMin),
     routeEndFormatted: formatMinutesToTime(lastDepartureMin),
+    departureDelayMinutes,
     suggestedEarlierStartMinutes,
     computeTimeMs: Number(computeTimeMs.toFixed(2))
   };

@@ -110,6 +110,8 @@ export interface TspTwSolution {
   totalVisitMinutes: number;
   routeStartFormatted: string;
   routeEndFormatted: string;
+  /** چند دقیقه دیرتر از «الان» حرکت کنیم تا پشت در بسته‌ی گالری منتظر نمانیم (۰ = همین حالا) */
+  departureDelayMinutes?: number;
   suggestedEarlierStartMinutes: number | null;
   computeTimeMs: number;
 }

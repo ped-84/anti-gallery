@@ -324,7 +324,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
 
                 {/* عنوان نمایشگاه: ۴ پیکسل فاصله با سطر افتتاحیه اضافه شد */}
                 <div className="pt-1 mt-0.5">
-                  <h3 className="text-xl font-black text-[#10335e] dark:text-[#dbeafe] leading-tight">
+                  <h3 className="font-exhibit text-2xl sm:text-3xl text-[#10335e] dark:text-[#dbeafe]">
                     {activeExhibition.title}
                   </h3>
                 </div>
