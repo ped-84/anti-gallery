@@ -38,6 +38,13 @@ jobs:
       - name: Typecheck
         run: npx tsc --noEmit
 
+      # Stamp the exact commit into the build so https://artgasht.com/version.json
+      # always says which commit is live (read by the project dashboard).
+      - name: Stamp build with commit sha
+        run: |
+          printf '{"sha":"%s","builtAt":"%s"}\n' "${GITHUB_SHA}" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > public/version.json
+          cat public/version.json
+
       - name: Build Docker image
         run: |
           docker build -t artgasht:latest .
