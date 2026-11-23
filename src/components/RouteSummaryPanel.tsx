@@ -456,7 +456,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
             <div className="clay-card p-2 sm:p-2.5 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-2xl border border-[#E1E1E1]/80 dark:border-stone-800 flex items-center justify-between gap-2 shadow-xs">
               <div className="flex items-center gap-2 text-stone-700 dark:text-stone-300 font-bold text-sm pr-1">
                 <Timer className="w-4 h-4 text-[#3D5B99] shrink-0" />
-                <span>زمان بازدید هر گالری:</span>
+                <span>بازدید هر گالری</span>
               </div>
               <ClayDropdown
                 value={String(visitDurationMin)}
@@ -482,7 +482,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
             const sol = routeResult.tspTwSolution;
             const tile = 'rounded-xl bg-[#f0f4fa] dark:bg-[#121722] border border-[#A3C2E4]/40 dark:border-stone-700/60 px-3 py-2.5 min-w-0';
             const label = 'flex items-center gap-1.5 text-xs font-medium text-stone-500 dark:text-stone-400';
-            const value = 'block mt-1 text-base font-bold text-[#1d2d4c] dark:text-white tabular-nums truncate';
+            const value = 'block mt-1 text-[15px] sm:text-base leading-snug font-bold text-[#1d2d4c] dark:text-white tabular-nums';
             const note = 'flex items-start gap-2 text-sm leading-relaxed text-stone-600 dark:text-stone-300';
             const notes: React.ReactNode[] = [];
             if (sol && (sol.departureDelayMinutes ?? 0) > 0) {
@@ -539,18 +539,18 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                 <div className="grid grid-cols-2 gap-2">
                   <div className={tile}>
                     <span className={label}><Timer className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />کل گشت</span>
-                    <span className={`${value} text-[#F76B1C]`}>
+                    <span className={`${value} !text-[#E05A10] dark:!text-[#ff8a3d]`}>
                       {avgHours > 0 ? `${toPersianDigits(avgHours)} ساعت و ` : ''}{toPersianDigits(avgMins)} دقیقه
                     </span>
+                    <span className="block text-xs text-stone-500 dark:text-stone-400 mt-0.5">{toPersianDigits(visitDurationMin)} دقیقه در هر گالری</span>
                   </div>
                   <div className={tile}>
                     <span className={label}>
                       {mode === 'walking' ? <Footprints className="w-3.5 h-3.5 shrink-0" aria-hidden="true" /> : <Car className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />}
                       {mode === 'walking' ? 'پیاده‌روی' : 'رانندگی'}
                     </span>
-                    <span className={value}>
-                      {formatDistanceFa(routeResult.totalDistanceKm)}، {toPersianDigits(routeResult.totalDurationMin)} دقیقه
-                    </span>
+                    <span className={value}>{formatDurationFa(routeResult.totalDurationMin)}</span>
+                    <span className="block text-xs text-stone-500 dark:text-stone-400 tabular-nums mt-0.5">{formatDistanceFa(routeResult.totalDistanceKm)}</span>
                   </div>
                   {sol && (
                     <>
@@ -565,9 +565,6 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                     </>
                   )}
                 </div>
-                <p className="text-xs text-stone-500 dark:text-stone-400">
-                  با {toPersianDigits(visitDurationMin)} دقیقه بازدید در هر گالری
-                </p>
                 {notes.length > 0 && (
                   <div className="pt-3 border-t border-stone-100 dark:border-stone-800/80 space-y-2">{notes}</div>
                 )}
