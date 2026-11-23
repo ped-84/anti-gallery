@@ -108,6 +108,7 @@ scripts/                   اسکرپر (sync-galleryinfo.cjs)، استقرار�
 4. Merge به `main` خودکار `deploy.yml` را اجرا می‌کند: تایپ‌چک ← بیلد ایمیج داکر ← انتقال با SSH به فرانکفورت ← `docker compose up` ← چک `/health` تا ۲ دقیقه ← در صورت شکست، **رول‌بک خودکار** به ایمیج قبلی.
 5. آینه‌ی ایران داده را هر ۵ دقیقه با `scripts/sync-pull.sh` از PRIMARY می‌گیرد؛ استقرار **کد** روی آینه هنوز دستی است (`scripts/deploy.ps1 -Target mirror` از لپ‌تاپ؛ جزئیات در `DEPLOY.md`).
 6. نسخه‌ی آزمایشی gh-pages اختیاری و دستی است: `node scripts/deploy-ghpages.cjs`.
+7. **ادغام خودکار:** برچسب `ship` روی PR بگذار؛ `auto-ship.yml` بعد از سبز شدن «PR check» (job «Typecheck and build») PR را merge می‌کند و `deploy.yml` را اجرا می‌کند (merge با توکن Actions رویداد push نمی‌سازد، پس dispatch صریح است). بدون برچسب هیچ اتفاقی نمی‌افتد. اگر merge نشد (conflict)، PR کامنت می‌گیرد.
 
 **بیلد پیش‌نمایش (برای Claude که به npm دسترسی ندارد):** هر push به شاخه‌ی `claude/**`، `preview-build.yml` را اجرا می‌کند: تایپ‌چک + بیلد، و فایل‌های تولیدشده (بدون `public/`) به‌صورت base64 در لاگ همان job چاپ می‌شوند. با `gh run view <id> --log` لاگ گرفته، فایل‌ها بازسازی و کنار `public/` سرو می‌شوند و با Playwright اسکرین‌شات گرفته می‌شود. این workflow فقط‌خواندنی است و چیزی منتشر نمی‌کند.
 
