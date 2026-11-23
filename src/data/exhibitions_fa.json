@@ -375,21 +375,6 @@
     "isExpired": false
   },
   {
-    "eventId": 21611,
-    "galleryId": 235,
-    "title": "وان میلیون",
-    "artist": "نمایشگاه گروهی",
-    "type": "نمایشگاه گروهی",
-    "openingDate": "جمعه 22 آبان 1405",
-    "fullDateRange": "22 آبان 1405 تا 2 آذر 1405",
-    "closingDate": "2 آذر 1405",
-    "openingHours": "۱۰:۰۰ الی 21:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21611.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21611.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21611",
-    "isExpired": false
-  },
-  {
     "eventId": 21607,
     "galleryId": 256,
     "title": "یوکرونیا",
@@ -450,36 +435,6 @@
     "isExpired": false
   },
   {
-    "eventId": 21594,
-    "galleryId": 467,
-    "title": "در امتداد شاخه‌ها",
-    "artist": "عاطفه جرنده‌ئی",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 22 آبان 1405",
-    "fullDateRange": "22 آبان 1405 تا 2 آذر 1405",
-    "closingDate": "2 آذر 1405",
-    "openingHours": "16:۰۰ الی ۲۰:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21594.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21594.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21594",
-    "isExpired": false
-  },
-  {
-    "eventId": 21595,
-    "galleryId": 467,
-    "title": "چمدان میترا",
-    "artist": "میترا رستم‌بیکی",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 22 آبان 1405",
-    "fullDateRange": "22 آبان 1405 تا 2 آذر 1405",
-    "closingDate": "2 آذر 1405",
-    "openingHours": "16:۰۰ الی ۲۰:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21595.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21595.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21595",
-    "isExpired": false
-  },
-  {
     "eventId": 21603,
     "galleryId": 484,
     "title": "ناپایداری",
@@ -495,21 +450,6 @@
     "isExpired": false
   },
   {
-    "eventId": 21593,
-    "galleryId": 492,
-    "title": "نمایش ۷ اثر/ پوشه نهم",
-    "artist": "صادق بریرانی",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 22 آبان 1405",
-    "fullDateRange": "22 آبان 1405 تا 2 آذر 1405",
-    "closingDate": "2 آذر 1405",
-    "openingHours": "16:۰۰ الی 20:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21593.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21593.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21593",
-    "isExpired": false
-  },
-  {
     "eventId": 21592,
     "galleryId": 472,
     "title": "علی نصیر؛ نقاشی‌ها و طراحی‌ها(۱۳۶۴ تا ۱۴۰۳)",
@@ -522,21 +462,6 @@
     "poster": "https://galleryinfo.ir/Images/Events/Event_21592.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21592.jpg",
     "url": "https://galleryinfo.ir/Event/fa/21592",
-    "isExpired": false
-  },
-  {
-    "eventId": 21600,
-    "galleryId": 1003,
-    "title": "بی‌حرف",
-    "artist": "سعید نقاشیان",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 22 آبان 1405",
-    "fullDateRange": "22 آبان 1405 تا 2 آذر 1405",
-    "closingDate": "2 آذر 1405",
-    "openingHours": "16:۰۰ الی 20:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21600.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21600.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21600",
     "isExpired": false
   },
   {
