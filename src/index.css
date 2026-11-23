@@ -406,8 +406,8 @@ body {
 }
 
 .font-exhibit {
-  font-family: 'Fateme', 'Shabnam FD', 'Shabnam', sans-serif;
-  font-weight: 400;
+  font-family: 'Fateme', 'Shabnam FD', 'Shabnam', sans-serif !important;
+  font-weight: 400 !important;
   font-synthesis: none;
   letter-spacing: 0;
   line-height: 1.5;

@@ -379,11 +379,11 @@
 .ag-card__show {
   align-self: flex-start;
   max-width: 100%;
-  font-family: 'Fateme', 'Shabnam FD', 'Shabnam', sans-serif;
+  font-family: 'Fateme', 'Shabnam FD', 'Shabnam', sans-serif !important;
   font-synthesis: none;
   font-size: 17px;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 400 !important;
   color: var(--accent-text);
   background: var(--accent-bg);
   padding: 3px 9px;
