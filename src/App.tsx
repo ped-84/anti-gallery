@@ -1403,7 +1403,7 @@ export default function App() {
 
         {/* FULL-WIDTH IMMERSIVE MAP (Desktop, Tablet & Mobile) */}
         <section className={`w-full ${mobileActiveTab === 'catalog' ? 'hidden lg:block' : 'block'}`}>
-          <div className="h-[420px] sm:h-[480px] lg:h-[530px] w-full rounded-2xl overflow-hidden border border-[#E1E1E1] dark:border-stone-800 shadow-md">
+          <div className="h-[min(72vh,560px)] sm:h-[480px] lg:h-[530px] w-full rounded-2xl overflow-hidden border border-[#E1E1E1] dark:border-stone-800 shadow-md">
             {(isMapActive && (isDesktop || mobileActiveTab === 'map')) ? (
               <Suspense
                 fallback={

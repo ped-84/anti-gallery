@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { Gallery, RouteOptimizationResult } from '../types/gallery';
 import { toPersianDigits, getGalleryDisplayName, parsePersianDateToScore, isThisWeekOpening } from '../utils/persianUtils';
-import { Navigation, Compass, Layers, Car, ShieldAlert } from 'lucide-react';
+import { Navigation, Compass, Layers, Car, ShieldAlert, SlidersHorizontal } from 'lucide-react';
 
 interface InteractiveMapProps {
   galleries: Gallery[];
@@ -116,6 +116,8 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
   const [showTrafficZone, setShowTrafficZone] = useState(true);
   const [mapFilterMode, setMapFilterMode] = useState<'all' | 'active-only' | 'openings-only'>('all');
   const [showTourOnly, setShowTourOnly] = useState(false);
+  // On phones the filters are collapsed behind one round button so they do not cover the pins.
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   // Auto-reset tour filter if selected galleries are cleared
   useEffect(() => {
@@ -863,20 +865,41 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
       {/* Floating Map Controls (Top-Right) */}
       <div className="absolute top-3.5 right-3.5 z-10 flex flex-col items-end gap-1.5 max-w-[calc(100%-70px)]">
+        {/* Phones: one round button opens/closes the filters */}
+        <button
+          type="button"
+          onClick={() => setFiltersOpen((o) => !o)}
+          aria-expanded={filtersOpen}
+          title={filtersOpen ? 'بستن فیلترهای نقشه' : 'فیلترهای نقشه'}
+          aria-label={filtersOpen ? 'بستن فیلترهای نقشه' : 'فیلترهای نقشه'}
+          className={`sm:hidden relative clay-button w-10 h-10 flex items-center justify-center transition-all cursor-pointer ${
+            filtersOpen ? 'clay-darkblue text-white' : 'clay-base text-[#3D5B99] dark:text-[#A3C2E4]'
+          }`}
+        >
+          <SlidersHorizontal className="w-4 h-4" />
+          {(showTourOnly || mapFilterMode !== 'all') && (
+            <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#F76B1C] border border-white dark:border-stone-900" />
+          )}
+        </button>
+
+        <div
+          className={`${filtersOpen ? 'flex' : 'hidden sm:flex'} flex-col items-end gap-1.5`}
+          onClick={() => { if (typeof window !== 'undefined' && window.innerWidth < 640) setFiltersOpen(false); }}
+        >
         {/* Primary Tour Mode Toggle: Shown whenever user has galleries in their tour */}
         {selectedGalleries.length > 0 && (
           <div className="clay-card bg-[#f0f3f8]/95 dark:bg-stone-900/95 backdrop-blur-md p-1 clay-track border border-[#E1E1E1]/80 dark:border-stone-800 shadow-xs flex items-center gap-1 text-xs font-bold">
             <button
               type="button"
               onClick={() => setShowTourOnly(true)}
-              className={`px-2.5 sm:px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-2 sm:px-3 py-1.5 rounded-full whitespace-nowrap transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
                 showTourOnly
                   ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                   : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
               }`}
               title="فقط نمایش گالری‌های منتخب و ایستگاه‌های گشت شما روی نقشه"
             >
-              <span className={`w-2 h-2 rounded-full ${showTourOnly ? 'bg-[#F76B1C]' : 'bg-stone-400'}`} />
+              <span className={`hidden sm:block w-2 h-2 rounded-full ${showTourOnly ? 'bg-[#F76B1C]' : 'bg-stone-400'}`} />
               <span>فقط گالری‌های گشت</span>
               <span
                 className={`text-xs px-1.5 rounded-md tabular-nums ${
@@ -892,7 +915,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
             <button
               type="button"
               onClick={() => setShowTourOnly(false)}
-              className={`px-2.5 sm:px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-2 sm:px-3 py-1.5 rounded-full whitespace-nowrap transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
                 !showTourOnly
                   ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                   : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
@@ -910,14 +933,14 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
             <button
               type="button"
               onClick={() => setMapFilterMode('openings-only')}
-              className={`px-2.5 sm:px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-2 sm:px-3 py-1.5 rounded-full whitespace-nowrap transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
                 mapFilterMode === 'openings-only'
                   ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                   : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
               }`}
               title="فقط نمایش گالری‌های دارای افتتاحیه این هفته (خلوت‌ترین حالت)"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#F76B1C]" />
+              <span className="hidden sm:block w-1.5 h-1.5 rounded-full bg-[#F76B1C]" />
               <span>افتتاحیه‌ها</span>
               <span
                 className={`text-xs px-1.5 rounded-md tabular-nums ${
@@ -933,14 +956,14 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
             <button
               type="button"
               onClick={() => setMapFilterMode('active-only')}
-              className={`px-2.5 sm:px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-2 sm:px-3 py-1.5 rounded-full whitespace-nowrap transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
                 mapFilterMode === 'active-only'
                   ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                   : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
               }`}
               title="نمایش تمام گالری‌های دارای نمایشگاه فعال"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#3D5B99] dark:bg-[#A3C2E4]" />
+              <span className="hidden sm:block w-1.5 h-1.5 rounded-full bg-[#3D5B99] dark:bg-[#A3C2E4]" />
               <span>همه فعال‌ها</span>
               <span
                 className={`text-xs px-1.5 rounded-md tabular-nums ${
@@ -956,7 +979,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
             <button
               type="button"
               onClick={() => setMapFilterMode('all')}
-              className={`px-2.5 sm:px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-2 sm:px-3 py-1.5 rounded-full whitespace-nowrap transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
                 mapFilterMode === 'all'
                   ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                   : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
@@ -976,6 +999,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
             </button>
           </div>
         )}
+        </div>
       </div>
 
       {/* Map Legend Overlay */}
