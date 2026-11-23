@@ -179,6 +179,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       origConsoleError.apply(console, args);
     };
 
+    let purgeObserver: MutationObserver | null = null;
     const purgeNeshanWatermarks = () => {
       const container = mapContainerRef.current;
       if (!container) return;
@@ -193,8 +194,15 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         '.mapboxgl-compact',
         '.mapboxgl-ctrl-logo',
         'a.mapboxgl-ctrl-logo',
+        '.mapboxgl-control-container',
         '.neshan-watermark',
-        '.neshan-logo'
+        '.neshan-logo',
+        'a[href*="neshan" i]',
+        'img[src*="neshan" i]',
+        '[alt*="neshan" i]',
+        '[class*="attrib" i]',
+        '[class*="copyright" i]',
+        '[class*="watermark" i]'
       ];
       selectors.forEach((sel) => {
         container.querySelectorAll(sel).forEach((el: any) => {
@@ -203,6 +211,14 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           el.style.setProperty('opacity', '0', 'important');
           el.style.setProperty('pointer-events', 'none', 'important');
         });
+      });
+      // Fallback by text: any small leaf that shows the © credit line (Platform / NeshanWeb / OSM)
+      container.querySelectorAll('div,span,a,p').forEach((el: any) => {
+        if (el.closest('.mapboxgl-marker, .mapboxgl-popup') || el.children.length > 3) return;
+        const t = (el.textContent || '').trim();
+        if (t.length > 0 && t.length < 80 && /©|openstreetmap|neshanweb/i.test(t)) {
+          el.style.setProperty('display', 'none', 'important');
+        }
       });
     };
 
@@ -267,6 +283,14 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           setIsMapReady(true);
           triggerProgressiveResize(map);
           purgeNeshanWatermarks();
+          // The SDK may add the credit line / logo after load or on style changes
+          try {
+            const target = mapContainerRef.current;
+            if (target) {
+              purgeObserver = new MutationObserver(() => purgeNeshanWatermarks());
+              purgeObserver.observe(target, { childList: true, subtree: true });
+            }
+          } catch {}
 
           // Add Tehran Central Traffic Zone Layer
           try {
@@ -357,6 +381,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       isCancelled = true;
       clearTimeout(watchdogTimer);
       resizeTimers.forEach(clearTimeout);
+      purgeObserver?.disconnect();
       if (resizeObserver) {
         resizeObserver.disconnect();
       }

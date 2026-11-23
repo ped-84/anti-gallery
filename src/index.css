@@ -656,6 +656,7 @@ body {
 }
 
 /* Hide Neshan / Mapbox attribution & watermarks */
+.mapboxgl-control-container,
 .mapboxgl-ctrl-attrib,
 .mapboxgl-ctrl-attrib-inner,
 .mapboxgl-ctrl-attrib-button,
