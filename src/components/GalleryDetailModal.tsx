@@ -355,13 +355,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   </span>
                 </div>
 
-                {/* دوره برگزاری: ۱ پیکسل کوچکتر (۱۴ پیکسل) */}
-                {activeExhibition.fullDateRange && (
-                  <div className="text-sm text-stone-500 dark:text-stone-400 flex items-center gap-2 pt-1 font-medium">
-                    <Clock className="w-4 h-4 text-[#F76B1C]" />
-                    <span>دوره برگزاری: {toPersianDigits(activeExhibition.fullDateRange)}</span>
-                  </div>
-                )}
+                {/* دوره‌ی برگزاری پایین‌تر در «برنامه و ساعت بازدید» آمده؛ اینجا تکرار نمی‌شود */}
               </div>
             ) : (
               <div className="clay-card clay-gray-subtle p-3.5 rounded-2xl border border-[#E1E1E1] dark:border-stone-800 text-stone-600 dark:text-stone-400 text-sm leading-relaxed">

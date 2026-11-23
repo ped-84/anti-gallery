@@ -1216,48 +1216,27 @@ export default function App() {
 
       {/* Main Content Layout */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6">
-        {/* Dedicated Curated Tours Claymorphic Spotlight Card */}
-        <section className="clay-card p-4 sm:p-5.5 bg-gradient-to-r from-white via-[#fcfdff] to-[#f4f7fb] dark:from-[#181d27] dark:via-[#1c2331] dark:to-[#141924] border border-[#E1E1E1] dark:border-stone-800 shadow-md">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0 pr-0.5 sm:pr-0">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl clay-button clay-orange flex items-center justify-center shrink-0 shadow-md">
-                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white stroke-[2.2]" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap sm:flex-nowrap">
-                  <span className="text-md sm:text-base font-black text-[#1c2944] dark:text-white shrink-0 whitespace-nowrap">
-                    گشت‌های آماده آرت‌گشت
-                  </span>
-                  <span className="whitespace-nowrap px-3 sm:px-3.5 py-0.5 sm:py-1 text-xs sm:text-xs font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug inline-flex items-center shrink-0 shadow-xs">
-                    مسیرهای پیشنهادی تهران
-                  </span>
-                </div>
-                <p className="text-sm sm:text-base text-stone-600 dark:text-stone-300 mt-1 sm:mt-1.5 leading-relaxed">
-                  مسیرهای منتخب و پیوسته برای گالری‌گردی بهینه با کمترین زمان و فاصله در محله‌های هنری تهران
-                </p>
-              </div>
+        {/* Editorial Claymorphic Banner */}
+        <section className="clay-card p-4 sm:p-6 bg-white dark:bg-[#181d27] border border-[#E1E1E1] dark:border-stone-800">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+            <div className="min-w-0">
+              <h1 className="text-xl sm:text-2xl font-bold text-[#1d2d4c] dark:text-white leading-snug">
+                بهترین مسیر آرت‌گشت در تهران
+              </h1>
+              <p className="text-sm sm:text-md text-stone-600 dark:text-stone-300 mt-1.5 leading-relaxed">
+                گالری‌ها را با «افزودن به گشت» انتخاب کن یا یکی از گشت‌های آماده‌ی زیر را بزن؛ آرت‌گشت ترتیب بهینه را با ساعت کار گالری‌ها و ترافیک تهران پیدا می‌کند.
+              </p>
             </div>
-
+            {/* گشت‌های آماده: قبلاً یک کارت جدا بالای همین کارت بود */}
             <button
               type="button"
               onClick={() => setIsCuratedModalOpen(true)}
-              className="clay-button clay-orange text-white px-5 sm:px-6 py-2.5 sm:py-3 text-sm font-bold flex items-center justify-center gap-2 rounded-2xl shadow-md hover:brightness-105 hover:scale-105 active:scale-95 transition-all shrink-0 cursor-pointer w-full sm:w-auto"
-              title="مشاهده نقشه و مسیرهای پیشنهادی گشت‌های آماده"
+              className="clay-button clay-orange text-white px-4 py-2.5 text-sm font-bold flex items-center justify-center gap-2 rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all shrink-0 cursor-pointer w-full sm:w-auto"
             >
-              <Sparkles className="w-4 h-4 text-white stroke-[2.2] shrink-0" />
-              <span>گشت‌های آماده</span>
+              <Sparkles className="w-4 h-4 text-white stroke-[2.2] shrink-0" aria-hidden="true" />
+              <span>گشت‌های آماده روی نقشه</span>
             </button>
           </div>
-        </section>
-
-        {/* Editorial Claymorphic Banner */}
-        <section className="clay-card p-4 sm:p-6 bg-white dark:bg-[#181d27] border border-[#E1E1E1] dark:border-stone-800">
-          <h1 className="text-xl sm:text-3xl font-bold text-[#1d2d4c] dark:text-white leading-snug">
-            بهترین مسیر آرت‌گشت در تهران
-          </h1>
-          <p className="text-sm sm:text-base text-stone-600 dark:text-stone-300 mt-2 leading-relaxed">
-            گالری‌های مورد نظر خود را انتخاب کنید تا بهترین مسیر با احتساب ترافیک تهران به شما پیشنهاد شود.
-          </p>
 
           {/* Quick Tour Presets */}
           <div className="mt-4 pt-3.5 border-t border-[#E1E1E1] dark:border-stone-800 flex items-center gap-2 flex-wrap">
