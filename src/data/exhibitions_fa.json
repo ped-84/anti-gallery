@@ -555,21 +555,6 @@
     "isExpired": false
   },
   {
-    "eventId": 21556,
-    "galleryId": 1005,
-    "title": "انباشت تدریجی",
-    "artist": "بهروز مجیدی",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 15 آبان 1405",
-    "fullDateRange": "15 آبان 1405 تا 1 آذر 1405",
-    "closingDate": "1 آذر 1405",
-    "openingHours": "15:۰۰ الی 21:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21556.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21556.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21556",
-    "isExpired": false
-  },
-  {
     "eventId": 21555,
     "galleryId": 26,
     "title": "حضور",
@@ -627,21 +612,6 @@
     "poster": "https://galleryinfo.ir/Images/Events/Event_21613.jpg",
     "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21613.jpg",
     "url": "https://galleryinfo.ir/Event/fa/21613",
-    "isExpired": false
-  },
-  {
-    "eventId": 21499,
-    "galleryId": 314,
-    "title": "آن سوی فرم",
-    "artist": "محمدرضا حسینی",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 1 آبان 1405",
-    "fullDateRange": "1 آبان 1405 تا 1 آذر 1405",
-    "closingDate": "1 آذر 1405",
-    "openingHours": "۱۰:۰۰ الی 20:۰۰",
-    "poster": "https://galleryinfo.ir/Images/Events/Event_21499.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21499.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21499",
     "isExpired": false
   },
   {
