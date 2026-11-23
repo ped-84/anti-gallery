@@ -40,7 +40,7 @@
    In the light theme, text set in brand orange uses the deeper #C2410C (5.2:1). */
 html:not(.dark) .text-\[\#F76B1C\]:not(svg),
 html:not(.dark) .hover\:text-\[\#F76B1C\]:not(svg):hover {
-  color: #c2410c;
+  color: #E05A10;
 }
 
 /* ========================================================

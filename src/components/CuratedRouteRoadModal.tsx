@@ -373,7 +373,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                     }}
                   >
                     {curatedMode === 'walking' ? (
-                      <Footprints className="ag-leg-icon text-[#c2410c] dark:text-[#ff8a3d]" aria-hidden="true" />
+                      <Footprints className="ag-leg-icon text-[#E05A10] dark:text-[#ff8a3d]" aria-hidden="true" />
                     ) : (
                       <Car className="ag-leg-icon text-[#10335e] dark:text-[#A3C2E4]" aria-hidden="true" />
                     )}

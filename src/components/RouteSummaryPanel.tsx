@@ -477,92 +477,103 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
       {/* TRIP STATS & INSIGHTS CARD: Harmonious, balanced, and clean */}
       {routeResult && (
         <div className="p-3 sm:p-3.5 bg-gradient-to-b from-[#f7f9fc] to-[#edf2f8] dark:from-[#131722] dark:to-[#0f121a] border-b border-[#E1E1E1] dark:border-stone-800 space-y-2.5">
-          {/* Main Hero Summary Card */}
-          <div className="clay-card p-3 sm:p-3.5 bg-white dark:bg-[#181d28] border border-[#E1E1E1]/80 dark:border-stone-800 flex items-center justify-between gap-2.5 shadow-xs rounded-xl">
-            {/* Primary ETA: Tour Duration */}
-            <div>
-              <span className="text-sm font-medium text-stone-500 dark:text-stone-400 block mb-0.5">
-                زمان کل برنامه ({toPersianDigits(visitDurationMin)} دقیقه بازدید در هر گالری)
-              </span>
-              <span className="text-base sm:text-lg font-bold text-[#F76B1C] tabular-nums">
-                {avgHours > 0 ? `${toPersianDigits(avgHours)} ساعت و ` : ''}{toPersianDigits(avgMins)} دقیقه
-              </span>
-            </div>
-
-            {/* Secondary Transit Metrics */}
-            <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1.5 shrink-0">
-              <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-[#f0f4fa] dark:bg-stone-800 text-[#1d2d4c] dark:text-stone-200 border border-[#E1E1E1]/80 dark:border-stone-700/80 tabular-nums">
-                {formatDistanceFa(routeResult.totalDistanceKm)} مسافت
-              </span>
-              <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-[#f0f4fa] dark:bg-stone-800 text-[#1d2d4c] dark:text-stone-200 border border-[#E1E1E1]/80 dark:border-stone-700/80 tabular-nums">
-                ~{toPersianDigits(routeResult.totalDurationMin)} دقیقه {mode === 'walking' ? 'پیاده' : 'رانندگی'}
-              </span>
-            </div>
-          </div>
-
-          {/* Context Alert Chips: Traffic Zone & Peak Delay */}
-          {(routeResult.trafficZoneWarningsCount > 0 || (trafficCondition === 'peak' && trafficDelayMin > 0)) && (
-            <div className="flex items-center gap-2 flex-wrap pt-0.5">
-              {routeResult.trafficZoneWarningsCount > 0 && (
-                <div className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800/60 px-2.5 py-1 rounded-lg shadow-2xs">
-                  <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-amber-600 dark:text-amber-400" />
-                  <span>{toPersianDigits(routeResult.trafficZoneWarningsCount)} نگارخانه در محدوده طرح ترافیک</span>
+          {/* خلاصه‌ی گشت: یک کارت با چهار کاشی هم‌شکل (همان زبان کارت‌های گالری) + یادداشت‌ها با آیکون، بدون جعبه‌های رنگی جدا */}
+          {(() => {
+            const sol = routeResult.tspTwSolution;
+            const tile = 'rounded-xl bg-[#f0f4fa] dark:bg-[#121722] border border-[#A3C2E4]/40 dark:border-stone-700/60 px-3 py-2.5 min-w-0';
+            const label = 'flex items-center gap-1.5 text-xs font-medium text-stone-500 dark:text-stone-400';
+            const value = 'block mt-1 text-base font-bold text-[#1d2d4c] dark:text-white tabular-nums truncate';
+            const note = 'flex items-start gap-2 text-sm leading-relaxed text-stone-600 dark:text-stone-300';
+            const notes: React.ReactNode[] = [];
+            if (sol && (sol.departureDelayMinutes ?? 0) > 0) {
+              notes.push(
+                <div key="delay" className={note}>
+                  <Clock className="w-4 h-4 mt-0.5 shrink-0 text-[#3D5B99] dark:text-[#A3C2E4]" aria-hidden="true" />
+                  <span>گالری‌ها هنوز باز نیستند؛ ساعت حرکت طوری تنظیم شده که سر ساعت باز شدن برسی.</span>
                 </div>
-              )}
-              {trafficCondition === 'peak' && trafficDelayMin > 0 && (
-                <div className="inline-flex items-center gap-1.5 text-xs font-medium text-[#F76B1C] bg-orange-50 dark:bg-orange-950/40 border border-orange-300 dark:border-orange-800/60 px-2.5 py-1 rounded-lg shadow-2xs">
-                  <Clock className="w-3.5 h-3.5 shrink-0" />
-                  <span>ترافیک عصر: +{toPersianDigits(trafficDelayMin)} دقیقه تاخیر احتمالی</span>
+              );
+            }
+            if (routeResult.trafficZoneWarningsCount > 0) {
+              notes.push(
+                <div key="zone" className={note}>
+                  <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0 text-[#F76B1C]" aria-hidden="true" />
+                  <span>{toPersianDigits(routeResult.trafficZoneWarningsCount)} گالری در محدوده‌ی طرح ترافیک است.</span>
                 </div>
-              )}
-            </div>
-          )}
-
-          {/* TSP-TW Time Window Insights */}
-          {routeResult.tspTwSolution && (
-            <div className="space-y-2 pt-1">
-              <div className="p-2.5 rounded-xl bg-blue-50/80 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50 text-xs space-y-1">
-                <div className="flex items-center gap-1.5 font-bold text-[#1856C7] dark:text-[#93c5fd] flex-wrap">
-                  <Clock className="w-4 h-4 shrink-0" aria-hidden="true" />
-                  <span>حرکت</span>
-                  <span className="tabular-nums text-sm">{toPersianDigits(routeResult.tspTwSolution.routeStartFormatted)}</span>
-                  <span className="text-stone-400 font-normal">·</span>
-                  <span>پایان گشت</span>
-                  <span className="tabular-nums text-sm">{toPersianDigits(routeResult.tspTwSolution.routeEndFormatted)}</span>
+              );
+            }
+            if (trafficCondition === 'peak' && trafficDelayMin > 0) {
+              notes.push(
+                <div key="peak" className={note}>
+                  <Car className="w-4 h-4 mt-0.5 shrink-0 text-[#3D5B99] dark:text-[#A3C2E4]" aria-hidden="true" />
+                  <span>ترافیک عصر حدود {toPersianDigits(trafficDelayMin)} دقیقه به رانندگی اضافه می‌کند.</span>
                 </div>
-                {(routeResult.tspTwSolution.departureDelayMinutes ?? 0) > 0 && (
-                  <p className="text-stone-600 dark:text-stone-300 leading-relaxed">
-                    گالری‌ها هنوز باز نیستند؛ اگر الان راه بیفتی پشت در می‌مانی. ساعت حرکت طوری تنظیم شده که سر ساعت باز شدن برسی.
-                  </p>
-                )}
-              </div>
-
-              {routeResult.tspTwSolution.suggestedEarlierStartMinutes && (
-                <div className="flex items-start gap-2 p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800/60 text-xs text-amber-900 dark:text-amber-200">
-                  <Sparkles className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                  <p className="leading-relaxed font-medium">
-                    <strong>پیشنهاد هوشمند:</strong> با {toPersianDigits(routeResult.tspTwSolution.suggestedEarlierStartMinutes)} دقیقه شروع زودتر، زمان کافی برای بازدید از تمامی گالری‌ها پیش از تعطیلی فراهم می‌شود.
-                  </p>
+              );
+            }
+            if (sol?.suggestedEarlierStartMinutes) {
+              notes.push(
+                <div key="earlier" className={note}>
+                  <Sparkles className="w-4 h-4 mt-0.5 shrink-0 text-[#F76B1C]" aria-hidden="true" />
+                  <span>اگر {toPersianDigits(sol.suggestedEarlierStartMinutes)} دقیقه زودتر راه بیفتی، به همه‌ی گالری‌ها پیش از تعطیلی می‌رسی.</span>
                 </div>
-              )}
-
-              {routeResult.tspTwSolution.droppedStops.length > 0 && (
-                <div className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-xs text-rose-900 dark:text-rose-200 space-y-1">
-                  <div className="flex items-center gap-1.5 font-bold text-rose-700 dark:text-rose-300">
-                    <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
-                    <span>هشدار تداخل ساعت کاری ({toPersianDigits(routeResult.tspTwSolution.droppedStops.length)} گالری):</span>
-                  </div>
-                  <div className="text-xs text-rose-800 dark:text-rose-300 space-y-0.5 pr-5">
-                    {routeResult.tspTwSolution.droppedStops.map((d, i) => (
+              );
+            }
+            if (sol && sol.droppedStops.length > 0) {
+              notes.push(
+                <div key="dropped" className={note}>
+                  <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0 text-rose-600 dark:text-rose-400" aria-hidden="true" />
+                  <div className="space-y-0.5">
+                    <span className="font-bold text-rose-700 dark:text-rose-300">
+                      به {toPersianDigits(sol.droppedStops.length)} گالری پیش از تعطیلی نمی‌رسی:
+                    </span>
+                    {sol.droppedStops.map((d, i) => (
                       <div key={i}>
-                        • <strong>{d.name || `ایستگاه ${toPersianDigits(d.nodeIndex + 1)}`}</strong>: ساعت {toPersianDigits(d.closingTimeFormatted)} بسته می‌شود (رسیدن تقریبی: ~{toPersianDigits(d.earliestPossibleArrivalFormatted)}).
+                        {d.name || `ایستگاه ${toPersianDigits(d.nodeIndex + 1)}`}: تعطیلی {toPersianDigits(d.closingTimeFormatted)}، رسیدن حدود {toPersianDigits(d.earliestPossibleArrivalFormatted)}
                       </div>
                     ))}
                   </div>
                 </div>
-              )}
-            </div>
-          )}
+              );
+            }
+            return (
+              <div className="clay-card p-3 sm:p-3.5 bg-white dark:bg-[#181d28] border border-[#E1E1E1]/80 dark:border-stone-800 space-y-3">
+                <div className="grid grid-cols-2 gap-2">
+                  <div className={tile}>
+                    <span className={label}><Timer className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />کل گشت</span>
+                    <span className={`${value} text-[#F76B1C]`}>
+                      {avgHours > 0 ? `${toPersianDigits(avgHours)} ساعت و ` : ''}{toPersianDigits(avgMins)} دقیقه
+                    </span>
+                  </div>
+                  <div className={tile}>
+                    <span className={label}>
+                      {mode === 'walking' ? <Footprints className="w-3.5 h-3.5 shrink-0" aria-hidden="true" /> : <Car className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />}
+                      {mode === 'walking' ? 'پیاده‌روی' : 'رانندگی'}
+                    </span>
+                    <span className={value}>
+                      {formatDistanceFa(routeResult.totalDistanceKm)}، {toPersianDigits(routeResult.totalDurationMin)} دقیقه
+                    </span>
+                  </div>
+                  {sol && (
+                    <>
+                      <div className={tile}>
+                        <span className={label}><Navigation className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />حرکت</span>
+                        <span className={value}>ساعت {toPersianDigits(sol.routeStartFormatted)}</span>
+                      </div>
+                      <div className={tile}>
+                        <span className={label}><Flag className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />پایان گشت</span>
+                        <span className={value}>ساعت {toPersianDigits(sol.routeEndFormatted)}</span>
+                      </div>
+                    </>
+                  )}
+                </div>
+                <p className="text-xs text-stone-500 dark:text-stone-400">
+                  با {toPersianDigits(visitDurationMin)} دقیقه بازدید در هر گالری
+                </p>
+                {notes.length > 0 && (
+                  <div className="pt-3 border-t border-stone-100 dark:border-stone-800/80 space-y-2">{notes}</div>
+                )}
+              </div>
+            );
+          })()}
         </div>
       )}
 
@@ -743,7 +754,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
 
                           {gallery.activeExhibition && (
                             <div className="min-w-0">
-                              <div className="font-exhibit text-xl text-[#c2410c] dark:text-[#ff8a3d] leading-normal truncate">
+                              <div className="font-exhibit text-xl text-[#E05A10] dark:text-[#ff8a3d] leading-normal truncate">
                                 {gallery.activeExhibition.title}
                               </div>
                               {gallery.activeExhibition.artist && (
@@ -809,7 +820,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                               )}
                               {!routeResult.isRoundTrip && (
                                 isLast ? (
-                                  <span className="inline-flex items-center gap-1 font-bold text-white bg-[#c2410c] px-3 py-2 min-h-10 rounded-xl text-sm">
+                                  <span className="inline-flex items-center gap-1 font-bold text-white bg-[#F76B1C] px-3 py-2 min-h-10 rounded-xl text-sm shadow-[0_4px_12px_-4px_rgba(247,107,28,0.6)]">
                                     <Check className="w-4 h-4" aria-hidden="true" />
                                     <span>پایان</span>
                                   </span>

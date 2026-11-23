@@ -99,7 +99,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
 
   let statusColors = 'bg-white dark:bg-stone-900/80 text-[#10335e] dark:text-[#dbeafe] border-[#10335e]/15 dark:border-[#93c5fd]/20';
   if (status?.badgeType === 'opening') {
-    statusColors = 'bg-white dark:bg-stone-900/80 text-[#c2410c] dark:text-[#ff8a3d] border-[#F76B1C]/30';
+    statusColors = 'bg-white dark:bg-stone-900/80 text-[#E05A10] dark:text-[#ff8a3d] border-[#F76B1C]/30';
   } else if (status?.badgeType === 'closing-today') {
     statusColors = 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-300 dark:border-rose-800';
   } else if (status?.badgeType === 'closing-soon') {
@@ -203,7 +203,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
 
           {totalActiveAtVenue > 1 && (
             <div
-              className="shrink-0 flex items-center gap-1 text-xs font-bold text-[#c2410c] dark:text-[#ff8a3d] bg-[#F76B1C]/10 border border-[#F76B1C]/25 px-2 py-0.5 rounded-lg"
+              className="shrink-0 flex items-center gap-1 text-xs font-bold text-[#E05A10] dark:text-[#ff8a3d] bg-[#F76B1C]/10 border border-[#F76B1C]/25 px-2 py-0.5 rounded-lg"
               title={`${toPersianDigits(totalActiveAtVenue)} نمایشگاه همزمان در این مکان`}
             >
               <Sparkles className="w-3 h-3 shrink-0" />
