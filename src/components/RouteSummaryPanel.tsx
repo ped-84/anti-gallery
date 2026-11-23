@@ -542,9 +542,10 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
               );
             }
             // همان الگوی ردیف «بازدید هر گالری»: کارت رسی خاکستری، برچسب با آیکون راست، مقدار در قرص سفید چپ
-            const row = 'flex items-center justify-between gap-2 py-1.5';
+            const row = 'flex items-center justify-between gap-2 py-2.5';
             const rowLabel = 'flex items-center gap-2 text-stone-700 dark:text-stone-300 font-bold text-sm pr-1';
-            const pill = 'clay-button clay-base px-3 py-1.5 rounded-xl text-sm font-bold text-[#1d2d4c] dark:text-white tabular-nums border border-[#E1E1E1] dark:border-stone-700 shadow-xs';
+            // مقدارها متن ساده‌اند، نه قرص: قرص سفید در این اپ یعنی «قابل کلیک»
+            const pill = 'pl-2 text-sm font-bold text-[#1d2d4c] dark:text-white tabular-nums text-left';
             return (
               <div className="space-y-2.5">
                 <div className="clay-card p-2 sm:p-2.5 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-2xl border border-[#E1E1E1]/80 dark:border-stone-800 shadow-xs divide-y divide-[#E1E1E1]/70 dark:divide-stone-800">
