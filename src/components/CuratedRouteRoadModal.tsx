@@ -57,6 +57,8 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
   }, [allGalleries, curatedMode]);
 
   const activeRouteIdx = Math.max(0, Math.min(selectedRouteIdx, Math.max(0, validRoutes.length - 1)));
+  // حالت تیره از کلاس روی <html> خوانده می‌شود (هوک نیست؛ مودال با هر باز شدن دوباره رندر می‌شود)
+  const isDark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
   const currentRoute: RoadRoute = validRoutes[activeRouteIdx] || CURATED_ROAD_ROUTES[0];
 
   // Sync with initialRouteId whenever modal opens or route id changes
@@ -135,7 +137,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="absolute top-4 left-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center transition-colors shadow-2xs z-20 cursor-pointer"
+            className="absolute top-4 left-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-600 dark:text-stone-300 flex items-center justify-center transition-colors shadow-2xs z-20 cursor-pointer"
             title="بستن پنجره (ESC)"
           >
             <X className="w-5 h-5" />
@@ -145,7 +147,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
             <div className="flex flex-wrap items-center justify-between gap-2 pl-12">
               <span className="ag-eyebrow">مسیرهای پیشنهادی آرت‌گشت</span>
               {/* Segmented Mode Switcher: با خودرو / پیاده‌روی */}
-              <div className="inline-flex items-center p-1 bg-stone-100 rounded-xl border border-stone-200/80 shadow-2xs">
+              <div className="inline-flex items-center p-1 bg-stone-100 dark:bg-stone-900 rounded-xl border border-stone-200/80 dark:border-stone-700 shadow-2xs">
                 <button
                   type="button"
                   onClick={() => {
@@ -154,8 +156,8 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                   }}
                   className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
                     curatedMode === 'driving'
-                      ? 'bg-white text-stone-900 shadow-xs'
-                      : 'text-stone-500 hover:text-stone-700'
+                      ? 'bg-white dark:bg-[#232a3a] text-stone-900 dark:text-white shadow-xs'
+                      : 'text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200'
                   }`}
                 >
                   <Car className="w-3.5 h-3.5 text-blue-600" />
@@ -169,8 +171,8 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                   }}
                   className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
                     curatedMode === 'walking'
-                      ? 'bg-white text-stone-900 shadow-xs'
-                      : 'text-stone-500 hover:text-stone-700'
+                      ? 'bg-white dark:bg-[#232a3a] text-stone-900 dark:text-white shadow-xs'
+                      : 'text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200'
                   }`}
                 >
                   <Footprints className="w-3.5 h-3.5 text-amber-600" />
@@ -202,10 +204,10 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
             {validRoutes.map((r, idx) => {
               const isSelected = idx === activeRouteIdx;
               const fill = r.tab || safeFillForWhiteText(r.color);
-              const tabBg = isSelected ? fill : mix(r.color, '#ffffff', 0.88);
-              const tabInk = isSelected ? (r.tabInk || '#ffffff') : mix(r.color, '#000000', 0.45);
+              const tabBg = isSelected ? fill : isDark ? mix(r.color, '#141822', 0.78) : mix(r.color, '#ffffff', 0.88);
+              const tabInk = isSelected ? (r.tabInk || '#ffffff') : isDark ? mix(r.color, '#ffffff', 0.55) : mix(r.color, '#000000', 0.45);
               const tabGlow = mix(r.color, '#ffffff', 0.4) + '66';
-              const tabBorder = isSelected ? mix(fill, '#000000', 0.15) : mix(r.color, '#ffffff', 0.65);
+              const tabBorder = isSelected ? mix(fill, '#000000', 0.15) : isDark ? mix(r.color, '#141822', 0.5) : mix(r.color, '#ffffff', 0.65);
 
               const style: React.CSSProperties = {
                 '--tab-bg': tabBg,
@@ -355,8 +357,8 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                   >
                     <path
                       d={`M ${r} 0.5 L ${badgeW - 20} 0.5 Q ${badgeW - 12} 1.5 ${badgeW - 8} 5.5 L ${badgeW - 3} ${r - 3.5} Q ${badgeW} ${r} ${badgeW - 3} ${r + 3.5} L ${badgeW - 8} ${badgeH - 5.5} Q ${badgeW - 12} ${badgeH - 1.5} ${badgeW - 20} ${badgeH - 0.5} L ${r} ${badgeH - 0.5} A ${r - 0.5} ${r - 0.5} 0 0 1 ${r} 0.5 Z`}
-                      fill="#ffffff"
-                      stroke="rgba(29, 45, 76, 0.16)"
+                      fill="var(--bubble)"
+                      stroke="var(--bubble-border)"
                       strokeWidth="1.2"
                     />
                   </svg>
@@ -369,9 +371,9 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                     }}
                   >
                     {curatedMode === 'walking' ? (
-                      <Footprints className="ag-leg-icon text-[#c2410c]" aria-hidden="true" />
+                      <Footprints className="ag-leg-icon text-[#c2410c] dark:text-[#ff8a3d]" aria-hidden="true" />
                     ) : (
-                      <Car className="ag-leg-icon text-[#10335e]" aria-hidden="true" />
+                      <Car className="ag-leg-icon text-[#10335e] dark:text-[#A3C2E4]" aria-hidden="true" />
                     )}
                     <span className="ag-leg-text">{lg.text}</span>
                   </div>
@@ -447,7 +449,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                         height={12}
                         viewBox="0 0 24 24"
                         fill="none"
-                        stroke="#8a5a00"
+                        stroke="currentColor"
                         strokeWidth={2.2}
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -504,8 +506,8 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
         {/* Bottom Docked CTA Bar: 100% Native Scale */}
         <div className="ag-foot w-full">
           <div className="flex items-center gap-2 text-xs sm:text-sm truncate">
-            <Compass className="w-4 h-4 sm:w-5 sm:h-5 text-[#3D5B99] shrink-0" />
-            <span className="font-extrabold text-[#1f2a44] truncate">
+            <Compass className="w-4 h-4 sm:w-5 sm:h-5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
+            <span className="font-extrabold text-[#1f2a44] dark:text-white truncate">
               {currentRoute.label}
             </span>
             <span className="text-stone-400">·</span>
