@@ -259,7 +259,17 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
 
   // Calculate Average Times as the main large metrics (Based on user-selected visit duration per gallery)
   const dwellTimeMin = (routeResult?.orderedGalleries.length || 0) * visitDurationMin;
-  const avgTotalTourTimeMin = (routeResult?.totalDurationMin || 0) + dwellTimeMin;
+  // اگر برنامه‌ی زمانی هست، «کل گشت» همان فاصله‌ی حرکت تا پایان است تا با کاشی‌های حرکت/پایان یکی باشد
+  const hhmm = (t?: string) => {
+    const m = t && /^(\d{1,2}):(\d{2})$/.exec(t.trim());
+    return m ? Number(m[1]) * 60 + Number(m[2]) : null;
+  };
+  const schedStart = hhmm(routeResult?.tspTwSolution?.routeStartFormatted);
+  const schedEnd = hhmm(routeResult?.tspTwSolution?.routeEndFormatted);
+  const avgTotalTourTimeMin =
+    schedStart !== null && schedEnd !== null && schedEnd > schedStart
+      ? schedEnd - schedStart
+      : (routeResult?.totalDurationMin || 0) + dwellTimeMin;
   const avgHours = Math.floor(avgTotalTourTimeMin / 60);
   const avgMins = avgTotalTourTimeMin % 60;
 
