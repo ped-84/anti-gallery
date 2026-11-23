@@ -637,7 +637,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                   type="button"
                   onClick={onReverseRoute}
                   className="clay-button clay-base text-sm font-bold px-3.5 py-2 min-h-10 rounded-xl flex items-center gap-1.5 text-stone-700 dark:text-stone-300 hover:text-[#F76B1C] hover:scale-105 active:scale-95 transition-all shadow-xs"
-                  title="معکوس کردن کامل مسیر (از آخر به اول)"
+                  title="ترتیب گشت برعکس شود (آخرین گالری اول)"
                 >
                   <ArrowUpDown className="w-4 h-4 text-[#F76B1C]" />
                   <span>مسیر معکوس</span>
@@ -646,7 +646,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                   type="button"
                   onClick={onResetAutoOrder}
                   className="clay-button clay-base text-sm font-bold px-3.5 py-2 min-h-10 rounded-xl flex items-center gap-1.5 text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] hover:scale-105 active:scale-95 transition-all shadow-xs"
-                  title="محاسبه مجدد کوتاه‌ترین مسیر کلی به صورت خودکار"
+                  title="ترتیب دستی کنار گذاشته شود و بهترین ترتیب دوباره حساب شود"
                 >
                   <Sparkles className="w-4 h-4 text-amber-500" />
                   <span>چینش خودکار</span>
@@ -740,10 +740,10 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                               </div>
                             </div>
                             <div className="flex items-center shrink-0 -ml-1">
-                              <button type="button" disabled={idx === 0} onClick={() => onMoveStop?.(idx, idx - 1)} className={`${iconBtn} hover:text-[#1856C7]`} title="یک توقف جلوتر" aria-label="یک توقف جلوتر">
+                              <button type="button" disabled={idx === 0} onClick={() => onMoveStop?.(idx, idx - 1)} className={`${iconBtn} hover:text-[#3D5B99]`} title="یک توقف جلوتر" aria-label="یک توقف جلوتر">
                                 <ArrowUp className="w-5 h-5" />
                               </button>
-                              <button type="button" disabled={isLast} onClick={() => onMoveStop?.(idx, idx + 1)} className={`${iconBtn} hover:text-[#1856C7]`} title="یک توقف عقب‌تر" aria-label="یک توقف عقب‌تر">
+                              <button type="button" disabled={isLast} onClick={() => onMoveStop?.(idx, idx + 1)} className={`${iconBtn} hover:text-[#3D5B99]`} title="یک توقف عقب‌تر" aria-label="یک توقف عقب‌تر">
                                 <ArrowDown className="w-5 h-5" />
                               </button>
                               <button type="button" onClick={() => onRemoveGallery(gallery.id)} className={`${iconBtn} hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40`} title="حذف این توقف" aria-label="حذف این توقف">
@@ -795,56 +795,59 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
 
                           <div className="flex items-center justify-between flex-wrap gap-x-3 gap-y-2.5 pt-3 border-t border-stone-100 dark:border-stone-800/80">
                             <div className="flex items-center gap-2 min-w-0">
-                              {isFirst ? (
-                                hasOrigin ? (
-                                  <span className="inline-flex items-center gap-1 font-bold text-[#1856C7] dark:text-[#93c5fd] bg-[#edf3ff] dark:bg-blue-950/40 px-3 py-2 min-h-10 rounded-xl text-sm border border-blue-200 dark:border-blue-800/50">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#1856C7]"></span>
-                                    <span>اولین گالری</span>
-                                  </span>
-                                ) : (
-                                  <span className="inline-flex items-center gap-1 font-bold text-white bg-emerald-600 px-3 py-2 min-h-10 rounded-xl text-sm">
-                                    <Check className="w-4 h-4" aria-hidden="true" />
-                                    <span>شروع</span>
-                                  </span>
-                                )
-                              ) : (
-                                <button
-                                  type="button"
-                                  onClick={() => onSetStartGallery?.(gallery.id)}
-                                  className="inline-flex items-center gap-1 font-bold text-[#1856C7] dark:text-[#93c5fd] hover:text-white hover:bg-[#1856C7] bg-[#edf3ff] dark:bg-blue-950/40 px-3 py-2 min-h-10 rounded-xl text-sm border border-blue-200 dark:border-blue-800/50 active:scale-95 transition-all"
-                                  title={hasOrigin ? 'این گالری اولین مقصد بعد از مبدأ می‌شود' : 'مسیر از این گالری شروع می‌شود و بقیه بهینه می‌شوند'}
-                                >
-                                  <Navigation className="w-4 h-4" aria-hidden="true" />
-                                  <span>{hasOrigin ? 'اول اینجا' : 'شروع'}</span>
-                                </button>
-                              )}
-                              {!routeResult.isRoundTrip && (
-                                isLast ? (
-                                  <span className="inline-flex items-center gap-1 font-bold text-white bg-[#F76B1C] px-3 py-2 min-h-10 rounded-xl text-sm shadow-[0_4px_12px_-4px_rgba(247,107,28,0.6)]">
-                                    <Check className="w-4 h-4" aria-hidden="true" />
-                                    <span>پایان</span>
-                                  </span>
-                                ) : (
-                                  <button
-                                    type="button"
-                                    onClick={() => onSetEndGallery?.(gallery.id)}
-                                    className="inline-flex items-center gap-1 font-medium text-stone-600 dark:text-stone-300 hover:text-white hover:bg-[#F76B1C] bg-stone-100 dark:bg-stone-800 px-3 py-2 min-h-10 rounded-xl text-sm border border-stone-200 dark:border-stone-700 active:scale-95 transition-all"
-                                    title="مسیر در این گالری تمام شود"
-                                  >
-                                    <Flag className="w-4 h-4" aria-hidden="true" />
-                                    <span>پایان</span>
-                                  </button>
-                                )
-                              )}
+                              {(() => {
+                                // دو حالت هم‌شکل با بقیه‌ی دکمه‌های رسی پنل: «انتخاب‌شده» آبی برند، «قابل انتخاب» سفید رسی
+                                const chosen = 'inline-flex items-center gap-1.5 font-bold text-white bg-[#3D5B99] dark:bg-[#4a6bb0] px-3.5 py-2 min-h-10 rounded-xl text-sm shadow-[0_4px_12px_-4px_rgba(61,91,153,0.55)]';
+                                const idle = 'clay-button clay-base inline-flex items-center gap-1.5 font-bold text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] px-3.5 py-2 min-h-10 rounded-xl text-sm border border-[#E1E1E1] dark:border-stone-700 active:scale-95 transition-all';
+                                const startLabel = hasOrigin ? 'اولین مقصد' : 'شروع';
+                                return (
+                                  <>
+                                    {isFirst ? (
+                                      <span className={chosen} title={hasOrigin ? 'بعد از مبدأ، اول به این گالری می‌روی' : 'گشت از این گالری شروع می‌شود'}>
+                                        <Check className="w-4 h-4" aria-hidden="true" />
+                                        <span>{startLabel}</span>
+                                      </span>
+                                    ) : (
+                                      <button
+                                        type="button"
+                                        onClick={() => onSetStartGallery?.(gallery.id)}
+                                        className={idle}
+                                        title={hasOrigin ? 'اول به این گالری برو؛ ترتیب بقیه دوباره بهینه می‌شود' : 'گشت از این گالری شروع شود؛ ترتیب بقیه دوباره بهینه می‌شود'}
+                                      >
+                                        <Navigation className="w-4 h-4" aria-hidden="true" />
+                                        <span>{startLabel}</span>
+                                      </button>
+                                    )}
+                                    {!routeResult.isRoundTrip && (
+                                      isLast ? (
+                                        <span className={chosen} title="گشت در این گالری تمام می‌شود">
+                                          <Check className="w-4 h-4" aria-hidden="true" />
+                                          <span>پایان</span>
+                                        </span>
+                                      ) : (
+                                        <button
+                                          type="button"
+                                          onClick={() => onSetEndGallery?.(gallery.id)}
+                                          className={idle}
+                                          title="گشت در این گالری تمام شود؛ ترتیب بقیه دوباره بهینه می‌شود"
+                                        >
+                                          <Flag className="w-4 h-4" aria-hidden="true" />
+                                          <span>پایان</span>
+                                        </button>
+                                      )
+                                    )}
+                                  </>
+                                );
+                              })()}
                             </div>
                             <div className="flex items-center gap-2 shrink-0" role="group" aria-label={`مسیریابی تا ${getGalleryDisplayName(gallery)}`}>
-                              <a href={buildNeshanUrl(gallery, undefined, mode)} target="_blank" rel="noopener noreferrer" className={navBtn} title="مسیریابی با نشان" aria-label="مسیریابی با نشان">
+                              <a href={buildNeshanUrl(gallery, undefined, mode)} target="_blank" rel="noopener noreferrer" className={navBtn} title="باز کردن مسیر تا این گالری در نشان" aria-label="باز کردن مسیر تا این گالری در نشان">
                                 <NeshanIcon className="w-[22px] h-[22px]" />
                               </a>
-                              <a href={buildWazeUrl(gallery)} target="_blank" rel="noopener noreferrer" className={navBtn} title="مسیریابی با Waze" aria-label="مسیریابی با Waze">
+                              <a href={buildWazeUrl(gallery)} target="_blank" rel="noopener noreferrer" className={navBtn} title="باز کردن مسیر تا این گالری در Waze" aria-label="باز کردن مسیر تا این گالری در Waze">
                                 <WazeIcon className="w-[22px] h-[22px]" />
                               </a>
-                              <a href={buildGoogleMapsUrl([gallery], undefined, mode)} target="_blank" rel="noopener noreferrer" className={navBtn} title="مسیریابی با Google Maps" aria-label="مسیریابی با Google Maps">
+                              <a href={buildGoogleMapsUrl([gallery], undefined, mode)} target="_blank" rel="noopener noreferrer" className={navBtn} title="باز کردن مسیر تا این گالری در Google Maps" aria-label="باز کردن مسیر تا این گالری در Google Maps">
                                 <GoogleMapsIcon className="w-[22px] h-[22px]" />
                               </a>
                             </div>
