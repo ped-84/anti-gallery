@@ -330,6 +330,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                     : <MapPin className="w-3.5 h-3.5 text-[#3D5B99]" />
                 }
                 className="w-full text-xs"
+                buttonClassName="w-full"
                 size="sm"
               />
             </div>
@@ -710,7 +711,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                     {/* کارت توقف (فشرده): نام + اقدام‌ها ← نمایشگاه ← یک ردیف زمان ← یک ردیف کنترل/ناوبری */}
                     {(() => {
                       const scheduledStop = routeResult.tspTwSolution?.scheduledStops.find((s) => s.id === gallery.id);
-                      const navBtn = 'clay-button clay-base w-9 h-9 rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all border border-stone-200/80 dark:border-stone-700';
+                      const navBtn = 'clay-button clay-base w-8 h-8 rounded-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all border border-stone-200/80 dark:border-stone-700';
                       const iconBtn = 'w-8 h-8 rounded-lg flex items-center justify-center text-stone-400 disabled:opacity-20 disabled:pointer-events-none hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors';
                       return (
                         <div className="clay-card p-3 bg-white dark:bg-[#1a202c] text-xs border border-stone-200 dark:border-stone-800 shadow-xs space-y-2">
@@ -782,7 +783,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                           )}
 
                           <div className="flex items-center justify-between gap-2 pt-2 border-t border-stone-100 dark:border-stone-800/80">
-                            <div className="flex items-center gap-1.5 flex-wrap min-w-0">
+                            <div className="flex items-center gap-1 min-w-0">
                               {isFirst ? (
                                 hasOrigin ? (
                                   <span className="inline-flex items-center gap-1 font-bold text-[#1856C7] dark:text-[#93c5fd] bg-[#edf3ff] dark:bg-blue-950/40 px-2 py-1 rounded-lg border border-blue-200 dark:border-blue-800/50">
@@ -790,8 +791,8 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                                     <span>اولین گالری</span>
                                   </span>
                                 ) : (
-                                  <span className="inline-flex items-center gap-1 font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-1 rounded-lg border border-emerald-300 dark:border-emerald-700/60">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                  <span className="inline-flex items-center gap-1 font-bold text-white bg-emerald-600 px-2 py-1 rounded-lg">
+                                    <Check className="w-3 h-3" aria-hidden="true" />
                                     <span>شروع</span>
                                   </span>
                                 )
@@ -803,13 +804,13 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                                   title={hasOrigin ? 'این گالری اولین مقصد بعد از مبدأ می‌شود' : 'مسیر از این گالری شروع می‌شود و بقیه بهینه می‌شوند'}
                                 >
                                   <Navigation className="w-3 h-3" aria-hidden="true" />
-                                  <span>{hasOrigin ? 'اول برو اینجا' : 'شروع از اینجا'}</span>
+                                  <span>{hasOrigin ? 'اول اینجا' : 'شروع'}</span>
                                 </button>
                               )}
                               {!routeResult.isRoundTrip && (
                                 isLast ? (
-                                  <span className="inline-flex items-center gap-1 font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 px-2 py-1 rounded-lg border border-amber-300 dark:border-amber-700/60">
-                                    <Flag className="w-3 h-3" aria-hidden="true" />
+                                  <span className="inline-flex items-center gap-1 font-bold text-white bg-[#c2410c] px-2 py-1 rounded-lg">
+                                    <Check className="w-3 h-3" aria-hidden="true" />
                                     <span>پایان</span>
                                   </span>
                                 ) : (
@@ -820,7 +821,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                                     title="مسیر در این گالری تمام شود"
                                   >
                                     <Flag className="w-3 h-3" aria-hidden="true" />
-                                    <span>پایان اینجا</span>
+                                    <span>پایان</span>
                                   </button>
                                 )
                               )}
