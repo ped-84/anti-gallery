@@ -410,7 +410,9 @@ body {
   font-weight: 400 !important;
   font-synthesis: none;
   letter-spacing: 0;
-  line-height: 1.5;
+  /* سرکش ک و گ در فاطمه بلند است؛ با truncate/overflow:hidden بریده می‌شد */
+  line-height: 1.9;
+  padding-block: 0.08em;
 }
 
 .clay-card {
