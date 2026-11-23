@@ -892,14 +892,14 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
             <button
               type="button"
               onClick={() => setShowTourOnly(true)}
-              className={`px-2.5 sm:px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-2 sm:px-3 py-1.5 rounded-full whitespace-nowrap transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
                 showTourOnly
                   ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                   : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
               }`}
               title="فقط نمایش گالری‌های منتخب و ایستگاه‌های گشت شما روی نقشه"
             >
-              <span className={`w-2 h-2 rounded-full ${showTourOnly ? 'bg-[#F76B1C]' : 'bg-stone-400'}`} />
+              <span className={`hidden sm:block w-2 h-2 rounded-full ${showTourOnly ? 'bg-[#F76B1C]' : 'bg-stone-400'}`} />
               <span>فقط گالری‌های گشت</span>
               <span
                 className={`text-xs px-1.5 rounded-md tabular-nums ${
@@ -915,7 +915,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
             <button
               type="button"
               onClick={() => setShowTourOnly(false)}
-              className={`px-2.5 sm:px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-2 sm:px-3 py-1.5 rounded-full whitespace-nowrap transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
                 !showTourOnly
                   ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                   : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
@@ -933,14 +933,14 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
             <button
               type="button"
               onClick={() => setMapFilterMode('openings-only')}
-              className={`px-2.5 sm:px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-2 sm:px-3 py-1.5 rounded-full whitespace-nowrap transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
                 mapFilterMode === 'openings-only'
                   ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                   : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
               }`}
               title="فقط نمایش گالری‌های دارای افتتاحیه این هفته (خلوت‌ترین حالت)"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#F76B1C]" />
+              <span className="hidden sm:block w-1.5 h-1.5 rounded-full bg-[#F76B1C]" />
               <span>افتتاحیه‌ها</span>
               <span
                 className={`text-xs px-1.5 rounded-md tabular-nums ${
@@ -956,14 +956,14 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
             <button
               type="button"
               onClick={() => setMapFilterMode('active-only')}
-              className={`px-2.5 sm:px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-2 sm:px-3 py-1.5 rounded-full whitespace-nowrap transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
                 mapFilterMode === 'active-only'
                   ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                   : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
               }`}
               title="نمایش تمام گالری‌های دارای نمایشگاه فعال"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#3D5B99] dark:bg-[#A3C2E4]" />
+              <span className="hidden sm:block w-1.5 h-1.5 rounded-full bg-[#3D5B99] dark:bg-[#A3C2E4]" />
               <span>همه فعال‌ها</span>
               <span
                 className={`text-xs px-1.5 rounded-md tabular-nums ${
@@ -979,7 +979,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
             <button
               type="button"
               onClick={() => setMapFilterMode('all')}
-              className={`px-2.5 sm:px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-2 sm:px-3 py-1.5 rounded-full whitespace-nowrap transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
                 mapFilterMode === 'all'
                   ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                   : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
