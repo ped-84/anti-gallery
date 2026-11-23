@@ -9,7 +9,7 @@ interface HeaderProps {
   isStandalone?: boolean;
 }
 
-export const APP_VERSION = 'بتا V 1.178';
+export const APP_VERSION = 'بتا V 1.179';
 
 export const Header: React.FC<HeaderProps> = ({
   isDarkMode,
@@ -59,7 +59,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onTriggerInstall}
               title="نصب اپلیکیشن روی گوشی یا رایانه (PWA)"
-              className="clay-button clay-base w-9 h-9 sm:w-auto sm:px-3 sm:py-2 flex items-center justify-center gap-1.5 text-xs font-bold text-[#3D5B99] dark:text-[#A3C2E4] hover:scale-105 active:scale-95 transition-all shrink-0 cursor-pointer rounded-xl"
+              className="clay-button clay-base w-9 h-9 sm:w-auto sm:px-3 sm:py-2 flex items-center justify-center gap-1.5 text-xs font-bold text-[#3D5B99] dark:text-[#A3C2E4] hover:scale-105 active:scale-95 transition-all shrink-0 cursor-pointer rounded-full"
             >
               <Download className="w-4 h-4 sm:w-3.5 sm:h-3.5 stroke-[2.2]" />
               <span className="hidden sm:inline">نصب اپ</span>

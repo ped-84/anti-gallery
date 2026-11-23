@@ -347,11 +347,11 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
             {/* Row 1: Mode Switch & Route Pattern (Two spacious, balanced Segmented Controls) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {/* Mode: Driving vs Walking */}
-              <div className="clay-card p-1.5 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-2xl flex items-center border border-[#E1E1E1]/80 dark:border-stone-800 shadow-xs">
+              <div className="clay-card clay-track p-1.5 bg-[#f0f3f8] dark:bg-stone-900/90 flex items-center border border-[#E1E1E1]/80 dark:border-stone-800 shadow-xs">
                 <button
                   type="button"
                   onClick={() => handleModeChange('driving')}
-                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${
+                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-full font-bold text-sm transition-all flex items-center justify-center gap-2 ${
                     activeMode === 'driving'
                       ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                       : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
@@ -363,7 +363,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => handleModeChange('walking')}
-                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${
+                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-full font-bold text-sm transition-all flex items-center justify-center gap-2 ${
                     activeMode === 'walking'
                       ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                       : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
@@ -375,7 +375,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
               </div>
 
               {/* Pattern: One-Way vs Loop */}
-              <div className="clay-card p-1.5 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-2xl flex items-center border border-[#E1E1E1]/80 dark:border-stone-800 shadow-xs">
+              <div className="clay-card clay-track p-1.5 bg-[#f0f3f8] dark:bg-stone-900/90 flex items-center border border-[#E1E1E1]/80 dark:border-stone-800 shadow-xs">
                 <button
                   type="button"
                   onClick={() => {
@@ -384,7 +384,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                       onRecalculate(mode, false, trafficCondition);
                     }
                   }}
-                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-1.5 ${
+                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-full font-bold text-sm transition-all flex items-center justify-center gap-1.5 ${
                     !isRoundTrip
                       ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                       : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
@@ -400,7 +400,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                       onRecalculate(mode, true, trafficCondition);
                     }
                   }}
-                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-1.5 ${
+                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-full font-bold text-sm transition-all flex items-center justify-center gap-1.5 ${
                     isRoundTrip
                       ? 'clay-button clay-darkblue text-white shadow-xs'
                       : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
@@ -426,7 +426,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                   <button
                     type="button"
                     onClick={() => handleTrafficChange('normal')}
-                    className={`py-2 px-2 rounded-xl text-center font-bold text-sm transition-all flex flex-col items-center justify-center min-h-[44px] ${
+                    className={`py-2 px-2 rounded-full text-center font-bold text-sm transition-all flex flex-col items-center justify-center min-h-[44px] ${
                       trafficCondition === 'normal'
                         ? 'clay-button clay-base text-[#F76B1C] shadow-xs'
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 hover:bg-white/60'
@@ -438,7 +438,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                   <button
                     type="button"
                     onClick={() => handleTrafficChange('peak')}
-                    className={`py-2 px-2 rounded-xl text-center font-bold text-sm transition-all flex flex-col items-center justify-center min-h-[44px] ${
+                    className={`py-2 px-2 rounded-full text-center font-bold text-sm transition-all flex flex-col items-center justify-center min-h-[44px] ${
                       trafficCondition === 'peak'
                         ? 'clay-button clay-base text-[#F76B1C] shadow-xs'
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 hover:bg-white/60'
@@ -450,7 +450,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                   <button
                     type="button"
                     onClick={() => handleTrafficChange('weekend')}
-                    className={`py-2 px-2 rounded-xl text-center font-bold text-sm transition-all flex flex-col items-center justify-center min-h-[44px] ${
+                    className={`py-2 px-2 rounded-full text-center font-bold text-sm transition-all flex flex-col items-center justify-center min-h-[44px] ${
                       trafficCondition === 'weekend'
                         ? 'clay-button clay-base text-[#F76B1C] shadow-xs'
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 hover:bg-white/60'
@@ -620,7 +620,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                   </div>
                   <button
                     onClick={() => onRemoveGallery(g.id)}
-                    className="text-stone-400 hover:text-rose-600 p-1.5 rounded-lg"
+                    className="text-stone-400 hover:text-rose-600 p-1.5 rounded-full"
                     title="حذف از گشت"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -637,7 +637,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                 <button
                   type="button"
                   onClick={onReverseRoute}
-                  className="clay-button clay-base text-sm font-bold px-3.5 py-2 min-h-10 rounded-xl flex items-center gap-1.5 text-stone-700 dark:text-stone-300 hover:text-[#F76B1C] hover:scale-105 active:scale-95 transition-all shadow-xs"
+                  className="clay-button clay-base text-sm font-bold px-3.5 py-2 min-h-10 rounded-full flex items-center gap-1.5 text-stone-700 dark:text-stone-300 hover:text-[#F76B1C] hover:scale-105 active:scale-95 transition-all shadow-xs"
                   title="ترتیب گشت برعکس شود (آخرین گالری اول)"
                 >
                   <ArrowUpDown className="w-4 h-4 text-[#F76B1C]" />
@@ -646,7 +646,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                 <button
                   type="button"
                   onClick={onResetAutoOrder}
-                  className="clay-button clay-base text-sm font-bold px-3.5 py-2 min-h-10 rounded-xl flex items-center gap-1.5 text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] hover:scale-105 active:scale-95 transition-all shadow-xs"
+                  className="clay-button clay-base text-sm font-bold px-3.5 py-2 min-h-10 rounded-full flex items-center gap-1.5 text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] hover:scale-105 active:scale-95 transition-all shadow-xs"
                   title="ترتیب دستی کنار گذاشته شود و بهترین ترتیب دوباره حساب شود"
                 >
                   <Sparkles className="w-4 h-4 text-amber-500" />
@@ -723,8 +723,8 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                     {/* کارت توقف (فشرده): نام + اقدام‌ها ← نمایشگاه ← یک ردیف زمان ← یک ردیف کنترل/ناوبری */}
                     {(() => {
                       const scheduledStop = routeResult.tspTwSolution?.scheduledStops.find((s) => s.id === gallery.id);
-                      const navBtn = 'clay-button clay-base w-11 h-11 rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all border border-stone-200/80 dark:border-stone-700';
-                      const iconBtn = 'w-10 h-10 rounded-xl flex items-center justify-center text-stone-400 disabled:opacity-20 disabled:pointer-events-none hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors';
+                      const navBtn = 'clay-button clay-base w-11 h-11 rounded-full flex items-center justify-center hover:scale-105 active:scale-95 transition-all border border-stone-200/80 dark:border-stone-700';
+                      const iconBtn = 'w-10 h-10 rounded-full flex items-center justify-center text-stone-400 disabled:opacity-20 disabled:pointer-events-none hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors';
                       return (
                         <div className="clay-card p-3.5 bg-white dark:bg-[#1a202c] text-sm border border-stone-200 dark:border-stone-800 shadow-xs space-y-2.5">
                           <div className="flex items-start justify-between gap-1.5">
@@ -797,9 +797,9 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                           <div className="flex items-center justify-between flex-wrap gap-x-3 gap-y-2.5 pt-3 border-t border-stone-100 dark:border-stone-800/80">
                             <div className="flex items-center gap-2 min-w-0">
                               {/* شروع/پایان: همان کنترل دوتایی «با خودرو / پیاده‌روی»؛ گزینه‌ی فعال قرص سفید برجسته */}
-                              <div className="p-1 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-xl flex items-center gap-1 border border-[#E1E1E1]/80 dark:border-stone-800">
+                              <div className="p-1 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-full flex items-center gap-1 border border-[#E1E1E1]/80 dark:border-stone-800">
                                 {(() => {
-                                  const seg = 'min-h-9 px-3 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-1.5';
+                                  const seg = 'min-h-9 px-3 rounded-full font-bold text-sm transition-all flex items-center justify-center gap-1.5';
                                   const on = 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs';
                                   const off = 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200';
                                   const startLabel = hasOrigin ? 'اولین مقصد' : 'شروع';
@@ -906,7 +906,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
               href={googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="clay-button clay-base border border-[#E1E1E1] dark:border-stone-700 w-full py-3 px-4 rounded-2xl flex items-center justify-center gap-2.5 text-stone-800 dark:text-stone-100 shadow-md hover:scale-[1.01] active:scale-[0.98] transition-all cursor-pointer group whitespace-nowrap"
+              className="clay-button clay-base border border-[#E1E1E1] dark:border-stone-700 w-full py-3 px-4 rounded-full flex items-center justify-center gap-2.5 text-stone-800 dark:text-stone-100 shadow-md hover:scale-[1.01] active:scale-[0.98] transition-all cursor-pointer group whitespace-nowrap"
               title={`باز کردن مسیر کامل شامل ${toPersianDigits(totalStops)} گالری در گوگل مپس`}
             >
               <GoogleMapsIcon className="w-6 h-6 shrink-0 group-hover:scale-110 transition-transform" />
@@ -923,7 +923,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
             <div>
               <button
                 onClick={handleCopySummary}
-                className="clay-button clay-base w-full py-3 px-4 text-stone-700 dark:text-stone-200 text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition-all border border-[#E1E1E1] dark:border-stone-700 shadow-sm hover:scale-[1.01] active:scale-95 cursor-pointer"
+                className="clay-button clay-base w-full py-3 px-4 text-stone-700 dark:text-stone-200 text-xs font-bold rounded-full flex items-center justify-center gap-2 transition-all border border-[#E1E1E1] dark:border-stone-700 shadow-sm hover:scale-[1.01] active:scale-95 cursor-pointer"
               >
                 {copied ? (
                   <>

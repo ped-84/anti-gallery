@@ -216,7 +216,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                         setSelectedSpaceIndex(idx);
                         setPosterLoadError(false);
                       }}
-                      className={`px-3.5 py-2 rounded-xl text-sm font-bold flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
+                      className={`px-3.5 py-2 rounded-full text-sm font-bold flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
                         isSelectedTab
                           ? 'bg-[#3D5B99] text-white shadow-xs'
                           : 'bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-[#E1E1E1] dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-700'
@@ -377,7 +377,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsPosterEnlarged(true)}
-                  className="absolute bottom-4 left-4 bg-black/60 hover:bg-black/80 text-white text-xs sm:text-sm font-bold px-3.5 py-1.5 rounded-xl flex items-center gap-1.5 backdrop-blur-md shadow-md transition-all active:scale-95"
+                  className="absolute bottom-4 left-4 bg-black/60 hover:bg-black/80 text-white text-xs sm:text-sm font-bold px-3.5 py-1.5 rounded-full flex items-center gap-1.5 backdrop-blur-md shadow-md transition-all active:scale-95"
                 >
                   <Maximize2 className="w-3.5 h-3.5" />
                   <span>نمایش بزرگ پوستر</span>
@@ -443,7 +443,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                     href={gallery.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="clay-button clay-base px-4 py-2 font-bold flex items-center gap-2 text-[#3D5B99] dark:text-[#A3C2E4] text-sm hover:scale-105 transition-all shadow-xs rounded-xl"
+                    className="clay-button clay-base px-4 py-2 font-bold flex items-center gap-2 text-[#3D5B99] dark:text-[#A3C2E4] text-sm hover:scale-105 transition-all shadow-xs rounded-full"
                   >
                     <Globe className="w-4 h-4" />
                     <span>وبسایت نگارخانه</span>
@@ -455,7 +455,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                     href={gallery.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="clay-button clay-orange-subtle px-4 py-2 font-bold flex items-center gap-2 text-[#F76B1C] text-sm hover:scale-105 transition-all shadow-xs rounded-xl"
+                    className="clay-button clay-orange-subtle px-4 py-2 font-bold flex items-center gap-2 text-[#F76B1C] text-sm hover:scale-105 transition-all shadow-xs rounded-full"
                   >
                     <Instagram className="w-4 h-4" />
                     <span>صفحه اینستاگرام</span>
@@ -475,7 +475,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   href={buildNeshanUrl(currentSpace)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
+                  className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-full"
                 >
                   <NeshanIcon className="w-7 h-7 shrink-0" />
                   <span className="text-md font-bold text-stone-800 dark:text-white">نشان</span>
@@ -486,7 +486,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   href={buildWazeUrl(currentSpace)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
+                  className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-full"
                 >
                   <WazeIcon className="w-7 h-7 shrink-0" />
                   <span className="text-md font-bold text-stone-800 dark:text-white font-ubuntu">Waze</span>
@@ -497,7 +497,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   href={buildGoogleMapsUrl([currentSpace])}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
+                  className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-full"
                 >
                   <GoogleMapsIcon className="w-7 h-7 shrink-0" />
                   <span className="text-md font-bold text-stone-800 dark:text-white font-ubuntu">Google</span>
@@ -508,7 +508,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   href={buildBaladUrl(currentSpace)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-xl"
+                  className="clay-button clay-base py-3 px-1 flex flex-col items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-xs rounded-full"
                 >
                   <BaladIcon className="w-7 h-7 shrink-0" />
                   <span className="text-md font-bold text-stone-800 dark:text-white">بلد</span>
@@ -532,7 +532,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
                   <button
                     type="button"
                     onClick={() => onSetStart(currentSpace.id)}
-                    className="w-full clay-button clay-base text-xs sm:text-sm font-bold py-2.5 px-3 text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] flex items-center justify-center gap-2 transition-all shadow-xs rounded-xl"
+                    className="w-full clay-button clay-base text-xs sm:text-sm font-bold py-2.5 px-3 text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] flex items-center justify-center gap-2 transition-all shadow-xs rounded-full"
                   >
                     <MapPin className="w-4 h-4 text-[#F76B1C]" />
                     <span>شروع گشت از این گالری (تغییر مبدأ)</span>
@@ -545,7 +545,7 @@ export const GalleryDetailModal: React.FC<GalleryDetailModalProps> = ({
             <button
               type="button"
               onClick={() => onToggle(currentSpace)}
-              className={`w-full clay-button py-3 px-4 text-sm font-bold flex items-center justify-center gap-2 transition-all active:scale-95 rounded-xl ${
+              className={`w-full clay-button py-3 px-4 text-sm font-bold flex items-center justify-center gap-2 transition-all active:scale-95 rounded-full ${
                 isVenueSelected
                   ? 'clay-base text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900 shadow-xs'
                   : 'clay-orange text-white shadow-md hover:brightness-105'

@@ -840,11 +840,11 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       <div className="absolute top-3.5 right-3.5 z-10 flex flex-col items-end gap-1.5 max-w-[calc(100%-70px)]">
         {/* Primary Tour Mode Toggle: Shown whenever user has galleries in their tour */}
         {selectedGalleries.length > 0 && (
-          <div className="clay-card bg-[#f0f3f8]/95 dark:bg-stone-900/95 backdrop-blur-md p-1 rounded-2xl border border-[#E1E1E1]/80 dark:border-stone-800 shadow-xs flex items-center gap-1 text-xs font-bold">
+          <div className="clay-card bg-[#f0f3f8]/95 dark:bg-stone-900/95 backdrop-blur-md p-1 clay-track border border-[#E1E1E1]/80 dark:border-stone-800 shadow-xs flex items-center gap-1 text-xs font-bold">
             <button
               type="button"
               onClick={() => setShowTourOnly(true)}
-              className={`px-2.5 sm:px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-2.5 sm:px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
                 showTourOnly
                   ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                   : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
@@ -867,7 +867,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
             <button
               type="button"
               onClick={() => setShowTourOnly(false)}
-              className={`px-2.5 sm:px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-2.5 sm:px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
                 !showTourOnly
                   ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                   : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
@@ -881,11 +881,11 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
         {/* Secondary Declutter Tabs: Visible when in 'All Galleries' mode or before selecting tour */}
         {(!showTourOnly || selectedGalleries.length === 0) && (
-          <div className="clay-card bg-[#f0f3f8]/95 dark:bg-stone-900/95 backdrop-blur-md p-1 rounded-2xl border border-[#E1E1E1]/80 dark:border-stone-800 shadow-xs flex items-center gap-1 text-xs font-bold">
+          <div className="clay-card bg-[#f0f3f8]/95 dark:bg-stone-900/95 backdrop-blur-md p-1 clay-track border border-[#E1E1E1]/80 dark:border-stone-800 shadow-xs flex items-center gap-1 text-xs font-bold">
             <button
               type="button"
               onClick={() => setMapFilterMode('openings-only')}
-              className={`px-2.5 sm:px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-2.5 sm:px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
                 mapFilterMode === 'openings-only'
                   ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                   : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
@@ -908,7 +908,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
             <button
               type="button"
               onClick={() => setMapFilterMode('active-only')}
-              className={`px-2.5 sm:px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-2.5 sm:px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
                 mapFilterMode === 'active-only'
                   ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                   : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
@@ -931,7 +931,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
             <button
               type="button"
               onClick={() => setMapFilterMode('all')}
-              className={`px-2.5 sm:px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-2.5 sm:px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
                 mapFilterMode === 'all'
                   ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                   : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'

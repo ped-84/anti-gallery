@@ -85,8 +85,8 @@ export const ClayDropdown: React.FC<ClayDropdownProps> = ({
         onClick={() => setIsOpen(!isOpen)}
         className={`clay-button clay-base text-stone-800 dark:text-white flex items-center justify-between gap-2 border border-[#E1E1E1] dark:border-stone-700 hover:border-[#3D5B99]/40 transition-all select-none focus:outline-none shadow-xs ${
           isSmall
-            ? 'min-w-[130px] sm:min-w-[150px] min-h-[38px] sm:min-h-[40px] py-1.5 sm:py-2 pr-3 pl-8 text-xs font-bold rounded-xl'
-            : 'w-full min-w-[150px] sm:min-w-[180px] min-h-[46px] sm:min-h-[48px] py-2.5 sm:py-3 pr-4 pl-10 text-xs sm:text-sm font-bold rounded-2xl'
+            ? 'min-w-[130px] sm:min-w-[150px] min-h-[38px] sm:min-h-[40px] py-1.5 sm:py-2 pr-3 pl-8 text-xs font-bold rounded-full'
+            : 'w-full min-w-[150px] sm:min-w-[180px] min-h-[46px] sm:min-h-[48px] py-2.5 sm:py-3 pr-4 pl-10 text-xs sm:text-sm font-bold rounded-full'
         } ${buttonClassName}`}
         aria-haspopup="listbox"
         aria-expanded={isOpen}

@@ -149,14 +149,14 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
             <div className="flex flex-wrap items-center justify-between gap-2 pl-12">
               <span className="ag-eyebrow">مسیرهای پیشنهادی آرت‌گشت</span>
               {/* Segmented Mode Switcher: با خودرو / پیاده‌روی */}
-              <div className="inline-flex items-center p-1 bg-stone-100 dark:bg-stone-900 rounded-xl border border-stone-200/80 dark:border-stone-700 shadow-2xs">
+              <div className="inline-flex items-center p-1 bg-stone-100 dark:bg-stone-900 rounded-full border border-stone-200/80 dark:border-stone-700 shadow-2xs">
                 <button
                   type="button"
                   onClick={() => {
                     setCuratedMode('driving');
                     setSelectedRouteIdx(0);
                   }}
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black transition-all cursor-pointer ${
                     curatedMode === 'driving'
                       ? 'bg-white dark:bg-[#232a3a] text-stone-900 dark:text-white shadow-xs'
                       : 'text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200'
@@ -171,7 +171,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                     setCuratedMode('walking');
                     setSelectedRouteIdx(0);
                   }}
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black transition-all cursor-pointer ${
                     curatedMode === 'walking'
                       ? 'bg-white dark:bg-[#232a3a] text-stone-900 dark:text-white shadow-xs'
                       : 'text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200'
@@ -528,7 +528,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
               backgroundColor: road,
               color: '#ffffff'
             }}
-            className="clay-button px-5 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-black text-white flex items-center gap-2 rounded-xl shadow-md hover:brightness-105 active:scale-95 transition-all shrink-0 cursor-pointer"
+            className="clay-button px-5 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-black text-white flex items-center gap-2 rounded-full shadow-md hover:brightness-105 active:scale-95 transition-all shrink-0 cursor-pointer"
           >
             <Navigation className="w-4 h-4 stroke-[2.2]" />
             <span>شروع این گشت</span>
