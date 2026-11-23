@@ -486,13 +486,10 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
 
       {/* TRIP STATS & INSIGHTS CARD: Harmonious, balanced, and clean */}
       {routeResult && (
-        <div className="p-3 sm:p-3.5 bg-gradient-to-b from-[#f7f9fc] to-[#edf2f8] dark:from-[#131722] dark:to-[#0f121a] border-b border-[#E1E1E1] dark:border-stone-800 space-y-2.5">
+        <div className="p-3 sm:p-3.5 bg-[#f7f9fc] dark:bg-[#131722] border-b border-[#E1E1E1] dark:border-stone-800 space-y-2.5">
           {/* خلاصه‌ی گشت: یک کارت با چهار کاشی هم‌شکل (همان زبان کارت‌های گالری) + یادداشت‌ها با آیکون، بدون جعبه‌های رنگی جدا */}
           {(() => {
             const sol = routeResult.tspTwSolution;
-            const tile = 'rounded-xl bg-[#f0f4fa] dark:bg-[#121722] border border-[#A3C2E4]/40 dark:border-stone-700/60 px-3 py-2.5 min-w-0';
-            const label = 'flex items-center gap-1.5 text-xs font-medium text-stone-500 dark:text-stone-400';
-            const value = 'block mt-1 text-[15px] sm:text-base leading-snug font-bold text-[#1d2d4c] dark:text-white tabular-nums';
             const note = 'flex items-start gap-2 text-sm leading-relaxed text-stone-600 dark:text-stone-300';
             const notes: React.ReactNode[] = [];
             if (sol && (sol.departureDelayMinutes ?? 0) > 0) {
@@ -544,40 +541,36 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                 </div>
               );
             }
+            // همان الگوی ردیف «بازدید هر گالری»: کارت رسی خاکستری، برچسب با آیکون راست، مقدار در قرص سفید چپ
+            const row = 'flex items-center justify-between gap-2 py-1.5';
+            const rowLabel = 'flex items-center gap-2 text-stone-700 dark:text-stone-300 font-bold text-sm pr-1';
+            const pill = 'clay-button clay-base px-3 py-1.5 rounded-xl text-sm font-bold text-[#1d2d4c] dark:text-white tabular-nums border border-[#E1E1E1] dark:border-stone-700 shadow-xs';
             return (
-              <div className="clay-card p-3 sm:p-3.5 bg-white dark:bg-[#181d28] border border-[#E1E1E1]/80 dark:border-stone-800 space-y-3">
-                <div className="grid grid-cols-2 gap-2">
-                  <div className={tile}>
-                    <span className={label}><Timer className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />کل گشت</span>
-                    <span className={`${value} !text-[#E05A10] dark:!text-[#ff8a3d]`}>
+              <div className="space-y-2.5">
+                <div className="clay-card p-2 sm:p-2.5 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-2xl border border-[#E1E1E1]/80 dark:border-stone-800 shadow-xs divide-y divide-[#E1E1E1]/70 dark:divide-stone-800">
+                  <div className={row}>
+                    <span className={rowLabel}><Timer className="w-4 h-4 text-[#3D5B99] shrink-0" aria-hidden="true" />کل گشت</span>
+                    <span className={`${pill} !text-[#E05A10] dark:!text-[#ff8a3d]`}>
                       {avgHours > 0 ? `${toPersianDigits(avgHours)} ساعت و ` : ''}{toPersianDigits(avgMins)} دقیقه
                     </span>
-                    <span className="block text-xs text-stone-500 dark:text-stone-400 mt-0.5">{toPersianDigits(visitDurationMin)} دقیقه در هر گالری</span>
-                  </div>
-                  <div className={tile}>
-                    <span className={label}>
-                      {mode === 'walking' ? <Footprints className="w-3.5 h-3.5 shrink-0" aria-hidden="true" /> : <Car className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />}
-                      {mode === 'walking' ? 'پیاده‌روی' : 'رانندگی'}
-                    </span>
-                    <span className={value}>{formatDurationFa(routeResult.totalDurationMin)}</span>
-                    <span className="block text-xs text-stone-500 dark:text-stone-400 tabular-nums mt-0.5">{formatDistanceFa(routeResult.totalDistanceKm)}</span>
                   </div>
                   {sol && (
-                    <>
-                      <div className={tile}>
-                        <span className={label}><Navigation className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />حرکت</span>
-                        <span className={value}>ساعت {toPersianDigits(sol.routeStartFormatted)}</span>
-                      </div>
-                      <div className={tile}>
-                        <span className={label}><Flag className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />پایان گشت</span>
-                        <span className={value}>ساعت {toPersianDigits(sol.routeEndFormatted)}</span>
-                      </div>
-                    </>
+                    <div className={row}>
+                      <span className={rowLabel}><Clock className="w-4 h-4 text-[#3D5B99] shrink-0" aria-hidden="true" />حرکت تا پایان</span>
+                      <span className={pill}>{toPersianDigits(sol.routeStartFormatted)} تا {toPersianDigits(sol.routeEndFormatted)}</span>
+                    </div>
                   )}
+                  <div className={row}>
+                    <span className={rowLabel}>
+                      {mode === 'walking'
+                        ? <Footprints className="w-4 h-4 text-[#F76B1C] shrink-0" aria-hidden="true" />
+                        : <Car className="w-4 h-4 text-[#3D5B99] shrink-0" aria-hidden="true" />}
+                      {mode === 'walking' ? 'پیاده‌روی' : 'رانندگی'}
+                    </span>
+                    <span className={pill}>{formatDurationFa(routeResult.totalDurationMin)}، {formatDistanceFa(routeResult.totalDistanceKm)}</span>
+                  </div>
                 </div>
-                {notes.length > 0 && (
-                  <div className="pt-3 border-t border-stone-100 dark:border-stone-800/80 space-y-2">{notes}</div>
-                )}
+                {notes.length > 0 && <div className="space-y-2 px-1">{notes}</div>}
               </div>
             );
           })()}
@@ -802,50 +795,45 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
 
                           <div className="flex items-center justify-between flex-wrap gap-x-3 gap-y-2.5 pt-3 border-t border-stone-100 dark:border-stone-800/80">
                             <div className="flex items-center gap-2 min-w-0">
-                              {(() => {
-                                // دو حالت هم‌شکل با بقیه‌ی دکمه‌های رسی پنل: «انتخاب‌شده» آبی برند، «قابل انتخاب» سفید رسی
-                                const chosen = 'inline-flex items-center gap-1.5 font-bold text-white bg-[#3D5B99] dark:bg-[#4a6bb0] px-3.5 py-2 min-h-10 rounded-xl text-sm shadow-[0_4px_12px_-4px_rgba(61,91,153,0.55)]';
-                                const idle = 'clay-button clay-base inline-flex items-center gap-1.5 font-bold text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] px-3.5 py-2 min-h-10 rounded-xl text-sm border border-[#E1E1E1] dark:border-stone-700 active:scale-95 transition-all';
-                                const startLabel = hasOrigin ? 'اولین مقصد' : 'شروع';
-                                return (
-                                  <>
-                                    {isFirst ? (
-                                      <span className={chosen} title={hasOrigin ? 'بعد از مبدأ، اول به این گالری می‌روی' : 'گشت از این گالری شروع می‌شود'}>
-                                        <Check className="w-4 h-4" aria-hidden="true" />
-                                        <span>{startLabel}</span>
-                                      </span>
-                                    ) : (
+                              {/* شروع/پایان: همان کنترل دوتایی «با خودرو / پیاده‌روی»؛ گزینه‌ی فعال قرص سفید برجسته */}
+                              <div className="p-1 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-xl flex items-center gap-1 border border-[#E1E1E1]/80 dark:border-stone-800">
+                                {(() => {
+                                  const seg = 'min-h-9 px-3 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-1.5';
+                                  const on = 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs';
+                                  const off = 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200';
+                                  const startLabel = hasOrigin ? 'اولین مقصد' : 'شروع';
+                                  return (
+                                    <>
                                       <button
                                         type="button"
+                                        aria-pressed={isFirst}
+                                        disabled={isFirst}
                                         onClick={() => onSetStartGallery?.(gallery.id)}
-                                        className={idle}
-                                        title={hasOrigin ? 'اول به این گالری برو؛ ترتیب بقیه دوباره بهینه می‌شود' : 'گشت از این گالری شروع شود؛ ترتیب بقیه دوباره بهینه می‌شود'}
+                                        className={`${seg} ${isFirst ? `${on} cursor-default` : off}`}
+                                        title={isFirst
+                                          ? (hasOrigin ? 'بعد از مبدأ، اول به این گالری می‌روی' : 'گشت از این گالری شروع می‌شود')
+                                          : (hasOrigin ? 'اول به این گالری برو؛ ترتیب بقیه دوباره بهینه می‌شود' : 'گشت از این گالری شروع شود؛ ترتیب بقیه دوباره بهینه می‌شود')}
                                       >
-                                        <Navigation className="w-4 h-4" aria-hidden="true" />
+                                        <Navigation className="w-4 h-4 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" aria-hidden="true" />
                                         <span>{startLabel}</span>
                                       </button>
-                                    )}
-                                    {!routeResult.isRoundTrip && (
-                                      isLast ? (
-                                        <span className={chosen} title="گشت در این گالری تمام می‌شود">
-                                          <Check className="w-4 h-4" aria-hidden="true" />
-                                          <span>پایان</span>
-                                        </span>
-                                      ) : (
+                                      {!routeResult.isRoundTrip && (
                                         <button
                                           type="button"
+                                          aria-pressed={isLast}
+                                          disabled={isLast}
                                           onClick={() => onSetEndGallery?.(gallery.id)}
-                                          className={idle}
-                                          title="گشت در این گالری تمام شود؛ ترتیب بقیه دوباره بهینه می‌شود"
+                                          className={`${seg} ${isLast ? `${on} cursor-default` : off}`}
+                                          title={isLast ? 'گشت در این گالری تمام می‌شود' : 'گشت در این گالری تمام شود؛ ترتیب بقیه دوباره بهینه می‌شود'}
                                         >
-                                          <Flag className="w-4 h-4" aria-hidden="true" />
+                                          <Flag className="w-4 h-4 text-[#F76B1C] shrink-0" aria-hidden="true" />
                                           <span>پایان</span>
                                         </button>
-                                      )
-                                    )}
-                                  </>
-                                );
-                              })()}
+                                      )}
+                                    </>
+                                  );
+                                })()}
+                              </div>
                             </div>
                             <div className="flex items-center gap-2 shrink-0" role="group" aria-label={`مسیریابی تا ${getGalleryDisplayName(gallery)}`}>
                               <a href={buildNeshanUrl(gallery, undefined, mode)} target="_blank" rel="noopener noreferrer" className={navBtn} title="باز کردن مسیر تا این گالری در نشان" aria-label="باز کردن مسیر تا این گالری در نشان">

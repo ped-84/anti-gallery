@@ -1,19 +1,19 @@
-const CACHE_NAME = 'artgasht-pwa-v1.176';
+const CACHE_NAME = 'artgasht-pwa-v1.177';
 
 const STATIC_ASSETS = [
   './',
   './index.html',
-  './manifest.json?v=1.176',
-  './favicon.ico?v=1.176',
-  './favicon.svg?v=1.176',
+  './manifest.json?v=1.177',
+  './favicon.ico?v=1.177',
+  './favicon.svg?v=1.177',
   './favicon.png',
   './favicon-32x32.png',
   './favicon-48x48.png',
   './favicon-96x96.png',
   './favicon-144x144.png',
   './favicon-16x16.png',
-  './icons/brand-logo-icon.svg?v=1.176',
-  './icons/brand-logo-icon-dark.svg?v=1.176',
+  './icons/brand-logo-icon.svg?v=1.177',
+  './icons/brand-logo-icon-dark.svg?v=1.177',
   './icons/brand-logo-icon.png',
   './icons/brand-logo-icon-dark.png',
   './icons/brand-logo-orange.png',
