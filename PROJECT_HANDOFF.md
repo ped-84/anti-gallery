@@ -112,6 +112,8 @@ npm run dev           # سرور توسعه روی پورت 3000
 ```
 بعد از استقرار: `https://artgasht.com/health` باید نسخه‌ی جدید را نشان دهد.
 
+`deploy.yml` شناسهٔ commit را در `public/version.json` می‌نویسد (فقط در بیلد استقرار، داخل مخزن ذخیره نمی‌شود). `https://artgasht.com/version.json` همیشه می‌گوید کدام commit روی سرور است؛ داشبورد پروژه‌ها (`project-hub`) از همین می‌خواند.
+
 **سکرت‌های GitHub Actions:** `DEPLOY_SSH_KEY`، `DEPLOY_KNOWN_HOSTS`.
 **متغیرهای سرور (`/opt/artgasht/.env`):** نمونه در `.env.example` — `ADMIN_PASSWORD`، `ADMIN_SECRET`، `NESHAN_KEY_IR`، `NESHAN_KEY_COM`، `SERVER_ROLE`، `SCRAPER_ENABLED`.
 
