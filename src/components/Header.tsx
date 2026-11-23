@@ -9,7 +9,7 @@ interface HeaderProps {
   isStandalone?: boolean;
 }
 
-export const APP_VERSION = 'بتا V 1.165';
+export const APP_VERSION = 'بتا V 1.168';
 
 export const Header: React.FC<HeaderProps> = ({
   isDarkMode,
@@ -22,7 +22,7 @@ export const Header: React.FC<HeaderProps> = ({
       className="sticky top-0 z-40 bg-[#f4f6fa]/95 dark:bg-[#131722]/95 backdrop-blur-md border-b border-[#E1E1E1] dark:border-stone-800 transition-colors duration-200"
       style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 sm:h-22 md:h-24 flex items-center justify-between gap-3 sm:gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-20 sm:h-22 md:h-24 flex items-center justify-between gap-3 sm:gap-4">
         {/* Zone 1: Brand Wordmark Logo (Prominent, Sole Main Logo, Right-Aligned Subtitle) */}
         <div className="flex items-center shrink-0">
           <a href="/" className="flex flex-col justify-center text-right text-inherit no-underline group">
@@ -46,7 +46,7 @@ export const Header: React.FC<HeaderProps> = ({
               />
             </div>
             {/* Slogan with comfortable breathing room below wordmark */}
-            <p className="text-xs sm:text-sm font-semibold text-[#3D5B99] dark:text-[#A3C2E4] text-right mt-1.5 sm:mt-2 leading-tight tracking-tight">
+            <p className="text-xs sm:text-sm font-semibold text-[#3D5B99] dark:text-[#A3C2E4] text-right mt-1.5 sm:mt-2 leading-tight">
               مسیریاب هوشمند گالری‌های هنری
             </p>
           </a>

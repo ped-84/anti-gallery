@@ -150,7 +150,7 @@ export const ClayDropdown: React.FC<ClayDropdownProps> = ({
                   {opt.badge && (
                     <span
                       className={`rounded-md shrink-0 ${
-                        isSmall ? 'text-[9px] px-1 py-0.2' : 'text-[10px] px-1.5 py-0.2'
+                        isSmall ? 'text-2xs px-1 py-0.2' : 'text-2xs px-1.5 py-0.2'
                       } ${
                         isSelected
                           ? 'bg-[#3D5B99]/20 text-[#3D5B99] dark:text-[#A3C2E4]'

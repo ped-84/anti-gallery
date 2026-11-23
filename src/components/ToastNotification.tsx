@@ -106,7 +106,7 @@ export const ToastNotification: React.FC<ToastNotificationProps> = ({
       dir="rtl"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-[120] w-[calc(100%-24px)] sm:w-auto sm:min-w-[460px] sm:max-w-[580px] pointer-events-auto select-none transition-all"
+      className="fixed bottom-[5.75rem] sm:bottom-auto sm:top-6 left-1/2 -translate-x-1/2 z-[120] w-[calc(100%-24px)] sm:w-auto sm:min-w-[460px] sm:max-w-[580px] pointer-events-auto select-none transition-all"
     >
       <div
         className={`
@@ -116,25 +116,25 @@ export const ToastNotification: React.FC<ToastNotificationProps> = ({
           shadow-[0_20px_45px_-8px_rgba(24,86,199,0.24),0_6px_16px_rgba(0,0,0,0.06)]
           dark:shadow-[0_24px_55px_-8px_rgba(0,0,0,0.88),0_8px_24px_rgba(0,0,0,0.65)]
           ring-1 ring-black/5 dark:ring-white/15
-          p-4 sm:p-4.5 flex items-start gap-3.5 sm:gap-4
-          animate-in fade-in slide-in-from-top-4 duration-300
+          p-3 sm:p-4.5 flex items-center sm:items-start gap-3 sm:gap-4
+          animate-in fade-in slide-in-from-bottom-4 sm:slide-in-from-top-4 duration-300
           ${sideAccentBorder}
         `}
       >
         {/* Type Icon Badge (Claymorphic) */}
         <div
-          className={`w-10 h-10 sm:w-11 sm:h-11 rounded-2xl ${iconBadgeBg} flex items-center justify-center shrink-0`}
+          className={`w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl ${iconBadgeBg} flex items-center justify-center shrink-0`}
         >
           {iconComponent}
         </div>
 
         {/* Text Content: Title & Subtitle with wide, comfortable layout */}
         <div className="flex-1 min-w-0 pt-0.5 text-right">
-          <h4 className="font-black text-[#102a4e] dark:text-white text-sm sm:text-[15.5px] leading-snug tracking-tight">
+          <h4 className="font-black text-[#102a4e] dark:text-white text-sm sm:text-md leading-snug">
             {title}
           </h4>
           {subtitle && (
-            <p className="text-xs sm:text-[13.5px] text-stone-600 dark:text-stone-300 font-medium mt-1 leading-relaxed">
+            <p className="hidden sm:block text-xs text-stone-600 dark:text-stone-300 font-medium mt-1 leading-relaxed">
               {subtitle}
             </p>
           )}

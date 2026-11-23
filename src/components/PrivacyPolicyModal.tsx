@@ -53,7 +53,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, 
               <p className="font-bold text-emerald-900 dark:text-emerald-200 text-xs sm:text-sm">
                 اصل بنیادین آرت‌گشت: حفظ ۱۰۰٪ ناشناسی و حریم خصوصی کاربر
               </p>
-              <p className="text-[11.5px] sm:text-xs text-emerald-700 dark:text-emerald-300 mt-1">
+              <p className="text-2xs sm:text-xs text-emerald-700 dark:text-emerald-300 mt-1">
                 آرت‌گشت هیچ‌گونه ثبت‌نام، شماره موبایل، ایمیل، یا ردپای مکانی از شما دریافت یا در هیچ پایگاه‌داده‌ای ذخیره نمی‌کند.
               </p>
             </div>
@@ -113,12 +113,12 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, 
                 <p className="font-bold text-stone-800 dark:text-stone-200 text-xs">
                   پشتیبانی و ارتباط با توسعه‌دهنده
                 </p>
-                <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5 font-mono">
+                <p className="text-2xs text-stone-500 dark:text-stone-400 mt-0.5 tabular-nums">
                   info@artgasht.com · ped.maleki@gmail.com
                 </p>
               </div>
             </div>
-            <span className="text-[11px] font-bold text-stone-400 shrink-0">
+            <span className="text-2xs font-bold text-stone-400 shrink-0">
               آخرین بازبینی: نوامبر ۲۰۲۶
             </span>
           </section>

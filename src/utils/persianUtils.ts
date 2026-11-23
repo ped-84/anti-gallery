@@ -8,6 +8,43 @@ export function toPersianDigits(input: number | string | null | undefined): stri
   return str.replace(/[0-9]/g, (w) => persianDigits[parseInt(w, 10)]);
 }
 
+/**
+ * مسافت خوانا به فارسی: زیر یک کیلومتر به متر (گرد به ۱۰ متر)، بالاتر با یک رقم اعشار و ممیز فارسی.
+ * مثال: 0.14 → «۱۴۰ متر»، 1.25 → «۱٫۳ کیلومتر»
+ */
+export function formatDistanceFa(km: number | null | undefined): string {
+  if (km === null || km === undefined || !Number.isFinite(km)) return '';
+  if (km < 1) return `${toPersianDigits(Math.max(10, Math.round((km * 1000) / 10) * 10))} متر`;
+  const v = km >= 10 ? Math.round(km).toString() : km.toFixed(1).replace(/\.0$/, '');
+  return `${toPersianDigits(v).replace('.', '٫')} کیلومتر`;
+}
+
+/**
+ * ساعت کاری خوانا و یکدست: «16:۰۰ الی 20:۰۰» یا «۱۶ - ۲۰» → «۱۶ تا ۲۰»؛
+ * دقیقه‌ی غیرصفر حفظ می‌شود («۱۰:۳۰ تا ۱۳ و ۱۵ تا ۱۹»). اگر قابل خواندن نبود، همان متن با ارقام فارسی.
+ */
+export function formatHoursFa(raw: string | null | undefined): string {
+  if (!raw || !raw.trim()) return '';
+  const latin = raw
+    .replace(/[۰-۹]/g, (d) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
+    .replace(/[٠-٩]/g, (d) => String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)));
+  const re = /(\d{1,2})(?::(\d{2}))?\s*(?:الی|تا|-|–|—|to)\s*(\d{1,2})(?::(\d{2}))?/gi;
+  const parts: string[] = [];
+  const t = (h: string, m?: string) => (m && m !== '00' ? `${Number(h)}:${m}` : `${Number(h)}`);
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(latin)) !== null) parts.push(`${t(m[1], m[2])} تا ${t(m[3], m[4])}`);
+  return toPersianDigits(parts.length ? parts.join(' و ') : raw.trim());
+}
+
+/** مدت خوانا به فارسی: «۴۵ دقیقه»، «۱ ساعت و ۵ دقیقه»، «۲ ساعت» */
+export function formatDurationFa(totalMinutes: number): string {
+  const t = Math.max(0, Math.round(totalMinutes));
+  const h = Math.floor(t / 60);
+  const m = t % 60;
+  if (!h) return `${toPersianDigits(m)} دقیقه`;
+  return `${toPersianDigits(h)} ساعت${m ? ` و ${toPersianDigits(m)} دقیقه` : ''}`;
+}
+
 export type TrafficCondition = 'normal' | 'peak' | 'weekend';
 
 export interface TrafficConfig {

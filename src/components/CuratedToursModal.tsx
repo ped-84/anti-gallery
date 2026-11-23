@@ -71,7 +71,7 @@ export const CuratedToursModal: React.FC<CuratedToursModalProps> = ({
                 )}
               </div>
               <div>
-                <h2 className="text-lg sm:text-2xl font-black text-[#1d2d4c] dark:text-white tracking-tight">
+                <h2 className="text-lg sm:text-2xl font-black text-[#1d2d4c] dark:text-white">
                   گشت‌های هنری و تورهای آماده
                 </h2>
                 <p className="text-xs sm:text-sm text-[#3D5B99] dark:text-[#A3C2E4] font-medium mt-0.5">
@@ -166,7 +166,7 @@ export const CuratedToursModal: React.FC<CuratedToursModalProps> = ({
                     <span className="text-xs sm:text-base font-black text-[#1d2d4c] dark:text-stone-100 px-3 py-1 rounded-xl bg-stone-100 dark:bg-[#141822] border border-stone-200 dark:border-stone-700/60">
                       {toPersianDigits(tourGalleries.length)} گالری منتخب
                     </span>
-                    <span className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 flex items-center gap-1.5 font-bold font-mono">
+                    <span className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 flex items-center gap-1.5 font-bold tabular-nums">
                       <Clock className="w-4 h-4 text-[#F76B1C]" />
                       <span>~{toPersianDigits(tour.estimatedHours)} ساعت بازدید</span>
                     </span>
@@ -193,12 +193,12 @@ export const CuratedToursModal: React.FC<CuratedToursModalProps> = ({
                         return (
                           <React.Fragment key={g.id}>
                             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-[#f4f6fa] dark:bg-[#131722] text-[#1d2d4c] dark:text-stone-200 font-medium border border-stone-200/80 dark:border-stone-700/60 shadow-2xs">
-                              <span className="w-4.5 h-4.5 rounded-full bg-[#3D5B99] text-white text-[10px] flex items-center justify-center font-ubuntu font-bold shrink-0">
+                              <span className="w-4.5 h-4.5 rounded-full bg-[#3D5B99] text-white text-2xs flex items-center justify-center font-ubuntu font-bold shrink-0">
                                 {toPersianDigits(idx + 1)}
                               </span>
                               <span className="font-bold">{name}</span>
                               {exTitle && (
-                                <span className="text-stone-500 dark:text-stone-400 text-[11px] font-normal truncate max-w-[140px] sm:max-w-[200px]">
+                                <span className="text-stone-500 dark:text-stone-400 text-2xs font-normal truncate max-w-[140px] sm:max-w-[200px]">
                                   ({exTitle})
                                 </span>
                               )}

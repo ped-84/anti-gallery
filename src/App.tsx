@@ -749,10 +749,12 @@ export default function App() {
 
       const savedDuration = (() => {
         try {
+          // همان پیش‌فرض پنل مسیر (۱۵ دقیقه)؛ قبلاً اینجا ۳۵ بود و ساعت‌ها با پنل نمی‌خواند
           const s = localStorage.getItem('gallery_visit_duration_min');
-          return s ? parseInt(s, 10) : 35;
+          const v = s ? parseInt(s, 10) : NaN;
+          return Number.isFinite(v) && v > 0 ? v : 15;
         } catch {
-          return 35;
+          return 15;
         }
       })();
 
@@ -765,7 +767,7 @@ export default function App() {
         isRoundTrip,
         trafficCondition,
         customStart,
-        startGalleryId: customStart ? null : startId,
+        startGalleryId: startId,
         endGalleryId: endId,
         startTime: startTimeMin,
         dwellMinutes: savedDuration
@@ -1202,7 +1204,7 @@ export default function App() {
 
       {/* Operational Ribbon */}
       <div className="bg-[#e4ebf5] dark:bg-[#161a24] text-stone-700 dark:text-stone-300 py-2.5 sm:py-3 border-b border-[#E1E1E1] dark:border-stone-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 font-medium">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-3 font-medium">
           <div className="flex items-center gap-2.5 shrink-0">
             <span className="w-3 h-3 rounded-full bg-[#F76B1C] inline-block shadow-sm shrink-0"></span>
             <span className="text-sm sm:text-base font-medium">
@@ -1213,54 +1215,33 @@ export default function App() {
       </div>
 
       {/* Main Content Layout */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6">
-        {/* Dedicated Curated Tours Claymorphic Spotlight Card */}
-        <section className="clay-card p-4 sm:p-5.5 bg-gradient-to-r from-white via-[#fcfdff] to-[#f4f7fb] dark:from-[#181d27] dark:via-[#1c2331] dark:to-[#141924] border border-[#E1E1E1] dark:border-stone-800 shadow-md">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0 pr-0.5 sm:pr-0">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl clay-button clay-orange flex items-center justify-center shrink-0 shadow-md">
-                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white stroke-[2.2]" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap sm:flex-nowrap">
-                  <span className="text-[15px] sm:text-base font-black text-[#1c2944] dark:text-white tracking-tight shrink-0 whitespace-nowrap">
-                    گشت‌های آماده آرت‌گشت
-                  </span>
-                  <span className="whitespace-nowrap px-3 sm:px-3.5 py-0.5 sm:py-1 text-xs sm:text-[13px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug inline-flex items-center shrink-0 shadow-xs">
-                    مسیرهای پیشنهادی تهران
-                  </span>
-                </div>
-                <p className="text-sm sm:text-base text-stone-600 dark:text-stone-300 mt-1 sm:mt-1.5 leading-relaxed">
-                  مسیرهای منتخب و پیوسته برای گالری‌گردی بهینه با کمترین زمان و فاصله در محله‌های هنری تهران
-                </p>
-              </div>
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6">
+        {/* Editorial Claymorphic Banner */}
+        <section className="clay-card p-3.5 sm:p-6 bg-white dark:bg-[#181d27] border border-[#E1E1E1] dark:border-stone-800">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+            <div className="min-w-0">
+              <h1 className="text-xl sm:text-2xl font-bold text-[#1d2d4c] dark:text-white leading-snug">
+                بهترین مسیر آرت‌گشت در تهران
+              </h1>
+              <p className="text-sm sm:text-md text-stone-600 dark:text-stone-300 mt-1.5 leading-relaxed">
+                گالری‌ها را با «افزودن به گشت» انتخاب کن یا یکی از گشت‌های آماده‌ی زیر را بزن؛ آرت‌گشت ترتیب بهینه را با ساعت کار گالری‌ها و ترافیک تهران پیدا می‌کند.
+              </p>
             </div>
-
+            {/* گشت‌های آماده: قبلاً یک کارت جدا بالای همین کارت بود */}
             <button
               type="button"
               onClick={() => setIsCuratedModalOpen(true)}
-              className="clay-button clay-orange text-white px-5 sm:px-6 py-2.5 sm:py-3 text-sm font-bold flex items-center justify-center gap-2 rounded-2xl shadow-md hover:brightness-105 hover:scale-105 active:scale-95 transition-all shrink-0 cursor-pointer w-full sm:w-auto"
-              title="مشاهده نقشه و مسیرهای پیشنهادی گشت‌های آماده"
+              className="clay-button clay-orange text-white px-4 py-2.5 text-sm font-bold flex items-center justify-center gap-2 rounded-2xl shadow-md hover:brightness-105 active:scale-95 transition-all shrink-0 cursor-pointer w-full sm:w-auto"
             >
-              <Sparkles className="w-4 h-4 text-white stroke-[2.2] shrink-0" />
-              <span>گشت‌های آماده</span>
+              <Sparkles className="w-4 h-4 text-white stroke-[2.2] shrink-0" aria-hidden="true" />
+              <span>گشت‌های آماده روی نقشه</span>
             </button>
           </div>
-        </section>
-
-        {/* Editorial Claymorphic Banner */}
-        <section className="clay-card p-4 sm:p-6 bg-white dark:bg-[#181d27] border border-[#E1E1E1] dark:border-stone-800">
-          <h1 className="text-xl sm:text-3xl font-bold text-[#1d2d4c] dark:text-white tracking-tight leading-snug">
-            بهترین مسیر آرت‌گشت در تهران
-          </h1>
-          <p className="text-sm sm:text-base text-stone-600 dark:text-stone-300 mt-2 leading-relaxed">
-            گالری‌های مورد نظر خود را انتخاب کنید تا بهترین مسیر با احتساب ترافیک تهران به شما پیشنهاد شود.
-          </p>
 
           {/* Quick Tour Presets */}
           <div className="mt-4 pt-3.5 border-t border-[#E1E1E1] dark:border-stone-800 flex items-center gap-2 flex-wrap">
             {/* Mode Switcher Pill (Authentic Claymorphic Segmented Control) */}
-            <div className="flex items-center p-1 rounded-full bg-[#eaedf4] dark:bg-[#121620] border border-[#d2d9e6] dark:border-[#262f40] shadow-inner text-xs sm:text-[13px] font-bold shrink-0 ml-1">
+            <div className="flex items-center p-1 rounded-full bg-[#eaedf4] dark:bg-[#121620] border border-[#d2d9e6] dark:border-[#262f40] shadow-inner text-xs sm:text-xs font-bold shrink-0 ml-1">
               <button
                 type="button"
                 onClick={() => setCuratedTourMode('openings-only')}
@@ -1290,7 +1271,7 @@ export default function App() {
             </div>
 
             {/* Travel Mode Switcher Pill (با خودرو vs پیاده‌روی) */}
-            <div className="flex items-center p-1 rounded-full bg-[#eaedf4] dark:bg-[#121620] border border-[#d2d9e6] dark:border-[#262f40] shadow-inner text-xs sm:text-[13px] font-bold shrink-0 ml-1">
+            <div className="flex items-center p-1 rounded-full bg-[#eaedf4] dark:bg-[#121620] border border-[#d2d9e6] dark:border-[#262f40] shadow-inner text-xs sm:text-xs font-bold shrink-0 ml-1">
               <button
                 type="button"
                 onClick={() => handleTravelModeChange('driving')}
@@ -1455,7 +1436,7 @@ export default function App() {
                 <span className="text-xs font-bold text-[#10335e] dark:text-stone-200">
                   نقشه تعاملی گالری‌های تهران
                 </span>
-                <span className="text-[11px] text-stone-400">
+                <span className="text-2xs text-stone-400">
                   {isDesktop ? 'جهت بارگذاری سریع نقشه کلیک کنید یا صفحه را پیمایش نمایید' : 'نقشه در تب «نقشه و مسیر» فعال می‌شود'}
                 </span>
               </div>
@@ -1477,7 +1458,7 @@ export default function App() {
                   placeholder="جستجوی نام هنرمند (مثلاً داریوش حسینی)، عنوان نمایشگاه، نگارخانه..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="clay-input w-full pr-12 pl-4 py-3 bg-[#f6f8fb] dark:bg-[#141822] text-sm sm:text-base placeholder:text-stone-400 focus:outline-none text-[#1d2d4c] dark:text-white transition-all font-medium border border-[#E1E1E1]/50 rounded-2xl"
+                  className="clay-input w-full pr-12 pl-4 py-3 bg-[#f6f8fb] dark:bg-[#141822] text-base placeholder:text-stone-400 focus:outline-none text-[#1d2d4c] dark:text-white transition-all font-medium border border-[#E1E1E1]/50 rounded-2xl"
                 />
                 {searchQuery && (
                   <button
@@ -1496,44 +1477,44 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => setGalleryFilterTab('this-week')}
-                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 text-xs sm:text-sm text-center ${
+                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap text-sm text-center ${
                       galleryFilterTab === 'this-week'
                         ? 'clay-button clay-base text-[#F76B1C] shadow-sm'
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
                     }`}
                   >
-                    <Flame className={`w-4 h-4 shrink-0 ${galleryFilterTab === 'this-week' ? 'text-[#F76B1C]' : 'text-amber-500'}`} />
+                    <Flame className={`w-4 h-4 shrink-0 hidden sm:block ${galleryFilterTab === 'this-week' ? 'text-[#F76B1C]' : 'text-amber-500'}`} />
                     <span className="hidden sm:inline">افتتاحیه‌های این هفته</span>
                     <span className="sm:hidden">این هفته</span>
-                    <span className="text-xs sm:text-sm font-bold font-sans opacity-90"><bdi>({toPersianDigits(totalThisWeek)})</bdi></span>
+                    <span className="text-xs sm:text-sm font-bold font-sans opacity-80"><bdi>({toPersianDigits(totalThisWeek)})</bdi></span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setGalleryFilterTab('all-active')}
-                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 text-xs sm:text-sm text-center ${
+                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap text-sm text-center ${
                       galleryFilterTab === 'all-active'
                         ? 'clay-button clay-base text-[#10335e] dark:text-[#A3C2E4] shadow-sm'
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
                     }`}
                   >
-                    <Palette className="w-4 h-4 shrink-0" />
+                    <Palette className="w-4 h-4 shrink-0 hidden sm:block" />
                     <span className="hidden sm:inline">نمایشگاه‌های جاری</span>
                     <span className="sm:hidden">جاری</span>
-                    <span className="text-xs sm:text-sm font-bold font-sans opacity-90"><bdi>({toPersianDigits(totalWithPosters)})</bdi></span>
+                    <span className="text-xs sm:text-sm font-bold font-sans opacity-80"><bdi>({toPersianDigits(totalWithPosters)})</bdi></span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setGalleryFilterTab('all')}
-                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 text-xs sm:text-sm text-center ${
+                    className={`flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap text-sm text-center ${
                       galleryFilterTab === 'all'
                         ? 'clay-button clay-base text-[#10335e] dark:text-[#A3C2E4] shadow-sm'
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
                     }`}
                   >
-                    <Grid className="w-4 h-4 shrink-0" />
+                    <Grid className="w-4 h-4 shrink-0 hidden sm:block" />
                     <span className="hidden sm:inline">همه نگارخانه‌ها</span>
                     <span className="sm:hidden">همه</span>
-                    <span className="text-xs sm:text-sm font-bold font-sans opacity-90"><bdi>({toPersianDigits(galleries.length)})</bdi></span>
+                    <span className="text-xs sm:text-sm font-bold font-sans opacity-80"><bdi>({toPersianDigits(galleries.length)})</bdi></span>
                   </button>
                 </div>
 
@@ -1592,7 +1573,7 @@ export default function App() {
             </div>
 
             {/* Gallery Cards Grid (with Square Posters and Compact Layouts) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               {filteredGalleries.slice(0, visibleCardCount).map((gallery, idx) => (
                 <GalleryCard
                   key={gallery.id}
@@ -1609,10 +1590,17 @@ export default function App() {
             </div>
 
             {filteredGalleries.length === 0 && (
-              <div className="clay-card p-10 text-center bg-white dark:bg-[#181d27] text-stone-500 space-y-3 border border-[#E1E1E1]">
+              <div className="clay-card p-8 text-center bg-white dark:bg-[#181d27] text-stone-500 space-y-3 border border-[#E1E1E1] dark:border-stone-800">
                 <MapPin className="w-10 h-10 text-stone-300 dark:text-stone-600 mx-auto stroke-1" />
                 <p className="text-base font-bold text-stone-800 dark:text-stone-200">
-                  هیچ گالری‌ای با این فیلتر یافت نشد
+                  {searchQuery.trim()
+                    ? <>برای «<bdi>{searchQuery.trim()}</bdi>» نمایشگاهی پیدا نشد</>
+                    : 'با این فیلتر نمایشگاهی پیدا نشد'}
+                </p>
+                <p className="text-sm text-stone-500 dark:text-stone-400">
+                  {searchQuery.trim()
+                    ? 'املای دیگری از نام هنرمند یا گالری را امتحان کن، یا فیلترها را بردار.'
+                    : 'فیلتر محله یا زمان را عوض کن، یا همه را ببین.'}
                 </p>
                 <button
                   onClick={() => {
@@ -1706,7 +1694,7 @@ export default function App() {
               />
               <span className="text-xs sm:text-sm font-bold text-[#1c2944] dark:text-stone-200 truncate">
                 {selectedGalleries.length === 0
-                  ? `انتخاب حداقل ${toPersianDigits(minRequired)} گالری`
+                  ? 'گشت هنوز خالی است'
                   : `${toPersianDigits(selectedGalleries.length)} گالری در مسیر`}
               </span>
             </button>
@@ -1717,6 +1705,7 @@ export default function App() {
                   type="button"
                   onClick={handleClearAll}
                   title="پاک کردن انتخاب‌ها"
+                  aria-label="پاک کردن همه‌ی گالری‌های انتخاب‌شده"
                   className="clay-button clay-base p-2 text-stone-500 hover:text-rose-500 rounded-xl transition-all active:scale-95 cursor-pointer shrink-0"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
@@ -1740,7 +1729,7 @@ export default function App() {
                 />
                 <span>
                   {isOptimizing
-                    ? 'محاسبه مسیر...'
+                    ? 'در حال مسیریابی…'
                     : canOptimize
                     ? `مسیریابی بهینه (${toPersianDigits(selectedGalleries.length)})`
                     : `حداقل ${toPersianDigits(minRequired)} گالری`}
@@ -1787,7 +1776,7 @@ export default function App() {
               سیاست حریم خصوصی
             </button>
             <span className="text-stone-300 dark:text-stone-700">|</span>
-            <span className="px-2.5 py-1 text-[11px] font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug font-ubuntu shadow-xs">
+            <span className="px-2.5 py-1 text-2xs font-bold rounded-full bg-[#F76B1C]/15 text-[#F76B1C] border border-[#F76B1C]/30 leading-snug font-ubuntu shadow-xs">
               {APP_VERSION}
             </span>
           </div>

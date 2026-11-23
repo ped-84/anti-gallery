@@ -8,10 +8,19 @@ import {
   accentFor,
   mix,
   safeFillForWhiteText,
-  getCuratedRoadRoutes
+  getCuratedRoadRoutes,
+  ROAD_CONSTANTS
 } from '../utils/roadLayout';
 import { X, Navigation, Compass, Car, Footprints } from 'lucide-react';
+import { RoadWalker } from './RoadWalker';
 import './route-map.css';
+
+const MAP_W = ROAD_CONSTANTS.MAP_W;
+const TREE_TONES = [
+  { base: '#6FAF8C', hi: '#A7D6BA', lo: '#4E8E6D' },
+  { base: '#5E9F80', hi: '#97CBAB', lo: '#437E61' },
+  { base: '#86BC8F', hi: '#BCE0C1', lo: '#5F9A6B' }
+];
 
 interface CuratedRouteRoadModalProps {
   isOpen: boolean;
@@ -48,6 +57,8 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
   }, [allGalleries, curatedMode]);
 
   const activeRouteIdx = Math.max(0, Math.min(selectedRouteIdx, Math.max(0, validRoutes.length - 1)));
+  // حالت تیره از کلاس روی <html> خوانده می‌شود (هوک نیست؛ مودال با هر باز شدن دوباره رندر می‌شود)
+  const isDark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
   const currentRoute: RoadRoute = validRoutes[activeRouteIdx] || CURATED_ROAD_ROUTES[0];
 
   // Sync with initialRouteId whenever modal opens or route id changes
@@ -83,8 +94,8 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
     const updateScale = () => {
       const vw = window.innerWidth;
       const pad = vw < 640 ? 20 : 32;
-      const available = Math.min(vw - pad, 560);
-      const s = Math.min(1, Math.max(0.50, available / 560));
+      const available = Math.min(vw - pad, MAP_W);
+      const s = Math.min(1, Math.max(0.55, available / MAP_W));
       setMapScale(s);
     };
 
@@ -118,7 +129,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="ag-overlay-root relative w-full max-w-[560px] flex flex-col gap-3.5 my-auto items-center"
+        className="ag-overlay-root relative w-full max-w-[520px] flex flex-col gap-3.5 my-auto items-center"
       >
         {/* Header Card: 100% Native Scale (Large, crystal-clear typography) */}
         <div className="ag-head relative w-full">
@@ -126,7 +137,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="absolute top-4 left-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center transition-colors shadow-2xs z-20 cursor-pointer"
+            className="absolute top-4 left-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-600 dark:text-stone-300 flex items-center justify-center transition-colors shadow-2xs z-20 cursor-pointer"
             title="بستن پنجره (ESC)"
           >
             <X className="w-5 h-5" />
@@ -136,7 +147,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
             <div className="flex flex-wrap items-center justify-between gap-2 pl-12">
               <span className="ag-eyebrow">مسیرهای پیشنهادی آرت‌گشت</span>
               {/* Segmented Mode Switcher: با خودرو / پیاده‌روی */}
-              <div className="inline-flex items-center p-1 bg-stone-100 rounded-xl border border-stone-200/80 shadow-2xs">
+              <div className="inline-flex items-center p-1 bg-stone-100 dark:bg-stone-900 rounded-xl border border-stone-200/80 dark:border-stone-700 shadow-2xs">
                 <button
                   type="button"
                   onClick={() => {
@@ -145,8 +156,8 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                   }}
                   className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
                     curatedMode === 'driving'
-                      ? 'bg-white text-stone-900 shadow-xs'
-                      : 'text-stone-500 hover:text-stone-700'
+                      ? 'bg-white dark:bg-[#232a3a] text-stone-900 dark:text-white shadow-xs'
+                      : 'text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200'
                   }`}
                 >
                   <Car className="w-3.5 h-3.5 text-blue-600" />
@@ -160,8 +171,8 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                   }}
                   className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
                     curatedMode === 'walking'
-                      ? 'bg-white text-stone-900 shadow-xs'
-                      : 'text-stone-500 hover:text-stone-700'
+                      ? 'bg-white dark:bg-[#232a3a] text-stone-900 dark:text-white shadow-xs'
+                      : 'text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200'
                   }`}
                 >
                   <Footprints className="w-3.5 h-3.5 text-amber-600" />
@@ -193,10 +204,10 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
             {validRoutes.map((r, idx) => {
               const isSelected = idx === activeRouteIdx;
               const fill = r.tab || safeFillForWhiteText(r.color);
-              const tabBg = isSelected ? fill : mix(r.color, '#ffffff', 0.88);
-              const tabInk = isSelected ? (r.tabInk || '#ffffff') : mix(r.color, '#000000', 0.45);
+              const tabBg = isSelected ? fill : isDark ? mix(r.color, '#141822', 0.78) : mix(r.color, '#ffffff', 0.88);
+              const tabInk = isSelected ? (r.tabInk || '#ffffff') : isDark ? mix(r.color, '#ffffff', 0.55) : mix(r.color, '#000000', 0.45);
               const tabGlow = mix(r.color, '#ffffff', 0.4) + '66';
-              const tabBorder = isSelected ? mix(fill, '#000000', 0.15) : mix(r.color, '#ffffff', 0.65);
+              const tabBorder = isSelected ? mix(fill, '#000000', 0.15) : isDark ? mix(r.color, '#141822', 0.5) : mix(r.color, '#ffffff', 0.65);
 
               const style: React.CSSProperties = {
                 '--tab-bg': tabBg,
@@ -229,7 +240,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
 
         {/* Map Card: Responsive Winding Road, Pins, Cards & Moving Car */}
         <div
-          className="relative w-full max-w-[560px] overflow-hidden flex justify-center rounded-3xl"
+          className="relative w-full max-w-[520px] overflow-hidden flex justify-center rounded-3xl"
           style={{ height: `${scaledMapH}px` }}
         >
           <div
@@ -239,7 +250,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                 position: 'absolute',
                 top: 0,
                 left: '50%',
-                width: '560px',
+                width: `${MAP_W}px`,
                 transform: `translateX(-50%) scale(${mapScale})`,
                 transformOrigin: 'top center',
                 height: `${layout.mapH}px`,
@@ -256,9 +267,9 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
             {/* 1. Road Shadow */}
             <svg
               aria-hidden="true"
-              width={560}
+              width={MAP_W}
               height={layout.mapH}
-              viewBox={`0 0 560 ${layout.mapH}`}
+              viewBox={`0 0 ${MAP_W} ${layout.mapH}`}
               className="ag-svg ag-road-shadow"
             >
               <path
@@ -274,9 +285,9 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
             {/* 2. The 5-layer Winding Road */}
             <svg
               role="img"
-              width={560}
+              width={MAP_W}
               height={layout.mapH}
-              viewBox={`0 0 560 ${layout.mapH}`}
+              viewBox={`0 0 ${MAP_W} ${layout.mapH}`}
               className="ag-svg"
               aria-label={`مسیر ${currentRoute.label}`}
             >
@@ -287,21 +298,38 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
               <path d={layout.pathD} className="ag-road ag-road--dash" />
             </svg>
 
+            {/* 2b. Static roadside trees (no animation, shadows drawn inside the SVG) */}
+            {layout.trees.length > 0 && (
+              <svg
+                aria-hidden="true"
+                width={MAP_W}
+                height={layout.mapH}
+                viewBox={`0 0 ${MAP_W} ${layout.mapH}`}
+                className="ag-svg"
+              >
+                {layout.trees.map((t, i) => {
+                  const tone = TREE_TONES[t.tone];
+                  return (
+                    <g key={i}>
+                      {/* soft ground shadow */}
+                      <ellipse cx={t.x + t.r * 0.32} cy={t.y + t.r * 0.62} rx={t.r * 1.15} ry={t.r * 0.78} fill="#1d2d4c" opacity={0.11} />
+                      {/* canopy: three overlapping clay blobs, lit from the top-left */}
+                      <circle cx={t.x + t.r * 0.38} cy={t.y + t.r * 0.18} r={t.r * 0.72} fill={tone.lo} />
+                      <circle cx={t.x - t.r * 0.36} cy={t.y + t.r * 0.22} r={t.r * 0.68} fill={tone.lo} />
+                      <circle cx={t.x} cy={t.y - t.r * 0.12} r={t.r * 0.82} fill={tone.base} />
+                      <circle cx={t.x - t.r * 0.3} cy={t.y - t.r * 0.36} r={t.r * 0.32} fill={tone.hi} opacity={0.9} />
+                      <circle cx={t.x + t.r * 0.26} cy={t.y - t.r * 0.02} r={t.r * 0.14} fill={tone.hi} opacity={0.55} />
+                    </g>
+                  );
+                })}
+              </svg>
+            )}
+
             {/* 3. Distance Bubbles: Unified Single-Piece Vector Pointer */}
             {layout.legs.map((lg, idx) => {
-              const kmVal = lg.km !== null && lg.km !== undefined ? lg.km : 0.25;
-              const minsVal =
-                lg.minutes !== null && lg.minutes !== undefined
-                  ? lg.minutes
-                  : curatedMode === 'walking'
-                  ? Math.max(1, Math.round(kmVal * 13))
-                  : 2;
-              const distLabel =
-                curatedMode === 'walking'
-                  ? `${toPersianDigits(kmVal)} کیلومتر - ${toPersianDigits(minsVal)} دقیقه`
-                  : `${toPersianDigits(kmVal)} کیلومتر`;
-              const badgeW = curatedMode === 'walking' ? 164 : 124;
-              const badgeH = 34;
+              const badgeW = lg.w;
+              const badgeH = lg.h;
+              const r = badgeH / 2;
 
               return (
                 <div
@@ -315,7 +343,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                     height: `${badgeH}px`
                   }}
                 >
-                  {/* Single Seamless Vector Shape matching exact green checkmark mockup */}
+                  {/* Single seamless shape: rounded tag with a point toward the road */}
                   <svg
                     width={badgeW}
                     height={badgeH}
@@ -328,30 +356,26 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                     aria-hidden="true"
                   >
                     <path
-                      d={`M 17 0.5 L ${badgeW - 20} 0.5 Q ${badgeW - 12} 1.5 ${badgeW - 8} 5.5 L ${badgeW - 3} 13.5 Q ${badgeW} 17 ${badgeW - 3} 20.5 L ${badgeW - 8} 28.5 Q ${badgeW - 12} 32.5 ${badgeW - 20} 33.5 L 17 33.5 A 16.5 16.5 0 0 1 17 0.5 Z`}
-                      fill="#ffffff"
-                      stroke="rgba(29, 45, 76, 0.18)"
+                      d={`M ${r} 0.5 L ${badgeW - 20} 0.5 Q ${badgeW - 12} 1.5 ${badgeW - 8} 5.5 L ${badgeW - 3} ${r - 3.5} Q ${badgeW} ${r} ${badgeW - 3} ${r + 3.5} L ${badgeW - 8} ${badgeH - 5.5} Q ${badgeW - 12} ${badgeH - 1.5} ${badgeW - 20} ${badgeH - 0.5} L ${r} ${badgeH - 0.5} A ${r - 0.5} ${r - 0.5} 0 0 1 ${r} 0.5 Z`}
+                      fill="var(--bubble)"
+                      stroke="var(--bubble-border)"
                       strokeWidth="1.2"
                     />
                   </svg>
 
-                  {/* Content layer (Distance text + Car / Walking Icon) */}
                   <div
                     className="ag-leg-content"
                     style={{
-                      paddingLeft: lg.rightSide ? '16px' : '12px',
-                      paddingRight: lg.rightSide ? '12px' : '16px',
-                      flexDirection: lg.rightSide ? 'row-reverse' : 'row'
+                      paddingLeft: lg.rightSide ? '18px' : '12px',
+                      paddingRight: lg.rightSide ? '12px' : '18px'
                     }}
                   >
-                    <span className="font-sans tabular-nums text-[11px] sm:text-xs font-black select-none whitespace-nowrap">
-                      {distLabel}
-                    </span>
                     {curatedMode === 'walking' ? (
-                      <Footprints className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                      <Footprints className="ag-leg-icon text-[#c2410c] dark:text-[#ff8a3d]" aria-hidden="true" />
                     ) : (
-                      <Car className="w-4 h-4 text-[#10335e] shrink-0" />
+                      <Car className="ag-leg-icon text-[#10335e] dark:text-[#A3C2E4]" aria-hidden="true" />
                     )}
+                    <span className="ag-leg-text">{lg.text}</span>
                   </div>
                 </div>
               );
@@ -403,12 +427,12 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                   type="button"
                   onClick={() => onSelectGalleryDetails(s.gallery)}
                   aria-label={`مشاهده مشخصات ${s.name} - نمایشگاه ${s.show}`}
-                  className="ag-card"
+                  className={`ag-card${s.isStart || s.isEnd ? ' ag-card--tagged' : ''}`}
                   style={{
                     left: `${s.card.x}px`,
                     top: `${s.card.y}px`,
                     width: `${s.card.w}px`,
-                    height: `${s.card.h}px`
+                    minHeight: `${s.card.h}px`
                   }}
                 >
                   {s.isStart && (
@@ -425,7 +449,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                         height={12}
                         viewBox="0 0 24 24"
                         fill="none"
-                        stroke="#8a5a00"
+                        stroke="currentColor"
                         strokeWidth={2.2}
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -447,260 +471,9 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
               </React.Fragment>
             ))}
 
-            {/* 5. Animated Car / Walker (CSS Motion Path along road) */}
+            {/* 5. Animated Walker (rAF + SVG transform) / Car (CSS motion path) */}
             {curatedMode === 'walking' ? (
-              <div
-                className="ag-walker"
-                aria-hidden="true"
-                style={{
-                  offsetPath: `path('${layout.pathD}')`,
-                  animationDuration: `${layout.carSeconds}s`
-                }}
-              >
-                <div className="ag-walker__rig">
-                  <svg
-                    width="48"
-                    height="64"
-                    viewBox="0 0 48 64"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="overflow-visible"
-                  >
-                    <defs>
-                      {/* Shirt 3D Claymorphic Gradient matching road & car theme */}
-                      <linearGradient id="walker-shirt-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor={carHi} />
-                        <stop offset="48%" stopColor={pin} />
-                        <stop offset="100%" stopColor={carLo} />
-                      </linearGradient>
-
-                      {/* Back Leg / Shadow Denim */}
-                      <linearGradient id="walker-denim-back" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stopColor="#23426e" />
-                        <stop offset="100%" stopColor="#142845" />
-                      </linearGradient>
-
-                      {/* Front Leg Denim */}
-                      <linearGradient id="walker-denim-front" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stopColor="#467bb8" />
-                        <stop offset="100%" stopColor="#28538c" />
-                      </linearGradient>
-
-                      {/* Hair 3D Volume Gradient */}
-                      <linearGradient id="walker-hair-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#25334d" />
-                        <stop offset="50%" stopColor="#182236" />
-                        <stop offset="100%" stopColor="#0c121e" />
-                      </linearGradient>
-                    </defs>
-
-                    {/* 1. Ground Contact Shadow on Asphalt (pulses with foot strikes) */}
-                    <ellipse
-                      className="ag-anim-shadow"
-                      cx="24"
-                      cy="58"
-                      rx="14"
-                      ry="3.5"
-                      fill="#090d16"
-                      opacity="0.45"
-                    />
-
-                    {/* 2. Animated Character Body (with natural rhythmic step bounce) */}
-                    <g className="ag-anim-bob">
-                      {/* BACK ARM (swings opposite to back leg) */}
-                      <g transform="translate(18, 22)">
-                        <g className="ag-anim-arm-l">
-                          <path
-                            d="M 0 0 L -3 8 L -4 14"
-                            stroke="#e09c85"
-                            strokeWidth="2.6"
-                            strokeLinecap="round"
-                          />
-                          <circle cx="-4" cy="15" r="1.6" fill="#e09c85" />
-                        </g>
-                      </g>
-
-                      {/* BACK LEG (shaded darker for depth, full walking stride + knee flex) */}
-                      <g transform="translate(20, 33)">
-                        <g className="ag-anim-leg-l">
-                          {/* Thigh */}
-                          <path
-                            d="M 0 0 L -2 11"
-                            stroke="url(#walker-denim-back)"
-                            strokeWidth="4.8"
-                            strokeLinecap="round"
-                          />
-                          {/* Knee joint -> Shin & Foot */}
-                          <g transform="translate(-2, 11)">
-                            <g className="ag-anim-knee-l">
-                              {/* Calf */}
-                              <path
-                                d="M 0 0 L -1 10"
-                                stroke="url(#walker-denim-back)"
-                                strokeWidth="4.2"
-                                strokeLinecap="round"
-                              />
-                              {/* Rolled Cuff */}
-                              <ellipse cx="-1" cy="8.5" rx="2.5" ry="1.2" fill="#7fa6d8" />
-                              {/* Sneaker */}
-                              <path
-                                d="M -2 9 L 4 11.5 L 3.5 13.5 L -3 13 Z"
-                                fill="#e2e8f0"
-                                stroke="#090d16"
-                                strokeWidth="0.8"
-                              />
-                              <line
-                                x1="-3"
-                                y1="13.2"
-                                x2="3.5"
-                                y2="13.2"
-                                stroke="#090d16"
-                                strokeWidth="1.1"
-                              />
-                            </g>
-                          </g>
-                        </g>
-                      </g>
-
-                      {/* TORSO & HIPS (Claymorphic 3D styling) */}
-                      {/* Hips / Jeans Waistband */}
-                      <path d="M 17 31 L 31 31 L 29 35 L 19 35 Z" fill="#28538c" />
-                      <line
-                        x1="18"
-                        y1="31"
-                        x2="30"
-                        y2="31"
-                        stroke="#162c4c"
-                        strokeWidth="1"
-                      />
-
-                      {/* T-Shirt Body (Dynamic Tour Colors) */}
-                      <path
-                        d="M 18 19 L 30 19 L 31 31 L 17 31 Z"
-                        fill="url(#walker-shirt-grad)"
-                      />
-                      {/* 3D Clay highlight on shirt top edge */}
-                      <path
-                        d="M 18.5 19.5 L 29.5 19.5 L 23 20 Z"
-                        fill="rgba(255,255,255,0.45)"
-                      />
-
-                      {/* Crossbody Tote Strap */}
-                      <line
-                        x1="20"
-                        y1="19"
-                        x2="29"
-                        y2="33"
-                        stroke="#1e293b"
-                        strokeWidth="1.3"
-                      />
-                      {/* Mini Exhibition Tote Bag */}
-                      <rect
-                        x="27"
-                        y="30"
-                        width="5"
-                        height="6.5"
-                        rx="1.2"
-                        fill="#fff7ed"
-                        stroke={pin}
-                        strokeWidth="0.8"
-                      />
-
-                      {/* FRONT LEG (bright denim, clear forward stride + knee flex) */}
-                      <g transform="translate(26, 33)">
-                        <g className="ag-anim-leg-r">
-                          {/* Thigh */}
-                          <path
-                            d="M 0 0 L 2 11"
-                            stroke="url(#walker-denim-front)"
-                            strokeWidth="5"
-                            strokeLinecap="round"
-                          />
-                          {/* Knee joint -> Shin & Foot */}
-                          <g transform="translate(2, 11)">
-                            <g className="ag-anim-knee-r">
-                              {/* Calf */}
-                              <path
-                                d="M 0 0 L 1 10"
-                                stroke="url(#walker-denim-front)"
-                                strokeWidth="4.4"
-                                strokeLinecap="round"
-                              />
-                              {/* Rolled Jean Cuff */}
-                              <ellipse cx="1" cy="8.5" rx="2.7" ry="1.3" fill="#bfdbfe" />
-                              {/* Clean White Sneaker */}
-                              <path
-                                d="M -1 9 L 6 11.5 L 5.5 13.5 L -2 13 Z"
-                                fill="#ffffff"
-                                stroke="#090d16"
-                                strokeWidth="0.8"
-                              />
-                              <line
-                                x1="-2"
-                                y1="13.2"
-                                x2="5.5"
-                                y2="13.2"
-                                stroke="#090d16"
-                                strokeWidth="1.2"
-                              />
-                            </g>
-                          </g>
-                        </g>
-                      </g>
-
-                      {/* FRONT ARM & SLEEVE (swings opposite to front leg) */}
-                      <g transform="translate(28, 22)">
-                        <g className="ag-anim-arm-r">
-                          {/* Sleeve */}
-                          <path d="M -2 -2 L 3 1 L 2 5 L -2 4 Z" fill="url(#walker-shirt-grad)" />
-                          {/* Forearm */}
-                          <path
-                            d="M 1 4 L 4 11 L 6 15"
-                            stroke="#fcd7c7"
-                            strokeWidth="2.8"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          {/* Hand */}
-                          <circle cx="6" cy="15.5" r="1.7" fill="#fcd7c7" />
-                        </g>
-                      </g>
-
-                      {/* HEAD & HAIR */}
-                      {/* Neck */}
-                      <rect x="22" y="16.5" width="4" height="3" fill="#fcd7c7" />
-
-                      {/* Back Hair Volume */}
-                      <path
-                        d="M 18 12 C 17 6, 29 5, 30 11 C 31 16, 27 20, 23 20 C 18 20, 17 16, 18 12 Z"
-                        fill="url(#walker-hair-grad)"
-                      />
-
-                      {/* Face */}
-                      <circle cx="24.5" cy="13.5" r="4.8" fill="#fcd7c7" />
-                      {/* Cheek Blush */}
-                      <circle cx="26.5" cy="15" r="1.3" fill="#fca5a5" opacity="0.6" />
-
-                      {/* Front Bob Hair Fringe & Bangs */}
-                      <path
-                        d="M 19 12 C 20 8, 28 8, 29 11 C 26 12, 23 11, 21 14 Z"
-                        fill="#182236"
-                      />
-                      <path
-                        d="M 18 13 C 17 16, 18 18, 20 19 C 19 19, 18 16, 18 13 Z"
-                        fill="#0f172a"
-                      />
-                      {/* 3D Hair Gloss / Clay Highlight */}
-                      <path
-                        d="M 22 7.5 C 24 7, 27 7.5, 28 8.5"
-                        stroke="rgba(255,255,255,0.4)"
-                        strokeWidth="1.1"
-                        strokeLinecap="round"
-                      />
-                    </g>
-                  </svg>
-                </div>
-              </div>
+              <RoadWalker pathD={layout.pathD} width={MAP_W} height={layout.mapH} />
             ) : (
               <div
                 className="ag-car"
@@ -711,6 +484,7 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
                 }}
               >
                 <div className="ag-car__rig">
+                  <i className="shadow" />
                   <i className="wheel" style={{ left: '7px', top: '-1px' }} />
                   <i className="wheel" style={{ left: '28px', top: '-1px' }} />
                   <i className="wheel" style={{ left: '7px', top: '22px' }} />
@@ -732,8 +506,8 @@ export const CuratedRouteRoadModal: React.FC<CuratedRouteRoadModalProps> = ({
         {/* Bottom Docked CTA Bar: 100% Native Scale */}
         <div className="ag-foot w-full">
           <div className="flex items-center gap-2 text-xs sm:text-sm truncate">
-            <Compass className="w-4 h-4 sm:w-5 sm:h-5 text-[#3D5B99] shrink-0" />
-            <span className="font-extrabold text-[#1f2a44] truncate">
+            <Compass className="w-4 h-4 sm:w-5 sm:h-5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" />
+            <span className="font-extrabold text-[#1f2a44] dark:text-white truncate">
               {currentRoute.label}
             </span>
             <span className="text-stone-400">·</span>

@@ -435,7 +435,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                 </div>
                 <h3 className="text-base font-bold text-stone-900 dark:text-stone-100 mb-1">ورود به پنل مدیریت سرور</h3>
                 <p className="text-xs text-stone-500 dark:text-stone-400">
-                  رمز عبور مدیریت تنظیم‌شده در متغیر محیطی <code className="font-ubuntu text-[11px] bg-stone-200 dark:bg-stone-800 px-1.5 py-0.5 rounded">ADMIN_PASSWORD</code> را وارد کنید:
+                  رمز عبور مدیریت تنظیم‌شده در متغیر محیطی <code className="font-ubuntu text-2xs bg-stone-200 dark:bg-stone-800 px-1.5 py-0.5 rounded">ADMIN_PASSWORD</code> را وارد کنید:
                 </p>
               </div>
 
@@ -779,7 +779,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                               {gallery.name}
                             </h4>
                             {ex?.title && (
-                              <span className="text-[10px] bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 px-2 py-0.5 rounded-full font-bold">
+                              <span className="text-2xs bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 px-2 py-0.5 rounded-full font-bold">
                                 {ex.medium || 'نمایشگاه فعال'}
                               </span>
                             )}
@@ -787,7 +787,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                           <p className="text-xs text-stone-500 dark:text-stone-400 truncate mt-0.5">
                             {ex?.title ? `«${ex.title}» اثر ${ex.artist || 'هنرمند'}` : 'بدون نمایشگاه جاری ثبت‌شده'}
                           </p>
-                          <div className="flex items-center gap-3 text-[11px] text-stone-400 mt-1">
+                          <div className="flex items-center gap-3 text-2xs text-stone-400 mt-1">
                             <span>{gallery.neighborhoodFa || gallery.neighborhood || 'تهران'}</span>
                             {ex?.openingDate && <span>· افتتاحیه: {toPersianDigits(ex.openingDate)}</span>}
                           </div>
