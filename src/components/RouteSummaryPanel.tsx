@@ -300,7 +300,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
             {/* Origin / Starting Location Selector Card */}
             <div className="clay-card p-3 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-2xl border border-[#E1E1E1]/80 dark:border-stone-800 space-y-2.5 shadow-xs">
               <div className="flex items-center justify-between px-1">
-                <span className="text-xs sm:text-sm font-bold text-stone-700 dark:text-stone-300 flex items-center gap-1.5">
+                <span className="text-sm font-bold text-stone-700 dark:text-stone-300 flex items-center gap-1.5">
                   <Navigation className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   <span>مبدأ حرکت</span>
                 </span>
@@ -341,7 +341,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => handleModeChange('driving')}
-                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 ${
+                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${
                     activeMode === 'driving'
                       ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                       : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
@@ -353,7 +353,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => handleModeChange('walking')}
-                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 ${
+                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${
                     activeMode === 'walking'
                       ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                       : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
@@ -374,7 +374,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                       onRecalculate(mode, false, trafficCondition);
                     }
                   }}
-                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 ${
+                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-1.5 ${
                     !isRoundTrip
                       ? 'clay-button clay-base text-[#1d2d4c] dark:text-white shadow-xs'
                       : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
@@ -390,7 +390,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                       onRecalculate(mode, true, trafficCondition);
                     }
                   }}
-                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 ${
+                  className={`flex-1 py-2 sm:py-2.5 px-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-1.5 ${
                     isRoundTrip
                       ? 'clay-button clay-darkblue text-white shadow-xs'
                       : 'text-stone-500 dark:text-stone-400 hover:text-stone-800'
@@ -406,55 +406,55 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
             {mode === 'driving' && (
               <div className="clay-card p-3 sm:p-3.5 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-2xl border border-[#E1E1E1]/80 dark:border-stone-800 space-y-2.5 shadow-xs">
                 <div className="flex items-center justify-between px-1 mb-0.5">
-                  <span className="text-xs sm:text-sm font-bold text-stone-700 dark:text-stone-300 flex items-center gap-1.5">
+                  <span className="text-sm font-bold text-stone-700 dark:text-stone-300 flex items-center gap-1.5">
                     <Clock className="w-4 h-4 text-[#F76B1C]" />
                     <span>ساعت حرکت در ترافیک تهران:</span>
                   </span>
-                  <span className="text-2xs font-medium text-stone-400 hidden xs:inline">تخمین هوشمند</span>
+                  <span className="text-xs font-medium text-stone-400 hidden xs:inline">تخمین هوشمند</span>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   <button
                     type="button"
                     onClick={() => handleTrafficChange('normal')}
-                    className={`py-2 px-2 rounded-xl text-center font-bold text-xs sm:text-sm transition-all flex flex-col items-center justify-center min-h-[44px] ${
+                    className={`py-2 px-2 rounded-xl text-center font-bold text-sm transition-all flex flex-col items-center justify-center min-h-[44px] ${
                       trafficCondition === 'normal'
                         ? 'clay-button clay-base text-[#F76B1C] shadow-xs'
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 hover:bg-white/60'
                     }`}
                   >
                     <span>عادی</span>
-                    <span className="text-2xs font-normal opacity-70">(روان)</span>
+                    <span className="text-xs font-normal opacity-70">(روان)</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => handleTrafficChange('peak')}
-                    className={`py-2 px-2 rounded-xl text-center font-bold text-xs sm:text-sm transition-all flex flex-col items-center justify-center min-h-[44px] ${
+                    className={`py-2 px-2 rounded-xl text-center font-bold text-sm transition-all flex flex-col items-center justify-center min-h-[44px] ${
                       trafficCondition === 'peak'
                         ? 'clay-button clay-base text-[#F76B1C] shadow-xs'
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 hover:bg-white/60'
                     }`}
                   >
                     <span>عصر</span>
-                    <span className="text-2xs font-normal opacity-70">(شلوغ)</span>
+                    <span className="text-xs font-normal opacity-70">(شلوغ)</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => handleTrafficChange('weekend')}
-                    className={`py-2 px-2 rounded-xl text-center font-bold text-xs sm:text-sm transition-all flex flex-col items-center justify-center min-h-[44px] ${
+                    className={`py-2 px-2 rounded-xl text-center font-bold text-sm transition-all flex flex-col items-center justify-center min-h-[44px] ${
                       trafficCondition === 'weekend'
                         ? 'clay-button clay-base text-[#F76B1C] shadow-xs'
                         : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 hover:bg-white/60'
                     }`}
                   >
                     <span>جمعه</span>
-                    <span className="text-2xs font-normal opacity-70">(تعطیلات)</span>
+                    <span className="text-xs font-normal opacity-70">(تعطیلات)</span>
                   </button>
                 </div>
               </div>
             )}
             {/* Row 3: Gallery Visit Duration Dropdown: 5 to 60 min (Default: 15 min) */}
             <div className="clay-card p-2 sm:p-2.5 bg-[#f0f3f8] dark:bg-stone-900/90 rounded-2xl border border-[#E1E1E1]/80 dark:border-stone-800 flex items-center justify-between gap-2 shadow-xs">
-              <div className="flex items-center gap-2 text-stone-700 dark:text-stone-300 font-bold text-xs sm:text-sm pr-1">
+              <div className="flex items-center gap-2 text-stone-700 dark:text-stone-300 font-bold text-sm pr-1">
                 <Timer className="w-4 h-4 text-[#3D5B99] shrink-0" />
                 <span>زمان بازدید هر گالری:</span>
               </div>
@@ -481,7 +481,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
           <div className="clay-card p-3 sm:p-3.5 bg-white dark:bg-[#181d28] border border-[#E1E1E1]/80 dark:border-stone-800 flex items-center justify-between gap-2.5 shadow-xs rounded-xl">
             {/* Primary ETA: Tour Duration */}
             <div>
-              <span className="text-2xs sm:text-xs font-medium text-stone-500 dark:text-stone-400 block mb-0.5">
+              <span className="text-sm font-medium text-stone-500 dark:text-stone-400 block mb-0.5">
                 زمان کل برنامه ({toPersianDigits(visitDurationMin)} دقیقه بازدید در هر گالری)
               </span>
               <span className="text-base sm:text-lg font-bold text-[#F76B1C] tabular-nums">
@@ -552,7 +552,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                     <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
                     <span>هشدار تداخل ساعت کاری ({toPersianDigits(routeResult.tspTwSolution.droppedStops.length)} گالری):</span>
                   </div>
-                  <div className="text-2xs text-rose-800 dark:text-rose-300 space-y-0.5 pr-5">
+                  <div className="text-xs text-rose-800 dark:text-rose-300 space-y-0.5 pr-5">
                     {routeResult.tspTwSolution.droppedStops.map((d, i) => (
                       <div key={i}>
                         • <strong>{d.name || `ایستگاه ${toPersianDigits(d.nodeIndex + 1)}`}</strong>: ساعت {toPersianDigits(d.closingTimeFormatted)} بسته می‌شود (رسیدن تقریبی: ~{toPersianDigits(d.earliestPossibleArrivalFormatted)}).
@@ -601,7 +601,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                       <div className="font-bold text-[#1d2d4c] dark:text-white truncate text-sm sm:text-base">
                         {getGalleryDisplayName(g)}
                       </div>
-                      <div className="text-stone-500 dark:text-stone-400 truncate text-xs sm:text-sm">
+                      <div className="text-stone-500 dark:text-stone-400 truncate text-sm">
                         {g.neighborhoodFa} · {formatGalleryAddress(g.addressFa || g.address)}
                       </div>
                     </div>
@@ -619,31 +619,31 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
           </div>
         ) : (
           <div className="space-y-3">
-            <div className="text-xs sm:text-sm font-bold text-[#3D5B99] dark:text-[#A3C2E4] flex items-center justify-between pb-1 flex-wrap gap-2">
+            <div className="text-sm font-bold text-[#3D5B99] dark:text-[#A3C2E4] flex items-center justify-between pb-1 flex-wrap gap-2.5">
               <span>توالی توقف‌ها ({toPersianDigits(routeResult.orderedGalleries.length)} گالری)</span>
               <div className="flex items-center gap-1.5">
                 <button
                   type="button"
                   onClick={onReverseRoute}
-                  className="clay-button clay-base text-xs font-bold px-2.5 py-1 rounded-xl flex items-center gap-1 text-stone-700 dark:text-stone-300 hover:text-[#F76B1C] hover:scale-105 active:scale-95 transition-all shadow-xs"
+                  className="clay-button clay-base text-sm font-bold px-3.5 py-2 min-h-10 rounded-xl flex items-center gap-1.5 text-stone-700 dark:text-stone-300 hover:text-[#F76B1C] hover:scale-105 active:scale-95 transition-all shadow-xs"
                   title="معکوس کردن کامل مسیر (از آخر به اول)"
                 >
-                  <ArrowUpDown className="w-3.5 h-3.5 text-[#F76B1C]" />
+                  <ArrowUpDown className="w-4 h-4 text-[#F76B1C]" />
                   <span>مسیر معکوس</span>
                 </button>
                 <button
                   type="button"
                   onClick={onResetAutoOrder}
-                  className="clay-button clay-base text-xs font-bold px-2.5 py-1 rounded-xl flex items-center gap-1 text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] hover:scale-105 active:scale-95 transition-all shadow-xs"
+                  className="clay-button clay-base text-sm font-bold px-3.5 py-2 min-h-10 rounded-xl flex items-center gap-1.5 text-[#3D5B99] dark:text-[#A3C2E4] hover:text-[#F76B1C] hover:scale-105 active:scale-95 transition-all shadow-xs"
                   title="محاسبه مجدد کوتاه‌ترین مسیر کلی به صورت خودکار"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                  <Sparkles className="w-4 h-4 text-amber-500" />
                   <span>چینش خودکار</span>
                 </button>
               </div>
             </div>
 
-            <div className="relative pr-6 sm:pr-8 space-y-2 before:absolute before:right-3 sm:before:right-4 before:top-4 before:bottom-4 before:w-0.5 before:bg-stone-200 dark:before:bg-stone-700">
+            <div className="relative pr-6 sm:pr-8 space-y-3 before:absolute before:right-3 sm:before:right-4 before:top-4 before:bottom-4 before:w-0.5 before:bg-stone-200 dark:before:bg-stone-700">
               {/* Origin Point Stop (If user location/hub is active) */}
               {routeResult.originPoint && (
                 <div className="relative group">
@@ -668,10 +668,10 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
 
                   {/* Transit Leg 0: Origin to First Gallery */}
                   {routeResult.legs[0] && (
-                    <div className="my-1.5 flex items-center justify-center">
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f1f4fa] dark:bg-[#151a24] text-xs text-stone-600 dark:text-stone-300 border border-emerald-200/80 dark:border-emerald-800/50 shadow-2xs tabular-nums">
+                    <div className="my-2.5 flex items-center justify-center">
+                      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f1f4fa] dark:bg-[#151a24] text-sm text-stone-600 dark:text-stone-300 border border-emerald-200/80 dark:border-emerald-800/50 shadow-2xs tabular-nums">
                         {mode === 'walking' ? (
-                          <Footprints className="w-3.5 h-3.5 text-[#F76B1C]" />
+                          <Footprints className="w-4 h-4 text-[#F76B1C]" />
                         ) : (
                           <Car className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                         )}
@@ -697,7 +697,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                   <div key={gallery.id} className="relative group">
                     {/* Order Pin on Timeline */}
                     <div
-                      className={`absolute -right-6 sm:-right-7.5 top-2 w-6.5 h-6.5 sm:w-7 sm:h-7 rounded-full text-xs sm:text-sm font-bold flex items-center justify-center border-2 border-white dark:border-stone-900 shadow-sm z-10 tabular-nums ${
+                      className={`absolute -right-6 sm:-right-7.5 top-2 w-6.5 h-6.5 sm:w-7 sm:h-7 rounded-full text-sm font-bold flex items-center justify-center border-2 border-white dark:border-stone-900 shadow-sm z-10 tabular-nums ${
                         isFirst && !hasOrigin
                           ? 'bg-[#1856C7] text-white'
                           : isLast && !routeResult.isRoundTrip
@@ -711,10 +711,10 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                     {/* کارت توقف (فشرده): نام + اقدام‌ها ← نمایشگاه ← یک ردیف زمان ← یک ردیف کنترل/ناوبری */}
                     {(() => {
                       const scheduledStop = routeResult.tspTwSolution?.scheduledStops.find((s) => s.id === gallery.id);
-                      const navBtn = 'clay-button clay-base w-8 h-8 rounded-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all border border-stone-200/80 dark:border-stone-700';
-                      const iconBtn = 'w-8 h-8 rounded-lg flex items-center justify-center text-stone-400 disabled:opacity-20 disabled:pointer-events-none hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors';
+                      const navBtn = 'clay-button clay-base w-11 h-11 rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all border border-stone-200/80 dark:border-stone-700';
+                      const iconBtn = 'w-10 h-10 rounded-xl flex items-center justify-center text-stone-400 disabled:opacity-20 disabled:pointer-events-none hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors';
                       return (
-                        <div className="clay-card p-3 bg-white dark:bg-[#1a202c] text-xs border border-stone-200 dark:border-stone-800 shadow-xs space-y-2">
+                        <div className="clay-card p-3.5 bg-white dark:bg-[#1a202c] text-sm border border-stone-200 dark:border-stone-800 shadow-xs space-y-2.5">
                           <div className="flex items-start justify-between gap-1.5">
                             <div className="min-w-0 flex-1">
                               <button
@@ -724,30 +724,30 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                               >
                                 {getGalleryDisplayName(gallery)}
                               </button>
-                              <div className="text-xs text-stone-500 dark:text-stone-400 truncate">
+                              <div className="text-sm text-stone-500 dark:text-stone-400 truncate mt-0.5">
                                 {gallery.neighborhoodFa} · {formatGalleryAddress(gallery.addressFa || gallery.address)}
                               </div>
                             </div>
                             <div className="flex items-center shrink-0 -ml-1">
                               <button type="button" disabled={idx === 0} onClick={() => onMoveStop?.(idx, idx - 1)} className={`${iconBtn} hover:text-[#1856C7]`} title="یک توقف جلوتر" aria-label="یک توقف جلوتر">
-                                <ArrowUp className="w-4 h-4" />
+                                <ArrowUp className="w-5 h-5" />
                               </button>
                               <button type="button" disabled={isLast} onClick={() => onMoveStop?.(idx, idx + 1)} className={`${iconBtn} hover:text-[#1856C7]`} title="یک توقف عقب‌تر" aria-label="یک توقف عقب‌تر">
-                                <ArrowDown className="w-4 h-4" />
+                                <ArrowDown className="w-5 h-5" />
                               </button>
                               <button type="button" onClick={() => onRemoveGallery(gallery.id)} className={`${iconBtn} hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40`} title="حذف این توقف" aria-label="حذف این توقف">
-                                <Trash2 className="w-4 h-4" />
+                                <Trash2 className="w-[18px] h-[18px]" />
                               </button>
                             </div>
                           </div>
 
                           {gallery.activeExhibition && (
                             <div className="min-w-0">
-                              <div className="font-exhibit text-lg text-[#c2410c] dark:text-[#ff8a3d] leading-snug truncate">
+                              <div className="font-exhibit text-xl text-[#c2410c] dark:text-[#ff8a3d] leading-normal truncate">
                                 {gallery.activeExhibition.title}
                               </div>
                               {gallery.activeExhibition.artist && (
-                                <div className="text-xs text-stone-500 dark:text-stone-400 truncate" title={gallery.activeExhibition.artist}>
+                                <div className="text-sm text-stone-600 dark:text-stone-300 truncate" title={gallery.activeExhibition.artist}>
                                   {gallery.activeExhibition.artist}
                                 </div>
                               )}
@@ -755,14 +755,14 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                           )}
 
                           {scheduledStop && (
-                            <div className="flex items-center gap-x-2 gap-y-1 flex-wrap text-xs tabular-nums">
+                            <div className="flex items-center gap-x-2.5 gap-y-1.5 flex-wrap text-sm tabular-nums">
                               <span className="inline-flex items-center gap-1 font-bold text-stone-700 dark:text-stone-200">
-                                <Clock className="w-3.5 h-3.5 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" aria-hidden="true" />
+                                <Clock className="w-4 h-4 text-[#3D5B99] dark:text-[#A3C2E4] shrink-0" aria-hidden="true" />
                                 <span>{toPersianDigits(scheduledStop.visitStartFormatted)} تا {toPersianDigits(scheduledStop.departureTimeFormatted)}</span>
                               </span>
                               {scheduledStop.waitMinutes >= 5 && (
                                 <span
-                                  className="px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-900/40 text-[#1856C7] dark:text-[#93c5fd] font-bold"
+                                  className="px-2.5 py-1 rounded-full text-xs bg-blue-50 dark:bg-blue-900/40 text-[#1856C7] dark:text-[#93c5fd] font-bold"
                                   title={`ساعت ${scheduledStop.arrivalTimeFormatted} می‌رسی ولی گالری ${scheduledStop.visitStartFormatted} باز می‌شود`}
                                 >
                                   {formatDurationFa(scheduledStop.waitMinutes)} صبر تا باز شدن
@@ -782,17 +782,17 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                             </div>
                           )}
 
-                          <div className="flex items-center justify-between gap-2 pt-2 border-t border-stone-100 dark:border-stone-800/80">
-                            <div className="flex items-center gap-1 min-w-0">
+                          <div className="flex items-center justify-between flex-wrap gap-x-3 gap-y-2.5 pt-3 border-t border-stone-100 dark:border-stone-800/80">
+                            <div className="flex items-center gap-2 min-w-0">
                               {isFirst ? (
                                 hasOrigin ? (
-                                  <span className="inline-flex items-center gap-1 font-bold text-[#1856C7] dark:text-[#93c5fd] bg-[#edf3ff] dark:bg-blue-950/40 px-2 py-1 rounded-lg border border-blue-200 dark:border-blue-800/50">
+                                  <span className="inline-flex items-center gap-1 font-bold text-[#1856C7] dark:text-[#93c5fd] bg-[#edf3ff] dark:bg-blue-950/40 px-3 py-2 min-h-10 rounded-xl text-sm border border-blue-200 dark:border-blue-800/50">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#1856C7]"></span>
                                     <span>اولین گالری</span>
                                   </span>
                                 ) : (
-                                  <span className="inline-flex items-center gap-1 font-bold text-white bg-emerald-600 px-2 py-1 rounded-lg">
-                                    <Check className="w-3 h-3" aria-hidden="true" />
+                                  <span className="inline-flex items-center gap-1 font-bold text-white bg-emerald-600 px-3 py-2 min-h-10 rounded-xl text-sm">
+                                    <Check className="w-4 h-4" aria-hidden="true" />
                                     <span>شروع</span>
                                   </span>
                                 )
@@ -800,41 +800,41 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                                 <button
                                   type="button"
                                   onClick={() => onSetStartGallery?.(gallery.id)}
-                                  className="inline-flex items-center gap-1 font-bold text-[#1856C7] dark:text-[#93c5fd] hover:text-white hover:bg-[#1856C7] bg-[#edf3ff] dark:bg-blue-950/40 px-2 py-1 rounded-lg border border-blue-200 dark:border-blue-800/50 active:scale-95 transition-all"
+                                  className="inline-flex items-center gap-1 font-bold text-[#1856C7] dark:text-[#93c5fd] hover:text-white hover:bg-[#1856C7] bg-[#edf3ff] dark:bg-blue-950/40 px-3 py-2 min-h-10 rounded-xl text-sm border border-blue-200 dark:border-blue-800/50 active:scale-95 transition-all"
                                   title={hasOrigin ? 'این گالری اولین مقصد بعد از مبدأ می‌شود' : 'مسیر از این گالری شروع می‌شود و بقیه بهینه می‌شوند'}
                                 >
-                                  <Navigation className="w-3 h-3" aria-hidden="true" />
+                                  <Navigation className="w-4 h-4" aria-hidden="true" />
                                   <span>{hasOrigin ? 'اول اینجا' : 'شروع'}</span>
                                 </button>
                               )}
                               {!routeResult.isRoundTrip && (
                                 isLast ? (
-                                  <span className="inline-flex items-center gap-1 font-bold text-white bg-[#c2410c] px-2 py-1 rounded-lg">
-                                    <Check className="w-3 h-3" aria-hidden="true" />
+                                  <span className="inline-flex items-center gap-1 font-bold text-white bg-[#c2410c] px-3 py-2 min-h-10 rounded-xl text-sm">
+                                    <Check className="w-4 h-4" aria-hidden="true" />
                                     <span>پایان</span>
                                   </span>
                                 ) : (
                                   <button
                                     type="button"
                                     onClick={() => onSetEndGallery?.(gallery.id)}
-                                    className="inline-flex items-center gap-1 font-medium text-stone-600 dark:text-stone-300 hover:text-white hover:bg-[#F76B1C] bg-stone-100 dark:bg-stone-800 px-2 py-1 rounded-lg border border-stone-200 dark:border-stone-700 active:scale-95 transition-all"
+                                    className="inline-flex items-center gap-1 font-medium text-stone-600 dark:text-stone-300 hover:text-white hover:bg-[#F76B1C] bg-stone-100 dark:bg-stone-800 px-3 py-2 min-h-10 rounded-xl text-sm border border-stone-200 dark:border-stone-700 active:scale-95 transition-all"
                                     title="مسیر در این گالری تمام شود"
                                   >
-                                    <Flag className="w-3 h-3" aria-hidden="true" />
+                                    <Flag className="w-4 h-4" aria-hidden="true" />
                                     <span>پایان</span>
                                   </button>
                                 )
                               )}
                             </div>
-                            <div className="flex items-center gap-1 shrink-0" role="group" aria-label={`مسیریابی تا ${getGalleryDisplayName(gallery)}`}>
+                            <div className="flex items-center gap-2 shrink-0" role="group" aria-label={`مسیریابی تا ${getGalleryDisplayName(gallery)}`}>
                               <a href={buildNeshanUrl(gallery, undefined, mode)} target="_blank" rel="noopener noreferrer" className={navBtn} title="مسیریابی با نشان" aria-label="مسیریابی با نشان">
-                                <NeshanIcon className="w-[18px] h-[18px]" />
+                                <NeshanIcon className="w-[22px] h-[22px]" />
                               </a>
                               <a href={buildWazeUrl(gallery)} target="_blank" rel="noopener noreferrer" className={navBtn} title="مسیریابی با Waze" aria-label="مسیریابی با Waze">
-                                <WazeIcon className="w-[18px] h-[18px]" />
+                                <WazeIcon className="w-[22px] h-[22px]" />
                               </a>
                               <a href={buildGoogleMapsUrl([gallery], undefined, mode)} target="_blank" rel="noopener noreferrer" className={navBtn} title="مسیریابی با Google Maps" aria-label="مسیریابی با Google Maps">
-                                <GoogleMapsIcon className="w-[18px] h-[18px]" />
+                                <GoogleMapsIcon className="w-[22px] h-[22px]" />
                               </a>
                             </div>
                           </div>
@@ -844,12 +844,12 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
 
                     {/* Transit Leg Info: Clean Centered Travel Pill */}
                     {leg && (
-                      <div className="my-1.5 flex items-center justify-center">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f1f4fa] dark:bg-[#151a24] text-xs text-stone-600 dark:text-stone-300 border border-stone-200/70 dark:border-stone-800 shadow-2xs tabular-nums">
+                      <div className="my-2.5 flex items-center justify-center">
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f1f4fa] dark:bg-[#151a24] text-sm text-stone-600 dark:text-stone-300 border border-stone-200/70 dark:border-stone-800 shadow-2xs tabular-nums">
                           {mode === 'walking' ? (
-                            <Footprints className="w-3.5 h-3.5 text-[#F76B1C]" />
+                            <Footprints className="w-4 h-4 text-[#F76B1C]" />
                           ) : (
-                            <Car className="w-3.5 h-3.5 text-[#3D5B99]" />
+                            <Car className="w-4 h-4 text-[#3D5B99]" />
                           )}
                           <span className="font-bold text-[#1d2d4c] dark:text-white">
                             حدود {toPersianDigits(leg.durationWithTrafficMin || leg.durationMin)} دقیقه {isLast && routeResult.isRoundTrip ? 'بازگشت به مبدأ' : mode === 'walking' ? 'پیاده' : 'رانندگی'}
@@ -874,7 +874,7 @@ export const RouteSummaryPanel: React.FC<RouteSummaryPanelProps> = ({
                     <span className="font-bold text-amber-800 dark:text-amber-300">
                       بازگشت به {routeResult.originPoint ? routeResult.originPoint.name : 'نقطه آغاز (گالری اول)'}
                     </span>
-                    <span className="text-2xs bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 px-2 py-0.5 rounded-full font-bold">
+                    <span className="text-xs bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 px-2 py-0.5 rounded-full font-bold">
                       پایان مسیر رفت‌وبرگشت
                     </span>
                   </div>
