@@ -224,7 +224,8 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
           <div className="p-3 rounded-2xl bg-[#f0f4fa] dark:bg-[#1b2230] space-y-2 border border-[#A3C2E4]/40 dark:border-stone-700/60">
             <h3
               onClick={() => onSelectDetails(gallery)}
-              className="font-exhibit text-xl sm:text-[22px] sm:leading-[1.5] text-[#10335e] dark:text-[#dbeafe] cursor-pointer line-clamp-2"
+              title={activeExhibition.title}
+              className="font-exhibit text-lg sm:text-xl text-[#10335e] dark:text-[#dbeafe] cursor-pointer truncate"
             >
               {activeExhibition.title}
             </h3>

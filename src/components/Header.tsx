@@ -9,7 +9,7 @@ interface HeaderProps {
   isStandalone?: boolean;
 }
 
-export const APP_VERSION = 'بتا V 1.169';
+export const APP_VERSION = 'بتا V 1.170';
 
 export const Header: React.FC<HeaderProps> = ({
   isDarkMode,
