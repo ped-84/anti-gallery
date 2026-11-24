@@ -19,3 +19,8 @@ Read `PROJECT_HANDOFF.md` first; it is the single source of truth (architecture,
 - Work on a branch → `npx tsc --noEmit` → `npm run build` → check the UI in a browser (screenshot, light + dark, mobile width) → open a PR. `ci.yml` re-runs typecheck + build + `scripts/smoke-test.mjs` (backend) + a production Docker image boot check on the PR.
 - Pedram merges the PR = final approval and deploy. Then verify `https://artgasht.com/health` shows the new version.
 - The data bot commits to `main` with `[skip ci]`; rebase on `main` before opening a PR.
+
+## Documents go to Pedram's Google Drive
+
+Every document you create for Pedram (plans, specs, reports, handoffs, decision records, sheets) is created in his Google Drive, account p.e.maleki@gmail.com, inside this project's folder under «AI product»: https://drive.google.com/drive/folders/1XmsTd7H_uXOP_VRjRtv5rNxsmMKLK9tZ
+Create it as a Google Doc or Sheet there, not in My Drive root and not only as a local or repository file. Then add its link to this project's `docs` in ped-84/project-hub data/projects.json. If this chat has no Google Drive access, say so in one line instead of saving it somewhere else.
