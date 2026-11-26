@@ -135,6 +135,18 @@ npm run dev           # سرور توسعه روی پورت 3000
 | اسکرپر داخلی `server.ts` (فقط PRIMARY) | `data/galleries.json` روی سرور (همان چیزی که کاربر می‌بیند) | بازه‌ی پویا بر اساس ساعت تهران |
 | `scheduled-scraper.yml` | `src/data/*.json` در گیت (کامیت با `[skip ci]`، پس استقرار نمی‌کند) | پنجشنبه عصر و جمعه هر ۳۰ دقیقه، بقیه هر ۶ ساعت |
 
+**منبع‌ها (از v1.181)** — هر دو اسکرپر همان `scripts/sync-galleryinfo.cjs` را اجرا می‌کنند، به این ترتیب:
+1. API گالری‌اینفو (`AjaxCalls.asmx/GetMoreEvents`).
+2. اگر galleryinfo.ir در دسترس نبود (از ۲۰۲۶-۱۱-۲۴ از سرورهای خارج ایران باز نمی‌شود؛ DNS و وب‌سرورش یک IP ایرانی‌اند): کانال تلگرام `@galleryinfo_ir` با `scripts/telegram-source.cjs`. پست‌ها لینک `Event/fa/<id>` و `Gallery/fa/<id>` دارند، پس شناسه‌ها با داده‌ی ما یکی است. نمایشگاه‌های جاری‌ای که در پست‌های اخیر نیستند نگه داشته می‌شوند. پوستر هر پست در کش `image_cache` با همان آدرس galleryinfo ذخیره می‌شود تا `/api/image-proxy` آن را بدهد. نگارخانه‌ی جدید فقط با مختصات لینک نقشه‌ی پست ساخته می‌شود؛ بدون مکان رد می‌شود. محدودیت: تلگرام معمولاً حدود روز افتتاحیه پست می‌گذارد، پس از سایت عقب‌تر است.
+3. **پل گوشی** (فوری، دستی): بوک‌مارکلت زیر روی galleryinfo.ir در مرورگر گوشیِ داخل ایران، فهرست کامل را می‌خواند و با رمز ادمین به `POST /api/admin/galleryinfo-import` می‌فرستد (فرم معمولی، بدون CORS؛ همان قفل ۵ تلاش ناموفق ورود ادمین). پوسترها از تلگرام کش می‌شوند.
+4. اگر هیچ منبعی کار نکرد، اسکریپت با کد ۱ تمام می‌شود (job گیت‌هاب قرمز، وضعیت خطا در `/api/sync-status`) و داده دست نمی‌خورد. منبع آخرین اجرا در `data/sync-report.json` و فیلد `lastSource` در `/api/sync-status` است.
+
+بوک‌مارکلت پل (به‌عنوان آدرس یک بوک‌مارک ذخیره شود، روی galleryinfo.ir زده شود):
+
+```
+javascript:(async()=>{try{if(!/galleryinfo\.ir$/.test(location.hostname)){alert('Open galleryinfo.ir first');return}var p=prompt('Artgasht admin password');if(!p)return;var a=[],s=0;while(s<900){var r=await fetch('/AjaxCalls.asmx/GetMoreEvents',{method:'POST',headers:{'Content-Type':'application/json; charset=utf-8'},body:JSON.stringify({count:18,skip:s,city:0,media:0,year:0,stat:'current'})});var b=(await r.json()).d||[];a=a.concat(b);if(b.length<18)break;s+=18}if(!a.length){alert('No events found');return}var f=document.createElement('form');f.method='POST';f.action='https://artgasht.com/api/admin/galleryinfo-import';f.acceptCharset='UTF-8';[['password',p],['events',JSON.stringify(a)]].forEach(function(x){var t=document.createElement('textarea');t.name=x[0];t.value=x[1];f.appendChild(t)});f.style.display='none';document.body.appendChild(f);f.submit()}catch(e){alert('Error: '+e.message)}})()
+```
+
 ویرایش‌های ادمین فقط در `data/galleries.json` سرور ذخیره می‌شوند. **داده‌ی سرور منبع حقیقت است.** هنگام بالا آمدن کانتینر، `syncGalleriesFromSeed()` داده‌ی پایه‌ی داخل ایمیج را با آن **ادغام** می‌کند (از v1.164):
 - رکوردی که روی سرور نیست اضافه می‌شود.
 - برای id مشترک، نسخه‌ی پایه فقط اگر `updatedAt` آن جدیدتر باشد جایگزین می‌شود؛ در غیر این صورت نسخه‌ی سرور می‌ماند.
