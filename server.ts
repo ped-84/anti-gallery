@@ -339,6 +339,7 @@ let syncState = {
   lastSyncTime: new Date().toISOString(),
   lastSyncStatus: SCRAPER_ENABLED ? 'موفق (داده‌های فعال بارگذاری شدند)' : 'غیرفعال (طبق پیکربندی سرور)',
   isSyncing: false,
+  lastSource: '' as string, // 'galleryinfo' | 'telegram' | 'bridge' (from data/sync-report.json)
   activeExhibitionsCount: 33,
   scheduleDescription: SCRAPER_ENABLED
     ? 'پنجشنبه شب هر ۳۰ دقیقه · جمعه صبح تا ظهر هر ۱۵ دقیقه · چهارشنبه و پنجشنبه روز هر ۱ ساعت'
@@ -382,7 +383,22 @@ function getTehranSyncIntervalMs(): number {
   return 6 * 60 * 60 * 1000;
 }
 
-async function syncExhibitions(): Promise<{ success: boolean; count: number; error?: string }> {
+const SYNC_REPORT_FILE = path.join(DATA_DIR, 'sync-report.json');
+const SOURCE_LABELS: Record<string, string> = {
+  galleryinfo: 'گالری‌اینفو',
+  telegram: 'کانال تلگرام گالری‌اینفو (سایت گالری‌اینفو از خارج ایران در دسترس نیست)',
+  bridge: 'ارسال از گوشی (پل گالری‌اینفو)'
+};
+
+function readSyncReport(): { ok?: boolean; source?: string; error?: string; postersCached?: number } {
+  try {
+    return JSON.parse(fs.readFileSync(SYNC_REPORT_FILE, 'utf-8')) || {};
+  } catch {
+    return {};
+  }
+}
+
+async function syncExhibitions(options: { eventsFile?: string } = {}): Promise<{ success: boolean; count: number; error?: string; source?: string }> {
   if (!SCRAPER_ENABLED) {
     return { success: false, count: syncState.activeExhibitionsCount, error: 'اسکرپر روی این سرور غیرفعال است' };
   }
@@ -400,7 +416,7 @@ async function syncExhibitions(): Promise<{ success: boolean; count: number; err
     }
 
     const syncResult = await new Promise<{ code: number | null }>((resolve) => {
-      const child = fork(syncScriptPath, [], {
+      const child = fork(syncScriptPath, options.eventsFile ? ['--events-file', options.eventsFile] : [], {
         env: {
           ...process.env,
           DATA_DIR
@@ -423,14 +439,18 @@ async function syncExhibitions(): Promise<{ success: boolean; count: number; err
           if (Array.isArray(exList)) activeCount = exList.length;
         } catch {}
       }
+      const report = readSyncReport();
+      const sourceLabel = report.source ? SOURCE_LABELS[report.source] || report.source : '';
+      syncState.lastSource = report.source || '';
       syncState.lastSyncTime = new Date().toISOString();
-      syncState.lastSyncStatus = `موفق (${freshGalleries.length} نگارخانه و ${activeCount} نمایشگاه به‌روز شدند)`;
+      syncState.lastSyncStatus = `موفق (${freshGalleries.length} نگارخانه و ${activeCount} نمایشگاه به‌روز شدند${sourceLabel ? ` · منبع: ${sourceLabel}` : ''})`;
       syncState.activeExhibitionsCount = activeCount || freshGalleries.length;
       syncState.isSyncing = false;
       console.log(`[Auto-Sync] Completed successfully! Fresh count: ${freshGalleries.length} galleries.`);
-      return { success: true, count: syncState.activeExhibitionsCount };
+      return { success: true, count: syncState.activeExhibitionsCount, source: report.source };
     } else {
-      throw new Error(`Sync script exited with code ${syncResult.code}`);
+      const report = readSyncReport();
+      throw new Error(report.error || `Sync script exited with code ${syncResult.code}`);
     }
   } catch (err: any) {
     console.warn('[Auto-Sync] Sync warning (using existing verified database):', err.message);
@@ -472,7 +492,7 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.180',
+    version: 'بتا V 1.181',
     serverRole: SERVER_ROLE, // 'primary' | 'mirror'
     adminEnabled: isAdminAllowed(),
     adminConfigured: ADMIN_CREDENTIALS_OK,
@@ -491,7 +511,7 @@ app.get('/health', (req, res) => {
 app.get('/api/config', (req, res) => {
   res.json({
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.180',
+    version: 'بتا V 1.181',
     serverRole: SERVER_ROLE,
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
@@ -698,6 +718,7 @@ app.get('/api/sync-status', (req, res) => {
     scraperEnabled: SCRAPER_ENABLED,
     lastSyncTime: syncState.lastSyncTime,
     lastSyncStatus: syncState.lastSyncStatus,
+    lastSource: syncState.lastSource,
     activeExhibitionsCount: syncState.activeExhibitionsCount,
     isSyncing: syncState.isSyncing,
     scheduleDescription: syncState.scheduleDescription
@@ -710,6 +731,66 @@ app.post('/api/sync-now', async (req, res) => {
   }
   const result = await syncExhibitions();
   res.json(result);
+});
+
+// Phone bridge: galleryinfo.ir is reachable from inside Iran but not from this server.
+// A bookmarklet run on galleryinfo.ir (in Pedram's phone browser) reads GetMoreEvents there and
+// submits it here as a normal form POST (no CORS needed). Protected by the admin password and
+// the same per-IP lockout as the admin login. Answers with a small HTML page.
+function escapeHtml(s: string): string {
+  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string));
+}
+
+function bridgePage(res: express.Response, status: number, title: string, message: string) {
+  res
+    .status(status)
+    .setHeader('Content-Security-Policy', "default-src 'none'; style-src 'unsafe-inline'")
+    .setHeader('X-Robots-Tag', 'noindex')
+    .type('html')
+    .send(`<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>${escapeHtml(title)}</title></head><body style="font-family:Tahoma,sans-serif;padding:24px;line-height:1.9;max-width:560px;margin:auto"><h2>${escapeHtml(title)}</h2><p>${escapeHtml(message)}</p><p><a href="/">بازگشت به آرت‌گشت</a></p></body></html>`);
+}
+
+app.post('/api/admin/galleryinfo-import', express.urlencoded({ extended: false, limit: '5mb' }), async (req, res) => {
+  const clientIp = req.ip || req.socket.remoteAddress || 'unknown';
+  const rateCheck = checkRateLimit(clientIp);
+  if (!rateCheck.allowed) {
+    return bridgePage(res, 429, 'تلاش زیاد', `تعداد تلاش‌های ناموفق زیاد بود. ${rateCheck.remainingSeconds} ثانیه دیگر دوباره امتحان کن.`);
+  }
+  if (!ADMIN_CREDENTIALS_OK || !isAdminAllowed()) {
+    return bridgePage(res, 403, 'غیرفعال', 'پنل مدیریت روی این سرور فعال نیست.');
+  }
+  if (!SCRAPER_ENABLED) {
+    return bridgePage(res, 400, 'غیرفعال', 'همگام‌سازی روی این سرور غیرفعال است.');
+  }
+  const { password, events } = (req.body || {}) as { password?: unknown; events?: unknown };
+  if (typeof password !== 'string' || !password || !safeEqual(password, ADMIN_PASSWORD)) {
+    recordFailedLogin(clientIp);
+    return bridgePage(res, 401, 'رمز نادرست', 'رمز مدیریت درست نبود.');
+  }
+  recordSuccessfulLogin(clientIp);
+
+  let list: unknown;
+  try {
+    list = JSON.parse(typeof events === 'string' ? events : '');
+  } catch {
+    return bridgePage(res, 400, 'داده نامعتبر', 'داده‌ی ارسالی خوانده نشد. صفحه‌ی galleryinfo.ir را کامل باز کن و دوباره بزن.');
+  }
+  if (!Array.isArray(list) || list.length === 0 || list.length > 1000) {
+    return bridgePage(res, 400, 'داده نامعتبر', 'هیچ نمایشگاهی در داده‌ی ارسالی نبود.');
+  }
+
+  const importFile = path.join(DATA_DIR, 'galleryinfo-import.json');
+  try {
+    fs.writeFileSync(importFile, JSON.stringify(list), 'utf-8');
+    const result = await syncExhibitions({ eventsFile: importFile });
+    if (!result.success) {
+      return bridgePage(res, 500, 'به‌روزرسانی نشد', result.error || 'خطای ناشناخته');
+    }
+    console.log(`[Bridge] Imported ${list.length} galleryinfo events from a browser`);
+    return bridgePage(res, 200, 'به‌روز شد ✓', `${list.length} نمایشگاه از گالری‌اینفو دریافت شد؛ الان ${result.count} نمایشگاه فعال روی سایت است.`);
+  } finally {
+    fs.rm(importFile, { force: true }, () => {});
+  }
 });
 
 // Proxy external galleryinfo.ir images with persistent disk cache & immutable Cache-Control
