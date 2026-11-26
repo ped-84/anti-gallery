@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
+const crypto = require('crypto');
+const telegram = require('./telegram-source.cjs');
 
 // Paths
 const ROOT_DIR = path.resolve(__dirname, '..');
@@ -9,6 +11,102 @@ const PERSISTENT_GALLERIES = path.join(DATA_DIR, 'galleries.json');
 const PERSISTENT_EXHIBITIONS = path.join(DATA_DIR, 'exhibitions_fa.json');
 const SRC_GALLERIES = path.join(ROOT_DIR, 'src', 'data', 'galleries.json');
 const SRC_EXHIBITIONS = path.join(ROOT_DIR, 'src', 'data', 'exhibitions_fa.json');
+// Same cache the server's /api/image-proxy reads (server.ts IMAGE_CACHE_DIR).
+const IMAGE_CACHE_DIR = path.join(DATA_DIR, 'image_cache');
+// Read by server.ts after each run so /api/sync-status shows which source was used.
+const REPORT_FILE = path.join(DATA_DIR, 'sync-report.json');
+
+function writeReport(report) {
+  try {
+    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+    fs.writeFileSync(REPORT_FILE, JSON.stringify({ at: new Date().toISOString(), ...report }, null, 2), 'utf-8');
+  } catch (err) {
+    console.warn('[Sync] Could not write sync report:', err.message);
+  }
+}
+
+function fatal(message) {
+  const err = new Error(message);
+  err.fatal = true;
+  return err;
+}
+
+function readJsonArraySafe(file) {
+  try {
+    const data = JSON.parse(fs.readFileSync(file, 'utf-8'));
+    return Array.isArray(data) ? data : null;
+  } catch {
+    return null;
+  }
+}
+
+// Must match server.ts /api/image-proxy: sha256(url) first 24 hex chars + extension.
+function imageCachePath(url) {
+  const hash = crypto.createHash('sha256').update(url).digest('hex').slice(0, 24);
+  const ext = path.extname(url.split('?')[0]) || '.jpg';
+  return path.join(IMAGE_CACHE_DIR, `${hash}${ext}`);
+}
+
+// galleryinfo.ir poster URLs cannot be fetched by the image proxy while the site is unreachable,
+// so put the same poster from the Telegram post into the proxy's cache under that URL.
+async function cachePostersFromTelegram(exhibitions, photoById) {
+  let saved = 0;
+  for (const x of exhibitions) {
+    const photo = photoById.get(x.eventId);
+    if (!photo) continue;
+    const targets = [x.poster, x.posterSmall]
+      .filter((u) => typeof u === 'string' && u.includes('galleryinfo.ir/'))
+      .map(imageCachePath)
+      .filter((p) => !fs.existsSync(p));
+    if (!targets.length) continue;
+    try {
+      const buf = await telegram.downloadImage(photo);
+      if (!buf) continue;
+      fs.mkdirSync(IMAGE_CACHE_DIR, { recursive: true });
+      for (const t of targets) fs.writeFileSync(t, buf);
+      saved++;
+    } catch (err) {
+      console.warn(`[Sync] Poster for event ${x.eventId} not cached: ${err.message}`);
+    }
+  }
+  if (saved) console.log(`[Sync] Cached ${saved} posters from Telegram`);
+  return saved;
+}
+
+async function buildGalleryFromTelegram(e, exObj, isExpired) {
+  const coords = e._mapUrl ? await telegram.resolveMapCoords(e._mapUrl) : null;
+  if (!coords) return null;
+  const galleryName = (e.GalleryName || '').trim();
+  const address = e._address || '';
+  const locationInfo = getCityAndNeighborhood(address, galleryName, coords.lat);
+  return {
+    id: e.GalleryId,
+    name: galleryName,
+    city: locationInfo.city,
+    lat: coords.lat,
+    lng: coords.lng,
+    address,
+    phone: '',
+    hours: '',
+    website: `https://galleryinfo.ir/Gallery/fa/${e.GalleryId}`,
+    instagram: '',
+    image: `https://galleryinfo.ir/Images/Galleries/GallerySmall_${e.GalleryId}.jpg`,
+    sourceUrl: `https://galleryinfo.ir/Gallery/fa/${e.GalleryId}`,
+    exhibitions: [exObj],
+    neighborhood: locationInfo.neighborhood,
+    nameFa: galleryName,
+    cityFa: locationInfo.cityFa,
+    neighborhoodFa: locationInfo.neighborhoodFa,
+    isInTrafficZone: address.includes('مطهری') || address.includes('کریم‌خان') || address.includes('انقلاب'),
+    activeExhibition: isExpired ? null : exObj,
+    posterImage: isExpired ? '' : exObj.poster,
+    posterSmall: isExpired ? '' : exObj.posterSmall,
+    logoImage: `https://galleryinfo.ir/Images/Galleries/GallerySmall_${e.GalleryId}.jpg`,
+    addressFa: address,
+    hoursFa: '',
+    updatedAt: new Date().toISOString()
+  };
+}
 
 function writeJsonAtomic(filePath, data) {
   const tmpPath = `${filePath}.${process.pid}.${Date.now()}.tmp`;
@@ -254,24 +352,73 @@ function getTodayPersianScore() {
 async function main() {
   console.log('--- Starting Live Exhibition Sync ---');
   
-  // 1. Fetch all current events from upstream ASP.NET API
+  // 1. Get all current events. Sources, in order:
+  //    --events-file <path>  events sent from a browser in Iran (phone bridge, /api/admin/galleryinfo-import)
+  //    galleryinfo.ir API    normal case
+  //    Telegram channel      when galleryinfo.ir is unreachable from this server
+  const argIdx = process.argv.indexOf('--events-file');
+  const eventsFile = argIdx > 0 ? process.argv[argIdx + 1] : '';
   let allEvents = [];
-  let skip = 0;
-  const count = 18;
+  let source = 'galleryinfo';
+  let upstreamError = null;
+  let tgEvents = null;
 
-  while (true) {
-    console.log(`Fetching events (skip=${skip})...`);
-    const batch = await fetchEventsWithRetry(skip, count);
-    if (!batch || batch.length === 0) break;
-    allEvents.push(...batch);
-    if (batch.length < count) break;
-    skip += count;
+  if (eventsFile) {
+    source = 'bridge';
+    const fromFile = JSON.parse(fs.readFileSync(eventsFile, 'utf-8'));
+    if (!Array.isArray(fromFile)) throw fatal('Events file is not a JSON array');
+    allEvents = fromFile.filter((e) => e && Number.isFinite(Number(e.Id)) && Number.isFinite(Number(e.GalleryId)));
+    console.log(`Using ${allEvents.length} events sent from a browser in Iran (phone bridge).`);
+    if (!allEvents.length) throw fatal('The phone bridge sent no usable events');
+    // Posters: galleryinfo.ir images are unreachable from here, Telegram has the same posters.
+    try {
+      tgEvents = await telegram.fetchTelegramEvents();
+    } catch (err) {
+      console.warn(`[Sync] Telegram (posters only) failed: ${err.message}`);
+    }
+  } else {
+    try {
+      let skip = 0;
+      const count = 18;
+      while (true) {
+        console.log(`Fetching events (skip=${skip})...`);
+        const batch = await fetchEventsWithRetry(skip, count);
+        if (!batch || batch.length === 0) break;
+        allEvents.push(...batch);
+        if (batch.length < count) break;
+        skip += count;
+      }
+    } catch (err) {
+      upstreamError = err;
+      allEvents = [];
+      console.warn(`[Sync] galleryinfo.ir is unreachable (${err.message}). Falling back to the Telegram channel...`);
+    }
+
+    if (upstreamError) {
+      try {
+        tgEvents = await telegram.fetchTelegramEvents();
+      } catch (err) {
+        throw fatal(`galleryinfo.ir unreachable (${upstreamError.message}) and Telegram failed (${err.message})`);
+      }
+      const today = getTodayPersianScore();
+      // Keep the poster URL we already store for known events, so cached images still match.
+      const known = new Map((readJsonArraySafe(PERSISTENT_EXHIBITIONS) || readJsonArraySafe(SRC_EXHIBITIONS) || [])
+        .filter((x) => x && x.poster).map((x) => [x.eventId, x.poster]));
+      allEvents = tgEvents
+        .filter((e) => e.SYE * 10000 + e.SME * 100 + e.SDE >= today)
+        .map((e) => (known.has(e.Id) ? { ...e, Poster1: known.get(e.Id) } : e));
+      source = 'telegram';
+      if (!allEvents.length) {
+        throw fatal(`galleryinfo.ir unreachable (${upstreamError.message}) and Telegram had no current exhibitions`);
+      }
+    }
   }
 
-  console.log(`Total live events fetched from upstream: ${allEvents.length}`);
+  console.log(`Total live events fetched (source: ${source}): ${allEvents.length}`);
 
   if (allEvents.length === 0) {
     console.warn('[Sync] 0 events fetched from upstream. Preserving existing verified dataset.');
+    writeReport({ ok: true, source, count: 0, note: '0 events from upstream, existing data kept' });
     return;
   }
 
@@ -315,7 +462,7 @@ async function main() {
       galleryId: e.GalleryId,
       title: title,
       artist: artist,
-      type: (artist.includes('گروهی') || title.includes('گروهی')) ? 'نمایشگاه گروهی' : 'نمایشگاه انفرادی',
+      type: e._type || ((artist.includes('گروهی') || title.includes('گروهی')) ? 'نمایشگاه گروهی' : 'نمایشگاه انفرادی'),
       openingDate: `جمعه ${startStr}`,
       fullDateRange: dateRangeStr,
       closingDate: endStr,
@@ -330,9 +477,28 @@ async function main() {
 
     let gallery = galleryMap.get(e.GalleryId);
 
+    if (!gallery && (e._source === 'telegram' || source === 'bridge')) {
+      // galleryinfo.ir gallery pages are unreachable in these modes; use the Telegram post's map link.
+      const tgPost = e._source === 'telegram' ? e : (tgEvents || []).find((t) => t.GalleryId === e.GalleryId);
+      gallery = tgPost ? await buildGalleryFromTelegram({ ...tgPost, GalleryName: galleryName || tgPost.GalleryName }, exObj, isExpired) : null;
+      if (!gallery) {
+        console.warn(`[Sync] Skipping new gallery ${e.GalleryId} (${galleryName}): no location available`);
+        continue;
+      }
+      console.log(`Added new gallery from Telegram: ${e.GalleryId} (${galleryName})`);
+      galleryMap.set(e.GalleryId, gallery);
+      galleries.push(gallery);
+      continue;
+    }
+
     if (!gallery) {
       console.log(`Discovering new gallery from event: ${e.GalleryId} (${galleryName})...`);
       const html = await fetchHtml(`https://galleryinfo.ir/Gallery/fa/${e.GalleryId}`);
+      if (!html) {
+        // Without the page we would only have a made-up location; skip rather than pin it wrongly.
+        console.warn(`[Sync] Skipping new gallery ${e.GalleryId} (${galleryName}): its page could not be read`);
+        continue;
+      }
       
       const addrMatch = html.match(/class=["']address["'][^>]*>([\s\S]*?)<\/(?:div|p|span)>/i) ||
                         html.match(/نشانی[\s\S]*?<p[^>]*>([\s\S]*?)<\/p>/i) ||
@@ -423,6 +589,27 @@ async function main() {
     fs.mkdirSync(DATA_DIR, { recursive: true });
   }
 
+  // Telegram only covers the last weeks of posts: keep current exhibitions we already had.
+  if (source === 'telegram') {
+    const today = getTodayPersianScore();
+    const seen = new Set(allExhibitionsFa.map((x) => x.eventId));
+    const previous = readJsonArraySafe(PERSISTENT_EXHIBITIONS) || readJsonArraySafe(SRC_EXHIBITIONS) || [];
+    let kept = 0;
+    for (const x of previous) {
+      if (!x || seen.has(x.eventId)) continue;
+      if (parsePersianEndDateToScore(x.fullDateRange, x.closingDate) < today) continue;
+      allExhibitionsFa.push({ ...x, isExpired: false });
+      kept++;
+    }
+    console.log(`[Sync] Kept ${kept} current exhibitions not in the recent Telegram posts`);
+  }
+
+  let postersCached = 0;
+  if (tgEvents && tgEvents.length) {
+    const photoById = new Map(tgEvents.filter((t) => t._photo).map((t) => [t.Id, t._photo]));
+    postersCached = await cachePostersFromTelegram(allExhibitionsFa, photoById);
+  }
+
   // Save to persistent database (temp file + rename, so a crash never leaves a half-written file)
   writeJsonAtomic(PERSISTENT_GALLERIES, galleries);
   writeJsonAtomic(PERSISTENT_EXHIBITIONS, allExhibitionsFa);
@@ -434,13 +621,28 @@ async function main() {
     writeJsonAtomic(SRC_EXHIBITIONS, allExhibitionsFa);
   }
 
-  console.log(`--- Sync Completed Successfully! ---`);
+  writeReport({
+    ok: true,
+    source,
+    count: allExhibitionsFa.length,
+    galleries: galleries.length,
+    postersCached,
+    upstreamError: upstreamError ? upstreamError.message : null
+  });
+
+  console.log(`--- Sync Completed Successfully! (source: ${source}) ---`);
   console.log(`Total galleries in dataset: ${galleries.length}`);
   console.log(`Total active exhibitions: ${allExhibitionsFa.length}`);
 }
 
 main().catch(err => {
   console.error('[Sync] Sync warning:', err.message);
+  writeReport({ ok: false, source: null, error: err.message });
+  if (err.fatal) {
+    // No source worked: fail loudly (red GitHub job, error status on the server) instead of a fake success.
+    console.error('[Sync] FAILED: no source could be read. Existing data is unchanged.');
+    process.exit(1);
+  }
   if (process.env.STRICT_SYNC === 'true') {
     process.exit(1);
   } else {
