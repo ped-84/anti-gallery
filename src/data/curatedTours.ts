@@ -1,5 +1,6 @@
 import { CuratedTour, Gallery } from '../types/gallery';
-import { parsePersianDateToScore, isThisWeekOpening } from '../utils/persianUtils';
+import { parsePersianDateToScore, isThisWeekOpening, isExhibitionExpired } from '../utils/persianUtils';
+import { getCuratedRoadRoutes, RoadRoute } from '../utils/roadLayout';
 
 export type CuratedTourFilterMode = 'openings-only' | 'all-active';
 
@@ -323,14 +324,46 @@ function filterWalkableGalleryChain(
   return walkable.length >= 2 ? walkable.map((g) => g.id) : [];
 }
 
+function roadRouteToPersianTour(
+  route: RoadRoute,
+  isOpeningThisWeek: boolean,
+  travelMode: 'driving' | 'walking'
+): PersianCuratedTour {
+  const themeColor: PersianCuratedTour['themeColor'] =
+    route.color === '#E58B2E' || route.color === '#D97706' || route.color === '#BF1932'
+      ? 'orange'
+      : route.color === '#00A892' || route.color === '#6D01AD'
+      ? 'softblue'
+      : 'darkblue';
+
+  const modeBadge = isOpeningThisWeek ? 'افتتاحیه‌های این هفته' : 'نمایشگاه‌های فعال';
+  const suffix = travelMode === 'walking' ? ' (پیاده‌روی)' : '';
+
+  return {
+    id: `${isOpeningThisWeek ? 'dynamic-open' : 'dynamic-active'}-${route.id}`,
+    title: route.label,
+    subtitle: `${route.label} (${route.galleryIds.length} stops)`,
+    city: 'Tehran',
+    neighborhood: route.label,
+    description: `${modeBadge} در محدوده ${route.label}`,
+    estimatedHours: Math.max(1, Number((route.galleryIds.length * 0.5).toFixed(1))),
+    galleryIds: route.galleryIds,
+    titleFa: route.label,
+    subtitleFa: `${modeBadge} در ${route.label}${suffix}`,
+    descriptionFa: `مسیر چیدمان‌شده بین گالری‌های دارای ${modeBadge} در محدوده ${route.label}.`,
+    neighborhoodFa: route.label,
+    themeColor,
+    isOpeningThisWeek,
+    maxHopKm: route.maxHopKm || (travelMode === 'walking' ? 0.85 : 1.5)
+  };
+}
+
 /**
  * Returns curated tours by exhibition filter mode ('openings-only' vs 'all-active')
  * and travel mode ('driving' vs 'walking'):
  *
- * - In 'walking' mode: Strictly filters each tour down to walkable stops (consecutive hops <= 1.0 km).
- *   Tours where galleries cannot be walked consecutively (such as Niavaran to Farmanieh across highway)
- *   are COMPLETELY HIDDEN.
- * - In 'driving' mode: Returns all regional circuits including wider district driving tours.
+ * - Dynamically computed from current weekly openings so weekly turnover never blanks out curated tours.
+ * - In 'walking' mode: Ensures strict walking feasibility (consecutive hops <= 0.75-1.0 km).
  *
  * RULE: Hubs with 0 or 1 gallery are strictly hidden (tours require >= 2 galleries).
  */
@@ -339,7 +372,16 @@ export function getCuratedToursByMode(
   mode: CuratedTourFilterMode = 'openings-only',
   travelMode: 'driving' | 'walking' = 'driving'
 ): PersianCuratedTour[] {
-  const baseTours = mode === 'all-active' ? PERSIAN_ACTIVE_TOURS : PERSIAN_OPENING_TOURS;
+  if (!allGalleries || allGalleries.length === 0) return [];
+
+  if (mode === 'openings-only') {
+    const dynamicOpeningRoutes = getCuratedRoadRoutes(allGalleries, travelMode, 'openings-only');
+    if (dynamicOpeningRoutes.length > 0) {
+      return dynamicOpeningRoutes
+        .map((r) => roadRouteToPersianTour(r, true, travelMode))
+        .filter((t) => t.galleryIds.length >= 2);
+    }
+  }
 
   // Compute maximum Persian opening score for the current Friday cycle
   const maxOpeningScore = Math.max(
@@ -349,22 +391,19 @@ export function getCuratedToursByMode(
       .filter((s) => s > 0)
   );
 
-  return baseTours
+  const baseTours = mode === 'all-active' ? PERSIAN_ACTIVE_TOURS : PERSIAN_OPENING_TOURS;
+
+  const filteredStatic = baseTours
     .map((tour) => {
-      // 1. Resolve which gallery IDs actually exist in the current gallery catalog
-      let validGalleryIds = tour.galleryIds.filter((id) =>
-        allGalleries.some((g) => g.id === id)
-      );
+      let validGalleryIds = tour.galleryIds.filter((id) => {
+        const g = allGalleries.find((x) => x.id === id);
+        if (!g || !g.activeExhibition || isExhibitionExpired(g.activeExhibition)) return false;
+        if (mode === 'openings-only') {
+          return isThisWeekOpening(g.activeExhibition?.openingDate, maxOpeningScore);
+        }
+        return true;
+      });
 
-      // 2. In openings-only mode, only retain galleries that actually have an active opening this week!
-      if (mode === 'openings-only') {
-        validGalleryIds = validGalleryIds.filter((id) => {
-          const g = allGalleries.find((x) => x.id === id);
-          return g && isThisWeekOpening(g.activeExhibition?.openingDate, maxOpeningScore);
-        });
-      }
-
-      // 3. In walking mode, only retain strictly walkable stops (hop <= 1.0 km)
       if (travelMode === 'walking') {
         validGalleryIds = filterWalkableGalleryChain(validGalleryIds, allGalleries, 1.0);
       }
@@ -374,6 +413,18 @@ export function getCuratedToursByMode(
         galleryIds: validGalleryIds
       };
     })
-    // 4. User Rule: Only show hubs with >= 2 galleries! If 0 or 1, do NOT show!
     .filter((tour) => tour.galleryIds.length >= 2);
+
+  if (mode === 'all-active') {
+    const dynamicActiveRoutes = getCuratedRoadRoutes(allGalleries, travelMode, 'all-active');
+    const representedHubs = new Set(filteredStatic.map((t) => t.neighborhoodFa.trim()));
+    for (const r of dynamicActiveRoutes) {
+      if (!representedHubs.has(r.label.trim()) && r.galleryIds.length >= 2) {
+        filteredStatic.push(roadRouteToPersianTour(r, false, travelMode));
+        representedHubs.add(r.label.trim());
+      }
+    }
+  }
+
+  return filteredStatic;
 }
