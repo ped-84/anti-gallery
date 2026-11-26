@@ -19,7 +19,12 @@ export function toOptimizedImageUrl(url?: string | null): string {
                          hostname === 'artgasht.ir' || hostname.endsWith('.artgasht.ir') ||
                          hostname === 'localhost' || hostname === '127.0.0.1';
 
-  if (isCustomServer && url.includes('galleryinfo.ir/')) {
+  const shouldProxy =
+    url.includes('galleryinfo.ir/') ||
+    url.includes('darz-public.s3.ir-thr-at1.arvanstorage.ir/') ||
+    url.includes('darz.art/pub/');
+
+  if (isCustomServer && shouldProxy) {
     return `/api/image-proxy?url=${encodeURIComponent(url)}`;
   }
 

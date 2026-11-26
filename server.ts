@@ -335,12 +335,34 @@ function getNeshanKey(host: string = ''): string {
 // Default: Scraper is enabled by default on Primary, disabled only if SCRAPER_ENABLED=false
 const SCRAPER_ENABLED = process.env.SCRAPER_ENABLED !== 'false' && SERVER_ROLE !== 'mirror';
 
+function getInitialActiveExhibitionsCount(): number {
+  const exList = readJsonArray(EXHIBITIONS_FILE);
+  if (exList && exList.length > 0) {
+    return exList.filter((x: any) => !x?.isExpired).length;
+  }
+  const galleries = readJsonArray(GALLERIES_FILE);
+  if (galleries) {
+    return galleries.filter((g: any) => g?.activeExhibition && !g.activeExhibition.isExpired).length;
+  }
+  return 0;
+}
+
+function getInitialSyncReport(): { source?: string; at?: string } {
+  try {
+    return JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'sync-report.json'), 'utf-8')) || {};
+  } catch {
+    return {};
+  }
+}
+
+const initialReport = getInitialSyncReport();
+
 let syncState = {
-  lastSyncTime: new Date().toISOString(),
+  lastSyncTime: initialReport.at || new Date().toISOString(),
   lastSyncStatus: SCRAPER_ENABLED ? 'موفق (داده‌های فعال بارگذاری شدند)' : 'غیرفعال (طبق پیکربندی سرور)',
   isSyncing: false,
-  lastSource: '' as string, // 'galleryinfo' | 'telegram' | 'bridge' (from data/sync-report.json)
-  activeExhibitionsCount: 33,
+  lastSource: (initialReport.source || '') as string, // 'galleryinfo' | 'telegram' | 'darz' | 'telegram+darz' | 'bridge'
+  activeExhibitionsCount: getInitialActiveExhibitionsCount(),
   scheduleDescription: SCRAPER_ENABLED
     ? 'پنجشنبه شب هر ۳۰ دقیقه · جمعه صبح تا ظهر هر ۱۵ دقیقه · چهارشنبه و پنجشنبه روز هر ۱ ساعت'
     : 'کران‌جاب اسکرپر در این سرور غیرفعال است'
@@ -387,6 +409,8 @@ const SYNC_REPORT_FILE = path.join(DATA_DIR, 'sync-report.json');
 const SOURCE_LABELS: Record<string, string> = {
   galleryinfo: 'گالری‌اینفو',
   telegram: 'کانال تلگرام گالری‌اینفو (سایت گالری‌اینفو از خارج ایران در دسترس نیست)',
+  darz: 'درز آرت (دارای نمایشگاه‌های جاری و افتتاحیه‌های هفته)',
+  'telegram+darz': 'تلگرام گالری‌اینفو + درز آرت (جایگزین خودکار)',
   bridge: 'ارسال از گوشی (پل گالری‌اینفو)'
 };
 
@@ -436,7 +460,7 @@ async function syncExhibitions(options: { eventsFile?: string } = {}): Promise<{
       if (fs.existsSync(EXHIBITIONS_FILE)) {
         try {
           const exList = JSON.parse(fs.readFileSync(EXHIBITIONS_FILE, 'utf-8'));
-          if (Array.isArray(exList)) activeCount = exList.length;
+          if (Array.isArray(exList)) activeCount = exList.filter((x: any) => !x?.isExpired).length;
         } catch {}
       }
       const report = readSyncReport();
@@ -492,7 +516,7 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.181',
+    version: 'بتا V 1.182',
     serverRole: SERVER_ROLE, // 'primary' | 'mirror'
     adminEnabled: isAdminAllowed(),
     adminConfigured: ADMIN_CREDENTIALS_OK,
@@ -511,7 +535,7 @@ app.get('/health', (req, res) => {
 app.get('/api/config', (req, res) => {
   res.json({
     appName: 'آرت‌گشت',
-    version: 'بتا V 1.181',
+    version: 'بتا V 1.182',
     serverRole: SERVER_ROLE,
     adminEnabled: isAdminAllowed(),
     isStandalone: isStandaloneMode(),
@@ -793,10 +817,20 @@ app.post('/api/admin/galleryinfo-import', express.urlencoded({ extended: false, 
   }
 });
 
-// Proxy external galleryinfo.ir images with persistent disk cache & immutable Cache-Control
+function isAllowedProxyImageUrl(targetUrl: string): boolean {
+  if (!targetUrl || typeof targetUrl !== 'string') return false;
+  return (
+    targetUrl.startsWith('https://galleryinfo.ir/') ||
+    targetUrl.startsWith('http://galleryinfo.ir/') ||
+    targetUrl.startsWith('https://darz-public.s3.ir-thr-at1.arvanstorage.ir/') ||
+    targetUrl.startsWith('https://darz.art/pub/')
+  );
+}
+
+// Proxy external gallery posters with persistent disk cache & immutable Cache-Control
 app.get('/api/image-proxy', async (req, res) => {
   const targetUrl = req.query.url as string;
-  if (!targetUrl || (!targetUrl.startsWith('https://galleryinfo.ir/') && !targetUrl.startsWith('http://galleryinfo.ir/'))) {
+  if (!isAllowedProxyImageUrl(targetUrl)) {
     return res.status(400).send('Invalid image URL');
   }
 
@@ -814,11 +848,15 @@ app.get('/api/image-proxy', async (req, res) => {
   }
 
   try {
+    const headers: Record<string, string> = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+    };
+    if (targetUrl.includes('galleryinfo.ir/')) {
+      headers['Referer'] = 'https://galleryinfo.ir/';
+    }
     const upstreamRes = await fetch(targetUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Referer': 'https://galleryinfo.ir/'
-      }
+      headers,
+      signal: AbortSignal.timeout(6000)
     });
     if (!upstreamRes.ok) {
       return res.status(upstreamRes.status).send('Upstream image error');
@@ -854,17 +892,21 @@ async function prewarmTopImages() {
       if (urlsToWarm.length >= 25) break;
     }
     for (const url of urlsToWarm) {
-      if (!url.includes('galleryinfo.ir/')) continue;
+      if (!isAllowedProxyImageUrl(url)) continue;
       const hash = crypto.createHash('sha256').update(url).digest('hex').slice(0, 24);
       const ext = path.extname(url.split('?')[0]) || '.jpg';
       const cachedFilePath = path.join(IMAGE_CACHE_DIR, `${hash}${ext}`);
       if (!fs.existsSync(cachedFilePath)) {
         try {
+          const headers: Record<string, string> = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+          };
+          if (url.includes('galleryinfo.ir/')) {
+            headers['Referer'] = 'https://galleryinfo.ir/';
+          }
           const resp = await fetch(url, {
-            headers: {
-              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-              'Referer': 'https://galleryinfo.ir/'
-            }
+            headers,
+            signal: AbortSignal.timeout(6000)
           });
           if (resp.ok) {
             const buf = Buffer.from(await resp.arrayBuffer());

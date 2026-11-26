@@ -4,6 +4,7 @@ import {
   getGalleryDisplayName,
   parsePersianDateToScore,
   isThisWeekOpening,
+  isExhibitionExpired,
   formatDistanceFa,
   formatDurationFa
 } from './persianUtils';
@@ -16,6 +17,7 @@ export interface RoadRoute {
   tabInk?: string;
   pinTone: 'cool' | 'warm';
   galleryIds: number[];
+  maxHopKm?: number;
 }
 
 export interface RoadStop {
@@ -566,27 +568,82 @@ function sortNearestNeighbor(list: Gallery[]): Gallery[] {
   return ordered;
 }
 
+function gallerySearchText(g: Gallery): string {
+  // Match street-level address first so broad district labels (e.g. 'کریم‌خان و مرکز' or
+  // 'مرکز، انقلاب و امیرآباد') never leak Enqelab/Villa/Hafez galleries into Karimkhan or Amirabad.
+  return (g.addressFa || g.address || '')
+    .replace(/[يئ]/g, 'ی')
+    .replace(/[ك]/g, 'ک')
+    .toLowerCase();
+}
+
+function pickBestWalkableChain(matched: Gallery[], maxHopKm: number): Gallery[] {
+  if (matched.length < 2) return [];
+  let bestChain: Gallery[] = [];
+  let bestDist = Infinity;
+
+  for (const start of matched) {
+    const remaining = matched.filter((g) => g.id !== start.id);
+    const chain: Gallery[] = [start];
+    let totalDist = 0;
+    let cur = start;
+
+    while (remaining.length > 0) {
+      let nearestIdx = -1;
+      let nearestDist = Infinity;
+      for (let i = 0; i < remaining.length; i++) {
+        const d = distKm(cur.lat, cur.lng, remaining[i].lat, remaining[i].lng);
+        if (d <= maxHopKm && d < nearestDist) {
+          nearestDist = d;
+          nearestIdx = i;
+        }
+      }
+      if (nearestIdx < 0) break;
+      const nextG = remaining.splice(nearestIdx, 1)[0];
+      chain.push(nextG);
+      totalDist += nearestDist;
+      cur = nextG;
+    }
+
+    if (
+      chain.length > bestChain.length ||
+      (chain.length === bestChain.length && totalDist < bestDist)
+    ) {
+      bestChain = chain;
+      bestDist = totalDist;
+    }
+  }
+
+  return bestChain;
+}
+
 /**
- * Dynamically computes curated road routes strictly based on THIS WEEK's opening exhibitions!
- * Guarantees that only galleries with active openings in the current cycle are shown,
- * and hubs with fewer than 2 galleries are automatically omitted.
+ * Dynamically computes curated road routes strictly based on active exhibitions
+ * (either THIS WEEK's openings or all non-expired active exhibitions).
+ * Guarantees hubs with fewer than 2 galleries are omitted.
  */
 export function getCuratedRoadRoutes(
   allGalleries: Gallery[],
-  travelMode: 'driving' | 'walking' = 'driving'
+  travelMode: 'driving' | 'walking' = 'driving',
+  filterMode: 'openings-only' | 'all-active' = 'openings-only'
 ): RoadRoute[] {
   if (!allGalleries || allGalleries.length === 0) return CURATED_ROAD_ROUTES;
 
+  const tehranActive = allGalleries.filter(
+    (g) => g.city === 'Tehran' && g.activeExhibition && !isExhibitionExpired(g.activeExhibition)
+  );
+
   const maxOpeningScore = Math.max(
     0,
-    ...allGalleries
+    ...tehranActive
       .map((g) => parsePersianDateToScore(g.activeExhibition?.openingDate))
       .filter((s) => s > 0)
   );
 
-  const openings = allGalleries.filter((g) =>
-    isThisWeekOpening(g.activeExhibition?.openingDate, maxOpeningScore)
-  );
+  const openings =
+    filterMode === 'all-active'
+      ? tehranActive
+      : tehranActive.filter((g) => isThisWeekOpening(g.activeExhibition?.openingDate, maxOpeningScore));
 
   const drivingTemplates = [
     {
@@ -594,8 +651,9 @@ export function getCuratedRoadRoutes(
       label: 'کریم‌خان و سنایی',
       color: '#3D5B99',
       pinTone: 'cool' as const,
+      maxHopKm: 1.5,
       matcher: (g: Gallery) => {
-        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        const text = gallerySearchText(g);
         return (
           text.includes('کریم‌خان') ||
           text.includes('کریمخان') ||
@@ -607,7 +665,8 @@ export function getCuratedRoadRoutes(
           text.includes('عضدی') ||
           text.includes('آبان') ||
           text.includes('شیرودی') ||
-          text.includes('هفت تیر')
+          text.includes('هفت تیر') ||
+          text.includes('مفتح')
         );
       }
     },
@@ -618,16 +677,42 @@ export function getCuratedRoadRoutes(
       tab: '#F76B1C',
       tabInk: '#1f2a44',
       pinTone: 'warm' as const,
+      maxHopKm: 1.5,
       matcher: (g: Gallery) => {
-        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        const text = gallerySearchText(g);
         return (
           text.includes('بهشتی') ||
           text.includes('مطهری') ||
           text.includes('لارستان') ||
           text.includes('عباس‌آباد') ||
+          text.includes('عباس اباد') ||
           text.includes('قائم مقام') ||
           text.includes('خرمشهر') ||
           text.includes('عشقیار')
+        );
+      }
+    },
+    {
+      id: 'center-lolagar',
+      label: 'انقلاب، ویلا و لولاگر',
+      color: '#D97706',
+      pinTone: 'warm' as const,
+      maxHopKm: 1.5,
+      matcher: (g: Gallery) => {
+        const text = gallerySearchText(g);
+        return (
+          text.includes('لولاگر') ||
+          text.includes('نوفل') ||
+          text.includes('حافظ') ||
+          text.includes('ویلا') ||
+          text.includes('سمیه') ||
+          text.includes('پورموسی') ||
+          text.includes('نجات اللهی') ||
+          text.includes('نجات‌اللهی') ||
+          text.includes('انقلاب') ||
+          text.includes('فردوسی') ||
+          text.includes('طالقانی') ||
+          text.includes('باغ هنر')
         );
       }
     },
@@ -637,18 +722,20 @@ export function getCuratedRoadRoutes(
       color: '#6D01AD',
       pinTone: 'cool' as const,
       matcher: (g: Gallery) => {
-        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        const text = gallerySearchText(g);
         return (
           text.includes('الهیه') ||
           text.includes('فرشته') ||
           text.includes('مریم') ||
           text.includes('آقا بزرگی') ||
+          text.includes('آقابزرگی') ||
           text.includes('فیاضی') ||
           text.includes('دربندی') ||
           text.includes('بیدار') ||
           text.includes('پارک وی') ||
           text.includes('پسیان') ||
-          text.includes('زعفرانیه')
+          text.includes('زعفرانیه') ||
+          (text.includes('شریعتی') && g.lat >= 35.77)
         );
       }
     },
@@ -660,7 +747,7 @@ export function getCuratedRoadRoutes(
       tabInk: '#2e0f0f',
       pinTone: 'warm' as const,
       matcher: (g: Gallery) => {
-        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        const text = gallerySearchText(g);
         return (
           text.includes('ونک') ||
           text.includes('سئول') ||
@@ -680,15 +767,16 @@ export function getCuratedRoadRoutes(
       color: '#00A892',
       pinTone: 'cool' as const,
       matcher: (g: Gallery) => {
-        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        const text = gallerySearchText(g);
         return (
           text.includes('لاله') ||
           text.includes('کشاورز') ||
           text.includes('فاطمی') ||
           text.includes('کارگر') ||
           text.includes('امیرآباد') ||
-          text.includes('انقلاب') ||
-          text.includes('گرد آفرید')
+          text.includes('گرد آفرید') ||
+          text.includes('وصال') ||
+          text.includes('قدس')
         );
       }
     },
@@ -698,7 +786,7 @@ export function getCuratedRoadRoutes(
       color: '#E58B2E',
       pinTone: 'warm' as const,
       matcher: (g: Gallery) => {
-        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        const text = gallerySearchText(g);
         return (
           text.includes('نیاوران') ||
           text.includes('فرمانیه') ||
@@ -721,7 +809,7 @@ export function getCuratedRoadRoutes(
       pinTone: 'cool' as const,
       maxHopKm: 0.75, // 750m max straight hop (~900m walking)
       matcher: (g: Gallery) => {
-        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        const text = gallerySearchText(g);
         return (
           text.includes('کریم‌خان') ||
           text.includes('کریمخان') ||
@@ -732,7 +820,8 @@ export function getCuratedRoadRoutes(
           text.includes('عضدی') ||
           text.includes('شیرودی') ||
           text.includes('اعرابی') ||
-          text.includes('هفت تیر')
+          text.includes('هفت تیر') ||
+          text.includes('خدری')
         );
       }
     },
@@ -743,7 +832,7 @@ export function getCuratedRoadRoutes(
       pinTone: 'cool' as const,
       maxHopKm: 0.85,
       matcher: (g: Gallery) => {
-        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        const text = gallerySearchText(g);
         return (
           text.includes('کشاورز') ||
           text.includes('وصال') ||
@@ -763,10 +852,14 @@ export function getCuratedRoadRoutes(
       pinTone: 'warm' as const,
       maxHopKm: 0.85,
       matcher: (g: Gallery) => {
-        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        const text = gallerySearchText(g);
         return (
           text.includes('لولاگر') ||
+          text.includes('نوفل') ||
           text.includes('حافظ') ||
+          text.includes('ویلا') ||
+          text.includes('سمیه') ||
+          text.includes('پورموسی') ||
           text.includes('انقلاب') ||
           text.includes('فردوسی') ||
           text.includes('طالقانی') ||
@@ -782,11 +875,32 @@ export function getCuratedRoadRoutes(
       pinTone: 'warm' as const,
       maxHopKm: 0.80,
       matcher: (g: Gallery) => {
-        const text = ((g.addressFa || g.address || '') + ' ' + (g.neighborhoodFa || '')).toLowerCase();
+        const text = gallerySearchText(g);
         return (
           text.includes('لارستان') ||
           text.includes('قائم مقام') ||
+          text.includes('فجر') ||
+          text.includes('غفاری') ||
           (text.includes('مطهری') && !text.includes('خرمشهر'))
+        );
+      }
+    },
+    {
+      id: 'walk-elahiyeh',
+      label: 'الهیه و فرشته',
+      color: '#6D01AD',
+      pinTone: 'cool' as const,
+      maxHopKm: 0.75,
+      matcher: (g: Gallery) => {
+        const text = gallerySearchText(g);
+        return (
+          text.includes('فرشته') ||
+          text.includes('الهیه') ||
+          text.includes('آقابزرگی') ||
+          text.includes('بیدار') ||
+          text.includes('چناران') ||
+          text.includes('ملکی') ||
+          text.includes('مریم غربی')
         );
       }
     }
@@ -798,22 +912,10 @@ export function getCuratedRoadRoutes(
   for (const tmpl of templatesToUse) {
     const matched = openings.filter(tmpl.matcher);
     if (matched.length >= 2) {
-      let sorted = sortNearestNeighbor(matched);
-
-      // In walking mode, only keep contiguous stops where hops are strictly <= maxHopKm (<= 750-850m)
-      if (travelMode === 'walking') {
-        const maxLimit = (tmpl as any).maxHopKm || 0.85;
-        const walkable: Gallery[] = [sorted[0]];
-        let cur = sorted[0];
-        for (let i = 1; i < sorted.length; i++) {
-          const d = distKm(cur.lat, cur.lng, sorted[i].lat, sorted[i].lng);
-          if (d <= maxLimit) {
-            walkable.push(sorted[i]);
-            cur = sorted[i];
-          }
-        }
-        sorted = walkable;
-      }
+      let sorted =
+        travelMode === 'walking'
+          ? pickBestWalkableChain(matched, (tmpl as any).maxHopKm || 0.85)
+          : sortNearestNeighbor(matched);
 
       // If at least 2 galleries remain in this route, display it
       if (sorted.length >= 2) {
@@ -824,6 +926,7 @@ export function getCuratedRoadRoutes(
           tab: (tmpl as any).tab,
           tabInk: (tmpl as any).tabInk,
           pinTone: tmpl.pinTone,
+          maxHopKm: (tmpl as any).maxHopKm || (travelMode === 'walking' ? 0.85 : 1.5),
           galleryIds: sorted.map((g) => g.id)
         });
       }

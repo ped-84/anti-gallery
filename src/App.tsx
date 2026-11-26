@@ -1300,76 +1300,89 @@ export default function App() {
               </button>
             </div>
 
-            <span className="text-stone-300 dark:text-stone-700 hidden sm:inline">|</span>
+            {currentCuratedTours.length > 0 && (
+              <span className="text-stone-300 dark:text-stone-700 hidden sm:inline">|</span>
+            )}
 
             {/* Tour buttons for current mode */}
-            {currentCuratedTours.map((tour) => {
-              const theme = getTourColorTheme(tour.id + ' ' + tour.titleFa + ' ' + tour.neighborhoodFa);
-              const isSelected =
-                tour.galleryIds.length > 0 &&
-                tour.galleryIds.length === selectedGalleryIds.length &&
-                tour.galleryIds.every((id) => selectedGalleryIds.includes(id));
+            {currentCuratedTours.length > 0 ? (
+              currentCuratedTours.map((tour) => {
+                const theme = getTourColorTheme(tour.id + ' ' + tour.titleFa + ' ' + tour.neighborhoodFa);
+                const isSelected =
+                  tour.galleryIds.length > 0 &&
+                  tour.galleryIds.length === selectedGalleryIds.length &&
+                  tour.galleryIds.every((id) => selectedGalleryIds.includes(id));
 
-              return (
-                <button
-                  key={tour.id}
-                  type="button"
-                  onClick={() => handleSelectCuratedTour(tour)}
-                  style={
-                    isSelected
-                      ? {
-                          backgroundColor: theme.activeBg,
-                          color: theme.activeText,
-                          borderColor: theme.activeBorder,
-                          boxShadow: `0 4px 14px -2px ${theme.activeGlow}`
-                        }
-                      : isDarkMode
-                      ? {
-                          backgroundColor: theme.bgDark,
-                          color: theme.textDark,
-                          borderColor: theme.borderDark
-                        }
-                      : {
-                          backgroundColor: theme.bg,
-                          color: theme.text,
-                          borderColor: theme.border
-                        }
-                  }
-                  className="clay-button text-xs sm:text-sm px-3.5 py-1.5 font-bold transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5 rounded-full border outline-none focus:outline-none cursor-pointer"
-                  title={`${tour.titleFa} (${toPersianDigits(tour.galleryIds.length)} گالری - فاصله ایستگاه‌ها زیر ${toPersianDigits(tour.maxHopKm || 1.5)} کم)`}
-                >
-                  <span
-                    className="w-2 h-2 rounded-full shrink-0 transition-transform"
-                    style={{
-                      backgroundColor: isSelected ? theme.activeDot : theme.dot
-                    }}
-                  />
-                  <span>
-                    {tour.titleFa
-                      .replace('معاصر کریم‌خان', 'کریم‌خان')
-                      .replace('موزه معاصر و پارک لاله', 'پارک لاله و کشاورز')
-                      .replace('گذر افتتاحیه‌های ', '')
-                      .replace('مدار افتتاحیه‌های ', '')
-                      .replace('مسیر هنری ', '')
-                      .replace('گشت افتتاحیه‌های ', '')
-                      .replace('محور افتتاحیه‌های ', '')
-                      .replace('گذر هنر ', '')
-                      .replace('محور هنر ', '')
-                      .replace('محور ', '')
-                      .replace('گشت طلایی ', '')
-                      .replace('مدار هنری ', '')
-                      .replace('مسیر تاریخی ', '')
-                      .replace('مثلث ', '')}
-                  </span>
-                  <span
-                    className="text-xs font-bold font-sans"
-                    style={{ opacity: isSelected ? 0.9 : 0.7 }}
+                return (
+                  <button
+                    key={tour.id}
+                    type="button"
+                    onClick={() => handleSelectCuratedTour(tour)}
+                    style={
+                      isSelected
+                        ? {
+                            backgroundColor: theme.activeBg,
+                            color: theme.activeText,
+                            borderColor: theme.activeBorder,
+                            boxShadow: `0 4px 14px -2px ${theme.activeGlow}`
+                          }
+                        : isDarkMode
+                        ? {
+                            backgroundColor: theme.bgDark,
+                            color: theme.textDark,
+                            borderColor: theme.borderDark
+                          }
+                        : {
+                            backgroundColor: theme.bg,
+                            color: theme.text,
+                            borderColor: theme.border
+                          }
+                    }
+                    className="clay-button text-xs sm:text-sm px-3.5 py-1.5 font-bold transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5 rounded-full border outline-none focus:outline-none cursor-pointer"
+                    title={`${tour.titleFa} (${toPersianDigits(tour.galleryIds.length)} گالری - فاصله ایستگاه‌ها زیر ${toPersianDigits(tour.maxHopKm || 1.5)} کم)`}
                   >
-                    <bdi>({toPersianDigits(tour.galleryIds.length)})</bdi>
-                  </span>
-                </button>
-              );
-            })}
+                    <span
+                      className="w-2 h-2 rounded-full shrink-0 transition-transform"
+                      style={{
+                        backgroundColor: isSelected ? theme.activeDot : theme.dot
+                      }}
+                    />
+                    <span>
+                      {tour.titleFa
+                        .replace('معاصر کریم‌خان', 'کریم‌خان')
+                        .replace('موزه معاصر و پارک لاله', 'پارک لاله و کشاورز')
+                        .replace('گذر افتتاحیه‌های ', '')
+                        .replace('مدار افتتاحیه‌های ', '')
+                        .replace('مسیر هنری ', '')
+                        .replace('گشت افتتاحیه‌های ', '')
+                        .replace('محور افتتاحیه‌های ', '')
+                        .replace('گذر هنر ', '')
+                        .replace('محور هنر ', '')
+                        .replace('محور ', '')
+                        .replace('گشت طلایی ', '')
+                        .replace('مدار هنری ', '')
+                        .replace('مسیر تاریخی ', '')
+                        .replace('مثلث ', '')}
+                    </span>
+                    <span
+                      className="text-xs font-bold font-sans"
+                      style={{ opacity: isSelected ? 0.9 : 0.7 }}
+                    >
+                      <bdi>({toPersianDigits(tour.galleryIds.length)})</bdi>
+                    </span>
+                  </button>
+                );
+              })
+            ) : (
+              <button
+                type="button"
+                onClick={() => setCuratedTourMode('all-active')}
+                className="clay-button text-xs sm:text-sm px-3.5 py-1.5 font-bold transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5 rounded-full border border-[#1856C7]/25 dark:border-[#93c5fd]/25 text-[#1856C7] dark:text-[#93c5fd] bg-blue-50/70 dark:bg-[#1a2232]/70 cursor-pointer"
+              >
+                <Sparkles className="w-3.5 h-3.5 shrink-0" />
+                <span>نمایش مسیرهای همه نمایشگاه‌های فعال</span>
+              </button>
+            )}
           </div>
         </section>
 

@@ -3,6 +3,7 @@ const path = require('path');
 const https = require('https');
 const crypto = require('crypto');
 const telegram = require('./telegram-source.cjs');
+const darz = require('./darz-source.cjs');
 
 // Paths
 const ROOT_DIR = path.resolve(__dirname, '..');
@@ -47,30 +48,73 @@ function imageCachePath(url) {
   return path.join(IMAGE_CACHE_DIR, `${hash}${ext}`);
 }
 
-// galleryinfo.ir poster URLs cannot be fetched by the image proxy while the site is unreachable,
-// so put the same poster from the Telegram post into the proxy's cache under that URL.
-async function cachePostersFromTelegram(exhibitions, photoById) {
+// Cache exhibition posters onto local SSD under imageCachePath(url) so /api/image-proxy
+// serves both galleryinfo.ir (mirrored via Telegram) and Darz (ArvanCloud) posters offline to users.
+async function cachePosters(exhibitions, photoById) {
   let saved = 0;
   for (const x of exhibitions) {
-    const photo = photoById.get(x.eventId);
-    if (!photo) continue;
-    const targets = [x.poster, x.posterSmall]
-      .filter((u) => typeof u === 'string' && u.includes('galleryinfo.ir/'))
-      .map(imageCachePath)
+    if (!x) continue;
+    const tgPhoto = photoById ? photoById.get(x.eventId) : null;
+    const darzUrl = [x.poster, x.posterSmall].find((u) => darz.isAllowedDarzImageUrl(u));
+    if (!tgPhoto && !darzUrl) continue;
+
+    const urlFilter = tgPhoto
+      ? (u) => typeof u === 'string' && u.includes('galleryinfo.ir/')
+      : (u) => darz.isAllowedDarzImageUrl(u);
+
+    const targets = [...new Set([x.poster, x.posterSmall].filter(urlFilter).map(imageCachePath))]
       .filter((p) => !fs.existsSync(p));
     if (!targets.length) continue;
+
     try {
-      const buf = await telegram.downloadImage(photo);
+      const buf = tgPhoto ? await telegram.downloadImage(tgPhoto) : await darz.downloadDarzImage(darzUrl);
       if (!buf) continue;
       fs.mkdirSync(IMAGE_CACHE_DIR, { recursive: true });
       for (const t of targets) fs.writeFileSync(t, buf);
       saved++;
+      if (!tgPhoto) await new Promise((r) => setTimeout(r, 120));
     } catch (err) {
       console.warn(`[Sync] Poster for event ${x.eventId} not cached: ${err.message}`);
     }
   }
-  if (saved) console.log(`[Sync] Cached ${saved} posters from Telegram`);
+  if (saved) console.log(`[Sync] Cached ${saved} posters locally`);
   return saved;
+}
+
+function buildGalleryFromDarz(e, exObj, isExpired) {
+  const d = e._venueDetails;
+  if (!d || !Number.isFinite(d.lat) || !Number.isFinite(d.lng)) return null;
+  const galleryNameFa = (e.GalleryName || '').trim();
+  const galleryNameEn = (e.GalleryNameEn || galleryNameFa).trim();
+  const address = d.address || '';
+  const locationInfo = getCityAndNeighborhood(address, galleryNameFa, d.lat);
+  return {
+    id: e.GalleryId,
+    name: galleryNameEn,
+    city: locationInfo.city,
+    lat: d.lat,
+    lng: d.lng,
+    address,
+    phone: d.phone || '',
+    hours: '۱۶ - ۲۰',
+    website: e._galleryUrl || '',
+    instagram: '',
+    image: '',
+    sourceUrl: e._galleryUrl || '',
+    exhibitions: [exObj],
+    neighborhood: locationInfo.neighborhood,
+    nameFa: galleryNameFa,
+    cityFa: locationInfo.cityFa,
+    neighborhoodFa: locationInfo.neighborhoodFa,
+    isInTrafficZone: address.includes('مطهری') || address.includes('کریم‌خان') || address.includes('کریمخان') || address.includes('سنائی') || address.includes('سنایی') || address.includes('انقلاب') || address.includes('حافظ'),
+    activeExhibition: isExpired ? null : exObj,
+    posterImage: isExpired ? '' : exObj.poster,
+    posterSmall: isExpired ? '' : exObj.posterSmall,
+    logoImage: '',
+    addressFa: address,
+    hoursFa: '۱۶ - ۲۰',
+    updatedAt: new Date().toISOString()
+  };
 }
 
 async function buildGalleryFromTelegram(e, exObj, isExpired) {
@@ -312,10 +356,9 @@ const PERSIAN_MONTHS = {
   'مهر': 7, 'آبان': 8, 'آذر': 9, 'دی': 10, 'بهمن': 11, 'اسفند': 12
 };
 
-function parsePersianEndDateToScore(fullRange, closingDate) {
-  const text = (closingDate || fullRange || '').trim();
-  if (!text || text.includes('ادامه نمایشگاه')) return 99999999;
-  const part = text.includes('تا') ? text.split('تا')[1].trim() : text;
+function parsePersianSingleDateScore(text, fallbackScore = 0) {
+  const part = String(text || '').trim();
+  if (!part) return fallbackScore;
   const enStr = part.replace(/[۰-۹]/g, (d) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).trim();
   const yearMatch = enStr.match(/\b(14\d{2})\b/);
   const year = yearMatch ? parseInt(yearMatch[1], 10) : 1405;
@@ -331,8 +374,68 @@ function parsePersianEndDateToScore(fullRange, closingDate) {
       if (val >= 1 && val <= 31) { day = val; break; }
     }
   }
-  if (!month) return 99999999;
+  if (!month) return fallbackScore;
   return year * 10000 + month * 100 + day;
+}
+
+function parsePersianEndDateToScore(fullRange, closingDate) {
+  const text = (closingDate || fullRange || '').trim();
+  if (!text || text.includes('ادامه نمایشگاه')) return 99999999;
+  const part = text.includes('تا') ? text.split('تا')[1].trim() : text;
+  return parsePersianSingleDateScore(part, 99999999);
+}
+
+function normalizeEventTitle(title) {
+  return String(title || '')
+    .replace(/[\u200c\u200f\s]+/g, ' ')
+    .replace(/[ي]/g, 'ی')
+    .replace(/[ك]/g, 'ک')
+    .replace(/[«»"'()\-–_|/\\:،,.\u200b]+/g, '')
+    .trim()
+    .toLowerCase();
+}
+
+function isNewerExhibitionCandidate(nextEx, curEx, todayScore) {
+  if (!nextEx) return false;
+  if (!curEx) return true;
+  const curEnd = parsePersianEndDateToScore(curEx.fullDateRange, curEx.closingDate);
+  if (curEnd < todayScore) return true;
+
+  const nextOpen = parsePersianSingleDateScore(nextEx.openingDate, 0);
+  const curOpen = parsePersianSingleDateScore(curEx.openingDate, 0);
+  if (nextOpen !== curOpen) return nextOpen > curOpen;
+
+  const nextId = Number(nextEx.eventId || 0);
+  const curId = Number(curEx.eventId || 0);
+  // Real GalleryInfo IDs (> 0) take precedence over negative Darz/manual placeholders on the same date
+  if (nextId > 0 && curId <= 0) return true;
+  if (curId > 0 && nextId <= 0) return false;
+  return nextId >= curId;
+}
+
+function mergeFallbackEvents(tgEvents, darzEvents) {
+  const merged = [...tgEvents];
+  for (const d of darzEvents) {
+    const dStartScore = (d.SY || 0) * 10000 + (d.SM || 0) * 100 + (d.SD || 0);
+    const dTitleNorm = normalizeEventTitle(d.Title);
+    const dArtistNorm = normalizeEventTitle(d.Names);
+    const match = tgEvents.find((t) => {
+      if (t.GalleryId !== d.GalleryId) return false;
+      const tStartScore = (t.SY || 0) * 10000 + (t.SM || 0) * 100 + (t.SD || 0);
+      if (tStartScore !== dStartScore) return false;
+      const tTitleNorm = normalizeEventTitle(t.Title);
+      const tArtistNorm = normalizeEventTitle(t.Names || t.Title2ToShow);
+      const titleMatch = !dTitleNorm || !tTitleNorm || tTitleNorm === 'بدونعنوان' || dTitleNorm.startsWith('نمایشگاهاثار') || dTitleNorm === tTitleNorm || dTitleNorm.includes(tTitleNorm) || tTitleNorm.includes(dTitleNorm);
+      const artistMatch = dArtistNorm && tArtistNorm && (dArtistNorm.includes(tArtistNorm) || tArtistNorm.includes(dArtistNorm));
+      return titleMatch && (artistMatch || dTitleNorm === tTitleNorm || (tTitleNorm && dTitleNorm.includes(tTitleNorm)));
+    });
+    if (match) {
+      if (!match.Poster1 && d.Poster1) match.Poster1 = d.Poster1;
+      continue;
+    }
+    merged.push(d);
+  }
+  return merged;
 }
 
 function getTodayPersianScore() {
@@ -352,10 +455,37 @@ function getTodayPersianScore() {
 async function main() {
   console.log('--- Starting Live Exhibition Sync ---');
   
-  // 1. Get all current events. Sources, in order:
+  // 1. Load galleries cleanly: when DATA_DIR is set (server/Docker runtime), prefer PERSISTENT_GALLERIES
+  //    but also merge any new galleries or manual exhibitions added in SRC_GALLERIES.
+  let galleries = [];
+  const srcGalleries = readJsonArraySafe(SRC_GALLERIES) || [];
+  if (process.env.DATA_DIR && fs.existsSync(PERSISTENT_GALLERIES)) {
+    galleries = JSON.parse(fs.readFileSync(PERSISTENT_GALLERIES, 'utf-8'));
+    const existingIds = new Set(galleries.map((g) => g.id));
+    for (const sg of srcGalleries) {
+      if (!existingIds.has(sg.id)) {
+        galleries.push(sg);
+        existingIds.add(sg.id);
+      } else {
+        const target = galleries.find((g) => g.id === sg.id);
+        if (target && Array.isArray(sg.exhibitions)) {
+          if (!Array.isArray(target.exhibitions)) target.exhibitions = [];
+          for (const mx of sg.exhibitions) {
+            if (mx && mx.eventId <= -900000 && !target.exhibitions.some((x) => x.eventId === mx.eventId)) {
+              target.exhibitions.unshift(mx);
+            }
+          }
+        }
+      }
+    }
+  } else {
+    galleries = srcGalleries;
+  }
+
+  // 2. Get all current events. Sources, in order:
   //    --events-file <path>  events sent from a browser in Iran (phone bridge, /api/admin/galleryinfo-import)
   //    galleryinfo.ir API    normal case
-  //    Telegram channel      when galleryinfo.ir is unreachable from this server
+  //    Telegram + Darz       automatic fallback when galleryinfo.ir is unreachable from this server
   const argIdx = process.argv.indexOf('--events-file');
   const eventsFile = argIdx > 0 ? process.argv[argIdx + 1] : '';
   let allEvents = [];
@@ -391,25 +521,51 @@ async function main() {
     } catch (err) {
       upstreamError = err;
       allEvents = [];
-      console.warn(`[Sync] galleryinfo.ir is unreachable (${err.message}). Falling back to the Telegram channel...`);
+      console.warn(`[Sync] galleryinfo.ir is unreachable (${err.message}). Falling back to Telegram + Darz...`);
     }
 
     if (upstreamError) {
+      const today = getTodayPersianScore();
+      let tgCurrent = [];
+      let darzCurrent = [];
+      let tgError = null;
+      let darzError = null;
+
       try {
         tgEvents = await telegram.fetchTelegramEvents();
+        // Keep the poster URL we already store for known events, so cached images still match.
+        const known = new Map((readJsonArraySafe(PERSISTENT_EXHIBITIONS) || readJsonArraySafe(SRC_EXHIBITIONS) || [])
+          .filter((x) => x && x.poster).map((x) => [x.eventId, x.poster]));
+        tgCurrent = (tgEvents || [])
+          .filter((e) => e.SYE * 10000 + e.SME * 100 + e.SDE >= today)
+          .map((e) => (known.has(e.Id) ? { ...e, Poster1: known.get(e.Id) } : e));
       } catch (err) {
-        throw fatal(`galleryinfo.ir unreachable (${upstreamError.message}) and Telegram failed (${err.message})`);
+        tgError = err;
+        console.warn(`[Sync] Telegram fallback warning: ${err.message}`);
       }
-      const today = getTodayPersianScore();
-      // Keep the poster URL we already store for known events, so cached images still match.
-      const known = new Map((readJsonArraySafe(PERSISTENT_EXHIBITIONS) || readJsonArraySafe(SRC_EXHIBITIONS) || [])
-        .filter((x) => x && x.poster).map((x) => [x.eventId, x.poster]));
-      allEvents = tgEvents
-        .filter((e) => e.SYE * 10000 + e.SME * 100 + e.SDE >= today)
-        .map((e) => (known.has(e.Id) ? { ...e, Poster1: known.get(e.Id) } : e));
-      source = 'telegram';
-      if (!allEvents.length) {
-        throw fatal(`galleryinfo.ir unreachable (${upstreamError.message}) and Telegram had no current exhibitions`);
+
+      try {
+        const darzResult = await darz.fetchDarzEvents({ existingGalleries: galleries });
+        darzCurrent = (darzResult.events || [])
+          .filter((e) => e.SYE * 10000 + e.SME * 100 + e.SDE >= today);
+      } catch (err) {
+        darzError = err;
+        console.warn(`[Sync] Darz fallback warning: ${err.message}`);
+      }
+
+      allEvents = mergeFallbackEvents(tgCurrent, darzCurrent);
+
+      if (tgCurrent.length && darzCurrent.length) {
+        source = 'telegram+darz';
+      } else if (darzCurrent.length) {
+        source = 'darz';
+      } else if (tgCurrent.length) {
+        source = 'telegram';
+      } else {
+        const parts = [`galleryinfo.ir unreachable (${upstreamError.message})`];
+        if (tgError) parts.push(`Telegram failed (${tgError.message})`);
+        if (darzError) parts.push(`Darz failed (${darzError.message})`);
+        throw fatal(parts.join('; ') + ' and no current exhibitions were found');
       }
     }
   }
@@ -422,40 +578,84 @@ async function main() {
     return;
   }
 
-  // 2. Read local databases (prioritize persistent volume if available)
-  let galleries = [];
-  if (fs.existsSync(PERSISTENT_GALLERIES)) {
-    galleries = JSON.parse(fs.readFileSync(PERSISTENT_GALLERIES, 'utf-8'));
-  } else if (fs.existsSync(SRC_GALLERIES)) {
-    galleries = JSON.parse(fs.readFileSync(SRC_GALLERIES, 'utf-8'));
-  }
-
   const galleryMap = new Map();
   galleries.forEach(g => galleryMap.set(g.id, g));
 
   const allExhibitionsFa = [];
   const todayScore = getTodayPersianScore();
 
-  // Sort events by StartDate descending so latest exhibitions (e.g. 15 Aban) are processed first
+  // Sort events by StartDate descending (preferring positive GalleryInfo IDs on ties)
   allEvents.sort((a, b) => {
     const scoreA = (a.SY || 1400) * 10000 + (a.SM || 1) * 100 + (a.SD || 1);
     const scoreB = (b.SY || 1400) * 10000 + (b.SM || 1) * 100 + (b.SD || 1);
-    return scoreB - scoreA;
+    if (scoreB !== scoreA) return scoreB - scoreA;
+    const posA = Number(a.Id) > 0 ? 1 : 0;
+    const posB = Number(b.Id) > 0 ? 1 : 0;
+    if (posB !== posA) return posB - posA;
+    return Number(b.Id || 0) - Number(a.Id || 0);
   });
 
   for (const e of allEvents) {
-    const posterUrl = e.Poster1 ? (e.Poster1.startsWith('http') ? e.Poster1 : `https://galleryinfo.ir${e.Poster1}`) : '';
-    const posterSmallUrl = posterUrl ? posterUrl.replace('Event_', 'EventSmall_') : '';
+    let posterUrl = e.Poster1 ? (e.Poster1.startsWith('http') ? e.Poster1 : `https://galleryinfo.ir${e.Poster1}`) : '';
+    let posterSmallUrl = (e._source === 'darz' || darz.isAllowedDarzImageUrl(posterUrl))
+      ? posterUrl
+      : (posterUrl ? posterUrl.replace('Event_', 'EventSmall_') : '');
     const artist = (e.Names || e.Title2ToShow || '').replace(/\r\n/g, ' ').replace(/\s+/g, ' ').trim();
     const title = (e.Title || '').replace(/\r\n/g, ' ').replace(/\s+/g, ' ').trim();
     const galleryName = (e.GalleryName || '').trim();
-    
+
     const startStr = (e.SD && e.SMN) ? `${e.SD} ${e.SMN} ${e.SY || 1405}` : '۱۵ آبان ۱۴۰۵';
     const endStr = (e.SDE && e.SMNE) ? `${e.SDE} ${e.SMNE} ${e.SYE || e.SY || 1405}` : '';
     const dateRangeStr = endStr ? `${startStr} تا ${endStr}` : `${startStr} تا ادامه نمایشگاه`;
     const hours = (e.StartT && e.EndT) ? `${e.StartT}:۰۰ الی ${e.EndT}:۰۰` : '۱۶:۰۰ الی ۲۰:۰۰';
 
     const isExpired = parsePersianEndDateToScore(dateRangeStr, endStr) < todayScore;
+    const openingDate = e._weekday ? `${e._weekday} ${startStr}` : `جمعه ${startStr}`;
+    const eventUrl = e._eventUrl || `https://galleryinfo.ir/Event/fa/${e.Id}`;
+
+    let gallery = galleryMap.get(e.GalleryId);
+
+    // If gallery already holds a positive GalleryInfo eventId for this exact opening date & show,
+    // skip adding a duplicate negative Darz placeholder.
+    if (gallery && Array.isArray(gallery.exhibitions) && Number(e.Id) < 0) {
+      const titleNorm = normalizeEventTitle(title);
+      const artistNorm = normalizeEventTitle(artist);
+      const openScore = parsePersianSingleDateScore(openingDate, 0);
+      const canonicalExisting = gallery.exhibitions.find((x) => {
+        if (!x || !(x.eventId > 0)) return false;
+        if (parsePersianSingleDateScore(x.openingDate, 0) !== openScore) return false;
+        const xTitleNorm = normalizeEventTitle(x.title);
+        const xArtistNorm = normalizeEventTitle(x.artist);
+        const titleMatch = titleNorm && xTitleNorm && (xTitleNorm === titleNorm || xTitleNorm.includes(titleNorm) || titleNorm.includes(xTitleNorm));
+        const artistFallbackMatch = (title.startsWith('نمایشگاه آثار') || xTitleNorm === 'بدونعنوان') && artistNorm && xArtistNorm && (xArtistNorm.includes(artistNorm) || artistNorm.includes(xArtistNorm));
+        return titleMatch || artistFallbackMatch;
+      });
+      if (canonicalExisting) {
+        canonicalExisting.isExpired = isExpired;
+        if (!canonicalExisting.poster && posterUrl) canonicalExisting.poster = posterUrl;
+        if (!canonicalExisting.posterSmall && posterSmallUrl) canonicalExisting.posterSmall = posterSmallUrl;
+        if (!isExpired) allExhibitionsFa.push({ ...canonicalExisting, isExpired: false });
+        continue;
+      }
+    }
+
+    // If a manual local poster (/assets/events/manual/...) already exists on disk for this show, keep using it
+    if (gallery && Array.isArray(gallery.exhibitions)) {
+      const titleNorm = normalizeEventTitle(title);
+      const openScore = parsePersianSingleDateScore(openingDate, 0);
+      const manualMatch = gallery.exhibitions.find((x) => {
+        if (!x || typeof x.poster !== 'string' || !x.poster.startsWith('/assets/events/manual/')) return false;
+        if (eventUrl && x.url === eventUrl) return true;
+        return titleNorm && normalizeEventTitle(x.title) === titleNorm && parsePersianSingleDateScore(x.openingDate, 0) === openScore;
+      });
+      if (manualMatch) {
+        const localFile = path.join(ROOT_DIR, 'public', manualMatch.poster.replace(/^\//, ''));
+        if (fs.existsSync(localFile)) {
+          posterUrl = manualMatch.poster;
+          posterSmallUrl = manualMatch.posterSmall || manualMatch.poster;
+        }
+      }
+    }
 
     const exObj = {
       eventId: e.Id,
@@ -463,19 +663,31 @@ async function main() {
       title: title,
       artist: artist,
       type: e._type || ((artist.includes('گروهی') || title.includes('گروهی')) ? 'نمایشگاه گروهی' : 'نمایشگاه انفرادی'),
-      openingDate: `جمعه ${startStr}`,
+      openingDate,
       fullDateRange: dateRangeStr,
       closingDate: endStr,
       openingHours: hours,
       poster: posterUrl,
       posterSmall: posterSmallUrl,
-      url: `https://galleryinfo.ir/Event/fa/${e.Id}`,
+      url: eventUrl,
       isExpired
     };
 
-    allExhibitionsFa.push(exObj);
+    if (!isExpired) {
+      allExhibitionsFa.push(exObj);
+    }
 
-    let gallery = galleryMap.get(e.GalleryId);
+    if (!gallery && e._source === 'darz') {
+      gallery = buildGalleryFromDarz(e, exObj, isExpired);
+      if (!gallery) {
+        console.warn(`[Sync] Skipping new Darz gallery ${e.GalleryId} (${galleryName}): no location available`);
+        continue;
+      }
+      console.log(`Added new gallery from Darz: ${e.GalleryId} (${galleryName})`);
+      galleryMap.set(e.GalleryId, gallery);
+      galleries.push(gallery);
+      continue;
+    }
 
     if (!gallery && (e._source === 'telegram' || source === 'bridge')) {
       // galleryinfo.ir gallery pages are unreachable in these modes; use the Telegram post's map link.
@@ -561,9 +773,8 @@ async function main() {
       galleryMap.set(e.GalleryId, gallery);
       galleries.push(gallery);
     } else {
-      // Update gallery active exhibition if this one is newer and not expired
-      const currentEventId = gallery.activeExhibition?.eventId || 0;
-      if (!isExpired && (!gallery.activeExhibition || exObj.eventId >= currentEventId)) {
+      // Update gallery active exhibition using opening-date comparison first, then positive IDs
+      if (!isExpired && isNewerExhibitionCandidate(exObj, gallery.activeExhibition, todayScore)) {
         gallery.activeExhibition = exObj;
         gallery.posterImage = posterUrl;
         gallery.posterSmall = posterSmallUrl;
@@ -575,6 +786,18 @@ async function main() {
       }
 
       if (!gallery.exhibitions) gallery.exhibitions = [];
+      const titleNorm = normalizeEventTitle(exObj.title);
+      const openScore = parsePersianSingleDateScore(exObj.openingDate, 0);
+      // Remove any negative placeholder (-90000x or Darz hash) superseded by this canonical event
+      gallery.exhibitions = gallery.exhibitions.filter((x) => {
+        if (!x || x.eventId === exObj.eventId) return true;
+        if (x.eventId >= 0) return true;
+        if (exObj.url && x.url === exObj.url) return false;
+        if (titleNorm && normalizeEventTitle(x.title) === titleNorm && parsePersianSingleDateScore(x.openingDate, 0) === openScore) {
+          return false;
+        }
+        return true;
+      });
       const exIndex = gallery.exhibitions.findIndex(x => x.eventId === exObj.eventId);
       if (exIndex >= 0) {
         gallery.exhibitions[exIndex] = exObj;
@@ -584,31 +807,69 @@ async function main() {
     }
   }
 
+  // Reconcile all galleries: refresh expiration flags and promote the newest non-expired exhibition
+  let expiredCleared = 0;
+  for (const g of galleries) {
+    if (Array.isArray(g.exhibitions)) {
+      for (const x of g.exhibitions) {
+        if (x) x.isExpired = parsePersianEndDateToScore(x.fullDateRange, x.closingDate) < todayScore;
+      }
+    }
+    const validSubs = (g.exhibitions || []).filter((x) => x && !x.isExpired);
+    const activeValid = g.activeExhibition && parsePersianEndDateToScore(g.activeExhibition.fullDateRange, g.activeExhibition.closingDate) >= todayScore;
+    let best = activeValid ? g.activeExhibition : null;
+    for (const candidate of validSubs) {
+      if (!best || isNewerExhibitionCandidate(candidate, best, todayScore)) {
+        best = candidate;
+      }
+    }
+    if (best) {
+      if (!g.activeExhibition || g.activeExhibition.eventId !== best.eventId) {
+        g.activeExhibition = best;
+        g.posterImage = best.poster || g.posterImage || '';
+        g.posterSmall = best.posterSmall || best.poster || g.posterSmall || '';
+      }
+    } else if (g.activeExhibition) {
+      g.activeExhibition = null;
+      g.posterImage = '';
+      g.posterSmall = '';
+      expiredCleared++;
+    }
+  }
+  if (expiredCleared) console.log(`[Sync] Cleared ${expiredCleared} expired active exhibitions from galleries`);
+
   // Ensure persistent DATA_DIR exists
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
   }
 
-  // Telegram only covers the last weeks of posts: keep current exhibitions we already had.
-  if (source === 'telegram') {
+  // Fallback sources (Telegram / Darz) only cover their respective feeds: keep manual or other current exhibitions.
+  if (source === 'telegram' || source === 'darz' || source === 'telegram+darz') {
     const today = getTodayPersianScore();
     const seen = new Set(allExhibitionsFa.map((x) => x.eventId));
-    const previous = readJsonArraySafe(PERSISTENT_EXHIBITIONS) || readJsonArraySafe(SRC_EXHIBITIONS) || [];
+    const seenUrls = new Set(allExhibitionsFa.map((x) => x.url).filter(Boolean));
+    const seenKeys = new Set(allExhibitionsFa.map((x) => `${x.galleryId}::${normalizeEventTitle(x.title)}::${parsePersianSingleDateScore(x.openingDate, 0)}`));
+    const previous = [
+      ...((process.env.DATA_DIR && readJsonArraySafe(PERSISTENT_EXHIBITIONS)) || []),
+      ...(readJsonArraySafe(SRC_EXHIBITIONS) || [])
+    ];
     let kept = 0;
     for (const x of previous) {
       if (!x || seen.has(x.eventId)) continue;
       if (parsePersianEndDateToScore(x.fullDateRange, x.closingDate) < today) continue;
+      const key = `${x.galleryId}::${normalizeEventTitle(x.title)}::${parsePersianSingleDateScore(x.openingDate, 0)}`;
+      if (x.eventId < 0 && ((x.url && seenUrls.has(x.url)) || seenKeys.has(key))) continue;
       allExhibitionsFa.push({ ...x, isExpired: false });
+      seen.add(x.eventId);
+      if (x.url) seenUrls.add(x.url);
+      seenKeys.add(key);
       kept++;
     }
-    console.log(`[Sync] Kept ${kept} current exhibitions not in the recent Telegram posts`);
+    console.log(`[Sync] Kept ${kept} current exhibitions from existing dataset (e.g. manual entries)`);
   }
 
-  let postersCached = 0;
-  if (tgEvents && tgEvents.length) {
-    const photoById = new Map(tgEvents.filter((t) => t._photo).map((t) => [t.Id, t._photo]));
-    postersCached = await cachePostersFromTelegram(allExhibitionsFa, photoById);
-  }
+  const photoById = new Map((tgEvents || []).filter((t) => t && t._photo).map((t) => [t.Id, t._photo]));
+  const postersCached = await cachePosters(allExhibitionsFa, photoById);
 
   // Save to persistent database (temp file + rename, so a crash never leaves a half-written file)
   writeJsonAtomic(PERSISTENT_GALLERIES, galleries);
