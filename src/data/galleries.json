@@ -56,7 +56,8 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21472.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21472.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21472",
-        "medium": "طراحی و نقاشی"
+        "medium": "طراحی و نقاشی",
+        "isExpired": true
       },
       {
         "eventId": 21473,
@@ -71,7 +72,8 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21473.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21473.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21473",
-        "medium": "نقاشی"
+        "medium": "نقاشی",
+        "isExpired": true
       }
     ],
     "neighborhood": "Elahiyeh & Fereshteh",
@@ -99,7 +101,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1023.jpg#mnt",
     "addressFa": "تهران، الهیه، خیابان فرشته، پلاک ۱۰۶، مرکز تجاری سام سنتر، طبقه ۱-",
     "hoursFa": "۱۱ - ۱۹",
-    "updatedAt": "2026-11-27T09:03:11.652Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 406,
@@ -143,7 +145,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21582.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21582.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21582",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Karimkhan & Center",
@@ -171,7 +173,7 @@
     "hoursFa": "۱۶ - ۲۰",
     "posterImage": "/assets/events/g/Event_21631.jpg",
     "posterSmall": "/assets/events/g/Event_21631.jpg",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 666,
@@ -368,7 +370,8 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21477.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21477.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21477",
-        "medium": "نقاشی"
+        "medium": "نقاشی",
+        "isExpired": true
       }
     ],
     "neighborhood": "North Tehran & Niavaran",
@@ -376,26 +379,13 @@
     "cityFa": "تهران",
     "neighborhoodFa": "نیاوران و شمال تهران",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21477,
-      "galleryId": 994,
-      "title": "مانا",
-      "artist": "علیرضا بشیر راد",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 24 مهر 1405",
-      "fullDateRange": "24 مهر 1405 تا 15 آبان 1405",
-      "closingDate": "15 آبان 1405",
-      "openingHours": "13:۰۰ الی 21:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21477.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21477.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21477",
-      "medium": "نقاشی"
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21477.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21477.jpg",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_994.jpg",
     "addressFa": "تهران، خیابان موحد دانش(اقدسیه)، مجتمع آواپلت، اِیت/پلیت، گالری اِیت/کیوب",
-    "hoursFa": "۱۳ - ۲۱"
+    "hoursFa": "۱۳ - ۲۱",
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 139,
@@ -817,7 +807,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21551.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21551.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21551",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Downtown, Enghelab & Amirabad",
@@ -825,27 +815,13 @@
     "cityFa": "تهران",
     "neighborhoodFa": "مرکز، انقلاب و امیرآباد",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21551,
-      "galleryId": 263,
-      "title": "جستجوی ایران",
-      "artist": "نمایشگاه گروهی",
-      "type": "نمایشگاه گروهی",
-      "openingDate": "جمعه 15 آبان 1405",
-      "fullDateRange": "15 آبان 1405 تا 30 آبان 1405",
-      "closingDate": "30 آبان 1405",
-      "openingHours": "10:۰۰ الی 18:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21551.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21551.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21551",
-      "isExpired": false
-    },
+    "activeExhibition": null,
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_263.jpg",
     "addressFa": "تهران، خیابان کارگر شمالی، جنب پارک لاله، موزه هنرهای معاصر",
     "hoursFa": "۱۰ - ۱۸",
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21551.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21551.jpg",
-    "updatedAt": "2026-11-21T14:20:07.899Z"
+    "posterImage": "",
+    "posterSmall": "",
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 18,
@@ -919,7 +895,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21521.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21521.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21521",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Karimkhan & Center",
@@ -947,7 +923,7 @@
     "addressFa": "تهران، خیابان کریمخان‌زند، خیابان سنایی، کوچه‌ی سیزدهم، پلاک ۵",
     "hoursFa": "۱۱ - ۱۹",
     "posterImage": "/assets/events/g/Event_21643.jpg",
-    "updatedAt": "2026-11-27T09:03:11.647Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 133,
@@ -976,7 +952,8 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21526.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21526.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21526",
-        "medium": "نقاشی"
+        "medium": "نقاشی",
+        "isExpired": true
       }
     ],
     "neighborhood": "North Tehran & Niavaran",
@@ -984,26 +961,13 @@
     "cityFa": "تهران",
     "neighborhoodFa": "نیاوران و شمال تهران",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21526,
-      "galleryId": 133,
-      "title": "آبی درباره همین ماندن است.",
-      "artist": "نمایشگاه گروهی",
-      "type": "نمایشگاه گروهی",
-      "openingDate": "جمعه 8 آبان 1405",
-      "fullDateRange": "8 آبان 1405 تا 18 آبان 1405",
-      "closingDate": "18 آبان 1405",
-      "openingHours": "16:۰۰ الی 20:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21526.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21526.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21526",
-      "medium": "نقاشی"
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21526.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21526.jpg",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_133.jpg",
     "addressFa": "تهران، خیابان شریعتی، نرسیده به میدان قدس، کوچه ماهروزاده، کوچه رمضانیان، ابتدای کوچه احمدی مقدم (ایزد)، پلاک 31، طبقه اول",
-    "hoursFa": "۱۶ - ۲۰"
+    "hoursFa": "۱۶ - ۲۰",
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 193,
@@ -1031,7 +995,8 @@
         "openingHours": "16:۰۰ الی 20:۰۰",
         "poster": "https://galleryinfo.ir/Images/Events/Event_21535.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21535.jpg",
-        "url": "https://galleryinfo.ir/Event/fa/21535"
+        "url": "https://galleryinfo.ir/Event/fa/21535",
+        "isExpired": true
       }
     ],
     "neighborhood": "Elahiyeh & Fereshteh",
@@ -1039,26 +1004,13 @@
     "cityFa": "تهران",
     "neighborhoodFa": "الهیه و فرشته",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21535,
-      "galleryId": 193,
-      "title": "قرارِ‌سنگ",
-      "artist": "سمیه جعفری",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 8 آبان 1405",
-      "fullDateRange": "8 آبان 1405 تا 22 آبان 1405",
-      "closingDate": "22 آبان 1405",
-      "openingHours": "16:۰۰ الی 20:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21535.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21535.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21535"
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21535.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21535.jpg",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_193.jpg#fmq",
     "addressFa": "تهران، الهیه، خیابان مهدیه، خیابان جبهه، کوچه لسانی، بن‌بست حمید، شماره ۱",
     "hoursFa": "۱۶ - ۲۰",
-    "updatedAt": "2026-11-13T09:44:36.996Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 196,
@@ -1102,7 +1054,8 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21534.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21534.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21534",
-        "medium": "نقاشی"
+        "medium": "نقاشی",
+        "isExpired": true
       }
     ],
     "neighborhood": "Karimkhan & Center",
@@ -1130,7 +1083,7 @@
     "hoursFa": "۹ - ۲۱",
     "posterImage": "/assets/events/g/Event_21609.jpg",
     "posterSmall": "/assets/events/g/Event_21609.jpg",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 212,
@@ -1231,7 +1184,8 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21543.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21543.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21543",
-        "medium": "طراحی و گرافیک"
+        "medium": "طراحی و گرافیک",
+        "isExpired": true
       }
     ],
     "neighborhood": "Beheshti & Motahari",
@@ -1259,7 +1213,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_226.jpg",
     "addressFa": "تهران، خیابان مطهری، خیابان جم (فجر)،خیابان غفاری،شماره 64",
     "hoursFa": "۱۱ - ۱۹",
-    "updatedAt": "2026-11-27T09:03:11.651Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 235,
@@ -1303,7 +1257,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21611.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21611.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21611",
-        "isExpired": false
+        "isExpired": true
       },
       {
         "eventId": 21537,
@@ -1318,7 +1272,8 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21537.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21537.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21537",
-        "medium": "طراحی"
+        "medium": "طراحی",
+        "isExpired": true
       }
     ],
     "neighborhood": "Karimkhan & Center",
@@ -1346,7 +1301,7 @@
     "hoursFa": "۱۰ - ۲۱",
     "posterImage": "/assets/events/g/Event_21661.jpg",
     "posterSmall": "/assets/events/g/Event_21661.jpg",
-    "updatedAt": "2026-11-27T09:03:11.647Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 258,
@@ -1375,7 +1330,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21599.jpg#enr",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21599.jpg#enr",
         "url": "https://galleryinfo.ir/Event/fa/21599",
-        "isExpired": false
+        "isExpired": true
       },
       {
         "eventId": 21523,
@@ -1390,7 +1345,8 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21523.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21523.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21523",
-        "medium": "نقاشی"
+        "medium": "نقاشی",
+        "isExpired": true
       }
     ],
     "neighborhood": "Karimkhan & Center",
@@ -1398,27 +1354,13 @@
     "cityFa": "تهران",
     "neighborhoodFa": "کریم‌خان و مرکز",
     "isInTrafficZone": true,
-    "activeExhibition": {
-      "eventId": 21599,
-      "galleryId": 258,
-      "title": "کالبد وهم",
-      "artist": "رضوانه منافی",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 22 آبان 1405",
-      "fullDateRange": "22 آبان 1405 تا 29 آبان 1405",
-      "closingDate": "29 آبان 1405",
-      "openingHours": "13:۰۰ الی 20:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21599.jpg#enr",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21599.jpg#enr",
-      "url": "https://galleryinfo.ir/Event/fa/21599",
-      "isExpired": false
-    },
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21599.jpg#enr",
+    "activeExhibition": null,
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_258.jpg#egn",
     "addressFa": "تهران، خیابان سمیه،بعد از خیابان مفتح، بن بست پروانه، پلاک 4",
     "hoursFa": "۱۳ - ۲۰",
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21599.jpg#enr",
-    "updatedAt": "2026-11-20T15:19:27.693Z"
+    "posterImage": "",
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 301,
@@ -1462,7 +1404,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21532.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21532.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21532",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Karimkhan & Center",
@@ -1490,7 +1432,7 @@
     "hoursFa": "۱۲ - ۲۰",
     "posterImage": "/assets/events/g/Event_21636.jpg",
     "posterSmall": "/assets/events/g/Event_21636.jpg",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 467,
@@ -1534,7 +1476,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21595.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21595.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21595",
-        "isExpired": false
+        "isExpired": true
       },
       {
         "eventId": 21594,
@@ -1549,7 +1491,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21594.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21594.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21594",
-        "isExpired": false
+        "isExpired": true
       },
       {
         "eventId": 21547,
@@ -1564,7 +1506,8 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21547.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21547.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21547",
-        "medium": "نقاشی فیگوراتیو"
+        "medium": "نقاشی فیگوراتیو",
+        "isExpired": true
       },
       {
         "eventId": 21548,
@@ -1579,7 +1522,8 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21548.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21548.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21548",
-        "medium": "نقاشی"
+        "medium": "نقاشی",
+        "isExpired": true
       }
     ],
     "neighborhood": "Beheshti & Motahari",
@@ -1607,7 +1551,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_467.jpg#tek",
     "addressFa": "تهران، میرزای شیرازی شمالی، خیابان دلاویز، پلاک ۱۸",
     "hoursFa": "۱۶ - ۲۰",
-    "updatedAt": "2026-11-27T09:03:11.651Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 468,
@@ -1651,7 +1595,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21545.jpg#qoj",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21545.jpg#qoj",
         "url": "https://galleryinfo.ir/Event/fa/21545",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Beheshti & Motahari",
@@ -1679,7 +1623,7 @@
     "hoursFa": "۱۲ - ۲۰",
     "posterImage": "/assets/events/manual/bavan-dahan-baste.jpg",
     "posterSmall": "/assets/events/manual/bavan-dahan-baste.jpg",
-    "updatedAt": "2026-11-26T19:34:39.000Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 470,
@@ -1707,7 +1651,8 @@
         "openingHours": "16:۰۰ الی 20:۰۰",
         "poster": "https://galleryinfo.ir/Images/Events/Event_21536.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21536.jpg",
-        "url": "https://galleryinfo.ir/Event/fa/21536"
+        "url": "https://galleryinfo.ir/Event/fa/21536",
+        "isExpired": true
       }
     ],
     "neighborhood": "Elahiyeh & Fereshteh",
@@ -1715,26 +1660,13 @@
     "cityFa": "تهران",
     "neighborhoodFa": "الهیه و فرشته",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21536,
-      "galleryId": 470,
-      "title": "اندر نیستی هست است",
-      "artist": "تانیا اصل",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 8 آبان 1405",
-      "fullDateRange": "8 آبان 1405 تا 22 آبان 1405",
-      "closingDate": "22 آبان 1405",
-      "openingHours": "16:۰۰ الی 20:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21536.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21536.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21536"
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21536.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21536.jpg",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_470.jpg#ypa",
     "addressFa": "تهران، الهیه، خیابان مهدیه، خیابان جبهه، کوچه لسانی، بن‌بست حمید، شماره ۱",
     "hoursFa": "۱۶ - ۲۰",
-    "updatedAt": "2026-11-13T09:44:36.996Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 485,
@@ -1778,7 +1710,8 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21519.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21519.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21519",
-        "medium": "نقاشی"
+        "medium": "نقاشی",
+        "isExpired": true
       }
     ],
     "neighborhood": "North Tehran & Niavaran",
@@ -1806,7 +1739,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_485.jpg",
     "addressFa": "تهران، میدان قدس ، خیابان شریعتی ،کوچه ماهروزاده، پلاک ۱۱",
     "hoursFa": "۱۲ - ۱۹",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 487,
@@ -1850,7 +1783,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21541.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21541.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21541",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Karimkhan & Center",
@@ -1878,7 +1811,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_487.jpg#wam",
     "addressFa": "تهران، خیابان ویلا، خیابان سمیه، خیابان پورموسى، شماره ۳۰",
     "hoursFa": "۱۶ - ۲۰",
-    "updatedAt": "2026-11-26T19:34:39.000Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 938,
@@ -1922,7 +1855,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21569.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21569.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21569",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Beheshti & Motahari",
@@ -1950,7 +1883,7 @@
     "hoursFa": "۱۶ - ۲۰",
     "posterImage": "/assets/events/g/Event_21624.jpg",
     "posterSmall": "/assets/events/g/Event_21624.jpg",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 1008,
@@ -1994,7 +1927,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21634.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21634.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21634",
-        "isExpired": false
+        "isExpired": true
       },
       {
         "eventId": 21602,
@@ -2009,7 +1942,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21602.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21602.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21602",
-        "isExpired": false
+        "isExpired": true
       },
       {
         "eventId": 21531,
@@ -2024,7 +1957,8 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21531.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21531.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21531",
-        "medium": "نقاشی"
+        "medium": "نقاشی",
+        "isExpired": true
       }
     ],
     "neighborhood": "Vanak, Mirdamad & Zafar",
@@ -2052,7 +1986,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1008.jpg",
     "addressFa": "تهران، جردن خیابان دریابندری (ارمغان غربی)، پلاک ۱۳",
     "hoursFa": "۱۵ - ۱۹",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 1027,
@@ -2096,7 +2030,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21550.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21550.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21550",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "North Tehran & Niavaran",
@@ -2124,7 +2058,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1027.jpg",
     "addressFa": "تهران، آجودانیه، خیابان سباری، نبش کوچه توکلی شرقی، پلاک 26، ساختمان آگرا، بال غربی، طبقه B، گالری بی",
     "hoursFa": "۱۲ - ۲۰",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 8,
@@ -2153,7 +2087,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21553.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21553.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21553",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Beheshti & Motahari",
@@ -2161,27 +2095,13 @@
     "cityFa": "تهران",
     "neighborhoodFa": "بهشتی و مطهری",
     "isInTrafficZone": true,
-    "activeExhibition": {
-      "eventId": 21553,
-      "galleryId": 8,
-      "title": "مُرَقَعِ پیاله پنهان",
-      "artist": "فاطمه وفایی‌نژاد (وفاای)",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 15 آبان 1405",
-      "fullDateRange": "15 آبان 1405 تا 29 آبان 1405",
-      "closingDate": "29 آبان 1405",
-      "openingHours": "16:۰۰ الی 20:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21553.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21553.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21553",
-      "isExpired": false
-    },
+    "activeExhibition": null,
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_8.jpg",
     "addressFa": "تهران، خیابان ولیعصر، بالاتر از سه راه عباس آباد، کوی زرین، پلاک 10",
     "hoursFa": "۱۶ - ۲۰",
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21553.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21553.jpg",
-    "updatedAt": "2026-11-20T15:19:27.693Z"
+    "posterImage": "",
+    "posterSmall": "",
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 5,
@@ -2266,7 +2186,8 @@
         "openingHours": "۱۵:۰۰ الی ۲۰:۰۰",
         "poster": "https://galleryinfo.ir/Images/Events/Event_21511.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21511.jpg",
-        "url": "https://galleryinfo.ir/Event/fa/21511"
+        "url": "https://galleryinfo.ir/Event/fa/21511",
+        "isExpired": true
       }
     ],
     "neighborhood": "Beheshti & Motahari",
@@ -2274,26 +2195,13 @@
     "cityFa": "تهران",
     "neighborhoodFa": "بهشتی و مطهری",
     "isInTrafficZone": true,
-    "activeExhibition": {
-      "eventId": 21511,
-      "galleryId": 25,
-      "title": "دگردیسی",
-      "artist": "ثمیلا امیر‌ابراهیمی",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 1 آبان 1405",
-      "fullDateRange": "1 آبان 1405 تا 22 آبان 1405",
-      "closingDate": "22 آبان 1405",
-      "openingHours": "۱۵:۰۰ الی ۲۰:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21511.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21511.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21511"
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21511.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21511.jpg",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_25.jpg",
     "addressFa": "تهران، خیابان مطهری، خیابان میرزای شیرازی شمالی، کوچه نعیمی، شماره ۱۲",
     "hoursFa": "۱۵ - ۲۰",
-    "updatedAt": "2026-11-13T09:44:36.996Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 28,
@@ -2337,7 +2245,8 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21505.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21505.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21505",
-        "medium": "عکاسی"
+        "medium": "عکاسی",
+        "isExpired": true
       }
     ],
     "neighborhood": "Elahiyeh & Fereshteh",
@@ -2365,7 +2274,7 @@
     "hoursFa": "۱۱ - ۱۹",
     "posterImage": "/assets/events/g/Event_21632.jpg",
     "posterSmall": "/assets/events/g/Event_21632.jpg",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 57,
@@ -2466,7 +2375,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21604.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21604.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21604",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "North Tehran & Niavaran",
@@ -2494,7 +2403,7 @@
     "hoursFa": "۱۱ - ۲۱",
     "posterImage": "/assets/events/g/Event_21642.jpg",
     "posterSmall": "/assets/events/g/Event_21642.jpg",
-    "updatedAt": "2026-11-27T09:03:11.647Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 208,
@@ -2691,7 +2600,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21621.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21621.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21621",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Isfahan",
@@ -2699,27 +2608,13 @@
     "cityFa": "اصفهان",
     "neighborhoodFa": "اصفهان",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21621,
-      "galleryId": 329,
-      "title": "در حافظه اشیاء",
-      "artist": "ندا ضیایی، مائده شفیعی، نسرین رمضانی، طهمورث بهادرانی، پریسا دارویی، مرضیه گلابگیر اصفهانی، مرضیه معتمدی، پروانه سیلانی",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 29 آبان 1405",
-      "fullDateRange": "29 آبان 1405 تا 4 آذر 1405",
-      "closingDate": "4 آذر 1405",
-      "openingHours": "16:۰۰ الی 20:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21621.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21621.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21621",
-      "isExpired": false
-    },
+    "activeExhibition": null,
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_329.jpg",
     "addressFa": "خ توحید، خ شهید قندی(مهرداد)، کوچه شهید قاسمی ۳، پلاک ۶",
     "hoursFa": "۱۶ - ۲۰",
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21621.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21621.jpg",
-    "updatedAt": "2026-11-24T08:44:41.715Z"
+    "posterImage": "",
+    "posterSmall": "",
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 286,
@@ -2748,7 +2643,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21530.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21530.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21530",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Isfahan",
@@ -2756,27 +2651,13 @@
     "cityFa": "اصفهان",
     "neighborhoodFa": "اصفهان",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21530,
-      "galleryId": 286,
-      "title": "نشان بی‌نشان",
-      "artist": "علی خطایی ایلخچی",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 8 آبان 1405",
-      "fullDateRange": "8 آبان 1405 تا 28 آبان 1405",
-      "closingDate": "28 آبان 1405",
-      "openingHours": "16:۰۰ الی 20:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21530.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21530.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21530",
-      "isExpired": false
-    },
+    "activeExhibition": null,
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_286.jpg",
     "addressFa": "آبشار دوم، کوچه فرشید، پلاک ٣٢٤",
     "hoursFa": "۱۶ - ۲۰",
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21530.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21530.jpg",
-    "updatedAt": "2026-11-19T06:55:59.878Z"
+    "posterImage": "",
+    "posterSmall": "",
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 365,
@@ -3261,7 +3142,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21559.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21559.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21567",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Shiraz",
@@ -3269,27 +3150,13 @@
     "cityFa": "شیراز",
     "neighborhoodFa": "شیراز",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21567,
-      "galleryId": 255,
-      "title": "شیارهای شکوفایی",
-      "artist": "امید بنکدار",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 15 آبان 1405",
-      "fullDateRange": "15 آبان 1405 تا 28 آبان 1405",
-      "closingDate": "28 آبان 1405",
-      "openingHours": "16:۰۰ الی 20:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21559.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21559.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21567",
-      "isExpired": false
-    },
+    "activeExhibition": null,
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_255.jpg#dst",
     "addressFa": "شیراز، چهار‌راه‌ حافظیه، خیابان حافظ، کوچه ۱۰، پلاک ۶۷",
     "hoursFa": "۱۶ - ۲۰",
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21559.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21559.jpg",
-    "updatedAt": "2026-11-19T06:55:59.878Z"
+    "posterImage": "",
+    "posterSmall": "",
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 214,
@@ -3475,13 +3342,14 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21503.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21503.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21503",
-        "medium": "نقاشی"
+        "medium": "نقاشی",
+        "isExpired": true
       }
     ],
     "isInTrafficZone": true,
     "website": "http://www.negarartgallery.com/",
     "instagram": "https://www.instagram.com/negar_art_gallery/",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 551,
@@ -3547,13 +3415,14 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21440.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21440.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21440",
-        "medium": "مجسمه‌سازی و چیدمان"
+        "medium": "مجسمه‌سازی و چیدمان",
+        "isExpired": true
       }
     ],
     "isInTrafficZone": false,
     "website": "http://www.",
     "instagram": "https://www.instagram.com/parallelcircuit1400/",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 103,
@@ -3627,26 +3496,12 @@
     "hoursFa": "۱۶ - ۲۰",
     "image": "https://galleryinfo.ir/Images/Galleries/GallerySmall_21.jpg#ywc",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_21.jpg#ywc",
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21369.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21369.jpg",
+    "posterImage": "",
+    "posterSmall": "",
     "sourceUrl": "https://galleryinfo.ir/Gallery/fa/21",
     "neighborhood": "Vanak, Mirdamad & Zafar",
     "neighborhoodFa": "ونک، میرداماد و ظفر",
-    "activeExhibition": {
-      "eventId": 21369,
-      "galleryId": 21,
-      "title": "نمایشگاه گروهی سالانه ۱۴۰۵",
-      "artist": "فریدون امیدی، هاوار امینی، رامین جمشیدی، شیرین حسین‌وند، علیرضا دیانی، حسینعلی ذابحی، فرناز ربیعی‌جاه، محمد رحیمی، حامد صحیحی، جواد عظیمی، سمیرا علیخانزاده، گلناز فتحی",
-      "type": "نمایشگاه گروهی",
-      "openingDate": "جمعه 27 شهریور 1405",
-      "fullDateRange": "27 شهریور 1405 تا 23 آبان 1405",
-      "closingDate": "23 آبان 1405",
-      "openingHours": "16:۰۰ الی ۲۰:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21369.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21369.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21369",
-      "isExpired": false
-    },
+    "activeExhibition": null,
     "exhibitions": [
       {
         "eventId": 21369,
@@ -3661,13 +3516,13 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21369.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21369.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21369",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "isInTrafficZone": false,
     "website": "http://www.mahartgallery.com/",
     "instagram": "https://www.instagram.com/mahartgallery/",
-    "updatedAt": "2026-11-14T17:26:13.979Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 379,
@@ -3684,26 +3539,12 @@
     "hoursFa": "۱۴ - ۱۹",
     "image": "https://galleryinfo.ir/Images/Galleries/GallerySmall_379.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_379.jpg",
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21549.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21549.jpg",
+    "posterImage": "",
+    "posterSmall": "",
     "sourceUrl": "https://galleryinfo.ir/Gallery/fa/379",
     "neighborhood": "Downtown, Enghelab & Amirabad",
     "neighborhoodFa": "مرکز، انقلاب و امیرآباد",
-    "activeExhibition": {
-      "eventId": 21549,
-      "galleryId": 379,
-      "title": "گشتن و بازگشتن",
-      "artist": "علی اصغر میرزایی مهر",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 8 آبان 1405",
-      "fullDateRange": "8 آبان 1405 تا 18 آبان 1405",
-      "closingDate": "18 آبان 1405",
-      "openingHours": "14:۰۰ الی 19:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21549.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21549.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21549",
-      "medium": "طراحی"
-    },
+    "activeExhibition": null,
     "exhibitions": [
       {
         "eventId": 21527,
@@ -3718,7 +3559,8 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21527.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21527.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21527",
-        "medium": "چاپ دستی و طراحی"
+        "medium": "چاپ دستی و طراحی",
+        "isExpired": true
       },
       {
         "eventId": 21549,
@@ -3733,12 +3575,14 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21549.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21549.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21549",
-        "medium": "طراحی"
+        "medium": "طراحی",
+        "isExpired": true
       }
     ],
     "isInTrafficZone": false,
     "website": "http://www.javidgallery.com",
-    "instagram": "https://www.instagram.com/javid_art_gallery/"
+    "instagram": "https://www.instagram.com/javid_art_gallery/",
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 225,
@@ -3804,13 +3648,14 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21474.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21474.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21474",
-        "medium": "عکاسی"
+        "medium": "عکاسی",
+        "isExpired": true
       }
     ],
     "isInTrafficZone": false,
     "website": "http://www.dastangallery.com/",
     "instagram": "https://www.instagram.com/dastanoutside/",
-    "updatedAt": "2026-11-27T09:03:11.651Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 834,
@@ -3875,7 +3720,8 @@
         "openingHours": "16:۰۰ الی 20:۰۰",
         "poster": "https://galleryinfo.ir/Images/Events/Event_21546.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21546.jpg",
-        "url": "https://galleryinfo.ir/Event/fa/21546"
+        "url": "https://galleryinfo.ir/Event/fa/21546",
+        "isExpired": true
       },
       {
         "eventId": 21523,
@@ -3890,13 +3736,14 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21523.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21523.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21523",
-        "medium": "نقاشی"
+        "medium": "نقاشی",
+        "isExpired": true
       }
     ],
     "isInTrafficZone": false,
     "website": "http://www.",
     "instagram": "http://instagram.com/galleryinfo.ir",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 1007,
@@ -3913,25 +3760,11 @@
     "hoursFa": "۱۳ - ۲۰",
     "image": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1007.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1007.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21542.jpg",
+    "posterSmall": "",
     "sourceUrl": "https://galleryinfo.ir/Gallery/fa/1007",
     "neighborhood": "Elahiyeh & Fereshteh",
     "neighborhoodFa": "الهیه و فرشته",
-    "activeExhibition": {
-      "eventId": 21542,
-      "galleryId": 1007,
-      "title": "سمفونی چرخ‌گوشت",
-      "artist": "ماهیار چرمچی",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 8 آبان 1405",
-      "fullDateRange": "8 آبان 1405 تا 29 آبان 1405",
-      "closingDate": "29 آبان 1405",
-      "openingHours": "13:۰۰ الی 20:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21542.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21542.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21542",
-      "isExpired": false
-    },
+    "activeExhibition": null,
     "exhibitions": [
       {
         "eventId": 21542,
@@ -3946,14 +3779,14 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21542.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21542.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21542",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "isInTrafficZone": false,
     "website": "http://www.",
     "instagram": "https://www.instagram.com/maadgallery",
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21542.jpg",
-    "updatedAt": "2026-11-20T15:19:27.693Z"
+    "posterImage": "",
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 952,
@@ -3970,26 +3803,12 @@
     "hoursFa": "۱۴ - ۲۰",
     "image": "https://galleryinfo.ir/Images/Galleries/GallerySmall_952.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_952.jpg",
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21504.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21504.jpg",
+    "posterImage": "",
+    "posterSmall": "",
     "sourceUrl": "https://galleryinfo.ir/Gallery/fa/952",
     "neighborhood": "Karimkhan & Center",
     "neighborhoodFa": "کریم‌خان و مرکز",
-    "activeExhibition": {
-      "eventId": 21504,
-      "galleryId": 952,
-      "title": "روزی یادت می‌آید",
-      "artist": "میترا امینایی، فاطمه بیدگلی، شقایق ترابی، ماری جعفری، فاطمه طوسی، دنیا فاضل نیا، مبینا لرستانی‌نژاد، مژگان مدنی، مهدیس معینی پور",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 1 آبان 1405",
-      "fullDateRange": "1 آبان 1405 تا 15 آبان 1405",
-      "closingDate": "15 آبان 1405",
-      "openingHours": "14:۰۰ الی 20:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21504.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21504.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21504",
-      "medium": "عکاسی"
-    },
+    "activeExhibition": null,
     "exhibitions": [
       {
         "eventId": 21504,
@@ -4004,12 +3823,14 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21504.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21504.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21504",
-        "medium": "عکاسی"
+        "medium": "عکاسی",
+        "isExpired": true
       }
     ],
     "isInTrafficZone": true,
     "website": "http://baashgaah.gallery",
-    "instagram": "http://instagram.com/galleryinfo.ir"
+    "instagram": "http://instagram.com/galleryinfo.ir",
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 937,
@@ -4075,13 +3896,13 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21354.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21354.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21354",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "isInTrafficZone": true,
     "website": "http://www.doostartgallery.com/",
     "instagram": "http://instagram.com/galleryinfo.ir",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 287,
@@ -4147,12 +3968,13 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21514.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21514.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21514",
-        "medium": "نقاشی"
+        "medium": "نقاشی",
+        "isExpired": true
       }
     ],
     "isInTrafficZone": false,
     "instagram": "https://www.instagram.com/kavin.artgallery/",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 127,
@@ -4169,26 +3991,12 @@
     "hoursFa": "۱۴ - ۱۹",
     "image": "https://galleryinfo.ir/Images/Galleries/GallerySmall_127.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_127.jpg",
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21518.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21518.jpg",
+    "posterImage": "",
+    "posterSmall": "",
     "sourceUrl": "https://galleryinfo.ir/Gallery/fa/127",
     "neighborhood": "North Tehran & Niavaran",
     "neighborhoodFa": "نیاوران و شمال تهران",
-    "activeExhibition": {
-      "eventId": 21518,
-      "galleryId": 127,
-      "title": "رد خط",
-      "artist": "منیره قریشی، فرشته گل‌پور، علیرضا فیروزدهقان، شادی مشکور، پروانه یوسفی",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 8 آبان 1405",
-      "fullDateRange": "8 آبان 1405 تا 15 آبان 1405",
-      "closingDate": "15 آبان 1405",
-      "openingHours": "14:۰۰ الی 19:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21518.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21518.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21518",
-      "medium": "خوشنویسی و نقاشی‌خط"
-    },
+    "activeExhibition": null,
     "exhibitions": [
       {
         "eventId": 21518,
@@ -4203,12 +4011,14 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21518.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21518.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21518",
-        "medium": "خوشنویسی و نقاشی‌خط"
+        "medium": "خوشنویسی و نقاشی‌خط",
+        "isExpired": true
       }
     ],
     "isInTrafficZone": false,
     "website": "http://www.fniavaran.ir/",
-    "instagram": "https://www.instagram.com/farhangsara_niavaran/"
+    "instagram": "https://www.instagram.com/farhangsara_niavaran/",
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 390,
@@ -4225,25 +4035,12 @@
     "hoursFa": "۱۱ - ۱۸",
     "image": "https://galleryinfo.ir/Images/Galleries/GallerySmall_390.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_390.jpg",
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21516.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21516.jpg",
+    "posterImage": "",
+    "posterSmall": "",
     "sourceUrl": "https://galleryinfo.ir/Gallery/fa/390",
     "neighborhood": "Elahiyeh & Fereshteh",
     "neighborhoodFa": "الهیه و فرشته",
-    "activeExhibition": {
-      "eventId": 21516,
-      "galleryId": 390,
-      "title": "مجسمه های پوشیدنی",
-      "artist": "صبا کریمخانی",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 1 آبان 1405",
-      "fullDateRange": "1 آبان 1405 تا 22 آبان 1405",
-      "closingDate": "22 آبان 1405",
-      "openingHours": "11:۰۰ الی 18:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21516.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21516.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21516"
-    },
+    "activeExhibition": null,
     "exhibitions": [
       {
         "eventId": 21516,
@@ -4257,12 +4054,13 @@
         "openingHours": "11:۰۰ الی 18:۰۰",
         "poster": "https://galleryinfo.ir/Images/Events/Event_21516.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21516.jpg",
-        "url": "https://galleryinfo.ir/Event/fa/21516"
+        "url": "https://galleryinfo.ir/Event/fa/21516",
+        "isExpired": true
       }
     ],
     "isInTrafficZone": false,
     "instagram": "http://instagram.com/galleryinfo.ir",
-    "updatedAt": "2026-11-13T09:44:36.996Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 1009,
@@ -4279,25 +4077,12 @@
     "hoursFa": "۱۱ - ۲۰",
     "image": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1009.jpg#owe",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1009.jpg#owe",
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21481.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21481.jpg",
+    "posterImage": "",
+    "posterSmall": "",
     "sourceUrl": "https://galleryinfo.ir/Gallery/fa/1009",
     "neighborhood": "Elahiyeh & Fereshteh",
     "neighborhoodFa": "الهیه و فرشته",
-    "activeExhibition": {
-      "eventId": 21481,
-      "galleryId": 1009,
-      "title": "ورای رخ",
-      "artist": "رسام ارژنگی، محسن الوردیلی، ناصر بخشی، جعفر پتگر، هوشنگ پزشک‌نیا، بابک حقی، امیر خجسته، مرتضی خسروی، حسینعلی ذابحی، امیرحسین زنجانی، محسن سهیلی، رضا شهابی، علی‌اکبر صادقی، علی‌اکبر صنعتی، ژازه تباتبایی، مجتبی طباطبایی، محمد فاسونکی، شادی قدیریان، عباس کاتوزیان، فرشید مثقالی، احمد مرشد‌لو، نصرت‌الله مسلمیان، معصومه مظفری، فرشید ملکی، میلاد موسوی، نیکزاد نجومی، مهدی ویشکایی، آیدین آغداشلو",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 24 مهر 1405",
-      "fullDateRange": "24 مهر 1405 تا 22 آبان 1405",
-      "closingDate": "22 آبان 1405",
-      "openingHours": "11:۰۰ الی 20:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21481.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21481.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21481"
-    },
+    "activeExhibition": null,
     "exhibitions": [
       {
         "eventId": 21481,
@@ -4311,13 +4096,14 @@
         "openingHours": "11:۰۰ الی 20:۰۰",
         "poster": "https://galleryinfo.ir/Images/Events/Event_21481.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21481.jpg",
-        "url": "https://galleryinfo.ir/Event/fa/21481"
+        "url": "https://galleryinfo.ir/Event/fa/21481",
+        "isExpired": true
       }
     ],
     "isInTrafficZone": false,
     "website": "http://www.mellalgallery.com",
     "instagram": "https://www.instagram.com/",
-    "updatedAt": "2026-11-13T09:44:36.996Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 1003,
@@ -4383,7 +4169,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21600.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21600.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21600",
-        "isExpired": false
+        "isExpired": true
       },
       {
         "eventId": 21522,
@@ -4398,13 +4184,14 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21522.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21522.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21522",
-        "medium": "خوشنویسی و نقاشی‌خط"
+        "medium": "خوشنویسی و نقاشی‌خط",
+        "isExpired": true
       }
     ],
     "isInTrafficZone": true,
     "website": "http://www.karchivegallery.com",
     "instagram": "https://www.instagram.com/karchivegallery/",
-    "updatedAt": "2026-11-27T09:03:11.651Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 1013,
@@ -4421,26 +4208,12 @@
     "hoursFa": "۱۴ - ۲۰",
     "image": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1013.jpg#jrk",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1013.jpg#jrk",
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21425.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21425.jpg",
+    "posterImage": "",
+    "posterSmall": "",
     "sourceUrl": "https://galleryinfo.ir/Gallery/fa/1013",
     "neighborhood": "West Tehran",
     "neighborhoodFa": "غرب تهران",
-    "activeExhibition": {
-      "eventId": 21425,
-      "galleryId": 1013,
-      "title": "چشم‌انداز",
-      "artist": "لیندا آهنی، احمد اسفندیاری، هوشنگ پزشک‌نیا، پرهام پیوندی، لیندا آهنی، هوشنگ پزشک‌نیا، پرهام پیوندی، محمدعلی ترقی‌جاه، علی ذاکری، علی رضا، محدیه سهرابی، سالومه سوزنچی، ترحم سلمانی، جلال شباهنگی، محدثه طاهری، یعقوب عشقی‌فر، لیندا آهنی، هوشنگ پزشک‌نیا، پرهام پیوندی، محمدعلی ترقی‌جاه، علی ذاکری، علی رضا، محدیه سهرابی، سالومه سوزنچی، ترحم سلمانی، جلال شباهنگی، محدثه طاهری، محمد فاسونکی، ساتین غفاری، دلناز نوذ ی، لیندا آهنی، احمد اسفندیاری، هوشنگ پزشک‌نیا، پرهام پیوندی، محمدعلی ترقی‌جاه، علی ذاکری، علی رضا، محدیه سهرابی، سالومه سوزنچی، ترحم سلمانی، جلال شباهنگی، محدثه طاهری، محمد فاسونکی، ساتین غفاری، علی گلستانه (۱۳۱۹-۱۴۰۰)، شهرام کریمی، حسین محجوبی، منوچهر معتبر، سعیده میقانی، منوچهر نیازی، آرمان یعقوب‌پور",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 10 مهر 1405",
-      "fullDateRange": "10 مهر 1405 تا 30 آبان 1405",
-      "closingDate": "30 آبان 1405",
-      "openingHours": "14:۰۰ الی 20:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21425.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21425.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21425",
-      "isExpired": false
-    },
+    "activeExhibition": null,
     "exhibitions": [
       {
         "eventId": 21425,
@@ -4455,13 +4228,13 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21425.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21425.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21425",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "isInTrafficZone": false,
     "website": "http://www.",
     "instagram": "http://instagram.com/galleryinfo.ir",
-    "updatedAt": "2026-11-21T14:20:07.899Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 1020,
@@ -4478,26 +4251,12 @@
     "hoursFa": "۱۲ - ۲۰",
     "image": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1020.jpg",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1020.jpg",
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21507.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21507.jpg",
+    "posterImage": "",
+    "posterSmall": "",
     "sourceUrl": "https://galleryinfo.ir/Gallery/fa/1020",
     "neighborhood": "Downtown, Enghelab & Amirabad",
     "neighborhoodFa": "مرکز، انقلاب و امیرآباد",
-    "activeExhibition": {
-      "eventId": 21507,
-      "galleryId": 1020,
-      "title": "گِرداگِرد ۳",
-      "artist": "مانی مکزی، ساسان ابری، شاهین اسفندیاری، عباس بابایی، علی‌یار راستی، نازلی عباس‌پور، کیمیا عسکریان، البرز کاظمی، حمیدرضا کرمی، سحر مختاری، تهمینه منزوی",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 1 آبان 1405",
-      "fullDateRange": "1 آبان 1405 تا 21 آبان 1405",
-      "closingDate": "21 آبان 1405",
-      "openingHours": "12:۰۰ الی 20:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21507.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21507.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21507",
-      "medium": "عکاسی"
-    },
+    "activeExhibition": null,
     "exhibitions": [
       {
         "eventId": 21507,
@@ -4512,12 +4271,14 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21507.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21507.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21507",
-        "medium": "عکاسی"
+        "medium": "عکاسی",
+        "isExpired": true
       }
     ],
     "isInTrafficZone": true,
     "website": "http://www.aassttiinn.com/",
-    "instagram": "https://www.instagram.com/_aartmaart_"
+    "instagram": "https://www.instagram.com/_aartmaart_",
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 1025,
@@ -4583,13 +4344,14 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21495.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21495.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21495",
-        "medium": "نقاشی‌خط"
+        "medium": "نقاشی‌خط",
+        "isExpired": true
       }
     ],
     "isInTrafficZone": true,
     "website": "http://www.binaartgallery.com",
     "instagram": "http://instagram.com/galleryinfo.ir",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 1014,
@@ -4654,13 +4416,14 @@
         "openingHours": "16:۰۰ الی 20:۰۰",
         "poster": "https://galleryinfo.ir/Images/Events/Event_21528.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21528.jpg",
-        "url": "https://galleryinfo.ir/Event/fa/21528"
+        "url": "https://galleryinfo.ir/Event/fa/21528",
+        "isExpired": true
       }
     ],
     "isInTrafficZone": false,
     "website": "http://www.33artgallery.com",
     "instagram": "https://www.instagram.com/galleryart.33",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 418,
@@ -4689,7 +4452,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21540.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21540.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21540",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "کریم‌خان و مرکز",
@@ -4697,27 +4460,13 @@
     "cityFa": "تهران",
     "neighborhoodFa": "کریم‌خان و مرکز",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21540,
-      "galleryId": 418,
-      "title": "در وضع موجود",
-      "artist": "مونا کلهرودی",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 8 آبان 1405",
-      "fullDateRange": "8 آبان 1405 تا 29 آبان 1405",
-      "closingDate": "29 آبان 1405",
-      "openingHours": "16:۰۰ الی ۲0:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21540.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21540.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21540",
-      "isExpired": false
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21540.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21540.jpg",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_418.jpg",
     "addressFa": "تهران، خیابان ویلا، خیابان سمیه، خیابان پورموسى، شماره ۳۰ 021-88809808 021-88946451 روزهای تعطیل: شنبه و یکشنبه ساعات کار: ۱۶ - ۲۰ https://soocontemporary.com مسیریابی",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-20T15:19:27.693Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 314,
@@ -4746,7 +4495,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21499.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21499.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21499",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Karaj",
@@ -4754,27 +4503,13 @@
     "cityFa": "کرج",
     "neighborhoodFa": "کرج",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21499,
-      "galleryId": 314,
-      "title": "آن سوی فرم",
-      "artist": "محمدرضا حسینی",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 1 آبان 1405",
-      "fullDateRange": "1 آبان 1405 تا 1 آذر 1405",
-      "closingDate": "1 آذر 1405",
-      "openingHours": "۱۰:۰۰ الی 20:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21499.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21499.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21499",
-      "isExpired": false
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21499.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21499.jpg",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_314.jpg",
     "addressFa": "کرج، اتوبان تهران کرج، غرب میدان استاندارد، مجتمع هارمونیک، طبقه دوم 02632828300 روزهای تعطیل: - ساعات کار: ۱۰ - ۲۱ https://harmony.ir/harmonic-art-home/ Arthome.Harmonic@Gmail.com",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-22T14:11:37.149Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 1017,
@@ -4803,7 +4538,8 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21493.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21493.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21493",
-        "medium": "کاریکاتور و مجسمه"
+        "medium": "کاریکاتور و مجسمه",
+        "isExpired": true
       }
     ],
     "neighborhood": "Bojnurd",
@@ -4811,26 +4547,13 @@
     "cityFa": "بجنورد",
     "neighborhoodFa": "بجنورد",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21493,
-      "galleryId": 1017,
-      "title": "او سیاه نیست",
-      "artist": "عبدی اسبقی، انسیه اکبرزاده، رضا بانگیز، تانیا پاکزاد، کامبیز درم‌بخش، یاسمن علیشاهی، سارا عطار، فرزاد فرجی، بیتا فیاضی، سپیده قائم مقام، نیوشا نیوژپور، مهراد ولی‌اللهی، واهیک هارتونیان، محبوبه یزدانی، ساقی پارسه",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 1 آبان 1405",
-      "fullDateRange": "1 آبان 1405 تا 15 آبان 1405",
-      "closingDate": "15 آبان 1405",
-      "openingHours": "17:۰۰ الی 21:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21493.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21493.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21493",
-      "medium": "کاریکاتور و مجسمه"
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21493.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21493.jpg",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1017.jpg",
     "addressFa": "بجنورد، بجنورد- خیابان نادر- نادر ۱- پلاک ۲۵ 05832750014 09366094115 روزهای تعطیل: پنجشنبه ها و جمعه های غیر افتتاحیه ساعات کار: ۱۷ - ۲۱ http://www.zaghebanafsh.art/ Saghiparseh@gmail.com",
-    "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
+    "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 472,
@@ -4874,7 +4597,8 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21466.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21466.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21466",
-        "medium": "نقاشی"
+        "medium": "نقاشی",
+        "isExpired": true
       }
     ],
     "neighborhood": "Kashan",
@@ -4902,7 +4626,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_472.jpg",
     "addressFa": "کاشان، خیابان ملافتح‌الله، کوچه مفسر۵، پلاک۴۴ 03155221537 روزهای تعطیل: دوشنبه‌ها ساعات کار: ۱۷ - ۲۱",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 1024,
@@ -4931,7 +4655,8 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21417.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21417.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21417",
-        "medium": "عکاسی"
+        "medium": "عکاسی",
+        "isExpired": true
       }
     ],
     "neighborhood": "Istanbul",
@@ -4939,26 +4664,13 @@
     "cityFa": "استانبول",
     "neighborhoodFa": "استانبول",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21417,
-      "galleryId": 1024,
-      "title": "هنوز تموم نشده",
-      "artist": "کیمیا عسکریان، سینا برومندی، شاهین اسفندیاری، رعنا حیدرزاده، البرز کاظمی، امید مهدی‌زاده، آریا تابندهپور",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 27 شهریور 1405",
-      "fullDateRange": "27 شهریور 1405 تا 16 آبان 1405",
-      "closingDate": "16 آبان 1405",
-      "openingHours": "11:۰۰ الی 19:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21417.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21417.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21417",
-      "medium": "عکاسی"
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21417.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21417.jpg",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1024.jpg",
     "addressFa": "ترکیه - استانبول +90 212 252 1852 +90 532 271 1070 روزهای تعطیل: دوشنبه‌ها ساعات کار: ۱۱ - ۱۹ http://www.shivazahed.art",
-    "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰"
+    "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 1005,
@@ -4987,7 +4699,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21556.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21556.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21556",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "الهیه و فرشته",
@@ -4995,27 +4707,13 @@
     "cityFa": "تهران",
     "neighborhoodFa": "الهیه و فرشته",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21556,
-      "galleryId": 1005,
-      "title": "انباشت تدریجی",
-      "artist": "بهروز مجیدی",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 15 آبان 1405",
-      "fullDateRange": "15 آبان 1405 تا 1 آذر 1405",
-      "closingDate": "1 آذر 1405",
-      "openingHours": "15:۰۰ الی 21:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21556.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21556.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21556",
-      "isExpired": false
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21556.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21556.jpg",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1005.jpg",
     "addressFa": "تهران، خیابان الهیه، کوچه اخگری، کوچه آناهیتا، پلاک10 09120139055 روزهای تعطیل: روز تعطیل ندارد. ساعات کار: ۱۵ - ۲۱ http://keimangallery.com/",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-22T14:11:37.149Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 65,
@@ -5074,7 +4772,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21579.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21579.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21579",
-        "isExpired": false
+        "isExpired": true
       },
       {
         "eventId": 21578,
@@ -5089,7 +4787,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21578.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21578.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21578",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "کریم‌خان و مرکز",
@@ -5117,7 +4815,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_65.jpg",
     "addressFa": "تهران، خیابان سنایی، خیابان شاهین (خدری)، پلاک ۱۸، طبقه ی اول 02188324828 روزهای تعطیل: شنبه‌ها و یکشنبه‌ها ساعات کار: ۱۲ - ۲۰ http://ogallery.net/ info@ogallery.net",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 24,
@@ -5161,7 +4859,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21577.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21577.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21577",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "کریم‌خان و مرکز",
@@ -5189,7 +4887,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_24.jpg",
     "addressFa": "تهران، خیابان کریم خان زند، خیابان سنایی، کوچه چهارم غربی، پلاک ۸، واحد یک 02188863596 02188863597 02188863598 روزهای تعطیل: ندارد ساعات کار: ۱۱ - ۱۹ http://www.homaartgallery.com/ info@homaartgallery.com",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 405,
@@ -5233,7 +4931,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21580.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21580.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21580",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "مرکز، انقلاب و امیرآباد",
@@ -5261,7 +4959,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_405.jpg",
     "addressFa": "تهران، خیابان انقلاب، مابین چهارراه کالج و میدان فردوسی، پلاک ۸۵۴، طبقه اول/ بالای حیاط 02166745132 روزهای تعطیل: شنبه‌ها ساعات کار: ۱۴ - ۲۰ http://www.inja.gallery/ info@inja.gallery",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-27T09:03:11.647Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 41,
@@ -5290,7 +4988,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21583.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21583.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21583",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "بهشتی و مطهری",
@@ -5298,27 +4996,13 @@
     "cityFa": "تهران",
     "neighborhoodFa": "بهشتی و مطهری",
     "isInTrafficZone": true,
-    "activeExhibition": {
-      "eventId": 21583,
-      "galleryId": 41,
-      "title": "ششمین جایزه هنر معاصر ویستا",
-      "artist": "تینا ابتهاج، راحله امیربهرامی",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 15 آبان 1405",
-      "fullDateRange": "15 آبان 1405 تا 25 آبان 1405",
-      "closingDate": "25 آبان 1405",
-      "openingHours": "16:۰۰ الی 19:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21583.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21583.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21583",
-      "isExpired": false
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21583.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21583.jpg",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_41.jpg",
     "addressFa": "تهران، خیابان مطهری، خیابان میرعماد، کوچه دوازدهم، پلاک 11 02188513933 02188513934 روزهای تعطیل: شنبه ها ساعات کار: ۱۶ - ۱۹ http://vistaart.gallery/ info@vistahonar.com",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-16T15:00:01.925Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 26,
@@ -5362,7 +5046,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21555.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21555.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21555",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "ونک، میرداماد و ظفر",
@@ -5390,7 +5074,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_26.jpg",
     "addressFa": "تهران، میدان ونک، خیابان شهید خدامی، پلاک 72 02188047698 روزهای تعطیل: شنبه‌ها و یکشنبه‌ها ساعات کار: ۱۲ - ۲۰ http://www.valiartgallery.com/ info@valiartgallery.com",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-27T09:03:11.651Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 43,
@@ -5476,7 +5160,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21576.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21576.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21576",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "North Tehran & Niavaran",
@@ -5484,27 +5168,13 @@
     "cityFa": "تهران",
     "neighborhoodFa": "نیاوران و شمال تهران",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21576,
-      "galleryId": 497,
-      "title": "ورای خویش",
-      "artist": "آیدا پاشاخانلو، وحیده قنبری، کتایون حسینی، بهزاد کهکی، حانیه کمایی، خاطره عنبری",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 15 آبان 1405",
-      "fullDateRange": "15 آبان 1405 تا 29 آبان 1405",
-      "closingDate": "29 آبان 1405",
-      "openingHours": "16:۰۰ الی 20:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21576.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21576.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21576",
-      "isExpired": false
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21576.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21576.jpg",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_497.jpg",
     "addressFa": "تهران، بلوار ارتش غرب، خیابان نخل، خیابان بهاران، بن بست نسترن، پلاک ۱، ساختمان مدرن پلازا، واحد ۶۰۲ و ۶۰۳ 02122454657 روزهای تعطیل: شنبه‌ها ساعات کار: ۱۶ - ۲۰ http://www.bagallerytehran.com ba@bagallerytehran.com",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-20T15:19:27.693Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 93,
@@ -5533,7 +5203,8 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21570.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21570.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21570",
-        "medium": "نقاشی"
+        "medium": "نقاشی",
+        "isExpired": true
       }
     ],
     "neighborhood": "Karaj",
@@ -5541,26 +5212,13 @@
     "cityFa": "کرج",
     "neighborhoodFa": "کرج",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21570,
-      "galleryId": 93,
-      "title": "آنجا نسلی ایستاده",
-      "artist": "سیاوش اجلالی",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 15 آبان 1405",
-      "fullDateRange": "15 آبان 1405 تا 20 آبان 1405",
-      "closingDate": "20 آبان 1405",
-      "openingHours": "16:۰۰ الی 20:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21570.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21570.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21570",
-      "medium": "نقاشی"
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21570.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21570.jpg",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_93.jpg",
     "addressFa": "کرج، مهرشهر کرج، بلوار ارم، بعد از باغ سیب، جنب سه راه شهرداری، پلاک 2 0263-3408647 0263-3409401 روزهای تعطیل: ندارد ساعات کار: ۱۶ - ۲۰ http://www.ivansepid.com/ ivan.sepid@yahoo.com",
-    "hoursFa": ""
+    "hoursFa": "",
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 443,
@@ -5604,7 +5262,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21597.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21597.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21597",
-        "isExpired": false
+        "isExpired": true
       },
       {
         "eventId": 21552,
@@ -5619,7 +5277,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21552.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21552.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21552",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "کریم‌خان و مرکز",
@@ -5647,7 +5305,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_443.jpg",
     "addressFa": "تهران، خیابان کریم خان زند. خیابان خردمند شمالی . کوچه اعرابی ۳ . پلاک ۵ . طبقه همکف و اول 021-8882 5322 روزهای تعطیل: شنبه‌ها، یکشنبه‌ها ساعات کار: ۱۴ - ۱۹ http://www.ev-artgallery.com info@ev-artgallery.com",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 755,
@@ -5691,7 +5349,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21581.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21581.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21581",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "بهشتی و مطهری",
@@ -5719,7 +5377,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_755.jpg",
     "addressFa": "تهران، خیابان مفتح جنوبی، کوچه ی مبینی، پلاک 10 02188301702 02186074037 روزهای تعطیل: پنجشنبه ساعات کار: ۱۶ - ۲۰ http://www.",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-27T09:03:11.651Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 494,
@@ -5748,7 +5406,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21557.jpg#mdo",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21557.jpg#mdo",
         "url": "https://galleryinfo.ir/Event/fa/21557",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Mashhad",
@@ -5756,27 +5414,13 @@
     "cityFa": "مشهد",
     "neighborhoodFa": "مشهد",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21557,
-      "galleryId": 494,
-      "title": "حافظه خاموش",
-      "artist": "نسرین بجد",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 15 آبان 1405",
-      "fullDateRange": "15 آبان 1405 تا 29 آبان 1405",
-      "closingDate": "29 آبان 1405",
-      "openingHours": "17:۰۰ الی 20:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21557.jpg#mdo",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21557.jpg#mdo",
-      "url": "https://galleryinfo.ir/Event/fa/21557",
-      "isExpired": false
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21557.jpg#mdo",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21557.jpg#mdo",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_494.jpg",
     "addressFa": "مشهد، بلوار خیام، خیابان ارشاد، شماره ۹۲/۱ 05137612971 روزهای تعطیل: شنبه‌ها، پنجشنبه‌ها ساعات کار: ۱۷ - ۲۰ http://www.hengamgallery.com info@hengamgallery.com",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-20T15:19:27.693Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 1019,
@@ -5820,7 +5464,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21568.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21568.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21568",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "الهیه و فرشته",
@@ -5848,7 +5492,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1019.jpg",
     "addressFa": "تهران، فرشته، خیابان آقابزرگی، ساختمان شیرین، پلاک 21، طبقه 6 واحد 603 روزهای تعطیل: شنبه‌ها ساعات کار: ۱۶ - ۲۰ http://www.Bazdidartgallery.com",
     "hoursFa": "",
-    "updatedAt": "2026-11-27T09:03:11.652Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 1026,
@@ -5892,7 +5536,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21554.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21554.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21554",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "ونک، میرداماد و ظفر",
@@ -5920,7 +5564,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1026.jpg",
     "addressFa": "تهران، ونک ، شیخ بهایی شمالی، میدان پرسپولیس، خیابان پرسپولیس( پیروزان)، پلاک ۲۰، طبقه اول 02188064277 09109105174 روزهای تعطیل: ساعات کار: ۱۶ - ۲۰",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 999,
@@ -5964,7 +5608,8 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21558.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21558.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21558",
-        "medium": "نقاشی"
+        "medium": "نقاشی",
+        "isExpired": true
       }
     ],
     "neighborhood": "کریم‌خان و مرکز",
@@ -5992,7 +5637,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_999.jpg",
     "addressFa": "تهران، کریمخان،خیابان نجات آللهی، خیابان آستاد جعفر شهری، پلاک 22 خانه سپند 88912331 88901955 روزهای تعطیل: ندارد. ساعات کار: ۱۶ - ۲۰ https://www.sepandhouse.com sepandartgallery@gmail.com مسیریابی",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-27T09:03:11.653Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 256,
@@ -6093,7 +5738,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21610.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21610.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21610",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Isfahan",
@@ -6121,7 +5766,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_147.jpg",
     "addressFa": "اصفهان، خیابان مارنان از سمت نظرغربی-بن بست ۶-پلاک ۱۵۳ 09120194728 روزهای تعطیل: ساعات کار: ۱۷ - ۲۱ http://www.aknoonartgallery.ir/ Info@akoonartgallery.ir",
     "hoursFa": "",
-    "updatedAt": "2026-11-27T09:03:11.651Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 325,
@@ -6180,7 +5825,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21606.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21606.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21606",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Vanak, Mirdamad & Zafar",
@@ -6208,7 +5853,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_325.jpg",
     "addressFa": "تهران، جردن ،خیابان دیدار شمالی کوچه کیش شرقی پلاک ۲۰ ،طبقه اول 02188676927 روزهای تعطیل: شنبه ها ساعات کار: ۱۶ - ۲۰ https://fa.camagallery.com info@camagallery.com",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-27T09:03:11.651Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 752,
@@ -6237,7 +5882,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21598.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21598.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21598",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "North Tehran & Niavaran",
@@ -6245,27 +5890,13 @@
     "cityFa": "تهران",
     "neighborhoodFa": "نیاوران و شمال تهران",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21598,
-      "galleryId": 752,
-      "title": "بی‌آستانگی",
-      "artist": "میسا صادقی",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 22 آبان 1405",
-      "fullDateRange": "22 آبان 1405 تا 29 آبان 1405",
-      "closingDate": "29 آبان 1405",
-      "openingHours": "16:۰۰ الی 20:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21598.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21598.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21598",
-      "isExpired": false
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21598.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21598.jpg",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_752.jpg",
     "addressFa": "تهران، خیابان شریعتی ، روبه‌روی دولت ، کوچه میرزا تاراج ، پلاک ۱۰ 22600570 روزهای تعطیل: ساعات کار: ۱۶ - ۲۰ http://www. mailto:hartGallery10@gmail.com",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-20T15:19:27.693Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 484,
@@ -6351,7 +5982,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21593.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21593.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21593",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Beheshti & Motahari",
@@ -6359,27 +5990,13 @@
     "cityFa": "تهران",
     "neighborhoodFa": "بهشتی و مطهری",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21593,
-      "galleryId": 492,
-      "title": "نمایش ۷ اثر/ پوشه نهم",
-      "artist": "صادق بریرانی",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 22 آبان 1405",
-      "fullDateRange": "22 آبان 1405 تا 2 آذر 1405",
-      "closingDate": "2 آذر 1405",
-      "openingHours": "16:۰۰ الی 20:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21593.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21593.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21593",
-      "isExpired": false
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21593.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21593.jpg",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_492.jpg",
     "addressFa": "تهران، خیابان فتحی شقاقی، بین خیابان کاج و میدان سلماس، پلاک ۱۱۸ ، طبقه اول روزهای تعطیل: شنبه‌ها و پنجشنبه ها ساعات کار: ۱۶ - ۲۰ https://liamgallery.ir/ liamgallery0@gmail.com مسیریابی",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-23T06:06:41.949Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 273,
@@ -6408,7 +6025,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21605.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21605.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21605",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Karimkhan & Center",
@@ -6416,27 +6033,13 @@
     "cityFa": "تهران",
     "neighborhoodFa": "کریم‌خان و مرکز",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21605,
-      "galleryId": 273,
-      "title": "\"خطوط سفیر و کرشمه\"",
-      "artist": "مهشید ارباب زاده، سعیده چهرزاد، مونا فریدونی، فهیمه آریادوست، محمد بخشی‌زاده، مرضیه بهرامی، سمیرا گلزاد، فرانک صابری، فرشید فقیهی، محدثه محتشمی، سیما پایا، صبا پناهی، نادر احمری، سما سلوکی، افسانه فتح‌اله نژاد، حمید قمصری، نازنین ابراهیمی، طهورا فراهانی، ندا یاور، سحر سلیمی",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 22 آبان 1405",
-      "fullDateRange": "22 آبان 1405 تا 27 آبان 1405",
-      "closingDate": "27 آبان 1405",
-      "openingHours": "15:۰۰ الی  21:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21605.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21605.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21605",
-      "isExpired": false
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21605.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21605.jpg",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_273.jpg",
     "addressFa": "تهران، کریمخان زند، روبروی ایرانشهر، پلاک 91 02188313431 روزهای تعطیل: ساعات کار: ۱۵ - ۲۰",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-18T15:14:26.657Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 304,
@@ -6522,7 +6125,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21596.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21596.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21596",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Beheshti & Motahari",
@@ -6530,27 +6133,13 @@
     "cityFa": "تهران",
     "neighborhoodFa": "بهشتی و مطهری",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21596,
-      "galleryId": 1001,
-      "title": "بزم در بزم 2",
-      "artist": "ترانه صادقیان، بهنام جلالی‌جعفری، علیخان عبداللهی، پرژام پارسی، سوسن اتحاد، آذرخش فراهانی، منا فرزانه، پانته آ بیات، پروین پرچکانی، علی باخدا",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 22 آبان 1405",
-      "fullDateRange": "22 آبان 1405 تا 29 آبان 1405",
-      "closingDate": "29 آبان 1405",
-      "openingHours": " 16:۰۰ الی 19:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21596.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21596.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21596",
-      "isExpired": false
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21596.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21596.jpg",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_1001.jpg",
     "addressFa": "تهران، میدان هفت تیر، خیابان مفتح جنوبی، کوچه جار، پلاک ۲۴ 02188301040 روزهای تعطیل: - ساعات کار: ۱۷ - ۱۹ http://www. مسیریابی",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-20T15:19:27.693Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 478,
@@ -6594,7 +6183,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21612.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21612.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21612",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Beheshti & Motahari",
@@ -6622,7 +6211,7 @@
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_478.jpg",
     "addressFa": "بندرانزلی خیابان مظلوم. پلاک ۶۴ 01344423553 روزهای تعطیل: شنبه‌ها ساعات کار: ۱۷ - ۲۱ www.choom.gallery",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-27T09:03:11.651Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 1030,
@@ -6765,7 +6354,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21623.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21623.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21623",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "Beheshti & Motahari",
@@ -6773,27 +6362,13 @@
     "cityFa": "تهران",
     "neighborhoodFa": "بهشتی و مطهری",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21623,
-      "galleryId": 504,
-      "title": "بستار",
-      "artist": "شیدا شکرگزار",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 28 آبان 1405",
-      "fullDateRange": "28 آبان 1405 تا 30 آبان 1405",
-      "closingDate": "30 آبان 1405",
-      "openingHours": "۱۶:۰۰ الی  19:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21623.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21623.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21623",
-      "isExpired": false
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21623.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21623.jpg",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_504.jpg",
     "addressFa": "تهران، خیابان قائم مقام فراهانی، پایین تر از بهشتی، کوچه دهم، پلاک ۲۴، طبقه 3، واحد ١٥ 02188527612 روزهای تعطیل: ساعات کار: ۱۶ - ۲۰ https://shaargallery.com/ Shahriyaran.gallery@gmail.com",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-21T14:20:07.899Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 120,
@@ -7001,27 +6576,13 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21629.jpg",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21629.jpg",
         "url": "https://galleryinfo.ir/Event/fa/21629",
-        "isExpired": false
+        "isExpired": true
       }
     ],
-    "activeExhibition": {
-      "eventId": 21629,
-      "galleryId": 90,
-      "title": "آرامِ رنگ",
-      "artist": "نمایشگاه انفرادی",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 29 آبان 1405",
-      "fullDateRange": "29 آبان 1405 تا 4 آذر 1405",
-      "closingDate": "4 آذر 1405",
-      "openingHours": " 16:۰۰ الی  19:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21629.jpg",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21629.jpg",
-      "url": "https://galleryinfo.ir/Event/fa/21629",
-      "isExpired": false
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21629.jpg",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21629.jpg",
-    "updatedAt": "2026-11-24T08:44:41.715Z"
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 67,
@@ -7050,7 +6611,7 @@
         "poster": "https://galleryinfo.ir/Images/Events/Event_21620.jpg#nbd",
         "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21620.jpg#nbd",
         "url": "https://galleryinfo.ir/Event/fa/21620",
-        "isExpired": false
+        "isExpired": true
       }
     ],
     "neighborhood": "North Tehran & Niavaran",
@@ -7058,27 +6619,13 @@
     "cityFa": "تهران",
     "neighborhoodFa": "نیاوران و شمال تهران",
     "isInTrafficZone": false,
-    "activeExhibition": {
-      "eventId": 21620,
-      "galleryId": 67,
-      "title": "هنوز ایستاده‌ام",
-      "artist": "نمایشگاه انفرادی",
-      "type": "نمایشگاه انفرادی",
-      "openingDate": "جمعه 30 آبان 1405",
-      "fullDateRange": "30 آبان 1405 تا 4 آذر 1405",
-      "closingDate": "4 آذر 1405",
-      "openingHours": "15:30:۰۰ الی 18:۰۰",
-      "poster": "https://galleryinfo.ir/Images/Events/Event_21620.jpg#nbd",
-      "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21620.jpg#nbd",
-      "url": "https://galleryinfo.ir/Event/fa/21620",
-      "isExpired": false
-    },
-    "posterImage": "https://galleryinfo.ir/Images/Events/Event_21620.jpg#nbd",
-    "posterSmall": "https://galleryinfo.ir/Images/Events/EventSmall_21620.jpg#nbd",
+    "activeExhibition": null,
+    "posterImage": "",
+    "posterSmall": "",
     "logoImage": "https://galleryinfo.ir/Images/Galleries/GallerySmall_67.jpg",
     "addressFa": "تهران، اقدسیه، آجودانیه، خیابان چهاردهم شرقی، شماره 22 02122286143 روزهای تعطیل: ندارد ساعات کار: ۱۵:۳۰ - ۱۸ http://www.ehsan-gallery.com/ ehsan.artgallery@yahoo.com",
     "hoursFa": "۱۶:۰۰ تا ۲۰:۰۰",
-    "updatedAt": "2026-11-24T08:44:41.714Z"
+    "updatedAt": "2026-11-27T09:07:10.000Z"
   },
   {
     "id": 134,
