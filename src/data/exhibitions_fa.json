@@ -150,36 +150,6 @@
     "isExpired": false
   },
   {
-    "eventId": 21626,
-    "galleryId": 174,
-    "title": "حقیقت باید مکان داشته باشد",
-    "artist": "محمد امین فولاد‌شکن",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 28 آبان 1405",
-    "fullDateRange": "28 آبان 1405 تا 6 آذر 1405",
-    "closingDate": "6 آذر 1405",
-    "openingHours": "16:۰۰ الی 20:۰۰",
-    "poster": "https://galleryinfo.ir/assets/events/g/Event_21626.jpg",
-    "posterSmall": "https://galleryinfo.ir/assets/events/g/EventSmall_21626.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21626",
-    "isExpired": false
-  },
-  {
-    "eventId": 21603,
-    "galleryId": 484,
-    "title": "ناپایداری",
-    "artist": "آرزو غلامی",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 22 آبان 1405",
-    "fullDateRange": "22 آبان 1405 تا 6 آذر 1405",
-    "closingDate": "6 آذر 1405",
-    "openingHours": "۱۶:۰۰ الی ۲۰:۰۰",
-    "poster": "https://galleryinfo.ir/assets/events/g/Event_21603.jpg",
-    "posterSmall": "https://galleryinfo.ir/assets/events/g/EventSmall_21603.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21603",
-    "isExpired": false
-  },
-  {
     "eventId": 21643,
     "galleryId": 18,
     "title": "سفید برفی",
@@ -540,21 +510,6 @@
     "isExpired": false
   },
   {
-    "eventId": 21662,
-    "galleryId": 999,
-    "title": "هیرکانی/ پوشه چهارم",
-    "artist": "آیلار دستگیری، یاسمن بازارگان، دلارام معروف، شقایق وحشی",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 4 آذر 1405",
-    "fullDateRange": "4 آذر 1405 تا 6 آذر 1405",
-    "closingDate": "6 آذر 1405",
-    "openingHours": " 17:۰۰ الی  21:۰۰",
-    "poster": "/assets/events/g/Event_21662.jpg",
-    "posterSmall": "/assets/events/g/Event_21662.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21662",
-    "isExpired": false
-  },
-  {
     "eventId": 21615,
     "galleryId": 65,
     "title": "بدون عنوان",
@@ -705,51 +660,6 @@
     "isExpired": false
   },
   {
-    "eventId": 21607,
-    "galleryId": 256,
-    "title": "یوکرونیا",
-    "artist": "صبا صالحی، غزل زارع زادگان، الهام محمدی، ملینا خسروی",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 22 آبان 1405",
-    "fullDateRange": "22 آبان 1405 تا 6 آذر 1405",
-    "closingDate": "6 آذر 1405",
-    "openingHours": "14:۰۰ الی 20:۰۰",
-    "poster": "/assets/events/g/Event_21607.jpg",
-    "posterSmall": "/assets/events/g/Event_21607.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21607",
-    "isExpired": false
-  },
-  {
-    "eventId": 21601,
-    "galleryId": 182,
-    "title": "خاک",
-    "artist": "محمود باجلان",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 22 آبان 1405",
-    "fullDateRange": "22 آبان 1405 تا 6 آذر 1405",
-    "closingDate": "6 آذر 1405",
-    "openingHours": "16:۰۰ الی 20:۰۰",
-    "poster": "/assets/events/g/Event_21601.jpg",
-    "posterSmall": "/assets/events/g/Event_21601.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21601",
-    "isExpired": false
-  },
-  {
-    "eventId": 21591,
-    "galleryId": 485,
-    "title": "تاک آبی",
-    "artist": "النا کاشانیان",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 22 آبان 1405",
-    "fullDateRange": "22 آبان 1405 تا 6 آذر 1405",
-    "closingDate": "6 آذر 1405",
-    "openingHours": "۱۲:۰۰ الی 19:۰۰",
-    "poster": "/assets/events/g/Event_21591.jpg",
-    "posterSmall": "/assets/events/g/Event_21591.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21591",
-    "isExpired": false
-  },
-  {
     "eventId": 21592,
     "galleryId": 472,
     "title": "علی نصیر؛ نقاشی‌ها و طراحی‌ها(۱۳۶۴ تا ۱۴۰۳)",
@@ -762,21 +672,6 @@
     "poster": "/assets/events/g/Event_21592.jpg",
     "posterSmall": "/assets/events/g/Event_21592.jpg",
     "url": "https://galleryinfo.ir/Event/fa/21592",
-    "isExpired": false
-  },
-  {
-    "eventId": 21608,
-    "galleryId": 304,
-    "title": "پرده سوم",
-    "artist": "همایون سلیمی، مصطفی دشتی، سارا ابری، هانی نجم، مریم طاهریانفر، فرزانه قریشی، دانیال ملانوروزی، لیلا میرزاخانی، فرشته ستایش، سالار احمدیان، روزبه دبیری، جمشید سماواتیان، هانی شرار، طاهر نیکخواه ابیانه",
-    "type": "نمایشگاه انفرادی",
-    "openingDate": "جمعه 22 آبان 1405",
-    "fullDateRange": "22 آبان 1405 تا 6 آذر 1405",
-    "closingDate": "6 آذر 1405",
-    "openingHours": "۱۶:۰۰ الی ۲۰:۰۰",
-    "poster": "/assets/events/g/Event_21608.jpg",
-    "posterSmall": "/assets/events/g/Event_21608.jpg",
-    "url": "https://galleryinfo.ir/Event/fa/21608",
     "isExpired": false
   },
   {
