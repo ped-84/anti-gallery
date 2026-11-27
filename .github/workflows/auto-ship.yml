@@ -1,0 +1,66 @@
+name: Auto-ship (label "ship")
+
+# Add the label "ship" to a pull request and it is merged automatically once "PR check" is green,
+# then production is deployed. No label = nothing happens. Merges made with GITHUB_TOKEN do not
+# trigger the push-based deploy, so this workflow starts deploy.yml itself (workflow_dispatch).
+on:
+  pull_request:
+    types: [labeled]
+  workflow_run:
+    workflows: ["PR check"]
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+concurrency:
+  group: auto-ship
+  cancel-in-progress: false
+
+jobs:
+  ship:
+    name: Merge labelled PR and deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const {owner, repo} = context.repo;
+            let numbers = [];
+            if (context.eventName === 'pull_request') {
+              if (context.payload.label.name !== 'ship') return core.info('not the ship label');
+              numbers = [context.payload.pull_request.number];
+            } else {
+              const run = context.payload.workflow_run;
+              if (run.conclusion !== 'success') return core.info('PR check not green: ' + run.conclusion);
+              numbers = (run.pull_requests || []).map(p => p.number);
+            }
+            if (!numbers.length) return core.info('no pull request attached');
+            for (const number of numbers) {
+              const {data: pr} = await github.rest.pulls.get({owner, repo, pull_number: number});
+              const tag = '#' + number + ': ';
+              if (pr.state !== 'open' || pr.draft) { core.info(tag + 'closed or draft'); continue; }
+              if (!pr.labels.some(l => l.name === 'ship')) { core.info(tag + 'no ship label'); continue; }
+              if (pr.base.ref !== 'main') { core.info(tag + 'base is not main'); continue; }
+              if (pr.head.repo.full_name !== pr.base.repo.full_name) { core.info(tag + 'fork PR, skipped'); continue; }
+              // PR check must be green on the current head commit
+              const {data: checks} = await github.rest.checks.listForRef({owner, repo, ref: pr.head.sha, per_page: 100});
+              const pc = checks.check_runs.filter(c => c.name === 'Typecheck and build');
+              if (!pc.length || pc.some(c => c.conclusion !== 'success')) { core.info(tag + 'PR check not green on ' + pr.head.sha); continue; }
+              try {
+                await github.rest.pulls.merge({owner, repo, pull_number: number, merge_method: 'merge', sha: pr.head.sha});
+              } catch (e) {
+                core.warning(tag + 'merge failed: ' + e.message);
+                await github.rest.issues.createComment({owner, repo, issue_number: number,
+                  body: 'Auto-ship could not merge: ' + e.message + '\nRebase on main, push, and it will retry when PR check is green.'});
+                continue;
+              }
+              core.info(tag + 'merged');
+              await github.rest.actions.createWorkflowDispatch({owner, repo, workflow_id: 'deploy.yml', ref: 'main'});
+              await github.rest.issues.createComment({owner, repo, issue_number: number,
+                body: 'Merged by auto-ship. Production deploy started: https://github.com/' + owner + '/' + repo + '/actions/workflows/deploy.yml'});
+              break; // one merge per run; deploy uses the latest main
+            }
