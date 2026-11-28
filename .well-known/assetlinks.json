@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.artgasht.app",
+      "sha256_cert_fingerprints": [
+        "14:6D:E9:7D:0C:5E:EA:71:1A:E3:89:F0:F4:60:57:2B:D9:84:45:44:22:16:60:11:03:00:1E:75:A3:2B:1A:C3"
+      ]
+    }
+  }
+]
